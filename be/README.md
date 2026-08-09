@@ -4,11 +4,11 @@ FastAPI backend for the offline-first historical flood replay MVP. The frontend 
 
 ## Setup
 
-Use Python 3.12 or newer.
+Use Python 3.13 or newer (the current local environment uses Python 3.13.9).
 
 ```powershell
 cd be
-py -3.12 -m venv .venv
+py -3.13 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000

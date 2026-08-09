@@ -1,0 +1,68 @@
+{
+  "id": "scenario-jakarta-20250304",
+  "name": "Jakarta Flood — 04 March 2025",
+  "mode": "historical-replay",
+  "location": "Jakarta",
+  "eventDate": "2025-03-04",
+  "eventType": "Urban Flood",
+  "dataSources": {
+    "mode": "historical_snapshot",
+    "historicalStatus": "offline_snapshot",
+    "operationalStatus": "simulated",
+    "historicalProvider": "local synthetic historical replay archive",
+    "snapshotId": "jakarta-2025-03-04-v1"
+  },
+  "companyName": "Nusantara Foods",
+  "facilities": [
+    {"id": "sup-a", "name": "Supplier A", "kind": "supplier", "location": {"type": "Point", "coordinates": [106.826, -6.139]}},
+    {"id": "sup-b", "name": "Supplier B", "kind": "supplier", "location": {"type": "Point", "coordinates": [106.910, -6.195]}},
+    {"id": "fac-1", "name": "Nusantara Foods Factory", "kind": "factory", "location": {"type": "Point", "coordinates": [106.875, -6.236]}},
+    {"id": "wh-east", "name": "Warehouse East", "kind": "warehouse", "location": {"type": "Point", "coordinates": [106.913, -6.229]}},
+    {"id": "wh-west", "name": "Warehouse West", "kind": "warehouse", "location": {"type": "Point", "coordinates": [106.770, -6.188]}},
+    {"id": "store-a", "name": "Store A", "kind": "store", "location": {"type": "Point", "coordinates": [106.808, -6.171]}},
+    {"id": "store-b", "name": "Store B", "kind": "store", "location": {"type": "Point", "coordinates": [106.852, -6.161]}},
+    {"id": "store-c", "name": "Store C", "kind": "store", "location": {"type": "Point", "coordinates": [106.893, -6.155]}},
+    {"id": "store-d", "name": "Store D", "kind": "store", "location": {"type": "Point", "coordinates": [106.927, -6.176]}},
+    {"id": "store-e", "name": "Store E", "kind": "store", "location": {"type": "Point", "coordinates": [106.827, -6.220]}}
+  ],
+  "vehicles": [
+    {"id": "V-01", "label": "Box Truck 01", "capacityUnits": 800},
+    {"id": "V-02", "label": "Box Truck 02", "capacityUnits": 800},
+    {"id": "V-03", "label": "Van 03", "capacityUnits": 450}
+  ],
+  "products": [
+    {"id": "prod-a", "name": "Product A", "unit": "units"},
+    {"id": "prod-b", "name": "Product B", "unit": "units"}
+  ],
+  "materials": [
+    {"id": "mat-a", "name": "Primary Ingredient", "supplierId": "sup-a", "productIds": ["prod-a"]},
+    {"id": "mat-b", "name": "Shared Packaging", "supplierId": "sup-b", "productIds": ["prod-a", "prod-b"]}
+  ],
+  "inventory": [
+    {"facilityId": "wh-east", "productId": "prod-a", "quantity": 420, "unit": "units"},
+    {"facilityId": "wh-west", "productId": "prod-a", "quantity": 310, "unit": "units"},
+    {"facilityId": "wh-west", "productId": "prod-b", "quantity": 500, "unit": "units"}
+  ],
+  "orders": [
+    {"id": "ORD-001", "storeId": "store-a", "productId": "prod-b", "quantity": 60, "priority": "high"},
+    {"id": "ORD-002", "storeId": "store-b", "productId": "prod-a", "quantity": 70, "priority": "normal"},
+    {"id": "ORD-003", "storeId": "store-c", "productId": "prod-a", "quantity": 80, "priority": "normal"},
+    {"id": "ORD-004", "storeId": "store-d", "productId": "prod-b", "quantity": 90, "priority": "normal"},
+    {"id": "ORD-005", "storeId": "store-e", "productId": "prod-a", "quantity": 100, "priority": "high"},
+    {"id": "ORD-006", "storeId": "store-a", "productId": "prod-a", "quantity": 60, "priority": "normal"},
+    {"id": "ORD-007", "storeId": "store-b", "productId": "prod-b", "quantity": 70, "priority": "normal"},
+    {"id": "ORD-008", "storeId": "store-c", "productId": "prod-a", "quantity": 80, "priority": "critical"},
+    {"id": "ORD-009", "storeId": "store-d", "productId": "prod-a", "quantity": 90, "priority": "high"},
+    {"id": "ORD-010", "storeId": "store-e", "productId": "prod-b", "quantity": 100, "priority": "normal"},
+    {"id": "ORD-011", "storeId": "store-a", "productId": "prod-a", "quantity": 60, "priority": "normal"},
+    {"id": "ORD-012", "storeId": "store-b", "productId": "prod-a", "quantity": 70, "priority": "normal"},
+    {"id": "ORD-013", "storeId": "store-c", "productId": "prod-b", "quantity": 80, "priority": "high"},
+    {"id": "ORD-014", "storeId": "store-d", "productId": "prod-a", "quantity": 90, "priority": "critical"},
+    {"id": "ORD-015", "storeId": "store-e", "productId": "prod-a", "quantity": 100, "priority": "normal"},
+    {"id": "ORD-016", "storeId": "store-a", "productId": "prod-b", "quantity": 60, "priority": "normal"},
+    {"id": "ORD-017", "storeId": "store-b", "productId": "prod-a", "quantity": 70, "priority": "high"},
+    {"id": "ORD-018", "storeId": "store-c", "productId": "prod-a", "quantity": 80, "priority": "normal"},
+    {"id": "ORD-019", "storeId": "store-d", "productId": "prod-b", "quantity": 90, "priority": "normal"},
+    {"id": "ORD-020", "storeId": "store-e", "productId": "prod-a", "quantity": 100, "priority": "normal"}
+  ]
+}
