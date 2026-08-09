@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+@theme {
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-surface-low: #f3f4f5;
+  --color-surface-high: #e7e8e9;
+  --color-surface-highest: #e1e3e4;
+  --color-ink: #191c1d;
+  --color-muted: #3d4947;
+  --color-outline: #bcc9c6;
+  --color-primary: #00685f;
+  --color-primary-dark: #005049;
+  --color-primary-soft: #d8f3ee;
+  --color-secondary-soft: #dae2fd;
+  --color-danger: #ba1a1a;
+  --color-danger-soft: #ffdad6;
+  --color-warning: #c45f00;
+  --font-sans: var(--font-geist), "Segoe UI", sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body { margin: 0; background: #f8f9fa; color: #191c1d; }
+button, a, input, select { outline-offset: 3px; }
+:focus-visible { outline: 2px solid #0d9488; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: #bcc9c6; border-radius: 999px; }
+
+.card { border: 1px solid #d4dddb; border-radius: 8px; background: #fff; box-shadow: 0 4px 6px -1px rgb(15 23 42 / 5%); }
+.eyebrow { font: 600 11px/16px var(--font-geist), sans-serif; letter-spacing: .06em; text-transform: uppercase; color: #52615e; }
+.mono { font-family: var(--font-mono), ui-monospace, monospace; }
+.page-title { font-size: 32px; line-height: 40px; font-weight: 600; letter-spacing: -.02em; }
+.section-title { font-size: 20px; line-height: 28px; font-weight: 600; }
+.kpi { font-size: 32px; line-height: 32px; font-weight: 600; letter-spacing: -.03em; }
+.maplibregl-canvas:focus { outline: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
