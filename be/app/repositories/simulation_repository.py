@@ -12,6 +12,8 @@ class SimulationRepository:
     def __init__(self) -> None:
         self._items: dict[str, Simulation] = {}
         self._disruptions: dict[str, Any] = {}
+        self._recoveries: dict[str, Any] = {}
+        self._impacts: dict[str, Any] = {}
         self._sequence = 0
         self._lock = Lock()
 
@@ -37,11 +39,29 @@ class SimulationRepository:
         with self._lock:
             return self._disruptions.get(simulation_id)
 
+    def save_recovery(self, simulation_id: str, recovery: Any) -> None:
+        with self._lock:
+            self._recoveries[simulation_id] = recovery
+
+    def get_recovery(self, simulation_id: str) -> Any | None:
+        with self._lock:
+            return self._recoveries.get(simulation_id)
+
+    def save_impact(self, simulation_id: str, impact: Any) -> None:
+        with self._lock:
+            self._impacts[simulation_id] = impact
+
+    def get_impact(self, simulation_id: str) -> Any | None:
+        with self._lock:
+            return self._impacts.get(simulation_id)
+
     def clear(self) -> None:
         """Test helper; the MVP intentionally has no persistence across restarts."""
         with self._lock:
             self._items.clear()
             self._disruptions.clear()
+            self._recoveries.clear()
+            self._impacts.clear()
             self._sequence = 0
 
 

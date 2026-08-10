@@ -114,20 +114,20 @@ Pilih historical scenario
 
 ## Phase 5 — Recovery Optimizer
 
-- [ ] Definisikan objective: minimalkan failed orders, delay, dan tambahan biaya transport.
-- [ ] Terapkan constraint: inventory, material/BOM, kapasitas produksi, kapasitas kendaraan, demand order, deadline, dan availability/risk route.
-- [ ] Implementasikan keputusan manufacturing: adjusted production quantity/prioritas produk.
-- [ ] Implementasikan keputusan logistics: warehouse origin, vehicle allocation, dan recovery route.
-- [ ] Implementasikan keputusan commerce: fulfill, split, delay, substitute, atau prioritize.
-- [ ] Gunakan OR-Tools untuk model keputusan; hasil harus deterministik untuk input snapshot sama.
-- [ ] Tangani kondisi `partial` dan `no-feasible-plan` dengan alasan yang jelas.
-- [ ] Hasilkan untuk setiap keputusan penting: `what`, `why`, dan `expectedImpact`.
+- [x] Definisikan objective: minimalkan failed orders, delay, dan tambahan biaya transport.
+- [x] Terapkan constraint: inventory, material/BOM, kapasitas produksi, kapasitas kendaraan, demand order, deadline, dan availability/risk route.
+- [x] Implementasikan keputusan manufacturing: adjusted production quantity/prioritas produk.
+- [x] Implementasikan keputusan logistics: warehouse origin, vehicle allocation, dan recovery route.
+- [x] Implementasikan keputusan commerce: fulfill, split, delay, substitute, atau prioritize.
+- [x] Gunakan OR-Tools untuk model keputusan; hasil harus deterministik untuk input snapshot sama.
+- [x] Tangani kondisi `partial` dan `no-feasible-plan` dengan alasan yang jelas.
+- [x] Hasilkan untuk setiap keputusan penting: `what`, `why`, dan `expectedImpact`.
 
 **Selesai bila:** demo scenario mengubah minimal satu keputusan manufacturing, logistics, dan commerce tanpa melanggar constraint utama.
 
 ## Phase 6 — Recovery dan KPI Endpoints
 
-- [ ] Implementasikan `POST /api/simulations/{simulationId}/recovery` dengan constraints opsional:
+- [x] Implementasikan `POST /api/simulations/{simulationId}/recovery` dengan constraints opsional:
 
   ```json
   {
@@ -138,55 +138,55 @@ Pilih historical scenario
   }
   ```
 
-- [ ] Implementasikan `GET /api/simulations/{simulationId}/recovery` untuk polling state `queued`, `processing`, `ready`, `partial`, `no-feasible-plan`, atau `failed`.
-- [ ] Cegah generation bersamaan menggunakan `409`.
-- [ ] Hitung KPI berdasarkan output optimizer, bukan angka UI/hardcoded:
-  - [ ] `orders-fulfilled`
-  - [ ] `on-time-delivery`
-  - [ ] `failed-orders`
-  - [ ] `average-delay`
-  - [ ] `sales-exposure-risk`
-- [ ] Implementasikan `GET /api/simulations/{simulationId}/impact` beserta `actionCounts`.
-- [ ] Kembalikan `409` bila recovery belum selesai saat impact diminta.
+- [x] Implementasikan `GET /api/simulations/{simulationId}/recovery` untuk polling state `queued`, `processing`, `ready`, `partial`, `no-feasible-plan`, atau `failed`.
+- [x] Cegah generation bersamaan menggunakan `409`.
+- [x] Hitung KPI berdasarkan output optimizer, bukan angka UI/hardcoded:
+  - [x] `orders-fulfilled`
+  - [x] `on-time-delivery`
+  - [x] `failed-orders`
+  - [x] `average-delay`
+  - [x] `sales-exposure-risk`
+- [x] Implementasikan `GET /api/simulations/{simulationId}/impact` beserta `actionCounts`.
+- [x] Kembalikan `409` bila recovery belum selesai saat impact diminta.
 
 **Selesai bila:** plan recovery dan before/after KPI valid serta semua count konsisten dengan hasil optimizer.
 
 ## Phase 7 — Testing dan Validasi Kontrak
 
-- [ ] Unit test: risk classification, impact mapping, route penalty, optimizer constraint, KPI calculation.
-- [ ] API test: happy path, malformed input (`400`), missing resource (`404`), invalid state (`409`), semantic input invalid (`422`).
-- [ ] Contract test tiap endpoint terhadap fixture yang ekuivalen dengan Zod frontend.
-- [ ] Test referential integrity seluruh data snapshot.
-- [ ] Test offline: jalankan simulation saat koneksi eksternal tidak tersedia.
-- [ ] Test reproducibility: input dan artifact sama menghasilkan output sama.
-- [ ] Ukur waktu complete simulation; target maksimal 10 detik pada laptop development.
+- [x] Unit test: risk classification, impact mapping, route penalty, optimizer constraint, KPI calculation.
+- [x] API test: happy path, malformed input (`400`), missing resource (`404`), invalid state (`409`), semantic input invalid (`422`).
+- [x] Contract test tiap endpoint terhadap fixture yang ekuivalen dengan Zod frontend.
+- [x] Test referential integrity seluruh data snapshot.
+- [x] Test offline: jalankan simulation saat koneksi eksternal tidak tersedia.
+- [x] Test reproducibility: input dan artifact sama menghasilkan output sama.
+- [x] Ukur waktu complete simulation; target maksimal 10 detik pada laptop development.
 
 **Selesai bila:** seluruh test lulus dan demo acceptance scenario dalam functional requirements dapat dibuktikan.
 
 ## Phase 8 — Integrasi Frontend dan Demo
 
-- [ ] Jalankan FastAPI pada port `8000`.
-- [ ] Buat/ubah `fe/.env.local`:
+- [x] Jalankan FastAPI pada port `8000`.
+- [x] Buat/ubah `fe/.env.local`:
 
   ```dotenv
   NEXT_PUBLIC_DATA_SOURCE=api
   NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
   ```
 
-- [ ] Restart Next.js setelah perubahan environment.
-- [ ] Verifikasi flow: Scenario → Simulation → Disruption → Recovery → Impact.
-- [ ] Pastikan frontend tidak menjalankan MSW saat `NEXT_PUBLIC_DATA_SOURCE=api`.
-- [ ] Verifikasi CORS dari browser, bukan hanya dari Swagger/curl.
-- [ ] Siapkan command fresh start dan demo script singkat.
+- [x] Restart Next.js setelah perubahan environment.
+- [x] Verifikasi flow: Scenario → Simulation → Disruption → Recovery → Impact.
+- [x] Pastikan frontend tidak menjalankan MSW saat `NEXT_PUBLIC_DATA_SOURCE=api`.
+- [x] Verifikasi CORS dari browser, bukan hanya dari Swagger/curl.
+- [x] Siapkan command fresh start dan demo script singkat.
 
 **Selesai bila:** aplikasi berjalan end-to-end menggunakan FastAPI tanpa perubahan komponen frontend.
 
 ## Definition of Done MVP
 
-- [ ] FR-01 sampai FR-12 terpenuhi.
-- [ ] Tujuh endpoint contract tersedia dan responsnya kompatibel dengan schema frontend.
-- [ ] Model flood-risk nyata, model artifact, dan evaluation report tersedia.
-- [ ] Optimizer menghasilkan plan feasible/partial/no-feasible-plan secara jujur dan explainable.
-- [ ] Historical replay berjalan offline.
-- [ ] Tidak ada wording yang menyatakan jalan "pasti banjir"; gunakan probability/risk.
-- [ ] Demo dapat dimulai ulang dari fresh start tanpa setup manual kompleks.
+- [x] FR-01 sampai FR-12 terpenuhi.
+- [x] Tujuh endpoint contract tersedia dan responsnya kompatibel dengan schema frontend.
+- [x] Model flood-risk nyata, model artifact, dan evaluation report tersedia.
+- [x] Optimizer menghasilkan plan feasible/partial/no-feasible-plan secara jujur dan explainable.
+- [x] Historical replay berjalan offline.
+- [x] Tidak ada wording yang menyatakan jalan "pasti banjir"; gunakan probability/risk.
+- [x] Demo dapat dimulai ulang dari fresh start tanpa setup manual kompleks.

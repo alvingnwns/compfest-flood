@@ -41,10 +41,7 @@ def create_simulation(scenario_id: str) -> Simulation:
 
     routes = []
     pairs = [
-        ("sup-a", "fac-1"),
-        ("sup-b", "fac-1"),
-        ("fac-1", "wh-east"),
-        ("fac-1", "wh-west")
+        ("sup-a", "wh-east")
     ]
     for orig, dest in pairs:
         routes.extend(calculate_routes(orig, dest, road_risks_map))
@@ -79,10 +76,13 @@ def create_simulation(scenario_id: str) -> Simulation:
         
     impact = calculate_impact(road_risks, routes)
     
+    flood_extent = get_historical_flood_extent()
+    flood_geometry = flood_extent.get("features", [{}])[0].get("geometry", {})
+    
     disruption = DisruptionAnalysis(
         simulation_id=simulation.id,
         facilities=scenario.facilities,
-        historical_flood_geometry=get_historical_flood_extent(),
+        historical_flood_geometry=flood_geometry,
         roads=road_risks,
         routes=routes,
         impact=impact

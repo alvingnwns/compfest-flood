@@ -139,7 +139,9 @@ def _build_route_analysis(
 
         geom = edge["geometry"]
         if geom and "coordinates" in geom:
-            coords.append(geom["coordinates"])
+            for pt in geom["coordinates"]:
+                if not coords or coords[-1] != pt:
+                    coords.append(pt)
 
         risk = road_risks_map.get(seg_id)
         if risk:
@@ -150,7 +152,7 @@ def _build_route_analysis(
             if level_val[lvl] > level_val[max_level]:
                 max_level = lvl
 
-    geom_obj = {"type": "MultiLineString", "coordinates": coords}
+    geom_obj = {"type": "LineString", "coordinates": coords}
 
     return RouteAnalysis(
         id=f"route-{route_type}-{origin}-{dest}",
