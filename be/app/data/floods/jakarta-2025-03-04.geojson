@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "name": "Jakarta flood extent — 04 March 2025 synthetic replay",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "flood-jakarta-20250304-core",
+      "properties": {
+        "eventDate": "2025-03-04",
+        "sourceMode": "synthetic_historical_replay",
+        "description": "Synthetic flood extent for reproducible offline MVP demonstration."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106.815, -6.120], [106.900, -6.120], [106.910, -6.190], [106.840, -6.205], [106.815, -6.120]]]
+      }
+    }
+  ]
+}

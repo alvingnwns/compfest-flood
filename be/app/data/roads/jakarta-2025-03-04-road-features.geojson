@@ -1,0 +1,30 @@
+{
+  "type": "FeatureCollection",
+  "name": "Jakarta road features — 04 March 2025 synthetic replay",
+  "features": [
+    {
+      "type": "Feature", "id": "road-supplier-a-north", "properties": {"segmentId": "road-supplier-a-north", "roadName": "Jl. Rajawali Selatan", "roadType": "primary", "lengthKm": 2.1, "travelTimeMinutes": 5, "rainfallMm": 168, "hazardScore": 0.72, "elevationMeters": 5.1, "historicalFloodExposure": 0.64, "drainagePressure": 0.71, "fromNode": "n-sup-a", "toNode": "n-north", "bidirectional": true}, "geometry": {"type": "LineString", "coordinates": [[106.826, -6.139], [106.838, -6.153]]}
+    },
+    {
+      "type": "Feature", "id": "road-gunung-sahari", "properties": {"segmentId": "road-gunung-sahari", "roadName": "Jl. Gunung Sahari", "roadType": "primary", "lengthKm": 4.8, "travelTimeMinutes": 12, "rainfallMm": 168, "hazardScore": 0.93, "elevationMeters": 3.4, "historicalFloodExposure": 0.91, "drainagePressure": 0.86, "fromNode": "n-north", "toNode": "n-central", "bidirectional": true}, "geometry": {"type": "LineString", "coordinates": [[106.838, -6.153], [106.842, -6.164], [106.846, -6.177]]}
+    },
+    {
+      "type": "Feature", "id": "road-kemayoran", "properties": {"segmentId": "road-kemayoran", "roadName": "Jl. Benyamin Sueb", "roadType": "arterial", "lengthKm": 5.4, "travelTimeMinutes": 10, "rainfallMm": 168, "hazardScore": 0.69, "elevationMeters": 4.8, "historicalFloodExposure": 0.63, "drainagePressure": 0.68, "fromNode": "n-central", "toNode": "n-wh-east", "bidirectional": true}, "geometry": {"type": "LineString", "coordinates": [[106.846, -6.177], [106.875, -6.190], [106.913, -6.229]]}
+    },
+    {
+      "type": "Feature", "id": "road-supplier-a-bypass", "properties": {"segmentId": "road-supplier-a-bypass", "roadName": "Jl. Angkasa Bypass", "roadType": "secondary", "lengthKm": 6.2, "travelTimeMinutes": 13, "rainfallMm": 168, "hazardScore": 0.27, "elevationMeters": 8.9, "historicalFloodExposure": 0.18, "drainagePressure": 0.31, "fromNode": "n-sup-a", "toNode": "n-bypass", "bidirectional": true}, "geometry": {"type": "LineString", "coordinates": [[106.826, -6.139], [106.800, -6.170], [106.770, -6.188]]}
+    },
+    {
+      "type": "Feature", "id": "road-west-south", "properties": {"segmentId": "road-west-south", "roadName": "Jl. Letjen S. Parman", "roadType": "arterial", "lengthKm": 6.8, "travelTimeMinutes": 12, "rainfallMm": 168, "hazardScore": 0.22, "elevationMeters": 9.4, "historicalFloodExposure": 0.14, "drainagePressure": 0.24, "fromNode": "n-bypass", "toNode": "n-southwest", "bidirectional": true}, "geometry": {"type": "LineString", "coordinates": [[106.770, -6.188], [106.790, -6.205], [106.830, -6.238]]}
+    },
+    {
+      "type": "Feature", "id": "road-south-factory", "properties": {"segmentId": "road-south-factory", "roadName": "Jl. Gatot Subroto", "roadType": "primary", "lengthKm": 4.1, "travelTimeMinutes": 10, "rainfallMm": 168, "hazardScore": 0.20, "elevationMeters": 9.1, "historicalFloodExposure": 0.12, "drainagePressure": 0.22, "fromNode": "n-southwest", "toNode": "n-factory", "bidirectional": true}, "geometry": {"type": "LineString", "coordinates": [[106.830, -6.238], [106.850, -6.239], [106.875, -6.236]]}
+    },
+    {
+      "type": "Feature", "id": "road-factory-east", "properties": {"segmentId": "road-factory-east", "roadName": "Jl. MT Haryono", "roadType": "primary", "lengthKm": 4.7, "travelTimeMinutes": 11, "rainfallMm": 168, "hazardScore": 0.44, "elevationMeters": 7.2, "historicalFloodExposure": 0.36, "drainagePressure": 0.42, "fromNode": "n-factory", "toNode": "n-wh-east", "bidirectional": true}, "geometry": {"type": "LineString", "coordinates": [[106.875, -6.236], [106.895, -6.233], [106.913, -6.229]]}
+    },
+    {
+      "type": "Feature", "id": "road-supplier-b-east", "properties": {"segmentId": "road-supplier-b-east", "roadName": "Jl. Yos Sudarso", "roadType": "secondary", "lengthKm": 3.6, "travelTimeMinutes": 8, "rainfallMm": 168, "hazardScore": 0.38, "elevationMeters": 6.9, "historicalFloodExposure": 0.29, "drainagePressure": 0.39, "fromNode": "n-sup-b", "toNode": "n-wh-east", "bidirectional": true}, "geometry": {"type": "LineString", "coordinates": [[106.910, -6.195], [106.914, -6.210], [106.913, -6.229]]}
+    }
+  ]
+}
