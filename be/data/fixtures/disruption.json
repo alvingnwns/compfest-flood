@@ -1,0 +1,58 @@
+{
+  "historicalFloodGeometry": {
+    "type": "Polygon",
+    "coordinates": [[[106.815, -6.12], [106.9, -6.12], [106.91, -6.19], [106.84, -6.205], [106.815, -6.12]]]
+  },
+  "roads": [
+    {
+      "segmentId": "road-gunung-sahari",
+      "roadName": "Jl. Gunung Sahari",
+      "geometry": { "type": "LineString", "coordinates": [[106.832, -6.145], [106.838, -6.153], [106.842, -6.164], [106.846, -6.177]] },
+      "riskProbability": 0.82,
+      "riskLevel": "high",
+      "estimatedDelayMinutes": 48,
+      "riskFactors": [{ "id": "historical", "label": "Historical exposure" }, { "id": "elevation", "label": "Low elevation" }],
+      "affectedSupplierIds": ["sup-a"],
+      "affectedWarehouseIds": ["wh-east"],
+      "affectedOrderIds": ["ORD-008", "ORD-014"]
+    },
+    {
+      "segmentId": "road-kemayoran",
+      "roadName": "Jl. Benyamin Sueb",
+      "geometry": { "type": "MultiLineString", "coordinates": [[[106.86, -6.16], [106.875, -6.17]], [[106.875, -6.17], [106.89, -6.185]]] },
+      "riskProbability": 0.68,
+      "riskLevel": "medium",
+      "estimatedDelayMinutes": 31,
+      "riskFactors": [{ "id": "drainage", "label": "Drainage pressure" }],
+      "affectedSupplierIds": [],
+      "affectedWarehouseIds": ["wh-east"],
+      "affectedOrderIds": ["ORD-005", "ORD-009"]
+    }
+  ],
+  "routes": [
+    {
+      "id": "route-baseline", "type": "baseline", "originFacilityId": "sup-a", "destinationFacilityId": "wh-east",
+      "geometry": { "type": "LineString", "coordinates": [[106.826, -6.139], [106.842, -6.164], [106.875, -6.19], [106.913, -6.229]] },
+      "distanceKm": 18.4, "etaMinutes": 27, "floodExposure": "high", "floodExposureProbability": 0.82,
+      "affectedRoadSegmentIds": ["road-gunung-sahari", "road-kemayoran"]
+    },
+    {
+      "id": "route-recovery", "type": "recovery", "originFacilityId": "sup-a", "destinationFacilityId": "fac-1",
+      "geometry": { "type": "LineString", "coordinates": [[106.826, -6.139], [106.8, -6.17], [106.79, -6.205], [106.83, -6.238], [106.875, -6.236]] },
+      "distanceKm": 24.8, "etaMinutes": 35, "floodExposure": "low", "floodExposureProbability": 0.2,
+      "affectedRoadSegmentIds": []
+    }
+  ],
+  "impact": {
+    "impactedSupplierIds": ["sup-a"],
+    "impactedWarehouseIds": ["wh-east"],
+    "impactedOrderIds": ["ORD-005", "ORD-008", "ORD-009", "ORD-014", "ORD-017", "ORD-020"],
+    "roadSegmentsAtRisk": 17,
+    "salesExposure": { "amount": 8200000, "currency": "IDR" },
+    "issues": [
+      { "id": "issue-1", "severity": "critical", "subject": "Supplier A inbound route", "description": "High estimated disruption risk requires immediate route review to maintain material availability." },
+      { "id": "issue-2", "severity": "high", "subject": "Warehouse East → Store C", "description": "Elevated disruption probability may add more than 45 minutes to delivery." },
+      { "id": "issue-3", "severity": "high", "subject": "ORD-014", "description": "Outbound delivery is at risk of missing its dispatch window." }
+    ]
+  }
+}

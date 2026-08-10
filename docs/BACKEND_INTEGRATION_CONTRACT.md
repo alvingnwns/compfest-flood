@@ -1,6 +1,6 @@
 # ResiliChain Backend Integration Contract v1.0
 
-Status: frozen for frontend integration. The Zod schemas in `src/domain` are the executable source of truth; this document is the human-readable handoff.
+Status: frozen for frontend integration. The Zod schemas in `fe/src/domain` are the executable source of truth; this document is the human-readable handoff.
 
 ## Architecture Boundary
 
@@ -78,7 +78,7 @@ Default query policy is one retry, 30-second stale time, and no refetch on windo
 
 ### GET /api/scenarios/historical-jakarta
 
-Purpose: return the selectable historical replay and its business network snapshot. Consumer: Scenario page. Path params: none. Query params: none. JSON body: none. Schema: `scenarioSchema` in `src/domain/scenario.ts`.
+Purpose: return the selectable historical replay and its business network snapshot. Consumer: Scenario page. Path params: none. Query params: none. JSON body: none. Schema: `scenarioSchema` in `fe/src/domain/scenario.ts`.
 
 Response `200`:
 
@@ -161,7 +161,7 @@ Relevant statuses: `200`, `404`, `500`.
 
 ### GET /api/simulations/{simulationId}/disruption
 
-Purpose: return backend/AI-owned road risk, route geometry, entity impact, and operational exposure. Consumer: Disruption Map. Path param: `simulationId`. Query params/body: none. Schema: `disruptionAnalysisSchema` in `src/domain/disruption.ts`.
+Purpose: return backend/AI-owned road risk, route geometry, entity impact, and operational exposure. Consumer: Disruption Map. Path param: `simulationId`. Query params/body: none. Schema: `disruptionAnalysisSchema` in `fe/src/domain/disruption.ts`.
 
 Response `200`:
 
@@ -273,7 +273,7 @@ For `queued`/`processing`, only `id`, `simulationId`, `createdAt`, and `status` 
 
 ### GET /api/simulations/{simulationId}/impact
 
-Purpose: return backend-owned baseline and recovery KPI values. Consumer: Impact Analysis. Path param: `simulationId`. Query params/body: none. Schema: `impactComparisonSchema` in `src/domain/impact.ts`.
+Purpose: return backend-owned baseline and recovery KPI values. Consumer: Impact Analysis. Path param: `simulationId`. Query params/body: none. Schema: `impactComparisonSchema` in `fe/src/domain/impact.ts`.
 
 Response `200`:
 
