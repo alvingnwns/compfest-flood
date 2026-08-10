@@ -51,3 +51,30 @@ def test_missing_simulation_returns_contract_error() -> None:
 
     assert response.status_code == 404
     assert response.json()["code"] == "simulation_not_found"
+
+
+def test_disruption_endpoint_returns_analysis() -> None:
+    # 1. Create a simulation
+    created = client.post("/api/simulations", json={"scenarioId": "scenario-jakarta-20250304"})
+    assert created.status_code == 201
+    sim_id = created.json()["id"]
+
+    # 2. Get disruption
+    response = client.get(f"/api/simulations/{sim_id}/disruption")
+    assert response.status_code == 200
+    payload = response.json()
+    
+    assert payload["simulationId"] == sim_id
+    assert "facilities" in payload
+    assert "historicalFloodGeometry" in payload
+    assert "roads" in payload
+    assert "routes" in payload
+    assert "impact" in payload
+    
+    # 3. Check impact summary structure
+    impact = payload["impact"]
+    assert "impactedSupplierIds" in impact
+    assert "roadSegmentsAtRisk" in impact
+    assert "salesExposure" in impact
+    assert impact["salesExposure"]["currency"] == "IDR"
+

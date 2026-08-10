@@ -3,11 +3,15 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 from app.errors import ApiError
-from app.repositories.geospatial_repository import get_road_features
+
+from app.repositories.geospatial_repository import get_road_features, get_historical_flood_extent
 from app.repositories.scenario_repository import get_historical_jakarta
 from app.repositories.simulation_repository import simulation_repository
 from app.schemas.simulation import Simulation
+from app.schemas.disruption import DisruptionAnalysis, RoadSegmentRisk
 from app.services.flood_risk_service import predict_risk
+from app.services.routing_service import calculate_routes
+from app.services.impact_service import calculate_impact
 
 
 def create_simulation(scenario_id: str) -> Simulation:
@@ -26,17 +30,65 @@ def create_simulation(scenario_id: str) -> Simulation:
     )
     simulation_repository.save(simulation)
 
-    # The local MVP has no background worker yet. The synchronous orchestration
-    # boundary preserves the contract lifecycle while keeping replay deterministic.
-    
-    # Phase 3: Run flood risk inference for all road segments
+    # Phase 3 & 4: Run flood risk inference and build disruption analysis
     road_features = get_road_features()
+    road_risks_map = {}
+    
     for feature in road_features.get("features", []):
         props = feature.get("properties", {})
         risk = predict_risk(props)
-        # For now, just prove the model works by evaluating it; 
-        # Phase 4 will persist these to the disruption endpoint.
-        pass
+        road_risks_map[props.get("segmentId")] = risk.model_dump()
+
+    routes = []
+    pairs = [
+        ("sup-a", "fac-1"),
+        ("sup-b", "fac-1"),
+        ("fac-1", "wh-east"),
+        ("fac-1", "wh-west")
+    ]
+    for orig, dest in pairs:
+        routes.extend(calculate_routes(orig, dest, road_risks_map))
+        
+    road_risks = []
+    for feature in road_features.get("features", []):
+        props = feature.get("properties", {})
+        seg_id = props.get("segmentId")
+        risk = road_risks_map.get(seg_id, {})
+        
+        aff_sups = set()
+        aff_whs = set()
+        for r in routes:
+            if r.type == "baseline" and seg_id in r.affected_road_segment_ids:
+                if r.origin_facility_id.startswith("sup"):
+                    aff_sups.add(r.origin_facility_id)
+                if r.destination_facility_id.startswith("wh"):
+                    aff_whs.add(r.destination_facility_id)
+                    
+        road_risks.append(RoadSegmentRisk(
+            segment_id=seg_id,
+            road_name=props.get("roadName", "Unknown"),
+            geometry=feature.get("geometry"),
+            risk_probability=risk.get("riskProbability", 0.0),
+            risk_level=risk.get("riskLevel", "low"),
+            estimated_delay_minutes=risk.get("estimatedDelayMinutes"),
+            risk_factors=risk.get("riskFactors", []),
+            affected_supplier_ids=list(aff_sups),
+            affected_warehouse_ids=list(aff_whs),
+            affected_order_ids=[]
+        ))
+        
+    impact = calculate_impact(road_risks, routes)
+    
+    disruption = DisruptionAnalysis(
+        simulation_id=simulation.id,
+        facilities=scenario.facilities,
+        historical_flood_geometry=get_historical_flood_extent(),
+        roads=road_risks,
+        routes=routes,
+        impact=impact
+    )
+    
+    simulation_repository.save_disruption(simulation.id, disruption)
 
     completed = simulation.model_copy(
         update={

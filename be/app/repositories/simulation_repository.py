@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from threading import Lock
+from typing import Any
 
 from app.schemas.simulation import Simulation
 
@@ -10,6 +11,7 @@ class SimulationRepository:
 
     def __init__(self) -> None:
         self._items: dict[str, Simulation] = {}
+        self._disruptions: dict[str, Any] = {}
         self._sequence = 0
         self._lock = Lock()
 
@@ -27,10 +29,19 @@ class SimulationRepository:
         with self._lock:
             return self._items.get(simulation_id)
 
+    def save_disruption(self, simulation_id: str, disruption: Any) -> None:
+        with self._lock:
+            self._disruptions[simulation_id] = disruption
+
+    def get_disruption(self, simulation_id: str) -> Any | None:
+        with self._lock:
+            return self._disruptions.get(simulation_id)
+
     def clear(self) -> None:
         """Test helper; the MVP intentionally has no persistence across restarts."""
         with self._lock:
             self._items.clear()
+            self._disruptions.clear()
             self._sequence = 0
 
 
