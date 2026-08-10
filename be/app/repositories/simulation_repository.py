@@ -1,50 +1,37 @@
-from dataclasses import dataclass
-from threading import RLock
+from __future__ import annotations
 
-from app.schemas.recovery import RecoveryPlan
+from threading import Lock
+
 from app.schemas.simulation import Simulation
 
 
-@dataclass
-class SimulationRecord:
-    simulation: Simulation
-    recovery: RecoveryPlan | None = None
-
-
-class InMemorySimulationRepository:
-    """Process-local state. All records are intentionally lost when the backend restarts."""
+class SimulationRepository:
+    """MVP storage for simulation metadata while the FastAPI process is running."""
 
     def __init__(self) -> None:
-        self._records: dict[str, SimulationRecord] = {}
-        self._scenario_index: dict[str, str] = {}
-        self._lock = RLock()
+        self._items: dict[str, Simulation] = {}
+        self._sequence = 0
+        self._lock = Lock()
+
+    def next_id(self, scenario_id: str) -> str:
+        with self._lock:
+            self._sequence += 1
+            return f"sim-{scenario_id.removeprefix('scenario-')}-{self._sequence:03d}"
 
     def save(self, simulation: Simulation) -> Simulation:
         with self._lock:
-            existing = self._records.get(simulation.id)
-            self._records[simulation.id] = SimulationRecord(
-                simulation=simulation.model_copy(deep=True), recovery=existing.recovery if existing else None
-            )
-            self._scenario_index[simulation.scenario_id] = simulation.id
-            return simulation.model_copy(deep=True)
+            self._items[simulation.id] = simulation
+        return simulation
 
     def get(self, simulation_id: str) -> Simulation | None:
         with self._lock:
-            record = self._records.get(simulation_id)
-            return record.simulation.model_copy(deep=True) if record else None
+            return self._items.get(simulation_id)
 
-    def get_by_scenario(self, scenario_id: str) -> Simulation | None:
+    def clear(self) -> None:
+        """Test helper; the MVP intentionally has no persistence across restarts."""
         with self._lock:
-            simulation_id = self._scenario_index.get(scenario_id)
-            return self.get(simulation_id) if simulation_id else None
+            self._items.clear()
+            self._sequence = 0
 
-    def save_recovery(self, simulation_id: str, recovery: RecoveryPlan) -> RecoveryPlan:
-        with self._lock:
-            record = self._records[simulation_id]
-            record.recovery = recovery
-            return recovery
 
-    def get_recovery(self, simulation_id: str) -> RecoveryPlan | None:
-        with self._lock:
-            record = self._records.get(simulation_id)
-            return record.recovery if record else None
+simulation_repository = SimulationRepository()

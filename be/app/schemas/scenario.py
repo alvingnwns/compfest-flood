@@ -1,70 +1,52 @@
+from __future__ import annotations
+
 from datetime import date
-from enum import StrEnum
 from typing import Literal
 
 from pydantic import Field
 
-from app.schemas.common import APIModel, PointGeometry
+from app.schemas.common import ApiModel
 
 
-class FacilityKind(StrEnum):
-    SUPPLIER = "supplier"
-    FACTORY = "factory"
-    WAREHOUSE = "warehouse"
-    STORE = "store"
+class GeoPoint(ApiModel):
+    type: Literal["Point"]
+    coordinates: tuple[float, float]
 
 
-class DataSourceMode(StrEnum):
-    HISTORICAL_SNAPSHOT = "historical_snapshot"
-    LIVE = "live"
-    HYBRID = "hybrid"
-
-
-class HistoricalDataStatus(StrEnum):
-    AVAILABLE = "available"
-    OFFLINE_SNAPSHOT = "offline_snapshot"
-    UNAVAILABLE = "unavailable"
-
-
-class OperationalDataStatus(StrEnum):
-    SIMULATED = "simulated"
-    LIVE = "live"
-
-
-class Facility(APIModel):
+class Facility(ApiModel):
     id: str
     name: str
-    kind: FacilityKind
-    location: PointGeometry
+    kind: Literal["supplier", "factory", "warehouse", "store"]
+    location: GeoPoint
 
 
-class Vehicle(APIModel):
+class Vehicle(ApiModel):
     id: str
     label: str
     capacity_units: int = Field(gt=0)
 
 
-class Product(APIModel):
+class Product(ApiModel):
     id: str
     name: str
     unit: str
 
 
-class Material(APIModel):
+class Material(ApiModel):
     id: str
     name: str
     supplier_id: str
     product_ids: list[str] = Field(min_length=1)
 
 
-class Inventory(APIModel):
+class Inventory(ApiModel):
     facility_id: str
     product_id: str
     quantity: float = Field(ge=0)
     unit: str
 
 
-class Order(APIModel):
+class Order(ApiModel):
     id: str
     store_id: str
     product_id: str
@@ -72,15 +54,15 @@ class Order(APIModel):
     priority: Literal["normal", "high", "critical"]
 
 
-class DataSources(APIModel):
-    mode: DataSourceMode
-    historical_status: HistoricalDataStatus
-    operational_status: OperationalDataStatus
+class DataSources(ApiModel):
+    mode: Literal["historical_snapshot", "live", "hybrid"]
+    historical_status: Literal["available", "offline_snapshot", "unavailable"]
+    operational_status: Literal["simulated", "live"]
     historical_provider: str
     snapshot_id: str | None = None
 
 
-class Scenario(APIModel):
+class Scenario(ApiModel):
     id: str
     name: str
     mode: Literal["historical-replay"]

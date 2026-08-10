@@ -1,1 +1,1 @@
-"""Pydantic transport schemas matching the frontend Zod contract."""
+"""Pydantic request and response schemas."""

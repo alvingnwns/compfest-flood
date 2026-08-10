@@ -1,14 +1,12 @@
-from typing import Annotated
+from fastapi import APIRouter
 
-from fastapi import APIRouter, Depends
-
-from app.dependencies.container import Container, get_container
+from app.repositories.scenario_repository import get_historical_jakarta
 from app.schemas.scenario import Scenario
 
-router = APIRouter(prefix="/scenarios", tags=["scenarios"])
-ContainerDependency = Annotated[Container, Depends(get_container)]
+router = APIRouter(prefix="/api/scenarios", tags=["scenarios"])
 
 
-@router.get("/historical-jakarta", response_model=Scenario, response_model_exclude_none=True)
-async def get_historical_jakarta(container: ContainerDependency) -> Scenario:
-    return container.scenarios.get_historical_jakarta()
+@router.get("/historical-jakarta", response_model=Scenario)
+def get_historical_jakarta_scenario() -> Scenario:
+    """Return the local historical-replay scenario selected by the current MVP UI."""
+    return get_historical_jakarta()

@@ -1,0 +1,25 @@
+{
+  "graphId": "jakarta-2025-03-04-v1",
+  "description": "Synthetic local road graph for reproducible risk-aware routing.",
+  "nodes": [
+    {"id": "n-sup-a", "coordinates": [106.826, -6.139], "facilityId": "sup-a"},
+    {"id": "n-sup-b", "coordinates": [106.910, -6.195], "facilityId": "sup-b"},
+    {"id": "n-factory", "coordinates": [106.875, -6.236], "facilityId": "fac-1"},
+    {"id": "n-wh-east", "coordinates": [106.913, -6.229], "facilityId": "wh-east"},
+    {"id": "n-wh-west", "coordinates": [106.770, -6.188], "facilityId": "wh-west"},
+    {"id": "n-north", "coordinates": [106.838, -6.153]},
+    {"id": "n-central", "coordinates": [106.846, -6.177]},
+    {"id": "n-bypass", "coordinates": [106.770, -6.188], "facilityId": "wh-west"},
+    {"id": "n-southwest", "coordinates": [106.830, -6.238]}
+  ],
+  "edges": [
+    {"segmentId": "road-supplier-a-north", "fromNode": "n-sup-a", "toNode": "n-north", "bidirectional": true},
+    {"segmentId": "road-gunung-sahari", "fromNode": "n-north", "toNode": "n-central", "bidirectional": true},
+    {"segmentId": "road-kemayoran", "fromNode": "n-central", "toNode": "n-wh-east", "bidirectional": true},
+    {"segmentId": "road-supplier-a-bypass", "fromNode": "n-sup-a", "toNode": "n-bypass", "bidirectional": true},
+    {"segmentId": "road-west-south", "fromNode": "n-bypass", "toNode": "n-southwest", "bidirectional": true},
+    {"segmentId": "road-south-factory", "fromNode": "n-southwest", "toNode": "n-factory", "bidirectional": true},
+    {"segmentId": "road-factory-east", "fromNode": "n-factory", "toNode": "n-wh-east", "bidirectional": true},
+    {"segmentId": "road-supplier-b-east", "fromNode": "n-sup-b", "toNode": "n-wh-east", "bidirectional": true}
+  ]
+}

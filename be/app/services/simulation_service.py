@@ -1,56 +1,60 @@
-from datetime import UTC, datetime
-from uuid import uuid4
+from __future__ import annotations
 
-from app.engines.flood_risk import FloodRiskEngine
-from app.engines.optimizer import RecoveryOptimizer
-from app.repositories.simulation_repository import InMemorySimulationRepository
-from app.schemas.simulation import Simulation, SimulationStatus
-from app.services.scenario_service import ScenarioService
+from datetime import datetime, timezone
+
+from app.errors import ApiError
+from app.repositories.geospatial_repository import get_road_features
+from app.repositories.scenario_repository import get_historical_jakarta
+from app.repositories.simulation_repository import simulation_repository
+from app.schemas.simulation import Simulation
+from app.services.flood_risk_service import predict_risk
 
 
-class SimulationService:
-    def __init__(
-        self,
-        scenarios: ScenarioService,
-        simulations: InMemorySimulationRepository,
-        flood_risk: FloodRiskEngine,
-        optimizer: RecoveryOptimizer,
-    ) -> None:
-        self._scenarios = scenarios
-        self._simulations = simulations
-        self._flood_risk = flood_risk
-        self._optimizer = optimizer
+def create_simulation(scenario_id: str) -> Simulation:
+    scenario = get_historical_jakarta()
+    if scenario_id != scenario.id:
+        raise ApiError(404, "scenario_not_found", "Scenario not found.", details={"scenarioId": scenario_id})
 
-    def create(self, scenario_id: str) -> Simulation:
-        scenario = self._scenarios.get(scenario_id)
-        existing = self._simulations.get_by_scenario(scenario_id)
-        if existing and existing.status == SimulationStatus.COMPLETED:
-            return existing
+    created_at = datetime.now(timezone.utc)
+    simulation = Simulation(
+        id=simulation_repository.next_id(scenario_id),
+        scenario_id=scenario_id,
+        status="queued",
+        created_at=created_at,
+        data_mode=scenario.data_sources.mode,
+        historical_data_status=scenario.data_sources.historical_status,
+    )
+    simulation_repository.save(simulation)
 
-        created_at = datetime.now(UTC)
-        simulation = Simulation(
-            id=f"sim-{uuid4().hex[:12]}",
-            scenario_id=scenario.id,
-            status=SimulationStatus.QUEUED,
-            created_at=created_at,
-            data_mode=scenario.data_sources.mode,
-            historical_data_status=scenario.data_sources.historical_status,
+    # The local MVP has no background worker yet. The synchronous orchestration
+    # boundary preserves the contract lifecycle while keeping replay deterministic.
+    
+    # Phase 3: Run flood risk inference for all road segments
+    road_features = get_road_features()
+    for feature in road_features.get("features", []):
+        props = feature.get("properties", {})
+        risk = predict_risk(props)
+        # For now, just prove the model works by evaluating it; 
+        # Phase 4 will persist these to the disruption endpoint.
+        pass
+
+    completed = simulation.model_copy(
+        update={
+            "status": "completed",
+            "completed_at": datetime.now(timezone.utc),
+            "model_version": "flood-risk-1.0.0",
+        }
+    )
+    return simulation_repository.save(completed)
+
+
+def get_simulation(simulation_id: str) -> Simulation:
+    simulation = simulation_repository.get(simulation_id)
+    if simulation is None:
+        raise ApiError(
+            404,
+            "simulation_not_found",
+            "Simulation not found.",
+            details={"simulationId": simulation_id},
         )
-        self._simulations.save(simulation)
-        simulation.status = SimulationStatus.PROCESSING
-        self._simulations.save(simulation)
-
-        # Foundation engines are deterministic and synchronous. Lifecycle states remain contract-compatible.
-        simulation.status = SimulationStatus.COMPLETED
-        simulation.completed_at = datetime.now(UTC)
-        simulation.model_version = self._flood_risk.version
-        simulation.optimizer_version = self._optimizer.version
-        return self._simulations.save(simulation)
-
-    def get(self, simulation_id: str) -> Simulation:
-        simulation = self._simulations.get(simulation_id)
-        if simulation is None:
-            from app.core.exceptions import not_found
-
-            raise not_found("simulation", simulation_id)
-        return simulation
+    return simulation

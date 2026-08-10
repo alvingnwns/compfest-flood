@@ -1,1 +1,1 @@
-"""Application orchestration services."""
+"""Application services for analysis, routing, and recovery."""

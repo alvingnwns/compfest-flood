@@ -1,1 +1,1 @@
-"""ResiliChain backend application package."""
+"""ResiliChain AI backend package."""

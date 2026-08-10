@@ -1,31 +1,25 @@
+from __future__ import annotations
+
 from datetime import datetime
-from enum import StrEnum
+from typing import Literal
 
 from pydantic import Field
 
-from app.schemas.common import APIModel, ErrorResponse
-from app.schemas.scenario import DataSourceMode, HistoricalDataStatus
+from app.schemas.common import ApiModel, ErrorResponse
 
 
-class SimulationStatus(StrEnum):
-    QUEUED = "queued"
-    PROCESSING = "processing"
-    COMPLETED = "completed"
-    FAILED = "failed"
-
-
-class RunSimulationRequest(APIModel):
+class RunSimulationRequest(ApiModel):
     scenario_id: str = Field(min_length=1)
 
 
-class Simulation(APIModel):
+class Simulation(ApiModel):
     id: str
     scenario_id: str
-    status: SimulationStatus
+    status: Literal["queued", "processing", "completed", "failed"]
     created_at: datetime
     completed_at: datetime | None = None
     model_version: str | None = None
     optimizer_version: str | None = None
-    data_mode: DataSourceMode
-    historical_data_status: HistoricalDataStatus
+    data_mode: Literal["historical_snapshot", "live", "hybrid"]
+    historical_data_status: Literal["available", "offline_snapshot", "unavailable"]
     error: ErrorResponse | None = None

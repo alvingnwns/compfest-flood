@@ -1,1 +1,1 @@
-"""Local fixture and in-memory persistence adapters."""
+"""Data access implementations for local MVP snapshots."""

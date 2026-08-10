@@ -1,31 +1,16 @@
-from typing import Annotated
+from fastapi import APIRouter, status
 
-from fastapi import APIRouter, Depends, status
-
-from app.dependencies.container import Container, get_container
-from app.schemas.disruption import DisruptionAnalysis
-from app.schemas.impact import ImpactComparison
 from app.schemas.simulation import RunSimulationRequest, Simulation
+from app.services.simulation_service import create_simulation, get_simulation
 
-router = APIRouter(prefix="/simulations", tags=["simulations"])
-ContainerDependency = Annotated[Container, Depends(get_container)]
-
-
-@router.post("", response_model=Simulation, response_model_exclude_none=True, status_code=status.HTTP_201_CREATED)
-async def create_simulation(payload: RunSimulationRequest, container: ContainerDependency) -> Simulation:
-    return container.simulations.create(payload.scenario_id)
+router = APIRouter(prefix="/api/simulations", tags=["simulations"])
 
 
-@router.get("/{simulation_id}", response_model=Simulation, response_model_exclude_none=True)
-async def get_simulation(simulation_id: str, container: ContainerDependency) -> Simulation:
-    return container.simulations.get(simulation_id)
+@router.post("", response_model=Simulation, status_code=status.HTTP_201_CREATED)
+def run_simulation(request: RunSimulationRequest) -> Simulation:
+    return create_simulation(request.scenario_id)
 
 
-@router.get("/{simulation_id}/disruption", response_model=DisruptionAnalysis, response_model_exclude_none=True)
-async def get_disruption(simulation_id: str, container: ContainerDependency) -> DisruptionAnalysis:
-    return container.disruption.get(simulation_id)
-
-
-@router.get("/{simulation_id}/impact", response_model=ImpactComparison, response_model_exclude_none=True)
-async def get_impact(simulation_id: str, container: ContainerDependency) -> ImpactComparison:
-    return container.impact.get(simulation_id)
+@router.get("/{simulation_id}", response_model=Simulation)
+def get_simulation_status(simulation_id: str) -> Simulation:
+    return get_simulation(simulation_id)
