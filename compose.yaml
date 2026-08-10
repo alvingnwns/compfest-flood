@@ -1,0 +1,10 @@
+services:
+  backend:
+    build:
+      context: ./be
+    environment:
+      APP_ENV: development
+      FRONTEND_ORIGIN: http://localhost:3000
+      ENGINE_MODE: stub
+    ports:
+      - "8000:8000"

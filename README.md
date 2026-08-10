@@ -7,13 +7,13 @@ ResiliChain AI is a flood-aware supply-chain recovery decision-support project. 
 ```text
 /
 ├── fe/       # Completed Next.js frontend
-├── be/       # Reserved for the future FastAPI backend
+├── be/       # FastAPI backend foundation
 ├── docs/     # Shared integration documentation
 ├── README.md
 └── .gitignore
 ```
 
-The backend has not been implemented. The shared API handoff is documented in [`docs/BACKEND_INTEGRATION_CONTRACT.md`](docs/BACKEND_INTEGRATION_CONTRACT.md).
+The shared API handoff is documented in [`docs/BACKEND_INTEGRATION_CONTRACT.md`](docs/BACKEND_INTEGRATION_CONTRACT.md). The backend currently uses deterministic local fixtures behind replaceable engine interfaces; it does not claim real AI, routing, or optimization.
 
 ## Frontend setup
 
@@ -58,6 +58,17 @@ npm test
 npm run build
 ```
 
-## Backend status
+## Backend setup
 
-`be/` is intentionally empty except for a placeholder that keeps the directory in Git. Backend, ML, routing, optimizer, and database implementation belong to a future development phase.
+```bash
+cd be
+python -m venv .venv
+.venv\Scripts\activate
+python -m pip install -e ".[dev]"
+copy .env.example .env
+uvicorn app.main:app --reload --port 8000
+```
+
+Alternatively, run the backend from the repository root with `docker compose up --build backend`. See [`be/README.md`](be/README.md) for architecture, tests, engine replacement, and current limitations.
+
+The backend foundation has no database, authentication, real ML model, live external data, OSMnx/NetworkX routing, or OR-Tools optimizer. Simulation state is process-local and resets on restart.
