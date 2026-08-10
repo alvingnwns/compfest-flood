@@ -3,9 +3,11 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 from app.errors import ApiError
+from app.repositories.geospatial_repository import get_road_features
 from app.repositories.scenario_repository import get_historical_jakarta
 from app.repositories.simulation_repository import simulation_repository
 from app.schemas.simulation import Simulation
+from app.services.flood_risk_service import predict_risk
 
 
 def create_simulation(scenario_id: str) -> Simulation:
@@ -26,10 +28,21 @@ def create_simulation(scenario_id: str) -> Simulation:
 
     # The local MVP has no background worker yet. The synchronous orchestration
     # boundary preserves the contract lifecycle while keeping replay deterministic.
+    
+    # Phase 3: Run flood risk inference for all road segments
+    road_features = get_road_features()
+    for feature in road_features.get("features", []):
+        props = feature.get("properties", {})
+        risk = predict_risk(props)
+        # For now, just prove the model works by evaluating it; 
+        # Phase 4 will persist these to the disruption endpoint.
+        pass
+
     completed = simulation.model_copy(
         update={
             "status": "completed",
             "completed_at": datetime.now(timezone.utc),
+            "model_version": "flood-risk-1.0.0",
         }
     )
     return simulation_repository.save(completed)
