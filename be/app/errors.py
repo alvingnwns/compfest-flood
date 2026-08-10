@@ -42,9 +42,14 @@ async def api_error_handler(_: Request, exc: ApiError) -> JSONResponse:
 
 
 async def validation_error_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
+    errors = exc.errors()
+    syntactic_error_types = {"json_invalid", "missing"}
+    status_code = 400 if any(error["type"] in syntactic_error_types for error in errors) else 422
+    code = "invalid_request" if status_code == 400 else "validation_error"
+    message = "Request syntax is invalid." if status_code == 400 else "The request is semantically invalid."
     return JSONResponse(
-        status_code=400,
-        content=error_body("invalid_request", "Request syntax is invalid.", details={"errors": exc.errors()}),
+        status_code=status_code,
+        content=error_body(code, message, details={"errors": errors}),
     )
 
 
