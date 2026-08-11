@@ -8,7 +8,7 @@ from app.repositories.geospatial_repository import get_road_features, get_histor
 from app.repositories.scenario_repository import get_historical_jakarta
 from app.repositories.simulation_repository import simulation_repository
 from app.schemas.simulation import Simulation
-from app.schemas.disruption import DisruptionAnalysis, RoadSegmentRisk
+from app.schemas.disruption import DisruptionAnalysis, RoadRisk
 from app.services.flood_risk_service import predict_risk
 from app.services.routing_service import calculate_routes
 from app.services.impact_service import calculate_impact
@@ -61,7 +61,7 @@ def create_simulation(scenario_id: str) -> Simulation:
                 if r.destination_facility_id.startswith("wh"):
                     aff_whs.add(r.destination_facility_id)
                     
-        road_risks.append(RoadSegmentRisk(
+        road_risks.append(RoadRisk(
             segment_id=seg_id,
             road_name=props.get("roadName", "Unknown"),
             geometry=feature.get("geometry"),

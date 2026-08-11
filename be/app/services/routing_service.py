@@ -1,7 +1,7 @@
 import networkx as nx
 
 from app.repositories.geospatial_repository import get_road_features, get_routing_graph
-from app.schemas.disruption import RouteAnalysis
+from app.schemas.disruption import Route
 
 
 def build_graph(road_risks_map: dict[str, dict] | None = None) -> nx.DiGraph:
@@ -64,7 +64,7 @@ def build_graph(road_risks_map: dict[str, dict] | None = None) -> nx.DiGraph:
 
 def calculate_routes(
     origin_facility_id: str, dest_facility_id: str, road_risks_map: dict[str, dict]
-) -> list[RouteAnalysis]:
+) -> list[Route]:
     graph_data = get_routing_graph()
     fac_to_node = {
         n.get("facilityId"): n["id"] for n in graph_data.get("nodes", []) if n.get("facilityId")
@@ -117,7 +117,7 @@ def _build_route_analysis(
     origin: str,
     dest: str,
     road_risks_map: dict[str, dict],
-) -> RouteAnalysis:
+) -> Route:
     segments = []
     dist = 0.0
     eta = 0.0
@@ -154,7 +154,7 @@ def _build_route_analysis(
 
     geom_obj = {"type": "LineString", "coordinates": coords}
 
-    return RouteAnalysis(
+    return Route(
         id=f"route-{route_type}-{origin}-{dest}",
         type=route_type,
         origin_facility_id=origin,

@@ -1,9 +1,8 @@
-<<<<<<< HEAD
 from app.repositories.scenario_repository import get_historical_jakarta
-from app.schemas.disruption import ImpactSummary, Issue, Money, RoadSegmentRisk, RouteAnalysis
+from app.schemas.disruption import OperationalImpact, PrioritizedIssue, RoadRisk, Route
+from app.schemas.common import Money
 
-
-def calculate_impact(road_risks: list[RoadSegmentRisk], routes: list[RouteAnalysis]) -> ImpactSummary:
+def calculate_impact(road_risks: list[RoadRisk], routes: list[Route]) -> OperationalImpact:
     scenario = get_historical_jakarta()
 
     impacted_suppliers = set()
@@ -32,7 +31,7 @@ def calculate_impact(road_risks: list[RoadSegmentRisk], routes: list[RouteAnalys
                     if fac.id == orig and fac.kind == "supplier":
                         impacted_suppliers.add(orig)
                         issues.append(
-                            Issue(
+                            PrioritizedIssue(
                                 id=f"issue-sup-{orig}",
                                 severity="high",
                                 subject=f"Supplier {fac.name} inbound route",
@@ -42,7 +41,7 @@ def calculate_impact(road_risks: list[RoadSegmentRisk], routes: list[RouteAnalys
                     if fac.id == dest and fac.kind == "warehouse":
                         impacted_warehouses.add(dest)
                         issues.append(
-                            Issue(
+                            PrioritizedIssue(
                                 id=f"issue-wh-{dest}",
                                 severity="high",
                                 subject=f"Warehouse {fac.name} inbound route",
@@ -79,7 +78,7 @@ def calculate_impact(road_risks: list[RoadSegmentRisk], routes: list[RouteAnalys
     # If no issues but there are segments at risk, add a generic issue
     if not unique_issues and segments_at_risk > 0:
         unique_issues.append(
-            Issue(
+            PrioritizedIssue(
                 id="issue-generic-risk",
                 severity="medium",
                 subject="General Road Risk",
@@ -87,7 +86,7 @@ def calculate_impact(road_risks: list[RoadSegmentRisk], routes: list[RouteAnalys
             )
         )
 
-    return ImpactSummary(
+    return OperationalImpact(
         impacted_supplier_ids=list(impacted_suppliers),
         impacted_warehouse_ids=list(impacted_warehouses),
         impacted_order_ids=list(impacted_orders),
@@ -95,39 +94,3 @@ def calculate_impact(road_risks: list[RoadSegmentRisk], routes: list[RouteAnalys
         sales_exposure=Money(amount=sales_exposure, currency="IDR"),
         issues=unique_issues,
     )
-=======
-from app.core.exceptions import DomainError, conflict
-from app.engines.impact import ImpactEngine
-from app.schemas.impact import ImpactComparison
-from app.schemas.recovery import RecoveryResult
-from app.services.recovery_service import RecoveryService
-from app.services.scenario_service import ScenarioService
-from app.services.simulation_service import SimulationService
-
-
-class ImpactService:
-    def __init__(
-        self,
-        scenarios: ScenarioService,
-        simulations: SimulationService,
-        recovery: RecoveryService,
-        impact: ImpactEngine,
-    ) -> None:
-        self._scenarios = scenarios
-        self._simulations = simulations
-        self._recovery = recovery
-        self._impact = impact
-
-    def get(self, simulation_id: str) -> ImpactComparison:
-        simulation = self._simulations.get(simulation_id)
-        try:
-            recovery = self._recovery.get(simulation_id)
-        except DomainError as exc:
-            if exc.code == "recovery_not_found":
-                raise conflict("recovery_not_completed", "Recovery plan is not completed.") from exc
-            raise
-        if not isinstance(recovery, RecoveryResult):
-            raise conflict("recovery_not_completed", "Recovery plan is not completed.")
-        scenario = self._scenarios.get(simulation.scenario_id)
-        return self._impact.compare(simulation_id, scenario, recovery)
->>>>>>> 920f8995c90025b5acc284e9377e3e9b5660cb39
