@@ -5,7 +5,6 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
 

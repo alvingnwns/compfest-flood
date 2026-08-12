@@ -10,7 +10,12 @@
     {"id": "n-north", "coordinates": [106.838, -6.153]},
     {"id": "n-central", "coordinates": [106.846, -6.177]},
     {"id": "n-bypass", "coordinates": [106.770, -6.188], "facilityId": "wh-west"},
-    {"id": "n-southwest", "coordinates": [106.830, -6.238]}
+    {"id": "n-southwest", "coordinates": [106.830, -6.238]},
+    {"id": "n-store-a", "coordinates": [106.808, -6.171], "facilityId": "store-a"},
+    {"id": "n-store-b", "coordinates": [106.852, -6.161], "facilityId": "store-b"},
+    {"id": "n-store-c", "coordinates": [106.893, -6.155], "facilityId": "store-c"},
+    {"id": "n-store-d", "coordinates": [106.927, -6.176], "facilityId": "store-d"},
+    {"id": "n-store-e", "coordinates": [106.827, -6.220], "facilityId": "store-e"}
   ],
   "edges": [
     {"segmentId": "road-supplier-a-north", "fromNode": "n-sup-a", "toNode": "n-north", "bidirectional": true},
@@ -20,6 +25,17 @@
     {"segmentId": "road-west-south", "fromNode": "n-bypass", "toNode": "n-southwest", "bidirectional": true},
     {"segmentId": "road-south-factory", "fromNode": "n-southwest", "toNode": "n-factory", "bidirectional": true},
     {"segmentId": "road-factory-east", "fromNode": "n-factory", "toNode": "n-wh-east", "bidirectional": true},
-    {"segmentId": "road-supplier-b-east", "fromNode": "n-sup-b", "toNode": "n-wh-east", "bidirectional": true}
+    {"segmentId": "road-supplier-b-east", "fromNode": "n-sup-b", "toNode": "n-wh-east", "bidirectional": true},
+    {"segmentId": "road-west-store-a", "fromNode": "n-bypass", "toNode": "n-store-a", "bidirectional": true},
+    {"segmentId": "road-west-store-b", "fromNode": "n-bypass", "toNode": "n-store-b", "bidirectional": true},
+    {"segmentId": "road-west-store-c", "fromNode": "n-bypass", "toNode": "n-store-c", "bidirectional": true},
+    {"segmentId": "road-west-store-d", "fromNode": "n-bypass", "toNode": "n-store-d", "bidirectional": true},
+    {"segmentId": "road-west-store-e", "fromNode": "n-bypass", "toNode": "n-store-e", "bidirectional": true},
+    {"segmentId": "road-east-store-a", "fromNode": "n-wh-east", "toNode": "n-store-a", "bidirectional": true},
+    {"segmentId": "road-east-store-b", "fromNode": "n-wh-east", "toNode": "n-store-b", "bidirectional": true},
+    {"segmentId": "road-east-store-c", "fromNode": "n-wh-east", "toNode": "n-store-c", "bidirectional": true},
+    {"segmentId": "road-east-store-d", "fromNode": "n-wh-east", "toNode": "n-store-d", "bidirectional": true},
+    {"segmentId": "road-east-store-e", "fromNode": "n-wh-east", "toNode": "n-store-e", "bidirectional": true},
+    {"segmentId": "road-east-west-relief", "fromNode": "n-wh-east", "toNode": "n-bypass", "bidirectional": true}
   ]
 }

@@ -5,12 +5,12 @@ from typing import Literal
 
 from pydantic import Field
 
-from app.schemas.common import ApiModel
+from app.schemas.common import ApiModel, ErrorResponse, RiskLevel
 
 
 class RecoveryConstraints(ApiModel):
     allow_substitution: bool = False
-    max_additional_delay_minutes: int | None = None
+    max_additional_delay_minutes: int | None = Field(default=None, ge=0, le=1440)
 
 
 class RecoveryRequest(ApiModel):
@@ -46,13 +46,13 @@ class LogisticsAction(RecoveryAction):
     recovery_warehouse_id: str
     recovery_warehouse_name: str
     vehicle_id: str
-    baseline_route_id: str | None = None
-    recovery_route_id: str | None = None
-    baseline_eta_minutes: int | None = None
-    recovery_eta_minutes: int | None = None
-    baseline_flood_exposure: Literal["low", "medium", "high", "critical"] | None = None
-    recovery_flood_exposure: Literal["low", "medium", "high", "critical"] | None = None
-    action: Literal["reallocate-reroute", "reroute", "reallocate", "keep"]
+    baseline_route_id: str
+    recovery_route_id: str
+    baseline_eta_minutes: int
+    recovery_eta_minutes: int
+    baseline_flood_exposure: RiskLevel
+    recovery_flood_exposure: RiskLevel
+    action: Literal["reallocate-reroute", "reroute", "reallocate"]
 
 
 class CommerceAllocation(ApiModel):
@@ -68,8 +68,27 @@ class CommerceAction(RecoveryAction):
     requested_product_id: str
     requested_product_name: str
     requested_quantity: int
-    action: Literal["split-substitute", "delay", "fulfill", "fail"]
+    action: Literal["fulfill", "split", "delay", "substitute", "prioritize", "split-substitute"]
     allocations: list[CommerceAllocation]
+
+
+class OrderOutcome(ApiModel):
+    order_id: str
+    requested_quantity: int
+    allocated_quantity: int
+    allocated_value: float
+    warehouse_id: str | None = None
+    vehicle_id: str | None = None
+    route_id: str | None = None
+    eta_minutes: int | None = None
+    deadline_minutes: int
+    delay_minutes: int
+    flood_exposure: RiskLevel | None = None
+
+
+class ProductionOutcome(ApiModel):
+    product_id: str
+    quantity: int
 
 
 class RecoveryResult(ApiModel):
@@ -83,4 +102,8 @@ class RecoveryResult(ApiModel):
     logistics_actions: list[LogisticsAction] | None = None
     commerce_actions: list[CommerceAction] | None = None
     possible_next_actions: list[str] | None = None
-    error: dict[str, str] | None = None
+    error: ErrorResponse | None = None
+    baseline_order_outcomes: list[OrderOutcome] = Field(default_factory=list, exclude=True)
+    recovery_order_outcomes: list[OrderOutcome] = Field(default_factory=list, exclude=True)
+    baseline_production: list[ProductionOutcome] = Field(default_factory=list, exclude=True)
+    recovery_production: list[ProductionOutcome] = Field(default_factory=list, exclude=True)

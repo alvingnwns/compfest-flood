@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-DEFAULT_DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+DEFAULT_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
 
 class Settings(BaseSettings):
@@ -16,7 +16,25 @@ class Settings(BaseSettings):
     port: int = Field(default=8000, ge=1, le=65535)
     frontend_origin: str = "http://localhost:3000"
     data_dir: Path = DEFAULT_DATA_DIR
-    engine_mode: Literal["stub"] = "stub"
+    engine_mode: Literal["connected"] = "connected"
+    risk_penalty_medium: int = Field(default=2, ge=0)
+    risk_penalty_high: int = Field(default=5, ge=0)
+    risk_penalty_critical: int = Field(default=15, ge=0)
+    supplier_availability_medium: float = Field(default=0.85, ge=0, le=1)
+    supplier_availability_high: float = Field(default=0.60, ge=0, le=1)
+    supplier_availability_critical: float = Field(default=0.35, ge=0, le=1)
+    objective_reward_normal: int = Field(default=100, ge=1)
+    objective_reward_high: int = Field(default=1_000, ge=1)
+    objective_reward_critical: int = Field(default=10_000, ge=1)
+    objective_substitution_penalty: int = Field(default=20, ge=0)
+    objective_delay_penalty: int = Field(default=5, ge=0)
+    objective_risk_penalty: int = Field(default=50, ge=0)
+    objective_transport_cost_scale: int = Field(default=10_000, ge=1)
+    objective_production_penalty: int = Field(default=1, ge=0)
+
+    @property
+    def cors_origins(self) -> list[str]:
+        return [origin.strip().rstrip("/") for origin in self.frontend_origin.split(",") if origin.strip()]
 
 
 @lru_cache

@@ -1,60 +1,61 @@
-from app.schemas.disruption import DisruptionAnalysis
+from __future__ import annotations
+
 from app.schemas.impact import ActionCounts, ImpactComparison, KpiMetric
-from app.schemas.recovery import RecoveryResult
+from app.schemas.recovery import OrderOutcome, RecoveryResult
 from app.schemas.scenario import Scenario
 
 
-def calculate_kpi(
-    simulation_id: str, scenario: Scenario, disruption: DisruptionAnalysis, recovery: RecoveryResult
-) -> ImpactComparison:
-    
-    total_orders = len(scenario.orders)
-    
-    # Baseline calculations
-    baseline_fulfilled = total_orders - len(disruption.impact.impacted_order_ids)
-    baseline_failed = total_orders - baseline_fulfilled
-    
-    baseline_sales_exposure = disruption.impact.sales_exposure.amount
-    
-    # This is a naive estimation for demonstration
-    baseline_otd = baseline_fulfilled / total_orders if total_orders > 0 else 0
-    baseline_avg_delay = 120 if baseline_failed > 0 else 0
-    
-    # Recovery calculations
-    if recovery.summary:
-        recovery_fulfilled = recovery.summary.recoverable_orders
-    else:
-        recovery_fulfilled = total_orders
-        
-    recovery_failed = total_orders - recovery_fulfilled
-    recovery_otd = recovery_fulfilled / total_orders if total_orders > 0 else 0
-    recovery_avg_delay = 45 if recovery_failed > 0 else 0
-    
-    # Rough estimate of mitigated exposure
-    mitigated_ratio = 1.0
-    if baseline_failed > 0:
-        mitigated_ratio = (baseline_failed - recovery_failed) / baseline_failed
-        if mitigated_ratio < 0:
-            mitigated_ratio = 0
-            
-    recovery_sales_exposure = baseline_sales_exposure * (1 - mitigated_ratio)
-
-    mfg_count = len(recovery.manufacturing_actions) if recovery.manufacturing_actions else 0
-    log_count = len(recovery.logistics_actions) if recovery.logistics_actions else 0
-    com_count = len(recovery.commerce_actions) if recovery.commerce_actions else 0
-
+def calculate_kpi(simulation_id: str, scenario: Scenario, recovery: RecoveryResult) -> ImpactComparison:
+    baseline = _metrics(scenario, recovery.baseline_order_outcomes)
+    recovered = _metrics(scenario, recovery.recovery_order_outcomes)
     return ImpactComparison(
         simulation_id=simulation_id,
         metrics=[
-            KpiMetric(key="orders-fulfilled", baseline=baseline_fulfilled, recovery=recovery_fulfilled, total=total_orders),
-            KpiMetric(key="on-time-delivery", baseline=baseline_otd, recovery=recovery_otd),
-            KpiMetric(key="failed-orders", baseline=baseline_failed, recovery=recovery_failed),
-            KpiMetric(key="average-delay", baseline=baseline_avg_delay, recovery=recovery_avg_delay),
-            KpiMetric(key="sales-exposure-risk", baseline=baseline_sales_exposure, recovery=recovery_sales_exposure, currency="IDR"),
+            KpiMetric(
+                key="orders-fulfilled",
+                baseline=baseline["fulfilled"],
+                recovery=recovered["fulfilled"],
+                total=len(scenario.orders),
+            ),
+            KpiMetric(key="on-time-delivery", baseline=baseline["on_time"], recovery=recovered["on_time"]),
+            KpiMetric(key="failed-orders", baseline=baseline["failed"], recovery=recovered["failed"]),
+            KpiMetric(key="average-delay", baseline=baseline["average_delay"], recovery=recovered["average_delay"]),
+            KpiMetric(
+                key="sales-exposure-risk",
+                baseline=baseline["sales_exposure"],
+                recovery=recovered["sales_exposure"],
+                currency="IDR",
+            ),
         ],
         action_counts=ActionCounts(
-            manufacturing=mfg_count,
-            logistics=log_count,
-            commerce=com_count
-        )
+            manufacturing=len(recovery.manufacturing_actions or []),
+            logistics=len(recovery.logistics_actions or []),
+            commerce=len(recovery.commerce_actions or []),
+        ),
     )
+
+
+def _metrics(scenario: Scenario, outcomes: list[OrderOutcome]) -> dict[str, float]:
+    by_order = {outcome.order_id: outcome for outcome in outcomes}
+    prices = {product.id: product.unit_price for product in scenario.products}
+    fulfilled = 0
+    failed = 0
+    on_time = 0
+    delays = []
+    sales_exposure = 0.0
+    for order in scenario.orders:
+        outcome = by_order.get(order.id)
+        allocated = outcome.allocated_quantity if outcome else 0
+        fulfilled += int(allocated == order.quantity)
+        failed += int(allocated == 0)
+        on_time += int(allocated == order.quantity and outcome is not None and outcome.delay_minutes == 0)
+        if allocated > 0 and outcome:
+            delays.append(outcome.delay_minutes)
+        sales_exposure += (order.quantity - allocated) * prices[order.product_id]
+    return {
+        "fulfilled": fulfilled,
+        "failed": failed,
+        "on_time": on_time / len(scenario.orders) if scenario.orders else 0,
+        "average_delay": sum(delays) / len(delays) if delays else 0,
+        "sales_exposure": sales_exposure,
+    }

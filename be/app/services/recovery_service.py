@@ -1,249 +1,416 @@
+from __future__ import annotations
+
 import uuid
-from datetime import datetime, timezone
-from typing import Any
+from dataclasses import dataclass
+from datetime import UTC, datetime
 
 from ortools.sat.python import cp_model
 
-from app.schemas.disruption import DisruptionAnalysis
+from app.core.config import get_settings
+from app.schemas.common import ErrorResponse
+from app.schemas.disruption import DisruptionAnalysis, Route
 from app.schemas.recovery import (
     CommerceAction,
     CommerceAllocation,
     LogisticsAction,
     ManufacturingAction,
-    RecoveryRequest,
+    OrderOutcome,
+    ProductionOutcome,
+    RecoveryConstraints,
     RecoveryResult,
     RecoverySummary,
 )
 from app.schemas.scenario import Scenario
 
+RISK_RANK = {"low": 0, "medium": 1, "high": 2, "critical": 3}
+BOM_SCALE = 10
+
+
+@dataclass
+class ComputedPlan:
+    feasible: bool
+    production: dict[str, int]
+    outcomes: list[OrderOutcome]
+    allocations: dict[str, list[tuple[str, int]]]
+
 
 def generate_recovery_plan(
-    simulation_id: str, scenario: Scenario, disruption: DisruptionAnalysis, request: RecoveryRequest | None
+    simulation_id: str,
+    scenario: Scenario,
+    disruption: DisruptionAnalysis,
+    constraints: RecoveryConstraints | None,
 ) -> RecoveryResult:
-    model = cp_model.CpModel()
-
-    allow_sub = False
-    if request and request.constraints and request.constraints.allow_substitution:
-        allow_sub = True
-
-    impacted_whs = set(disruption.impact.impacted_warehouse_ids)
-    impacted_suppliers = set(disruption.impact.impacted_supplier_ids)
-
-    # 1. Prepare data
-    warehouses = [f for f in scenario.facilities if f.kind == "warehouse"]
-    wh_ids = [w.id for w in warehouses]
-    prod_ids = [p.id for p in scenario.products]
-
-    inventory = {}
-    for inv in scenario.inventory:
-        if inv.facility_id not in inventory:
-            inventory[inv.facility_id] = {}
-        inventory[inv.facility_id][inv.product_id] = inv.quantity
-
-    # 2. Variables
-    # Q[(o.id, w_id, p_id)] = quantity of product p supplied for order o from warehouse w
-    Q = {}
-    # is_fulfilled[(o.id, w_id)] = 1 if order o is fulfilled from warehouse w
-    is_fulfilled = {}
-
-    for o in scenario.orders:
-        for w_id in wh_ids:
-            is_fulfilled[(o.id, w_id)] = model.NewBoolVar(f"is_fulfilled_{o.id}_{w_id}")
-            for p_id in prod_ids:
-                Q[(o.id, w_id, p_id)] = model.NewIntVar(0, o.quantity, f"Q_{o.id}_{w_id}_{p_id}")
-
-                # If no substitution, force Q to 0 for other products
-                if not allow_sub and p_id != o.product_id:
-                    model.Add(Q[(o.id, w_id, p_id)] == 0)
-
-                # Q > 0 only if is_fulfilled is true
-                model.Add(Q[(o.id, w_id, p_id)] <= is_fulfilled[(o.id, w_id)] * o.quantity)
-
-        # An order can be fulfilled from at most one warehouse
-        model.AddAtMostOne([is_fulfilled[(o.id, w_id)] for w_id in wh_ids])
-        
-        # Total quantity supplied cannot exceed requested
-        model.Add(sum(Q[(o.id, w_id, p_id)] for w_id in wh_ids for p_id in prod_ids) <= o.quantity)
-
-    # Inventory constraints
-    for w_id in wh_ids:
-        for p_id in prod_ids:
-            avail = int(inventory.get(w_id, {}).get(p_id, 0))
-            model.Add(sum(Q[(o.id, w_id, p_id)] for o in scenario.orders) <= avail)
-
-    # 3. Objective
-    objective_terms = []
-    priority_weights = {"critical": 100, "high": 50, "normal": 10}
-
-    for o in scenario.orders:
-        weight = priority_weights.get(o.priority, 10)
-        for w_id in wh_ids:
-            # Penalty if warehouse is impacted
-            penalty = 30 if w_id in impacted_whs else 0
-            
-            for p_id in prod_ids:
-                # Slight penalty for substitution so it prefers requested product
-                sub_penalty = 5 if p_id != o.product_id else 0
-                
-                net_weight = weight - penalty - sub_penalty
-                objective_terms.append(Q[(o.id, w_id, p_id)] * net_weight)
-
-    model.Maximize(sum(objective_terms))
-
-    # 4. Solve
-    solver = cp_model.CpSolver()
-    status = solver.Solve(model)
-
-    if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+    baseline = _solve_plan(scenario, disruption, RecoveryConstraints(), baseline=True)
+    recovery = _solve_plan(scenario, disruption, constraints or RecoveryConstraints(), baseline=False)
+    now = datetime.now(UTC)
+    if not recovery.feasible:
         return RecoveryResult(
             id=f"plan-{uuid.uuid4().hex[:8]}",
             simulation_id=simulation_id,
             status="no-feasible-plan",
-            created_at=datetime.now(timezone.utc),
-            error={"code": "no_feasible_plan", "message": "The optimizer could not find a feasible recovery plan."}
+            created_at=now,
+            completed_at=now,
+            summary=RecoverySummary(
+                risks_mitigated=0,
+                operational_changes=0,
+                recoverable_orders=0,
+                total_orders=len(scenario.orders),
+            ),
+            manufacturing_actions=[],
+            logistics_actions=[],
+            commerce_actions=[],
+            possible_next_actions=[
+                "Restore material or inventory availability for critical orders.",
+                "Permit a safe route or relax the additional-delay constraint.",
+            ],
+            error=ErrorResponse(
+                code="no_feasible_plan",
+                message="Critical-order demand cannot be satisfied under the supplied constraints.",
+                retryable=False,
+                details={"criticalOrderPolicy": "all critical demand must be allocated"},
+            ),
+            baseline_order_outcomes=baseline.outcomes,
+            baseline_production=_production_outcomes(baseline.production),
         )
 
-    # 5. Extract actions
-    manufacturing_actions = []
-    logistics_actions = []
-    commerce_actions = []
+    baseline_by_order = {outcome.order_id: outcome for outcome in baseline.outcomes}
+    recovery_by_order = {outcome.order_id: outcome for outcome in recovery.outcomes}
+    products = {product.id: product for product in scenario.products}
+    stores = {facility.id: facility for facility in scenario.facilities if facility.kind == "store"}
+    warehouses = {facility.id: facility for facility in scenario.facilities if facility.kind == "warehouse"}
 
-    # Heuristic: if a supplier is impacted, we reduce manufacturing
-    if impacted_suppliers:
-        for sup_id in impacted_suppliers:
-            for p in scenario.products:
-                manufacturing_actions.append(
-                    ManufacturingAction(
-                        id=f"mfg-{uuid.uuid4().hex[:6]}",
-                        what=f"Reduce {p.name} output and reserve constrained material.",
-                        why=f"Supplier {sup_id} availability is projected to be delayed.",
-                        expected_impact="Preserves shared capacity for priority orders.",
-                        product_id=p.id,
-                        product_name=p.name,
-                        baseline_quantity=1000,
-                        recovery_quantity=650,
-                        change_quantity=-350
-                    )
-                )
-
-    original_warehouse_map = {}
-    for o in scenario.orders:
-        # naive baseline assignment based on store
-        if o.store_id in ["store-c", "store-d"]:
-            original_warehouse_map[o.id] = "wh-east"
-        else:
-            original_warehouse_map[o.id] = "wh-west"
-
-    risks_mitigated = 0
-    operational_changes = 0
-    recoverable_orders = 0
-
-    for o in scenario.orders:
-        assigned_w = None
-        allocations = []
-        total_supplied = 0
-        
-        for w_id in wh_ids:
-            if solver.Value(is_fulfilled[(o.id, w_id)]):
-                assigned_w = w_id
-                for p in scenario.products:
-                    val = solver.Value(Q[(o.id, w_id, p.id)])
-                    if val > 0:
-                        allocations.append((p, val))
-                        total_supplied += val
-
-        if total_supplied == 0:
-            commerce_actions.append(
-                CommerceAction(
-                    id=f"com-{uuid.uuid4().hex[:6]}",
-                    what=f"Fail or delay order {o.id}.",
-                    why="No inventory or safe routes available.",
-                    expected_impact="Prevents dispatching into hazardous areas.",
-                    order_id=o.id,
-                    store_id=o.store_id,
-                    store_name=o.store_id,  # simplistic mapping
-                    requested_product_id=o.product_id,
-                    requested_product_name=o.product_id,
-                    requested_quantity=o.quantity,
-                    action="delay",
-                    allocations=[]
-                )
-            )
+    manufacturing = []
+    for product in scenario.products:
+        before = baseline.production.get(product.id, 0)
+        after = recovery.production.get(product.id, 0)
+        if before == after:
             continue
-
-        recoverable_orders += 1
-
-        # Check commerce changes (split/substitute/delay)
-        if total_supplied < o.quantity or len(allocations) > 1 or allocations[0][0].id != o.product_id:
-            operational_changes += 1
-            com_allocs = [
-                CommerceAllocation(product_id=p.id, product_name=p.name, quantity=q)
-                for p, q in allocations
-            ]
-            commerce_actions.append(
-                CommerceAction(
-                    id=f"com-{uuid.uuid4().hex[:6]}",
-                    what=f"Split/substitute order {o.id} ({total_supplied}/{o.quantity} units).",
-                    why="Inventory constraint on requested product.",
-                    expected_impact="Maximizes fulfillment using available substitutes.",
-                    order_id=o.id,
-                    store_id=o.store_id,
-                    store_name=o.store_id,
-                    requested_product_id=o.product_id,
-                    requested_product_name=o.product_id,
-                    requested_quantity=o.quantity,
-                    action="split-substitute",
-                    allocations=com_allocs
-                )
+        constrained_materials = ", ".join(item.material_id for item in product.bom)
+        manufacturing.append(
+            ManufacturingAction(
+                id=f"mfg-{product.id}",
+                product_id=product.id,
+                product_name=product.name,
+                baseline_quantity=before,
+                recovery_quantity=after,
+                change_quantity=after - before,
+                what=f"Adjust {product.name} production from {before} to {after} {product.unit}.",
+                why=f"Computed material availability and BOM requirements ({constrained_materials}) bound production.",
+                expected_impact="Production feeds the inventory available to the order-allocation model.",
             )
+        )
 
-        # Check logistics changes (reroute/reallocate)
-        orig_w = original_warehouse_map[o.id]
-        if orig_w != assigned_w:
-            operational_changes += 1
-            if orig_w in impacted_whs:
-                risks_mitigated += 1
-                
-            orig_name = next((f.name for f in warehouses if f.id == orig_w), orig_w)
-            recv_name = next((f.name for f in warehouses if f.id == assigned_w), assigned_w)
-            
-            logistics_actions.append(
-                LogisticsAction(
-                    id=f"log-{uuid.uuid4().hex[:6]}",
-                    what=f"Reallocate {o.id} to {recv_name}.",
-                    why="Original baseline corridor has high disruption risk.",
-                    expected_impact="Reduces exposure with slight ETA increase.",
-                    order_id=o.id,
-                    original_warehouse_id=orig_w,
-                    original_warehouse_name=orig_name,
-                    recovery_warehouse_id=assigned_w,
-                    recovery_warehouse_name=recv_name,
-                    vehicle_id=scenario.vehicles[0].id if scenario.vehicles else "V-01",
-                    action="reallocate-reroute",
-                    baseline_route_id="route-baseline-sup-a-wh-east",
-                    recovery_route_id="route-recovery-sup-a-wh-east",
-                    baseline_eta_minutes=27,
-                    recovery_eta_minutes=46,
-                    baseline_flood_exposure="critical",
-                    recovery_flood_exposure="medium",
-                )
+    logistics = []
+    risks_mitigated = 0
+    for order in scenario.orders:
+        before = baseline_by_order.get(order.id)
+        after = recovery_by_order.get(order.id)
+        if not before or not after or not after.warehouse_id or not after.route_id or not after.vehicle_id:
+            continue
+        warehouse_changed = before.warehouse_id != after.warehouse_id
+        route_changed = before.route_id != after.route_id
+        if not warehouse_changed and not route_changed:
+            continue
+        if before.flood_exposure and after.flood_exposure:
+            risks_mitigated += int(RISK_RANK[after.flood_exposure] < RISK_RANK[before.flood_exposure])
+        action = (
+            "reallocate-reroute"
+            if warehouse_changed and route_changed
+            else "reallocate"
+            if warehouse_changed
+            else "reroute"
+        )
+        logistics.append(
+            LogisticsAction(
+                id=f"log-{order.id}",
+                order_id=order.id,
+                original_warehouse_id=before.warehouse_id or order.preferred_warehouse_id,
+                original_warehouse_name=warehouses[before.warehouse_id or order.preferred_warehouse_id].name,
+                recovery_warehouse_id=after.warehouse_id,
+                recovery_warehouse_name=warehouses[after.warehouse_id].name,
+                vehicle_id=after.vehicle_id,
+                baseline_route_id=before.route_id or after.route_id,
+                recovery_route_id=after.route_id,
+                baseline_eta_minutes=before.eta_minutes or 0,
+                recovery_eta_minutes=after.eta_minutes or 0,
+                baseline_flood_exposure=before.flood_exposure or "low",
+                recovery_flood_exposure=after.flood_exposure or "low",
+                action=action,
+                what=f"Use {warehouses[after.warehouse_id].name} and vehicle {after.vehicle_id} for {order.id}.",
+                why=(
+                    "The CP-SAT allocation selected a feasible route and vehicle within capacity and delay constraints."
+                ),
+                expected_impact=f"ETA is {after.eta_minutes} minutes with {after.flood_exposure} flood exposure.",
             )
+        )
 
-    now = datetime.now(timezone.utc)
+    commerce = []
+    for order in scenario.orders:
+        outcome = recovery_by_order[order.id]
+        allocations = recovery.allocations.get(order.id, [])
+        has_substitute = any(product_id != order.product_id for product_id, _ in allocations)
+        if outcome.allocated_quantity == 0:
+            action = "delay"
+        elif outcome.allocated_quantity < order.quantity and has_substitute:
+            action = "split-substitute"
+        elif outcome.allocated_quantity < order.quantity:
+            action = "split"
+        elif has_substitute:
+            action = "substitute"
+        elif order.priority == "critical":
+            action = "prioritize"
+        else:
+            action = "fulfill"
+        commerce.append(
+            CommerceAction(
+                id=f"com-{order.id}",
+                order_id=order.id,
+                store_id=order.store_id,
+                store_name=stores[order.store_id].name,
+                requested_product_id=order.product_id,
+                requested_product_name=products[order.product_id].name,
+                requested_quantity=order.quantity,
+                action=action,
+                allocations=[
+                    CommerceAllocation(
+                        product_id=product_id,
+                        product_name=products[product_id].name,
+                        quantity=quantity,
+                    )
+                    for product_id, quantity in allocations
+                ],
+                what=(
+                    f"{action.replace('-', ' ').title()} {order.id} with "
+                    f"{outcome.allocated_quantity}/{order.quantity} units."
+                ),
+                why=(
+                    "The result follows inventory, computed production, substitution, "
+                    "route, vehicle, and deadline constraints."
+                ),
+                expected_impact=(
+                    f"Expected delay is {outcome.delay_minutes} minutes; "
+                    f"protected value is IDR {outcome.allocated_value:.0f}."
+                ),
+            )
+        )
+
+    recoverable = sum(outcome.allocated_quantity == outcome.requested_quantity for outcome in recovery.outcomes)
+    changed_commerce = sum(action.action not in {"fulfill", "prioritize"} for action in commerce)
     return RecoveryResult(
         id=f"plan-{uuid.uuid4().hex[:8]}",
         simulation_id=simulation_id,
-        status="ready" if len(commerce_actions) == 0 else "partial",
+        status="ready" if recoverable == len(scenario.orders) else "partial",
         created_at=now,
         completed_at=now,
         summary=RecoverySummary(
             risks_mitigated=risks_mitigated,
-            operational_changes=operational_changes,
-            recoverable_orders=recoverable_orders,
-            total_orders=len(scenario.orders)
+            operational_changes=len(manufacturing) + len(logistics) + changed_commerce,
+            recoverable_orders=recoverable,
+            total_orders=len(scenario.orders),
         ),
-        manufacturing_actions=manufacturing_actions,
-        logistics_actions=logistics_actions,
-        commerce_actions=commerce_actions,
-        possible_next_actions=["Delay selected non-critical orders", "Request emergency resupply"]
+        manufacturing_actions=manufacturing,
+        logistics_actions=logistics,
+        commerce_actions=commerce,
+        possible_next_actions=["Restore disrupted inbound material capacity.", "Review delayed non-critical orders."],
+        baseline_order_outcomes=baseline.outcomes,
+        recovery_order_outcomes=recovery.outcomes,
+        baseline_production=_production_outcomes(baseline.production),
+        recovery_production=_production_outcomes(recovery.production),
     )
+
+
+def _production_outcomes(production: dict[str, int]) -> list[ProductionOutcome]:
+    return [ProductionOutcome(product_id=product_id, quantity=quantity) for product_id, quantity in production.items()]
+
+
+def _solve_plan(
+    scenario: Scenario,
+    disruption: DisruptionAnalysis,
+    constraints: RecoveryConstraints,
+    *,
+    baseline: bool,
+) -> ComputedPlan:
+    settings = get_settings()
+    priority_reward = {
+        "normal": settings.objective_reward_normal,
+        "high": settings.objective_reward_high,
+        "critical": settings.objective_reward_critical,
+    }
+    model = cp_model.CpModel()
+    products = {product.id: product for product in scenario.products}
+    warehouses = [facility for facility in scenario.facilities if facility.kind == "warehouse"]
+    vehicles = [vehicle for vehicle in scenario.vehicles if vehicle.available]
+    factory_capacity = sum(
+        facility.production_capacity_units or 0 for facility in scenario.facilities if facility.kind == "factory"
+    )
+    route_index = {
+        (route.origin_facility_id, route.destination_facility_id, route.type): route for route in disruption.routes
+    }
+    material_available = _material_availability(scenario, disruption, baseline=baseline)
+
+    production = {
+        product.id: model.new_int_var(0, factory_capacity, f"produce_{product.id}") for product in scenario.products
+    }
+    delivered = {
+        (product.id, warehouse.id): model.new_int_var(0, factory_capacity, f"deliver_{product.id}_{warehouse.id}")
+        for product in scenario.products
+        for warehouse in warehouses
+    }
+    for product in scenario.products:
+        model.add(sum(delivered[product.id, warehouse.id] for warehouse in warehouses) == production[product.id])
+    model.add(sum(production.values()) <= factory_capacity)
+    for material in scenario.materials:
+        consumption = []
+        for product in scenario.products:
+            bom = next((item for item in product.bom if item.material_id == material.id), None)
+            if bom:
+                consumption.append(production[product.id] * round(bom.quantity_per_unit * BOM_SCALE))
+        if consumption:
+            model.add(sum(consumption) <= round(material_available[material.id] * BOM_SCALE))
+
+    route_options: dict[tuple[str, str], Route] = {}
+    for order in scenario.orders:
+        baseline_reference = route_index.get((order.preferred_warehouse_id, order.store_id, "baseline"))
+        for warehouse in warehouses:
+            normal = route_index.get((warehouse.id, order.store_id, "baseline"))
+            safer = route_index.get((warehouse.id, order.store_id, "recovery"))
+            selected = normal if baseline else safer or normal
+            if selected is None:
+                continue
+            if not baseline and selected.flood_exposure == "critical":
+                continue
+            if (
+                not baseline
+                and constraints.max_additional_delay_minutes is not None
+                and baseline_reference
+                and selected.eta_minutes - baseline_reference.eta_minutes > constraints.max_additional_delay_minutes
+            ):
+                continue
+            if baseline and warehouse.id != order.preferred_warehouse_id:
+                continue
+            route_options[order.id, warehouse.id] = selected
+
+    assignments = {}
+    quantities = {}
+    for order in scenario.orders:
+        allowed_products = [order.product_id]
+        if not baseline and constraints.allow_substitution:
+            allowed_products.extend(products[order.product_id].substitute_product_ids)
+        order_assignments = []
+        for warehouse in warehouses:
+            route = route_options.get((order.id, warehouse.id))
+            if not route:
+                continue
+            for vehicle in vehicles:
+                assign = model.new_bool_var(f"assign_{order.id}_{warehouse.id}_{vehicle.id}")
+                assignments[order.id, warehouse.id, vehicle.id] = assign
+                order_assignments.append(assign)
+                for product_id in allowed_products:
+                    quantity = model.new_int_var(
+                        0, order.quantity, f"qty_{order.id}_{warehouse.id}_{vehicle.id}_{product_id}"
+                    )
+                    quantities[order.id, warehouse.id, vehicle.id, product_id] = quantity
+                    model.add(quantity <= order.quantity * assign)
+        model.add_at_most_one(order_assignments)
+        order_quantities = [quantity for key, quantity in quantities.items() if key[0] == order.id]
+        if order_assignments:
+            model.add(sum(order_quantities) >= sum(order_assignments))
+        model.add(sum(order_quantities) <= order.quantity)
+        if order.priority == "critical":
+            model.add(sum(order_quantities) == order.quantity)
+
+    inventory = {(item.facility_id, item.product_id): round(item.quantity) for item in scenario.inventory}
+    for warehouse in warehouses:
+        for product in scenario.products:
+            allocated = [
+                quantity for key, quantity in quantities.items() if key[1] == warehouse.id and key[3] == product.id
+            ]
+            model.add(
+                sum(allocated) <= inventory.get((warehouse.id, product.id), 0) + delivered[product.id, warehouse.id]
+            )
+    for vehicle in vehicles:
+        model.add(
+            sum(quantity for key, quantity in quantities.items() if key[2] == vehicle.id) <= vehicle.capacity_units
+        )
+
+    objective = []
+    orders = {order.id: order for order in scenario.orders}
+    for key, quantity in quantities.items():
+        order_id, _, _, product_id = key
+        substitution_penalty = (
+            settings.objective_substitution_penalty if product_id != orders[order_id].product_id else 0
+        )
+        objective.append(quantity * (priority_reward[orders[order_id].priority] - substitution_penalty))
+    for (order_id, warehouse_id, vehicle_id), assignment in assignments.items():
+        route = route_options[order_id, warehouse_id]
+        vehicle = next(item for item in vehicles if item.id == vehicle_id)
+        delay = max(0, round(route.eta_minutes) - orders[order_id].deadline_minutes)
+        risk_penalty = RISK_RANK[route.flood_exposure] * settings.objective_risk_penalty
+        transport_penalty = round(route.distance_km * vehicle.cost_per_km / settings.objective_transport_cost_scale)
+        objective.append(-assignment * (delay * settings.objective_delay_penalty + risk_penalty + transport_penalty))
+    objective.extend(-variable * settings.objective_production_penalty for variable in production.values())
+    model.maximize(sum(objective))
+
+    solver = cp_model.CpSolver()
+    solver.parameters.num_search_workers = 1
+    solver.parameters.random_seed = 42
+    status = solver.solve(model)
+    if status not in {cp_model.OPTIMAL, cp_model.FEASIBLE}:
+        return ComputedPlan(False, {}, [], {})
+
+    produced = {product_id: solver.value(variable) for product_id, variable in production.items()}
+    allocations: dict[str, list[tuple[str, int]]] = {}
+    outcomes = []
+    for order in scenario.orders:
+        selected_warehouse = selected_vehicle = None
+        selected_route = None
+        for (order_id, warehouse_id, vehicle_id), assignment in assignments.items():
+            if order_id == order.id and solver.value(assignment):
+                selected_warehouse, selected_vehicle = warehouse_id, vehicle_id
+                selected_route = route_options[order.id, warehouse_id]
+                break
+        order_allocations = []
+        for key, variable in quantities.items():
+            if key[0] == order.id and solver.value(variable) > 0:
+                order_allocations.append((key[3], solver.value(variable)))
+        allocations[order.id] = order_allocations
+        allocated = sum(quantity for _, quantity in order_allocations)
+        eta = round(selected_route.eta_minutes) if selected_route else None
+        outcomes.append(
+            OrderOutcome(
+                order_id=order.id,
+                requested_quantity=order.quantity,
+                allocated_quantity=allocated,
+                allocated_value=allocated * products[order.product_id].unit_price,
+                warehouse_id=selected_warehouse,
+                vehicle_id=selected_vehicle,
+                route_id=selected_route.id if selected_route else None,
+                eta_minutes=eta,
+                deadline_minutes=order.deadline_minutes,
+                delay_minutes=max(0, (eta or order.deadline_minutes) - order.deadline_minutes),
+                flood_exposure=selected_route.flood_exposure if selected_route else None,
+            )
+        )
+    return ComputedPlan(True, produced, outcomes, allocations)
+
+
+def _material_availability(scenario: Scenario, disruption: DisruptionAnalysis, *, baseline: bool) -> dict[str, float]:
+    if baseline:
+        return {material.id: material.available_quantity for material in scenario.materials}
+    settings = get_settings()
+    factors = {
+        "low": 1.0,
+        "medium": settings.supplier_availability_medium,
+        "high": settings.supplier_availability_high,
+        "critical": settings.supplier_availability_critical,
+    }
+    supplier_risk = {material.supplier_id: "low" for material in scenario.materials}
+    for route in disruption.routes:
+        if route.type != "baseline" or route.origin_facility_id not in supplier_risk:
+            continue
+        if RISK_RANK[route.flood_exposure] > RISK_RANK[supplier_risk[route.origin_facility_id]]:
+            supplier_risk[route.origin_facility_id] = route.flood_exposure
+    return {
+        material.id: material.available_quantity * factors[supplier_risk[material.supplier_id]]
+        for material in scenario.materials
+    }

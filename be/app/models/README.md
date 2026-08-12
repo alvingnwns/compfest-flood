@@ -1,3 +1,5 @@
-# Model artifacts
+# Flood-risk model artifact
 
-Trained flood-risk artifacts and their versioned evaluation metadata will be stored here in a later phase. Model output is always a disruption probability, not a flood certainty claim.
+`flood_risk_model.joblib` contains a real Logistic Regression estimator and scaler used through `predict_proba`. Its labels and input dataset are synthetic, so its metrics demonstrate only technical reproducibility—not real-world flood-prediction validity.
+
+Regenerate it deterministically with `python scripts/train_flood_risk_model.py`. The JSON metadata records the model version, features, synthetic-data status, evaluation metrics, and scikit-learn version used to serialize the artifact.

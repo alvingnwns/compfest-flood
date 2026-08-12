@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Literal
 
 from app.schemas.common import ApiModel
-from app.schemas.disruption import Money
 
 
 class KpiMetric(ApiModel):
-    key: str
+    key: Literal["orders-fulfilled", "on-time-delivery", "failed-orders", "average-delay", "sales-exposure-risk"]
     baseline: float
     recovery: float
     total: float | None = None
