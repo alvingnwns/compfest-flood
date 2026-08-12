@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { Map as MapLibreMap, MapLayerMouseEvent } from "maplibre-gl";
 import { useEffect, useRef } from "react";
@@ -35,6 +35,12 @@ export function DisruptionMap({ data, selectedRoadId, onSelectRoad }: { data: Di
         map.on("click", "roads-risk", (event: MapLayerMouseEvent) => { const segmentId = event.features?.[0]?.properties?.segmentId as string | undefined; const road = data.roads.find((item) => item.segmentId === segmentId); if (road) onSelectRoad(road); });
         map.on("mouseenter", "roads-risk", () => { map.getCanvas().style.cursor = "pointer"; }); map.on("mouseleave", "roads-risk", () => { map.getCanvas().style.cursor = ""; });
       });
+
+      const resizeObserver = new ResizeObserver(() => {
+        if (mapRef.current) mapRef.current.resize();
+      });
+      resizeObserver.observe(container.current);
+      return () => { disposed = true; resizeObserver.disconnect(); mapRef.current?.remove(); mapRef.current = null; };
     });
     return () => { disposed = true; mapRef.current?.remove(); mapRef.current = null; };
   }, [data, onSelectRoad, selectedRoadId]);

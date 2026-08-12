@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -25,3 +25,42 @@ class ErrorResponse(ApiModel):
 
 class HealthResponse(ApiModel):
     status: str = Field(description="Service availability indicator.")
+
+
+class Money(ApiModel):
+    amount: float = Field(ge=0)
+    currency: str
+
+
+RiskLevel = Literal["low", "medium", "high", "critical"]
+
+
+class GeoPoint(ApiModel):
+    type: Literal["Point"]
+    coordinates: tuple[float, float]
+
+
+class GeoLineString(ApiModel):
+    type: Literal["LineString"]
+    coordinates: list[tuple[float, float]]
+
+
+class GeoMultiLineString(ApiModel):
+    type: Literal["MultiLineString"]
+    coordinates: list[list[tuple[float, float]]]
+
+
+LineGeometry = GeoLineString | GeoMultiLineString
+
+
+class GeoPolygon(ApiModel):
+    type: Literal["Polygon"]
+    coordinates: list[list[tuple[float, float]]]
+
+
+class GeoMultiPolygon(ApiModel):
+    type: Literal["MultiPolygon"]
+    coordinates: list[list[list[tuple[float, float]]]]
+
+
+PolygonalGeometry = GeoPolygon | GeoMultiPolygon
