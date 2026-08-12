@@ -2,7 +2,7 @@
 
 FastAPI backend for an offline-first synthetic Jakarta flood replay. The HTTP contract is frozen in [`../docs/BACKEND_INTEGRATION_CONTRACT.md`](../docs/BACKEND_INTEGRATION_CONTRACT.md).
 
-The computation pipeline is connected: Logistic Regression probabilities affect NetworkX route costs and supplier availability; those results feed OR-Tools production, inventory, warehouse, vehicle, substitution, and order-allocation decisions; recovery outputs drive all five KPIs. The ML training labels, historical snapshot, road graph, and company scenario are synthetic.
+The computation pipeline is connected: Logistic Regression probabilities affect NetworkX route costs and supplier availability; those results feed OR-Tools production, inventory, warehouse, vehicle, substitution, and order-allocation decisions; recovery outputs drive all five KPIs. The runtime road graph is derived from OpenStreetMap; ML training labels, the flood snapshot, and company scenario remain synthetic.
 
 ## Setup
 
@@ -29,7 +29,7 @@ docker run --rm -p 8000:8000 resilichain-backend
 ## Active computation
 
 - Flood inference: cached Joblib Logistic Regression artifact and raw `predict_proba` values.
-- Routing: cached synthetic NetworkX graph; baseline minimizes normal travel time, recovery adds configurable risk penalties and excludes critical roads.
+- Routing: cached compact OpenStreetMap-derived NetworkX graph; baseline minimizes estimated travel time and recovery adds configurable risk penalties.
 - Supplier availability: route risk reduces each supplier material's expected quantity using the documented policy in `Settings`.
 - Recovery: CP-SAT integer quantities enforce BOM/material supply, factory capacity, inventory, explicit substitution, warehouse and vehicle assignment, vehicle capacity/availability, route feasibility, order demand, deadlines, and optional maximum additional delay.
 - Objective: maximize priority-weighted fulfillment while penalizing unfulfilled quantity, delay, transport cost, substitution, and route risk. Weights live in `app/core/config.py`.
@@ -46,4 +46,4 @@ docker run --rm -p 8000:8000 resilichain-backend
 
 ## Scope and limitations
 
-Vehicle capacity is modeled as aggregate planning capacity per vehicle, not a full vehicle-routing problem. State is process-local. There is no authentication, database, queue, or external data ingestion. Do not describe this version as historical flood AI: the algorithms execute for real, but their current scientific and business inputs are synthetic.
+Vehicle capacity is modeled as aggregate planning capacity per vehicle, not a full vehicle-routing problem. State is process-local. There is no authentication, database, queue, or runtime external data ingestion. Do not describe this version as historical flood AI: the road geometry is OSM-derived and algorithms execute for real, but flood labels/model and business inputs remain synthetic. Phase C historical model work is blocked pending Earth Engine authentication.

@@ -28,7 +28,7 @@ def calculate_impact(scenario: Scenario, road_risks: list[RoadRisk], routes: lis
                 id=f"issue-{route.id}",
                 severity=route.flood_exposure,
                 subject=f"Risk on {route.origin_facility_id} to {route.destination_facility_id}",
-                description="The baseline route crosses a high-risk synthetic road segment.",
+                description="The baseline route crosses a road segment with high estimated flood exposure risk.",
             )
         )
     affected_products = {

@@ -57,9 +57,12 @@ def _build_graph(road_risks: dict[str, dict]) -> nx.DiGraph:
 
 
 def calculate_routes(origin_id: str, destination_id: str, road_risks: dict[str, dict]) -> list[Route]:
-    facility_nodes = {
-        node.get("facilityId"): node["id"] for node in get_routing_graph().get("nodes", []) if node.get("facilityId")
-    }
+    graph_data = get_routing_graph()
+    facility_nodes = graph_data.get("metadata", {}).get("facilityNodeMappings", {})
+    if not facility_nodes:
+        facility_nodes = {
+            node.get("facilityId"): node["id"] for node in graph_data.get("nodes", []) if node.get("facilityId")
+        }
     start, end = facility_nodes.get(origin_id), facility_nodes.get(destination_id)
     if not start or not end:
         return []

@@ -27,9 +27,18 @@ def test_geojson_and_graph_are_consistent() -> None:
     flood = get_historical_flood_extent()
     segment_ids = {feature["properties"]["segmentId"] for feature in roads["features"]}
     assert {edge["segmentId"] for edge in graph["edges"]} == segment_ids
+    assert graph["metadata"]["source"] == "OpenStreetMap contributors"
+    assert graph["metadata"]["license"] == "ODbL 1.0"
+    assert graph["metadata"]["fullGraph"]["nodes"] == 64053
+    assert graph["metadata"]["processedGraph"]["uniqueSegments"] == len(segment_ids)
+    assert len(graph["metadata"]["facilityNodeMappings"]) == 10
+    node_ids = {node["id"] for node in graph["nodes"]}
+    assert set(graph["metadata"]["facilityNodeMappings"].values()) <= node_ids
     assert flood["features"][0]["geometry"]["type"] in {"Polygon", "MultiPolygon"}
     for feature in roads["features"]:
         assert feature["geometry"]["type"] == "LineString"
+        assert feature["properties"]["osmWayIds"]
+        assert feature["properties"]["travelTimeMinutes"] > 0
         assert all(
             100 < coordinate[0] < 120 and -10 < coordinate[1] < 0 for coordinate in feature["geometry"]["coordinates"]
         )

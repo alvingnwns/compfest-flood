@@ -33,8 +33,9 @@ def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
 
     disruption = client.get(f"/api/simulations/{simulation_id}/disruption").json()
     assert disruption["simulationId"] == simulation_id
-    assert len(disruption["roads"]) == 19
-    assert {route["type"] for route in disruption["routes"]} == {"baseline", "recovery"}
+    assert len(disruption["roads"]) > 1_000
+    assert {route["type"] for route in disruption["routes"]} <= {"baseline", "recovery"}
+    assert "baseline" in {route["type"] for route in disruption["routes"]}
     assert all(0 <= road["riskProbability"] <= 1 for road in disruption["roads"])
 
     generated = client.post(
@@ -114,10 +115,21 @@ def test_process_local_idempotency(client: TestClient) -> None:
     assert first_plan["id"] == second_plan["id"]
 
 
-def test_no_feasible_api_shape_matches_recovery_result_contract(client: TestClient, simulation_id: str) -> None:
+def test_no_feasible_api_shape_matches_recovery_result_contract(
+    client: TestClient, simulation_id: str, monkeypatch
+) -> None:
+    from app.api import simulations as simulations_api
+    from app.repositories.scenario_repository import get_historical_jakarta
+
+    infeasible = get_historical_jakarta().model_copy(deep=True)
+    for material in infeasible.materials:
+        material.available_quantity = 0
+    for inventory in infeasible.inventory:
+        inventory.quantity = 0
+    monkeypatch.setattr(simulations_api, "get_historical_jakarta", lambda: infeasible)
     response = client.post(
         f"/api/simulations/{simulation_id}/recovery",
-        json={"constraints": {"allowSubstitution": True, "maxAdditionalDelayMinutes": 0}},
+        json={"constraints": {"allowSubstitution": False, "maxAdditionalDelayMinutes": 30}},
     )
     assert response.status_code == 201
     payload = response.json()

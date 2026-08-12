@@ -2,12 +2,24 @@ from app.repositories.scenario_repository import get_historical_jakarta
 from app.repositories.simulation_repository import simulation_repository
 from app.schemas.recovery import RecoveryConstraints
 from app.services.recovery_service import generate_recovery_plan
+from app.services.routing_service import calculate_routes
 
 
 def test_risk_changes_networkx_route(simulation_id: str) -> None:
-    disruption = simulation_repository.get_disruption(simulation_id)
-    baseline = next(route for route in disruption.routes if route.id == "route-baseline-wh-east-store-d")
-    recovery = next(route for route in disruption.routes if route.id == "route-recovery-wh-east-store-d")
+    normal_route = calculate_routes("wh-east", "store-d", {})[0]
+    routes = []
+    for segment_id in normal_route.affected_road_segment_ids:
+        candidate = calculate_routes(
+            "wh-east",
+            "store-d",
+            {segment_id: {"riskLevel": "critical", "riskProbability": 0.99}},
+        )
+        if any(route.type == "recovery" for route in candidate):
+            routes = candidate
+            break
+    assert routes, "The processed OSM corridor must retain at least one risk-sensitive alternative."
+    baseline = next(route for route in routes if route.type == "baseline")
+    recovery = next(route for route in routes if route.type == "recovery")
     assert baseline.affected_road_segment_ids != recovery.affected_road_segment_ids
     assert recovery.flood_exposure_probability < baseline.flood_exposure_probability
 
@@ -37,17 +49,29 @@ def test_business_outputs_are_computed_and_referentially_valid(simulation_id: st
 def test_maximum_additional_delay_changes_feasibility(simulation_id: str) -> None:
     scenario = get_historical_jakarta()
     disruption = simulation_repository.get_disruption(simulation_id)
+    recovery_routes = [
+        route.model_copy(
+            update={
+                "id": route.id.replace("route-baseline", "route-recovery"),
+                "type": "recovery",
+                "eta_minutes": route.eta_minutes + 10,
+            }
+        )
+        for route in disruption.routes
+        if route.type == "baseline"
+    ]
+    delayed_disruption = disruption.model_copy(update={"routes": [*disruption.routes, *recovery_routes]})
     strict = generate_recovery_plan(
         simulation_id,
         scenario,
-        disruption,
+        delayed_disruption,
         RecoveryConstraints(allow_substitution=True, max_additional_delay_minutes=0),
     )
     flexible = generate_recovery_plan(
         simulation_id,
         scenario,
-        disruption,
-        RecoveryConstraints(allow_substitution=True, max_additional_delay_minutes=30),
+        delayed_disruption,
+        RecoveryConstraints(allow_substitution=True, max_additional_delay_minutes=10),
     )
     assert strict.status == "no-feasible-plan"
     assert flexible.status in {"ready", "partial"}
