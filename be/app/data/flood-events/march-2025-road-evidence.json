@@ -1,0 +1,49 @@
+{
+  "eventId": "jakarta-20250304",
+  "status": "satellite_unknown",
+  "reason": "No Sentinel-1 acquisition during or within 48 hours after 4-5 March 2025.",
+  "sources": [
+    {
+      "name": "BPBD DKI Jakarta",
+      "reference": "https://bpbd.jakarta.go.id/berita/d1N3eG0vOXBsL1NEbzhITjNaYUpmQT09/update-info-terkini-genangan-04-maret-2025-s-d-pukul-09-00-wib",
+      "evidence": "BPBD reported 62 affected RT and four inundated roads at 09:00 WIB."
+    },
+    {
+      "name": "Kota Administrasi Jakarta Barat",
+      "reference": "https://barat.jakarta.go.id/index.php/berita/bpbd-dki-jakarta-drop-bantuan-buat-warga-terdampak-genangan-di-jakbar",
+      "evidence": "The official city page reported Jalan H Briti and Jalan Puri Indah in Kembangan Selatan with 15-70 cm inundation."
+    }
+  ],
+  "roads": [
+    {
+      "reportedRoad": "Jalan Puri Kembangan / Puri Indah area",
+      "osmMatch": "No exact named segment in the compact business-corridor snapshot",
+      "satelliteResult": "unknown",
+      "notes": "Official Jakarta Barat evidence confirms nearby Jalan Puri Indah; no timely Sentinel-1 observation exists."
+    },
+    {
+      "reportedRoad": "Jalan H Briti",
+      "osmMatch": "No exact named segment in the compact business-corridor snapshot",
+      "satelliteResult": "unknown",
+      "notes": "Official Jakarta Barat evidence; no timely Sentinel-1 observation exists."
+    },
+    {
+      "reportedRoad": "Jalan Basoka Raya",
+      "osmMatch": "No exact named segment in the compact business-corridor snapshot",
+      "satelliteResult": "unknown",
+      "notes": "Reported in contemporaneous media quoting BPBD; not promoted to training evidence."
+    },
+    {
+      "reportedRoad": "Komplek Joglo Baru",
+      "osmMatch": "No exact named segment in the compact business-corridor snapshot",
+      "satelliteResult": "unknown",
+      "notes": "Reported in contemporaneous media quoting BPBD; not promoted to training evidence."
+    },
+    {
+      "reportedRoad": "Jalan Kedoya Raya",
+      "osmMatch": "osm-5506920811-5523935808-0 (OSM ways 636772881, 718431699)",
+      "satelliteResult": "unknown",
+      "notes": "Only related named OSM segment found; it is not treated as proof of the specifically reported inundated roads."
+    }
+  ]
+}

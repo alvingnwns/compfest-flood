@@ -1,0 +1,252 @@
+{
+  "metadata": {
+    "purpose": "Sensitivity only; thresholds are not tuned against March 2025 or used to overwrite labels.",
+    "canonicalLabels": "validCoverageFraction>=0.8, permanentWaterFraction<0.2, floodFraction>=0.2, estimatedInundatedLengthMeters>=30"
+  },
+  "events": [
+    {
+      "eventId": "jakarta-20200101",
+      "combinations": [
+        {
+          "pixelThreshold": {
+            "id": "strict",
+            "vvDropDb": 2.0,
+            "vhDropDb": 1.5
+          },
+          "roadThreshold": {
+            "id": "canonical",
+            "floodFraction": 0.2,
+            "minimumLengthMeters": 30
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "strict",
+            "vvDropDb": 2.0,
+            "vhDropDb": 1.5
+          },
+          "roadThreshold": {
+            "id": "moderate",
+            "floodFraction": 0.1,
+            "minimumLengthMeters": 20
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "strict",
+            "vvDropDb": 2.0,
+            "vhDropDb": 1.5
+          },
+          "roadThreshold": {
+            "id": "permissive",
+            "floodFraction": 0.05,
+            "minimumLengthMeters": 10
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "moderate",
+            "vvDropDb": 1.5,
+            "vhDropDb": 1.0
+          },
+          "roadThreshold": {
+            "id": "canonical",
+            "floodFraction": 0.2,
+            "minimumLengthMeters": 30
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "moderate",
+            "vvDropDb": 1.5,
+            "vhDropDb": 1.0
+          },
+          "roadThreshold": {
+            "id": "moderate",
+            "floodFraction": 0.1,
+            "minimumLengthMeters": 20
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "moderate",
+            "vvDropDb": 1.5,
+            "vhDropDb": 1.0
+          },
+          "roadThreshold": {
+            "id": "permissive",
+            "floodFraction": 0.05,
+            "minimumLengthMeters": 10
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "permissive",
+            "vvDropDb": 1.0,
+            "vhDropDb": 0.5
+          },
+          "roadThreshold": {
+            "id": "canonical",
+            "floodFraction": 0.2,
+            "minimumLengthMeters": 30
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "permissive",
+            "vvDropDb": 1.0,
+            "vhDropDb": 0.5
+          },
+          "roadThreshold": {
+            "id": "moderate",
+            "floodFraction": 0.1,
+            "minimumLengthMeters": 20
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "permissive",
+            "vvDropDb": 1.0,
+            "vhDropDb": 0.5
+          },
+          "roadThreshold": {
+            "id": "permissive",
+            "floodFraction": 0.05,
+            "minimumLengthMeters": 10
+          },
+          "positiveSegments": 0
+        }
+      ]
+    },
+    {
+      "eventId": "jakarta-20210220",
+      "combinations": [
+        {
+          "pixelThreshold": {
+            "id": "strict",
+            "vvDropDb": 2.0,
+            "vhDropDb": 1.5
+          },
+          "roadThreshold": {
+            "id": "canonical",
+            "floodFraction": 0.2,
+            "minimumLengthMeters": 30
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "strict",
+            "vvDropDb": 2.0,
+            "vhDropDb": 1.5
+          },
+          "roadThreshold": {
+            "id": "moderate",
+            "floodFraction": 0.1,
+            "minimumLengthMeters": 20
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "strict",
+            "vvDropDb": 2.0,
+            "vhDropDb": 1.5
+          },
+          "roadThreshold": {
+            "id": "permissive",
+            "floodFraction": 0.05,
+            "minimumLengthMeters": 10
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "moderate",
+            "vvDropDb": 1.5,
+            "vhDropDb": 1.0
+          },
+          "roadThreshold": {
+            "id": "canonical",
+            "floodFraction": 0.2,
+            "minimumLengthMeters": 30
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "moderate",
+            "vvDropDb": 1.5,
+            "vhDropDb": 1.0
+          },
+          "roadThreshold": {
+            "id": "moderate",
+            "floodFraction": 0.1,
+            "minimumLengthMeters": 20
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "moderate",
+            "vvDropDb": 1.5,
+            "vhDropDb": 1.0
+          },
+          "roadThreshold": {
+            "id": "permissive",
+            "floodFraction": 0.05,
+            "minimumLengthMeters": 10
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "permissive",
+            "vvDropDb": 1.0,
+            "vhDropDb": 0.5
+          },
+          "roadThreshold": {
+            "id": "canonical",
+            "floodFraction": 0.2,
+            "minimumLengthMeters": 30
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "permissive",
+            "vvDropDb": 1.0,
+            "vhDropDb": 0.5
+          },
+          "roadThreshold": {
+            "id": "moderate",
+            "floodFraction": 0.1,
+            "minimumLengthMeters": 20
+          },
+          "positiveSegments": 0
+        },
+        {
+          "pixelThreshold": {
+            "id": "permissive",
+            "vvDropDb": 1.0,
+            "vhDropDb": 0.5
+          },
+          "roadThreshold": {
+            "id": "permissive",
+            "floodFraction": 0.05,
+            "minimumLengthMeters": 10
+          },
+          "positiveSegments": 0
+        }
+      ]
+    }
+  ]
+}

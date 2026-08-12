@@ -9,4 +9,4 @@ This directory will contain versioned, offline historical-replay snapshots:
 
 No external API is required to run the MVP demo.
 
-The initial `jakarta-2025-03-04-*` assets are synthetic and intentionally marked as such. They provide a reproducible data shape until verified source data is selected.
+The initial `jakarta-2025-03-04-*` runtime scenario assets remain synthetic and intentionally marked as such. Separately, `flood-events/` and `datasets/historical_road_flood_labels.csv` contain verified event provenance and Earth Engine-derived road-event observations. Those observations failed the scientific feasibility gate and are not used by the runtime model.

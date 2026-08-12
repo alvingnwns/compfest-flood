@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "collection": "COPERNICUS/S1_GRD",
+    "instrumentMode": "IW",
+    "polarizations": [
+      "VV",
+      "VH"
+    ],
+    "resolutionMeters": 10,
+    "maximumEventLagHours": 48,
+    "selectionPolicy": "Use a full-coverage acquisition during or no more than 48 hours after the verified event window; preserve orbit and polarization for the dry baseline.",
+    "dryBaselinePolicy": "Median of same relative orbit/direction/polarization acquisitions from June through October preceding the event.",
+    "maskMethod": "30 m focal-median VV/VH change detection; require VV drop >=2.0 dB and VH drop >=1.5 dB.",
+    "permanentWaterMask": "JRC/GSW1_4/GlobalSurfaceWater occurrence >=90 percent",
+    "terrainQualityMask": "COPERNICUS/DEM/GLO30 slope <=5 degrees",
+    "roadBufferMeters": 15,
+    "positiveCriterion": "validCoverageFraction>=0.8, permanentWaterFraction<0.2, floodFraction>=0.2, estimatedInundatedLengthMeters>=30",
+    "negativeCriterion": "validCoverageFraction>=0.8, permanentWaterFraction<0.2, floodFraction<=0.02",
+    "unknownCriterion": "no timely acquisition, insufficient valid coverage, permanent-water overlap, or ambiguous flood fraction"
+  },
+  "events": [
+    {
+      "baseline": {
+        "count": 12,
+        "end": "2019-11-01",
+        "imageIds": [
+          "S1A_IW_GRDH_1SDV_20190612T111511_20190612T111536_027645_031ED2_9323",
+          "S1A_IW_GRDH_1SDV_20190624T111512_20190624T111537_027820_032404_EF16",
+          "S1A_IW_GRDH_1SDV_20190706T111513_20190706T111538_027995_032957_267D",
+          "S1A_IW_GRDH_1SDV_20190718T111514_20190718T111539_028170_032E9E_8AD1",
+          "S1A_IW_GRDH_1SDV_20190730T111514_20190730T111539_028345_0333FB_3615",
+          "S1A_IW_GRDH_1SDV_20190811T111515_20190811T111540_028520_03397F_CEB8",
+          "S1A_IW_GRDH_1SDV_20190823T111516_20190823T111541_028695_033F86_ED5E",
+          "S1A_IW_GRDH_1SDV_20190904T111516_20190904T111541_028870_0345A8_DF0F",
+          "S1A_IW_GRDH_1SDV_20190916T111517_20190916T111542_029045_034BBF_A377",
+          "S1A_IW_GRDH_1SDV_20190928T111517_20190928T111542_029220_0351B7_E1D0",
+          "S1A_IW_GRDH_1SDV_20191010T111517_20191010T111542_029395_0357B7_896B",
+          "S1A_IW_GRDH_1SDV_20191022T111517_20191022T111542_029570_035DC2_EE55"
+        ],
+        "start": "2019-06-01"
+      },
+      "detectedFloodAreaSquareKm": 0.1209,
+      "eventImageId": "S1A_IW_GRDH_1SDV_20200102T111515_20200102T111540_030620_038227_CF59",
+      "validAreaSquareKm": 283.008,
+      "eventId": "jakarta-20200101",
+      "usable": true,
+      "labels": {
+        "positive": 0,
+        "negative": 1413,
+        "unknown": 0
+      }
+    },
+    {
+      "baseline": {
+        "count": 7,
+        "end": "2020-11-01",
+        "imageIds": [
+          "S1A_IW_GRDH_1SDV_20200813T223357_20200813T223424_033894_03EE5E_3810",
+          "S1A_IW_GRDH_1SDV_20200825T223358_20200825T223425_034069_03F496_42FF",
+          "S1A_IW_GRDH_1SDV_20200906T223358_20200906T223426_034244_03FAB9_3079",
+          "S1A_IW_GRDH_1SDV_20200918T223359_20200918T223426_034419_0400E1_F4A3",
+          "S1A_IW_GRDH_1SDV_20200930T223359_20200930T223426_034594_040714_97B1",
+          "S1A_IW_GRDH_1SDV_20201012T223359_20201012T223427_034769_040D29_4773",
+          "S1A_IW_GRDH_1SDV_20201024T223359_20201024T223427_034944_04133E_6164"
+        ],
+        "start": "2020-06-01"
+      },
+      "detectedFloodAreaSquareKm": 0.086,
+      "eventImageId": "S1A_IW_GRDH_1SDV_20210221T223355_20210221T223423_036694_044FF3_879D",
+      "validAreaSquareKm": 283.008,
+      "eventId": "jakarta-20210220",
+      "usable": true,
+      "labels": {
+        "positive": 0,
+        "negative": 1412,
+        "unknown": 1
+      }
+    },
+    {
+      "eventId": "jakarta-20220118",
+      "usable": false,
+      "exclusionReason": "No full-coverage Sentinel-1 acquisition during or within 48 hours after the event; nearest post-event acquisition was about four days later."
+    },
+    {
+      "eventId": "jakarta-20250304",
+      "usable": false,
+      "exclusionReason": "Holdout has no Sentinel-1 acquisition during or within 48 hours after 4-5 March; available images are 28 February and 12 March."
+    }
+  ],
+  "totalObservations": 5652
+}

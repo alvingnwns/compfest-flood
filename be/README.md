@@ -46,4 +46,4 @@ docker run --rm -p 8000:8000 resilichain-backend
 
 ## Scope and limitations
 
-Vehicle capacity is modeled as aggregate planning capacity per vehicle, not a full vehicle-routing problem. State is process-local. There is no authentication, database, queue, or runtime external data ingestion. Do not describe this version as historical flood AI: the road geometry is OSM-derived and algorithms execute for real, but flood labels/model and business inputs remain synthetic. Phase C historical model work is blocked pending Earth Engine authentication.
+Vehicle capacity is modeled as aggregate planning capacity per vehicle, not a full vehicle-routing problem. State is process-local. There is no authentication, database, queue, or runtime external data ingestion. Do not describe this version as historical flood AI: the road geometry is OSM-derived and algorithms execute for real, but the runtime flood model and business inputs remain synthetic. Earth Engine processing produced no defensible positive road labels, so the Phase C scientific feasibility gate failed and historical training was prohibited.
