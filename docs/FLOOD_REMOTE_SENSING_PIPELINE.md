@@ -1,6 +1,10 @@
 # Flood Remote-Sensing Pipeline
 
-Status: **C2-C6 COMPLETE; SCIENTIFIC FEASIBILITY GATE FAILED**.
+Status: **BOTH REAL-HISTORICAL LABEL ATTEMPTS FAILED THE SCIENTIFIC GATE**.
+
+Attempt 1, documented below, used Sentinel-1 event change detection and failed with zero defensible positive road labels. Attempt 2 used the validated Global Flood Database event product with a coarse road-corridor target and also failed with zero canonical positives and no event-level split. See [`GLOBAL_FLOOD_DATABASE_FEASIBILITY.md`](GLOBAL_FLOOD_DATABASE_FEASIBILITY.md). Neither failure is hidden or weakened.
+
+## Attempt 1: Sentinel-1
 
 Earth Engine was initialized against Google Cloud project `resilichain-aic-2026`. Credentials remain outside the repository. The read-only acquisition audit queried `COPERNICUS/S1_GRD` over the Jakarta study bounds for four authoritative flood events.
 
@@ -41,3 +45,11 @@ python scripts/run_scientific_feasibility_gate.py --write
 ```
 
 The final command intentionally exits with code 2 while the gate status is `FAIL`. Training must not proceed.
+
+## Attempt 2: Global Flood Database fallback
+
+`GLOBAL_FLOOD_DB/MODIS_EVENTS/V1` was inspected across its full 2000-2018 coverage. Nineteen product geometries intersect the fixed Jakarta pilot, but only two contain non-permanent flood pixels in the pilot; only one has a pilot-centred event context. A 250 m road-corridor overlay created 2,826 observations: 0 positive, 1,385 negative, and 1,441 unknown/excluded.
+
+Sensitivity over 125/250/375 m corridor radii, 0.50/0.75/0.90 clear-observation cutoffs, and 0.02/0.05/0.10 positive exposure thresholds produced at most one unstable positive. Thresholds were not selected to force class support.
+
+The final fallback gate is `FAIL`. Feature engineering and model training stopped. The transparent synthetic runtime baseline remains active.

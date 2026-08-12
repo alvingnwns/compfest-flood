@@ -22,7 +22,7 @@ The stabilization phase connects the existing real algorithms without claiming r
 | Component | Algorithm/runtime | Input data |
 | --- | --- | --- |
 | Flood risk | Real Logistic Regression inference | Synthetic features and labels |
-| Routing | Real NetworkX shortest path | Synthetic road graph |
+| Routing | Real NetworkX shortest path | Real compact OSM-derived graph |
 | Recovery | Real OR-Tools CP-SAT solve | Synthetic business scenario |
 | Impact and KPIs | Real data-driven computation | Derived from the synthetic replay |
 
@@ -31,11 +31,11 @@ Risk probabilities are not flood-certainty claims, and evaluation metrics do not
 ## Deliberately deferred
 
 - [ ] Real historical labels and validated flood-event snapshots.
-- [ ] Sentinel-1/Earth Engine and rainfall/hazard ingestion.
-- [ ] OSM/OSMnx road-network ingestion and validation.
+- [x] Sentinel-1 and Global Flood Database feasibility processing (both gates failed; no runtime ingestion).
+- [x] OSM/OSMnx road-network ingestion and validation.
 - [ ] Persistent database and durable idempotency.
 - [ ] Authentication/authorization.
 - [ ] Distributed/background job execution.
 - [ ] Full multi-stop vehicle-routing optimization.
 
-The next phase is **real historical/remote-sensing data plus a real OSM road network**. It must validate provenance and scientific claims before the synthetic labels or graph are replaced.
+Final MVP recommendation: freeze the transparent synthetic ML baseline, retain the real OSM/NetworkX/CP-SAT pipeline, and harden the demo. Both approved real-historical label attempts failed their scientific gates, so no historical model replacement is permitted.

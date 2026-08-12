@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "collectionId": "GLOBAL_FLOOD_DB/MODIS_EVENTS/V1",
+    "target": "roadCorridorFloodExposure",
+    "effectiveSourceResolutionMeters": 250,
+    "aggregationScaleMeters": 30,
+    "aggregationScaleWarning": "The 30 m reduction grid only approximates corridor-area overlap; it does not improve the 250 m observational support or create road-surface ground truth.",
+    "minimumValidObservationFraction": 0.8,
+    "maximumPermanentWaterFraction": 0.2,
+    "negativeExposureEpsilon": 0.001,
+    "eventExclusionRule": "An isolated pilot pixel from an event centred outside the pilot is unknown, not negative or positive."
+  },
+  "canonical": {
+    "name": "canonical",
+    "bufferRadiusMeters": 250,
+    "minimumClearFraction": 0.75,
+    "positiveFraction": 0.05,
+    "events": 2,
+    "roadSegments": 1413,
+    "roadEventObservations": 2826,
+    "positive": 0,
+    "negative": 1385,
+    "unknown": 1441,
+    "positiveRateAmongUsable": 0.0
+  },
+  "configurations": [
+    {
+      "name": "canonical",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.75,
+      "positiveFraction": 0.05,
+      "positive": 0,
+      "negative": 1385,
+      "unknown": 1441,
+      "positiveRateAmongUsable": 0.0,
+      "byEvent": {
+        "DFO_3251_From_20080102_to_20080106": {
+          "negative": 1385,
+          "unknown": 28
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "unknown": 1413
+        }
+      },
+      "changedFromCanonical": 0
+    },
+    {
+      "name": "half-pixel-radius",
+      "bufferRadiusMeters": 125,
+      "minimumClearFraction": 0.75,
+      "positiveFraction": 0.05,
+      "positive": 0,
+      "negative": 1389,
+      "unknown": 1437,
+      "positiveRateAmongUsable": 0.0,
+      "byEvent": {
+        "DFO_3251_From_20080102_to_20080106": {
+          "negative": 1389,
+          "unknown": 24
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "unknown": 1413
+        }
+      },
+      "changedFromCanonical": 4
+    },
+    {
+      "name": "one-and-half-pixel-radius",
+      "bufferRadiusMeters": 375,
+      "minimumClearFraction": 0.75,
+      "positiveFraction": 0.05,
+      "positive": 1,
+      "negative": 1387,
+      "unknown": 1438,
+      "positiveRateAmongUsable": 0.00072,
+      "byEvent": {
+        "DFO_3251_From_20080102_to_20080106": {
+          "negative": 1387,
+          "unknown": 25,
+          "positive": 1
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "unknown": 1413
+        }
+      },
+      "changedFromCanonical": 15
+    },
+    {
+      "name": "lower-quality-cutoff",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.5,
+      "positiveFraction": 0.05,
+      "positive": 0,
+      "negative": 1385,
+      "unknown": 1441,
+      "positiveRateAmongUsable": 0.0,
+      "byEvent": {
+        "DFO_3251_From_20080102_to_20080106": {
+          "negative": 1385,
+          "unknown": 28
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "unknown": 1413
+        }
+      },
+      "changedFromCanonical": 0
+    },
+    {
+      "name": "higher-quality-cutoff",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.9,
+      "positiveFraction": 0.05,
+      "positive": 0,
+      "negative": 1337,
+      "unknown": 1489,
+      "positiveRateAmongUsable": 0.0,
+      "byEvent": {
+        "DFO_3251_From_20080102_to_20080106": {
+          "negative": 1337,
+          "unknown": 76
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "unknown": 1413
+        }
+      },
+      "changedFromCanonical": 48
+    },
+    {
+      "name": "lower-exposure-threshold",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.75,
+      "positiveFraction": 0.02,
+      "positive": 1,
+      "negative": 1385,
+      "unknown": 1440,
+      "positiveRateAmongUsable": 0.000722,
+      "byEvent": {
+        "DFO_3251_From_20080102_to_20080106": {
+          "negative": 1385,
+          "unknown": 27,
+          "positive": 1
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "unknown": 1413
+        }
+      },
+      "changedFromCanonical": 1
+    },
+    {
+      "name": "higher-exposure-threshold",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.75,
+      "positiveFraction": 0.1,
+      "positive": 0,
+      "negative": 1385,
+      "unknown": 1441,
+      "positiveRateAmongUsable": 0.0,
+      "byEvent": {
+        "DFO_3251_From_20080102_to_20080106": {
+          "negative": 1385,
+          "unknown": 28
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "unknown": 1413
+        }
+      },
+      "changedFromCanonical": 0
+    }
+  ]
+}

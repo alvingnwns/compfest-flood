@@ -1,0 +1,79 @@
+{
+  "status": "FAIL",
+  "finalRealHistoricalMlFeasibility": "FAIL",
+  "checks": {
+    "multipleIndependentHistoricalEvents": {
+      "passed": false,
+      "explanation": "Only 2 products contain non-permanent flood pixels in the pilot, and only 1 has event context centred on the pilot."
+    },
+    "multiplePositiveEventGroups": {
+      "passed": false,
+      "explanation": "The canonical configuration has positives in 0 independent event groups."
+    },
+    "defensibleNegatives": {
+      "passed": true,
+      "explanation": "1385 observations have sufficient clear coverage, low permanent-water overlap, and zero meaningful flood exposure."
+    },
+    "usableLabelBalance": {
+      "passed": false,
+      "explanation": "Canonical support is 0 positive and 1385 negative; positive rate among usable labels is 0.000000."
+    },
+    "eventTemporalSplitPossible": {
+      "passed": false,
+      "explanation": "At least three positive-support event groups are required for non-random train/validation/test roles."
+    },
+    "meaningfulTargetAtSourceResolution": {
+      "passed": true,
+      "explanation": "The target is explicitly corridor exposure with a one-pixel-radius canonical buffer, not pavement inundation or road closure."
+    },
+    "sufficientPreEventStaticFeaturesAvailable": {
+      "passed": true,
+      "explanation": "OSM road class and length are available before an event; feature construction was intentionally stopped after this failed label gate."
+    },
+    "noObviousTargetLeakage": {
+      "passed": true,
+      "explanation": "No same-event flood, duration, severity, damage, or label-derived value was built as a feature."
+    },
+    "evaluationTestsBetweenEventGeneralization": {
+      "passed": false,
+      "explanation": "With no canonical positive event group, independent-event generalization cannot be evaluated."
+    }
+  },
+  "failures": [
+    "multipleIndependentHistoricalEvents",
+    "multiplePositiveEventGroups",
+    "usableLabelBalance",
+    "eventTemporalSplitPossible",
+    "evaluationTestsBetweenEventGeneralization"
+  ],
+  "statistics": {
+    "collectionEvents": 913,
+    "productGeometriesIntersectingPilot": 19,
+    "detectedFloodEventsInPilot": 2,
+    "independentlyOfficiallyConfirmedDetectedEvents": 0,
+    "contextEligibleEvents": [
+      "DFO_3251_From_20080102_to_20080106"
+    ],
+    "positiveEventGroups": [],
+    "roadSegments": 1413,
+    "roadEventObservations": 2826,
+    "positive": 0,
+    "negative": 1385,
+    "unknownExcluded": 1441,
+    "positiveRateAmongUsable": 0.0,
+    "byEvent": {
+      "DFO_3251_From_20080102_to_20080106": {
+        "negative": 1385,
+        "unknown": 28
+      },
+      "DFO_3280_From_20080301_to_20080403": {
+        "unknown": 1413
+      }
+    },
+    "sensitivityConfigurationsWithAnyPositive": 2,
+    "march2025Role": "demo_only_not_a_global_flood_database_evaluation_event"
+  },
+  "priorSentinelAttemptStatus": "FAIL",
+  "activeRuntimeTrainingData": "synthetic",
+  "decision": "Stop before feature engineering and training. Keep the transparent synthetic ML baseline for the competition MVP; do not replace the active runtime artifact."
+}

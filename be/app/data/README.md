@@ -9,4 +9,4 @@ This directory will contain versioned, offline historical-replay snapshots:
 
 No external API is required to run the MVP demo.
 
-The initial `jakarta-2025-03-04-*` runtime scenario assets remain synthetic and intentionally marked as such. Separately, `flood-events/` and `datasets/historical_road_flood_labels.csv` contain verified event provenance and Earth Engine-derived road-event observations. Those observations failed the scientific feasibility gate and are not used by the runtime model.
+The initial `jakarta-2025-03-04-*` runtime scenario assets remain synthetic and intentionally marked as such. Separately, `flood-events/` contains the failed Sentinel-1 feasibility evidence, while `global-flood-db/` and `datasets/global_flood_road_corridor_labels.csv` contain the failed Global Flood Database fallback evidence. Neither real-data dataset is used by the runtime model.

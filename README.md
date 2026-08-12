@@ -4,9 +4,9 @@ ResiliChain AI is a flood-aware supply-chain recovery decision-support MVP with 
 
 ## What is real and what is synthetic
 
-The FastAPI API, Logistic Regression inference with `predict_proba`, NetworkX risk-aware routing, OR-Tools CP-SAT optimization, impact propagation, manufacturing/logistics/commerce decisions, and KPI calculations are executable computations. The active road snapshot is now derived from OpenStreetMap. The model's training labels, Jakarta flood extent, and company scenario remain synthetic placeholders pending Earth Engine authentication and historical-data integration.
+The FastAPI API, Logistic Regression inference with `predict_proba`, NetworkX risk-aware routing, OR-Tools CP-SAT optimization, impact propagation, manufacturing/logistics/commerce decisions, and KPI calculations are executable computations. The active road snapshot is derived from OpenStreetMap. The active model's training labels, March 2025 flood extent, and company scenario remain transparent synthetic placeholders.
 
-Phase C status: C1 real OSM is complete; C2–C9 are blocked with **EARTH ENGINE AUTHENTICATION REQUIRED**. See [`docs/OSM_ROAD_NETWORK.md`](docs/OSM_ROAD_NETWORK.md) and [`docs/FLOOD_REMOTE_SENSING_PIPELINE.md`](docs/FLOOD_REMOTE_SENSING_PIPELINE.md).
+Phase C status: real OSM is complete. Earth Engine processing was completed for Sentinel-1 and the Global Flood Database, but both scientific feasibility gates failed with zero canonical positive road/corridor labels. Historical model training was therefore prohibited. See [`docs/FLOOD_REMOTE_SENSING_PIPELINE.md`](docs/FLOOD_REMOTE_SENSING_PIPELINE.md) and [`docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md`](docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md).
 
 ## Run locally
 
