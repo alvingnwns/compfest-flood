@@ -4,9 +4,9 @@ ResiliChain AI is a flood-aware supply-chain recovery decision-support MVP with 
 
 ## What is real and what is synthetic
 
-The FastAPI API, Logistic Regression inference with `predict_proba`, NetworkX risk-aware routing, OR-Tools CP-SAT optimization, impact propagation, manufacturing/logistics/commerce decisions, and KPI calculations are executable computations. The active road snapshot is derived from OpenStreetMap. The active model's training labels, March 2025 flood extent, and company scenario remain transparent synthetic placeholders.
+The FastAPI API, Random Forest inference with `predict_proba`, NetworkX risk-aware routing, OR-Tools CP-SAT optimization, impact propagation, manufacturing/logistics/commerce decisions, and KPI calculations are executable computations. The active road snapshot is derived from OpenStreetMap. The active model is trained on Global Flood Database corridor labels across multiple Indonesian regions. March 2025 flood geometry and the company scenario remain transparent synthetic/simulated placeholders.
 
-Phase C status: real OSM is complete. Earth Engine processing was completed for Sentinel-1 and the Global Flood Database, but both scientific feasibility gates failed with zero canonical positive road/corridor labels. Historical model training was therefore prohibited. See [`docs/FLOOD_REMOTE_SENSING_PIPELINE.md`](docs/FLOOD_REMOTE_SENSING_PIPELINE.md) and [`docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md`](docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md).
+Phase D status: both Jakarta-only scientific attempts remain documented failures. Objective multi-region Indonesia discovery produced a feasible historical corridor-exposure dataset, and the selected model now runs offline over Jakarta as the deployment/demo pilot. Jakarta is not a labeled validation region; unseen-region recall is limited and Jakarta contains two unseen road categories. See [`docs/INDONESIA_HISTORICAL_FLOOD_DATASET.md`](docs/INDONESIA_HISTORICAL_FLOOD_DATASET.md), [`docs/FLOOD_RISK_MODEL_REPORT.md`](docs/FLOOD_RISK_MODEL_REPORT.md), and [`docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md`](docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md).
 
 ## Run locally
 

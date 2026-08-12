@@ -8,7 +8,7 @@ from app.repositories.scenario_repository import get_historical_jakarta
 from app.repositories.simulation_repository import simulation_repository
 from app.schemas.disruption import DisruptionAnalysis, RoadRisk
 from app.schemas.simulation import Simulation
-from app.services.flood_risk_service import predict_risk
+from app.services.flood_risk_service import model_version, predict_risk
 from app.services.impact_service import calculate_impact
 from app.services.routing_service import calculate_routes
 
@@ -105,7 +105,7 @@ def create_simulation(scenario_id: str) -> Simulation:
             update={
                 "status": "completed",
                 "completed_at": datetime.now(UTC),
-                "model_version": "flood-risk-1.0.0-synthetic-labels",
+                "model_version": model_version(),
                 "optimizer_version": "cp-sat-connected-v2",
             }
         )

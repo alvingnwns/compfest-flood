@@ -40,14 +40,14 @@ def test_sensitivity_does_not_promote_unstable_candidate_to_canonical_positive()
     assert canonical["bufferRadiusMeters"] == 250
 
 
-def test_final_gate_fails_before_training_and_keeps_runtime_synthetic() -> None:
+def test_jakarta_fallback_gate_stays_failed_after_multiregion_runtime_activation() -> None:
     result = evaluate()
     assert result["status"] == "FAIL"
     assert result["finalRealHistoricalMlFeasibility"] == "FAIL"
     assert not result["checks"]["multipleIndependentHistoricalEvents"]["passed"]
     assert not result["checks"]["multiplePositiveEventGroups"]["passed"]
     assert not result["checks"]["eventTemporalSplitPossible"]["passed"]
-    assert result["activeRuntimeTrainingData"] == "synthetic"
+    assert result["activeRuntimeTrainingData"] == "real-historical-global-flood-database-indonesia"
     assert result["statistics"]["march2025Role"] == "demo_only_not_a_global_flood_database_evaluation_event"
 
 

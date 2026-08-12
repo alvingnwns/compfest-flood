@@ -1,0 +1,130 @@
+{
+  "status": "PASS",
+  "finalIndonesiaHistoricalMlFeasibility": "PASS",
+  "checks": {
+    "multipleIndependentFloodEvents": {
+      "passed": true,
+      "explanation": "32 independently identified event groups are represented."
+    },
+    "positivesAcrossMultipleEventGroups": {
+      "passed": true,
+      "explanation": "Canonical positives occur in 31 event groups."
+    },
+    "defensibleNegatives": {
+      "passed": true,
+      "explanation": "26911 negatives meet source/clear coverage and permanent-water rules and have flood exposure <= 0.001."
+    },
+    "usableClassBalance": {
+      "passed": true,
+      "explanation": "Natural usable support is 2219 positive and 26911 negative (7.6176% positive); unknowns were not converted to negatives."
+    },
+    "multipleGeographicGroups": {
+      "passed": true,
+      "explanation": "Canonical positives occur in 13 GAUL level-2 regions."
+    },
+    "eventTemporalSeparationPossible": {
+      "passed": true,
+      "explanation": "Positive events span 2002-2016 across 14 distinct years, permitting later-event validation."
+    },
+    "geographicSeparationPossible": {
+      "passed": true,
+      "explanation": "13 positive-support regions permit entire-region holdout without row splitting."
+    },
+    "meaningfulTargetAtSourceResolution": {
+      "passed": true,
+      "explanation": "The target remains ~250 m road-corridor flood exposure, explicitly not closure, depth, passability, or pavement truth."
+    },
+    "preEventStaticFeaturesAvailable": {
+      "passed": true,
+      "explanation": "OSM road class, length, directionality, and geometry-derived features are local and static; causal history can be computed using only earlier events."
+    },
+    "meaningfulEvaluationBeyondLookupPossible": {
+      "passed": true,
+      "explanation": "Many positive event and geographic groups support later-event validation and unseen-region testing without feeding region identity to the model."
+    },
+    "noObviousLeakage": {
+      "passed": true,
+      "explanation": "Same-event flood fraction, quality masks, event duration/severity, region identity, and post-event impact are prohibited as model inputs."
+    }
+  },
+  "failures": [],
+  "statistics": {
+    "indonesiaFloodEventsInspected": 35,
+    "selectedUsableEvents": 32,
+    "regions": 13,
+    "provinces": 8,
+    "eventRegionGroups": 32,
+    "uniqueRoadSegments": 13771,
+    "roadEventObservations": 31531,
+    "positive": 2219,
+    "negative": 26911,
+    "unknown": 2401,
+    "positiveRateAmongUsable": 0.076176,
+    "positiveEventGroups": [
+      "DFO_2106_From_20021215_to_20021220",
+      "DFO_2148_From_20030130_to_20030209",
+      "DFO_2158_From_20030216_to_20030217",
+      "DFO_2222_From_20030503_to_20030506",
+      "DFO_2403_From_20031210_to_20040123",
+      "DFO_2437_From_20040217_to_20040225",
+      "DFO_2612_From_20050111_to_20050210",
+      "DFO_2627_From_20050219_to_20050225",
+      "DFO_2779_From_20060108_to_20060112",
+      "DFO_2789_From_20060126_to_20060214",
+      "DFO_2890_From_20060619_to_20060623",
+      "DFO_2896_From_20060625_to_20060629",
+      "DFO_3065_From_20070501_to_20070525",
+      "DFO_3103_From_20070616_to_20070620",
+      "DFO_3141_From_20070725_to_20070802",
+      "DFO_3249_From_20071225_to_20080103",
+      "DFO_3251_From_20080102_to_20080106",
+      "DFO_3271_From_20080214_to_20080314",
+      "DFO_3280_From_20080301_to_20080403",
+      "DFO_3425_From_20081226_to_20081228",
+      "DFO_3465_From_20090324_to_20090420",
+      "DFO_3640_From_20100416_to_20100502",
+      "DFO_3878_From_20111127_to_20111130",
+      "DFO_3888_From_20111218_to_20120104",
+      "DFO_3895_From_20120127_to_20120129",
+      "DFO_3899_From_20120212_to_20120214",
+      "DFO_3902_From_20120220_to_20120227",
+      "DFO_4020_From_20130113_to_20130122",
+      "DFO_4231_From_20150315_to_20150323",
+      "DFO_4330_From_20160118_to_20160310",
+      "DFO_4364_From_20160617_to_20160624"
+    ],
+    "positiveRegionGroups": [
+      "gaul2-18003",
+      "gaul2-18007",
+      "gaul2-18013",
+      "gaul2-18014",
+      "gaul2-18069",
+      "gaul2-18081",
+      "gaul2-18116",
+      "gaul2-18188",
+      "gaul2-73682",
+      "gaul2-73705",
+      "gaul2-73735",
+      "gaul2-73814",
+      "gaul2-73847"
+    ],
+    "eventYears": [
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2015,
+      2016
+    ]
+  },
+  "decision": "Proceed to non-leaky feature construction, grouped temporal/geographic evaluation, Logistic Regression, and Random Forest. Runtime replacement remains conditional on valid evaluation.",
+  "selectionAudit": "Criteria fixed before OSM extraction or road-corridor labels."
+}

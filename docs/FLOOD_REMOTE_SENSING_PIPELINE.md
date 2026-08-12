@@ -1,8 +1,8 @@
 # Flood Remote-Sensing Pipeline
 
-Status: **BOTH REAL-HISTORICAL LABEL ATTEMPTS FAILED THE SCIENTIFIC GATE**.
+Status: **two Jakarta-only attempts failed; the objectively selected Indonesia multi-region attempt passed**.
 
-Attempt 1, documented below, used Sentinel-1 event change detection and failed with zero defensible positive road labels. Attempt 2 used the validated Global Flood Database event product with a coarse road-corridor target and also failed with zero canonical positives and no event-level split. See [`GLOBAL_FLOOD_DATABASE_FEASIBILITY.md`](GLOBAL_FLOOD_DATABASE_FEASIBILITY.md). Neither failure is hidden or weakened.
+Attempt 1 used Sentinel-1 and failed with zero defensible positive road labels. Attempt 2 used the Global Flood Database in Jakarta and failed with zero canonical positives. Neither failure is hidden or weakened. Attempt 3 expanded only the training population to objectively selected Indonesian regions; it passed with 31 positive-support events and 13 positive-support regions. The product pilot remains Jakarta. See [`INDONESIA_HISTORICAL_FLOOD_DATASET.md`](INDONESIA_HISTORICAL_FLOOD_DATASET.md).
 
 ## Attempt 1: Sentinel-1
 
@@ -52,4 +52,10 @@ The final command intentionally exits with code 2 while the gate status is `FAIL
 
 Sensitivity over 125/250/375 m corridor radii, 0.50/0.75/0.90 clear-observation cutoffs, and 0.02/0.05/0.10 positive exposure thresholds produced at most one unstable positive. Thresholds were not selected to force class support.
 
-The final fallback gate is `FAIL`. Feature engineering and model training stopped. The transparent synthetic runtime baseline remains active.
+The Jakarta fallback gate remains `FAIL`; it is not reinterpreted after Phase D.
+
+## Attempt 3: Indonesia multi-region Global Flood Database
+
+The same source semantics and quality rules were applied after deterministic region discovery. Full candidate and exclusion results were persisted before road labels. Real logistics road snapshots were extracted for 13 regions. Canonical 250 m corridors produced 31,531 observations: 2,219 positive, 26,911 negative, and 2,401 unknown.
+
+The 11-criterion gate passed before features or training. Non-leaky features and temporal plus wholly held-out-region splits were then used for Logistic Regression and Random Forest. Runtime uses the selected historical Random Forest; Earth Engine and Overpass remain preparation-only and Historical Replay remains offline.

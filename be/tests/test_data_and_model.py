@@ -44,11 +44,13 @@ def test_geojson_and_graph_are_consistent() -> None:
         )
 
 
-def test_model_inference_uses_raw_probability_and_synthetic_metadata() -> None:
+def test_model_inference_uses_historical_probability_and_real_label_metadata() -> None:
     road = get_road_features()["features"][1]["properties"]
     result = predict_risk(road)
     assert 0 <= result.riskProbability <= 1
     assert result.riskLevel in {"low", "medium", "high", "critical"}
     metrics_path = Path(__file__).resolve().parents[1] / "app" / "models" / "flood_risk_metrics.json"
     metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
-    assert "synthetic" in metrics["description"].lower()
+    assert metrics["version"] == "indonesia-road-corridor-flood-exposure-v1"
+    assert metrics["selectedModel"] == "randomForest"
+    assert metrics["split"]["test"]["regions"] == ["gaul2-73682", "gaul2-73814", "gaul2-73847"]

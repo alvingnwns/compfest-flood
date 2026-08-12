@@ -1,5 +1,14 @@
 # Flood-risk model artifact
 
-`flood_risk_model.joblib` contains a real Logistic Regression estimator and scaler used through `predict_proba`. Its labels and input dataset are synthetic, so its metrics demonstrate only technical reproducibility—not real-world flood-prediction validity.
+`flood_risk_model.joblib` contains the full preprocessing pipeline and selected Random Forest used through `predict_proba`. Its target is `roadCorridorFloodExposure`; labels are derived from real Global Flood Database observations over real OSM road corridors in multiple Indonesian regions.
 
-Regenerate it deterministically with `python scripts/train_flood_risk_model.py`. The JSON metadata records the model version, features, synthetic-data status, evaluation metrics, and scikit-learn version used to serialize the artifact.
+The artifact is versioned as `indonesia-road-corridor-flood-exposure-v1` and records the feature schema/order, target semantics, validation-selected threshold, temporal/geographic split groups, metrics, training provenance, and scikit-learn version.
+
+Regenerate it deterministically with:
+
+```powershell
+python scripts/train_indonesia_historical_flood_model.py
+python scripts/evaluate_indonesia_historical_flood_model.py
+```
+
+Jakarta is deployment/demo inference only, not a labeled accuracy evaluation region. March 2025 flood geometry and business operations remain synthetic/simulated.

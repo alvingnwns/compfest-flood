@@ -1,35 +1,30 @@
 # Flood-Risk Dataset Status
 
-Status: **two real-data label attempts constructed; neither is suitable for supervised training**.
+Three historical-label attempts are preserved.
 
-## Attempt 1: Sentinel-1 road-inundation evidence
+## Attempt 1: Sentinel-1 Jakarta — FAIL
 
-The versioned dataset contains 5,652 observations from 1,413 real OSM road segments across four events. It contains 0 positive, 2,825 negative, and 2,827 unknown observations.
+5,652 road-event observations: 0 positive, 2,825 negative, and 2,827 unknown. Only two event groups had timely homogeneous Sentinel-1 acquisitions. March 2025 had no timely acquisition and remains unknown, not a negative. No model was trained from this attempt.
 
-| Event | Role | Positive | Negative | Unknown |
-|---|---:|---:|---:|---:|
-| 2020-01-01 | Train | 0 | 1,413 | 0 |
-| 2021-02-20 | Train | 0 | 1,412 | 1 |
-| 2022-01-18 | Validation | 0 | 0 | 1,413 |
-| 2025-03-04 | Holdout | 0 | 0 | 1,413 |
+## Attempt 2: Global Flood Database Jakarta — FAIL
 
-Unknown observations are excluded rather than forced negative. In particular, the validation and holdout events have no timely Sentinel-1 acquisition. March 2025 road reports are preserved as authoritative event evidence, but cannot become satellite-observed road labels without suitable imagery.
+2,826 observations: 0 positive, 1,385 negative, and 1,441 unknown. Only two products contained non-permanent flood pixels in the pilot and only one had pilot-centred context. No event-level split was possible. No model was trained from this attempt.
 
-The canonical labels are in `be/app/data/datasets/historical_road_flood_labels.csv`; provenance, mask summaries, and sensitivity results are in `be/app/data/flood-events/`. No pre-event/context feature matrix was built because the label feasibility gate failed first. This ordering prevents post-event leakage and avoids spending downstream analysis on an invalid target.
+## Attempt 3: Global Flood Database multi-region Indonesia — PASS
 
-Scientific feasibility gate: **FAIL**. There is no positive class, only two usable event groups, no usable validation event, and no usable independent holdout.
+Objective discovery inspected 35 Indonesia-coded events and 3,981 event-region pairs before road labels. It selected 32 event-region groups across 13 regions and 8 provinces.
 
-## Attempt 2: Global Flood Database road-corridor exposure
+| Label | Count |
+|---|---:|
+| Positive | 2,219 |
+| Negative | 26,911 |
+| Unknown/excluded | 2,401 |
+| Total | 31,531 |
 
-The fallback dataset contains 2,826 observations for two products with non-permanent flood pixels in the pilot:
+The positive rate among usable rows is 7.6176%. Positives occur in 31 independent events and all 13 regions. Unknown rows are excluded from training and never recoded as negative.
 
-| Event | Positive | Negative | Unknown/excluded |
-|---|---:|---:|---:|
-| DFO 3251, January 2008 | 0 | 1,385 | 28 |
-| DFO 3280, March-April 2008 | 0 | 0 | 1,413 |
+Canonical labels use 250 m corridors, source/valid coverage >= 0.80, `clear_perc >= 0.75`, permanent water < 0.20, positive exposure >= 0.05, and negative exposure <= 0.001. The 100 m integration grid approximates corridor overlap only; the source support remains approximately 250 m.
 
-DFO 3280 has an event centroid outside Jakarta and only an isolated pilot pixel, so every observation is unknown rather than being forced into either class. The canonical definition uses a 250 m corridor radius, at least 75% clear observation, at least 80% valid coverage, less than 20% permanent-water overlap, and at least 5% exposure for a positive.
+The local feature table uses real OSM properties/geometry and causal prior-event history. Same-event flood evidence, event severity/duration/cause, post-event impacts, raw coordinates, and region identity are not predictive features.
 
-The canonical labels are in `be/app/data/datasets/global_flood_road_corridor_labels.csv`. The exact event audit, sensitivity configurations, sample evidence, and final gate are in `be/app/data/global-flood-db/`.
-
-Scientific feasibility gate: **FAIL**. The canonical positive count is zero, only one event has pilot-centred context, and no temporal/event split can evaluate generalization. No predictive feature matrix was built.
+See [`INDONESIA_HISTORICAL_FLOOD_DATASET.md`](INDONESIA_HISTORICAL_FLOOD_DATASET.md) and the artifacts under `be/app/data/indonesia-flood-ml/`.

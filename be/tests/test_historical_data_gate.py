@@ -29,10 +29,10 @@ def test_road_labels_preserve_unknown_and_never_force_uncovered_events_negative(
     assert all(row["exclusion_reason"] for row in excluded)
 
 
-def test_scientific_gate_fails_before_training_and_runtime_artifact_stays_synthetic() -> None:
+def test_sentinel_gate_stays_failed_after_multiregion_runtime_activation() -> None:
     result = evaluate()
     assert result["status"] == "FAIL"
     assert result["statistics"]["positive"] == 0
     assert not result["checks"]["meaningfulClassSupport"]
     metrics = json.loads((BASE_DIR / "app" / "models" / "flood_risk_metrics.json").read_text(encoding="utf-8"))
-    assert metrics["trainingData"] == "synthetic"
+    assert metrics["trainingData"] == "real-historical-global-flood-database-indonesia"

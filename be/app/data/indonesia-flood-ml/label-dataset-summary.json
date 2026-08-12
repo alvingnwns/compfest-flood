@@ -1,0 +1,537 @@
+{
+  "metadata": {
+    "collectionId": "GLOBAL_FLOOD_DB/MODIS_EVENTS/V1",
+    "effectiveSourceResolutionMeters": 250,
+    "aggregationScaleMeters": 100,
+    "aggregationScaleWarning": "The 100 m integration grid approximates corridor-area overlap; it does not improve the Global Flood Database's effective ~250 m observational support or create road-surface truth. A limited 30 m comparison is reported separately.",
+    "minimumValidObservationFraction": 0.8,
+    "maximumPermanentWaterFraction": 0.2,
+    "negativeExposureEpsilon": 0.001,
+    "target": "roadCorridorFloodExposure",
+    "targetSemantics": "Coarse corridor exposure proxy; not road closure, passability, depth, or pavement truth.",
+    "selectionIndependentOfRoadLabels": true,
+    "unknownsConvertedToNegatives": false,
+    "naturalDistributionBeforeResampling": true
+  },
+  "summary": {
+    "indonesiaFloodEventsInspected": 35,
+    "selectedUsableEvents": 32,
+    "regions": 13,
+    "provinces": 8,
+    "eventRegionGroups": 32,
+    "uniqueRoadSegments": 13771,
+    "roadEventObservations": 31531,
+    "positive": 2219,
+    "negative": 26911,
+    "unknown": 2401,
+    "positiveRateAmongUsable": 0.076176
+  },
+  "byEvent": [
+    {
+      "event_id": "DFO_2106_From_20021215_to_20021220",
+      "event_start": "2002-12-15",
+      "region_id": "gaul2-73705",
+      "region": "Kota Bandaaceh",
+      "positive": 4,
+      "negative": 788,
+      "unknown": 160
+    },
+    {
+      "event_id": "DFO_2148_From_20030130_to_20030209",
+      "event_start": "2003-01-30",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 102,
+      "negative": 947,
+      "unknown": 118
+    },
+    {
+      "event_id": "DFO_2158_From_20030216_to_20030217",
+      "event_start": "2003-02-16",
+      "region_id": "gaul2-18081",
+      "region": "Lamongan",
+      "positive": 125,
+      "negative": 921,
+      "unknown": 55
+    },
+    {
+      "event_id": "DFO_2222_From_20030503_to_20030506",
+      "event_start": "2003-05-03",
+      "region_id": "gaul2-18003",
+      "region": "Kota Jambi",
+      "positive": 38,
+      "negative": 828,
+      "unknown": 64
+    },
+    {
+      "event_id": "DFO_2403_From_20031210_to_20040123",
+      "event_start": "2003-12-10",
+      "region_id": "gaul2-18188",
+      "region": "Wajo",
+      "positive": 16,
+      "negative": 179,
+      "unknown": 61
+    },
+    {
+      "event_id": "DFO_2437_From_20040217_to_20040225",
+      "event_start": "2004-02-17",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 59,
+      "negative": 1011,
+      "unknown": 97
+    },
+    {
+      "event_id": "DFO_2612_From_20050111_to_20050210",
+      "event_start": "2005-01-11",
+      "region_id": "gaul2-73814",
+      "region": "Ogan Ilir",
+      "positive": 173,
+      "negative": 121,
+      "unknown": 41
+    },
+    {
+      "event_id": "DFO_2627_From_20050219_to_20050225",
+      "event_start": "2005-02-19",
+      "region_id": "gaul2-18007",
+      "region": "Bekasi",
+      "positive": 74,
+      "negative": 3006,
+      "unknown": 21
+    },
+    {
+      "event_id": "DFO_2779_From_20060108_to_20060112",
+      "event_start": "2006-01-08",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 104,
+      "negative": 960,
+      "unknown": 103
+    },
+    {
+      "event_id": "DFO_2789_From_20060126_to_20060214",
+      "event_start": "2006-01-26",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 152,
+      "negative": 895,
+      "unknown": 120
+    },
+    {
+      "event_id": "DFO_2890_From_20060619_to_20060623",
+      "event_start": "2006-06-19",
+      "region_id": "gaul2-73735",
+      "region": "Kota Makasar",
+      "positive": 5,
+      "negative": 1649,
+      "unknown": 110
+    },
+    {
+      "event_id": "DFO_2896_From_20060625_to_20060629",
+      "event_start": "2006-06-25",
+      "region_id": "gaul2-18116",
+      "region": "Tanahlaut",
+      "positive": 14,
+      "negative": 281,
+      "unknown": 36
+    },
+    {
+      "event_id": "DFO_3065_From_20070501_to_20070525",
+      "event_start": "2007-05-01",
+      "region_id": "gaul2-73682",
+      "region": "Hulusungai Utara",
+      "positive": 44,
+      "negative": 195,
+      "unknown": 26
+    },
+    {
+      "event_id": "DFO_3103_From_20070616_to_20070620",
+      "event_start": "2007-06-16",
+      "region_id": "gaul2-18188",
+      "region": "Wajo",
+      "positive": 10,
+      "negative": 179,
+      "unknown": 67
+    },
+    {
+      "event_id": "DFO_3141_From_20070725_to_20070802",
+      "event_start": "2007-07-25",
+      "region_id": "gaul2-18188",
+      "region": "Wajo",
+      "positive": 14,
+      "negative": 187,
+      "unknown": 55
+    },
+    {
+      "event_id": "DFO_3249_From_20071225_to_20080103",
+      "event_start": "2007-12-25",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 12,
+      "negative": 1085,
+      "unknown": 70
+    },
+    {
+      "event_id": "DFO_3251_From_20080102_to_20080106",
+      "event_start": "2008-01-02",
+      "region_id": "gaul2-18013",
+      "region": "Indramayu",
+      "positive": 62,
+      "negative": 993,
+      "unknown": 40
+    },
+    {
+      "event_id": "DFO_3271_From_20080214_to_20080314",
+      "event_start": "2008-02-14",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 100,
+      "negative": 947,
+      "unknown": 120
+    },
+    {
+      "event_id": "DFO_3280_From_20080301_to_20080403",
+      "event_start": "2008-03-01",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 155,
+      "negative": 910,
+      "unknown": 102
+    },
+    {
+      "event_id": "DFO_3425_From_20081226_to_20081228",
+      "event_start": "2008-12-26",
+      "region_id": "gaul2-73705",
+      "region": "Kota Bandaaceh",
+      "positive": 2,
+      "negative": 794,
+      "unknown": 156
+    },
+    {
+      "event_id": "DFO_3465_From_20090324_to_20090420",
+      "event_start": "2009-03-24",
+      "region_id": "gaul2-73705",
+      "region": "Kota Bandaaceh",
+      "positive": 7,
+      "negative": 785,
+      "unknown": 160
+    },
+    {
+      "event_id": "DFO_3640_From_20100416_to_20100502",
+      "event_start": "2010-04-16",
+      "region_id": "gaul2-73682",
+      "region": "Hulusungai Utara",
+      "positive": 84,
+      "negative": 151,
+      "unknown": 30
+    },
+    {
+      "event_id": "DFO_3878_From_20111127_to_20111130",
+      "event_start": "2011-11-27",
+      "region_id": "gaul2-73847",
+      "region": "Serdang Bedagai",
+      "positive": 56,
+      "negative": 679,
+      "unknown": 18
+    },
+    {
+      "event_id": "DFO_3888_From_20111218_to_20120104",
+      "event_start": "2011-12-18",
+      "region_id": "gaul2-18013",
+      "region": "Indramayu",
+      "positive": 251,
+      "negative": 761,
+      "unknown": 83
+    },
+    {
+      "event_id": "DFO_3895_From_20120127_to_20120129",
+      "event_start": "2012-01-27",
+      "region_id": "gaul2-18013",
+      "region": "Indramayu",
+      "positive": 96,
+      "negative": 955,
+      "unknown": 44
+    },
+    {
+      "event_id": "DFO_3899_From_20120212_to_20120214",
+      "event_start": "2012-02-12",
+      "region_id": "gaul2-18014",
+      "region": "Karawang",
+      "positive": 58,
+      "negative": 1623,
+      "unknown": 40
+    },
+    {
+      "event_id": "DFO_3902_From_20120220_to_20120227",
+      "event_start": "2012-02-20",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 77,
+      "negative": 995,
+      "unknown": 95
+    },
+    {
+      "event_id": "DFO_4020_From_20130113_to_20130122",
+      "event_start": "2013-01-13",
+      "region_id": "gaul2-18013",
+      "region": "Indramayu",
+      "positive": 6,
+      "negative": 1068,
+      "unknown": 21
+    },
+    {
+      "event_id": "DFO_4222_From_20150205_to_20150209",
+      "event_start": "2015-02-05",
+      "region_id": "gaul2-18188",
+      "region": "Wajo",
+      "positive": 0,
+      "negative": 205,
+      "unknown": 51
+    },
+    {
+      "event_id": "DFO_4231_From_20150315_to_20150323",
+      "event_start": "2015-03-15",
+      "region_id": "gaul2-18081",
+      "region": "Lamongan",
+      "positive": 131,
+      "negative": 903,
+      "unknown": 67
+    },
+    {
+      "event_id": "DFO_4330_From_20160118_to_20160310",
+      "event_start": "2016-01-18",
+      "region_id": "gaul2-18081",
+      "region": "Lamongan",
+      "positive": 85,
+      "negative": 955,
+      "unknown": 61
+    },
+    {
+      "event_id": "DFO_4364_From_20160617_to_20160624",
+      "event_start": "2016-06-17",
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "positive": 103,
+      "negative": 955,
+      "unknown": 109
+    }
+  ],
+  "byRegion": [
+    {
+      "region_id": "gaul2-18003",
+      "region": "Kota Jambi",
+      "province": "Jambi",
+      "positive": 38,
+      "negative": 828,
+      "unknown": 64
+    },
+    {
+      "region_id": "gaul2-18007",
+      "region": "Bekasi",
+      "province": "Jawa Barat",
+      "positive": 74,
+      "negative": 3006,
+      "unknown": 21
+    },
+    {
+      "region_id": "gaul2-18013",
+      "region": "Indramayu",
+      "province": "Jawa Barat",
+      "positive": 415,
+      "negative": 3777,
+      "unknown": 188
+    },
+    {
+      "region_id": "gaul2-18014",
+      "region": "Karawang",
+      "province": "Jawa Barat",
+      "positive": 58,
+      "negative": 1623,
+      "unknown": 40
+    },
+    {
+      "region_id": "gaul2-18069",
+      "region": "Gresik",
+      "province": "Jawa Timur",
+      "positive": 864,
+      "negative": 8705,
+      "unknown": 934
+    },
+    {
+      "region_id": "gaul2-18081",
+      "region": "Lamongan",
+      "province": "Jawa Timur",
+      "positive": 341,
+      "negative": 2779,
+      "unknown": 183
+    },
+    {
+      "region_id": "gaul2-18116",
+      "region": "Tanahlaut",
+      "province": "Kalimantan Selatan",
+      "positive": 14,
+      "negative": 281,
+      "unknown": 36
+    },
+    {
+      "region_id": "gaul2-18188",
+      "region": "Wajo",
+      "province": "Sulawesi Selatan",
+      "positive": 40,
+      "negative": 750,
+      "unknown": 234
+    },
+    {
+      "region_id": "gaul2-73682",
+      "region": "Hulusungai Utara",
+      "province": "Kalimantan Selatan",
+      "positive": 128,
+      "negative": 346,
+      "unknown": 56
+    },
+    {
+      "region_id": "gaul2-73705",
+      "region": "Kota Bandaaceh",
+      "province": "Nangroe Aceh Darussalam",
+      "positive": 13,
+      "negative": 2367,
+      "unknown": 476
+    },
+    {
+      "region_id": "gaul2-73735",
+      "region": "Kota Makasar",
+      "province": "Sulawesi Selatan",
+      "positive": 5,
+      "negative": 1649,
+      "unknown": 110
+    },
+    {
+      "region_id": "gaul2-73814",
+      "region": "Ogan Ilir",
+      "province": "Sumatera Selatan",
+      "positive": 173,
+      "negative": 121,
+      "unknown": 41
+    },
+    {
+      "region_id": "gaul2-73847",
+      "region": "Serdang Bedagai",
+      "province": "Sumatera Utara",
+      "positive": 56,
+      "negative": 679,
+      "unknown": 18
+    }
+  ],
+  "byProvince": [
+    {
+      "province": "Jambi",
+      "positive": 38,
+      "negative": 828,
+      "unknown": 64
+    },
+    {
+      "province": "Jawa Barat",
+      "positive": 547,
+      "negative": 8406,
+      "unknown": 249
+    },
+    {
+      "province": "Jawa Timur",
+      "positive": 1205,
+      "negative": 11484,
+      "unknown": 1117
+    },
+    {
+      "province": "Kalimantan Selatan",
+      "positive": 142,
+      "negative": 627,
+      "unknown": 92
+    },
+    {
+      "province": "Nangroe Aceh Darussalam",
+      "positive": 13,
+      "negative": 2367,
+      "unknown": 476
+    },
+    {
+      "province": "Sulawesi Selatan",
+      "positive": 45,
+      "negative": 2399,
+      "unknown": 344
+    },
+    {
+      "province": "Sumatera Selatan",
+      "positive": 173,
+      "negative": 121,
+      "unknown": 41
+    },
+    {
+      "province": "Sumatera Utara",
+      "positive": 56,
+      "negative": 679,
+      "unknown": 18
+    }
+  ],
+  "byRoadClass": [
+    {
+      "highway": "motorway",
+      "positive": 49,
+      "negative": 519,
+      "unknown": 42
+    },
+    {
+      "highway": "motorway_link",
+      "positive": 138,
+      "negative": 1015,
+      "unknown": 22
+    },
+    {
+      "highway": "primary",
+      "positive": 98,
+      "negative": 2758,
+      "unknown": 137
+    },
+    {
+      "highway": "primary_link",
+      "positive": 0,
+      "negative": 680,
+      "unknown": 31
+    },
+    {
+      "highway": "secondary",
+      "positive": 445,
+      "negative": 7398,
+      "unknown": 778
+    },
+    {
+      "highway": "secondary_link",
+      "positive": 64,
+      "negative": 1088,
+      "unknown": 34
+    },
+    {
+      "highway": "tertiary",
+      "positive": 432,
+      "negative": 6892,
+      "unknown": 500
+    },
+    {
+      "highway": "tertiary_link",
+      "positive": 12,
+      "negative": 404,
+      "unknown": 80
+    },
+    {
+      "highway": "trunk",
+      "positive": 735,
+      "negative": 4725,
+      "unknown": 648
+    },
+    {
+      "highway": "trunk_link",
+      "positive": 246,
+      "negative": 1432,
+      "unknown": 129
+    }
+  ]
+}

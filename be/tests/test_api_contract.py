@@ -26,7 +26,7 @@ def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
     assert created.status_code == 201
     simulation = created.json()
     assert simulation["status"] == "completed"
-    assert simulation["modelVersion"].endswith("synthetic-labels")
+    assert simulation["modelVersion"] == "indonesia-road-corridor-flood-exposure-v1"
     assert simulation["optimizerVersion"] == "cp-sat-connected-v2"
     simulation_id = simulation["id"]
     assert client.get(f"/api/simulations/{simulation_id}").json() == simulation
