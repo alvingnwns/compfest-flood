@@ -26,20 +26,20 @@ class RiskResult(BaseModel):
 @lru_cache(maxsize=1)
 def _load_model() -> dict[str, Any]:
     if not MODEL_PATH.exists():
-        raise ApiError(500, "model_missing", "Historical flood-risk model artifact was not found.")
+        raise ApiError(500, "model_missing", "Artefak model risiko banjir historis tidak ditemukan.")
     artifact = joblib.load(MODEL_PATH)
     if artifact.get("trainingData") != EXPECTED_TRAINING_DATA or "pipeline" not in artifact:
-        raise ApiError(500, "model_provenance_invalid", "Historical flood-risk model provenance is invalid.")
+        raise ApiError(500, "model_provenance_invalid", "Provenance model risiko banjir historis tidak valid.")
     return artifact
 
 
 @lru_cache(maxsize=1)
 def _jakarta_features() -> pd.DataFrame:
     if not JAKARTA_FEATURES_PATH.exists():
-        raise ApiError(500, "features_missing", "Local Jakarta historical-model features were not found.")
+        raise ApiError(500, "features_missing", "Fitur lokal Jakarta untuk model historis tidak ditemukan.")
     frame = pd.read_csv(JAKARTA_FEATURES_PATH).set_index("segment_id", drop=False)
     if frame.index.has_duplicates:
-        raise ApiError(500, "features_invalid", "Jakarta historical-model segment IDs are not unique.")
+        raise ApiError(500, "features_invalid", "ID segmen fitur model historis Jakarta tidak unik.")
     return frame
 
 
@@ -59,24 +59,44 @@ def model_version() -> str:
     return str(_load_model()["version"])
 
 
+def model_provenance() -> dict[str, Any]:
+    artifact = _load_model()
+    split = artifact["split"]
+    event_ids = {event for group in split.values() for event in group["events"]}
+    region_ids = {region for group in split.values() for region in group["regions"]}
+    algorithm = type(artifact["pipeline"].named_steps["model"]).__name__
+    return {
+        "training_data": artifact["trainingData"],
+        "source": "Global Flood Database / MODIS_EVENTS/V1",
+        "target": artifact["target"],
+        "algorithm": algorithm,
+        "training_scope": "32 kejadian banjir historis di 13 region Indonesia",
+        "deployment_scope": "Jakarta sebagai pilot inferensi/demo",
+        "training_events": len(event_ids),
+        "training_regions": len(region_ids),
+        "jakarta_validation_status": "not_validated",
+        "probability_semantics": "Probabilitas paparan banjir koridor jalan, bukan kepastian jalan ditutup",
+    }
+
+
 def _risk_factors(row: pd.Series) -> list[dict[str, str]]:
-    factors = [{"id": "road_class", "label": f"OSM road class: {row['highway']}"}]
+    factors = [{"id": "road_class", "label": f"Kelas jalan OSM: {row['highway']}"}]
     if float(row["log_length_meters"]) >= 6:
-        factors.append({"id": "segment_length", "label": "Longer OSM road segment"})
+        factors.append({"id": "segment_length", "label": "Segmen jalan OSM lebih panjang"})
     if float(row["sinuosity"]) >= 1.25:
-        factors.append({"id": "road_geometry", "label": "Curved OSM segment geometry"})
+        factors.append({"id": "road_geometry", "label": "Geometri segmen OSM berkelok"})
     if float(row["prior_observed_events"]) > 0:
         factors.append(
             {
                 "id": "causal_history",
-                "label": "Prior satellite-observed corridor exposure history",
+                "label": "Riwayat paparan koridor dari observasi satelit sebelumnya",
             }
         )
     else:
         factors.append(
             {
                 "id": "no_local_label_history",
-                "label": "No defensible prior labeled Jakarta event; static-road inference only",
+                "label": "Belum ada event Jakarta berlabel defensible; inferensi memakai fitur jalan statis",
             }
         )
     return factors
@@ -90,7 +110,7 @@ def predict_risk(road_properties: dict[str, Any]) -> RiskResult:
         raise ApiError(
             500,
             "segment_features_missing",
-            "Historical-model features are missing for the requested Jakarta OSM segment.",
+            "Fitur model historis tidak tersedia untuk segmen OSM Jakarta yang diminta.",
             details={"segmentId": segment_id},
         )
     row = features.loc[segment_id]

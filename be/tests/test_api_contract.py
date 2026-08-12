@@ -27,6 +27,11 @@ def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
     simulation = created.json()
     assert simulation["status"] == "completed"
     assert simulation["modelVersion"] == "indonesia-road-corridor-flood-exposure-v1"
+    provenance = simulation["modelProvenance"]
+    assert provenance["trainingData"] == "real-historical-global-flood-database-indonesia"
+    assert provenance["algorithm"] == "RandomForestClassifier"
+    assert provenance["trainingEvents"] == 32 and provenance["trainingRegions"] == 13
+    assert provenance["jakartaValidationStatus"] == "not_validated"
     assert simulation["optimizerVersion"] == "cp-sat-connected-v2"
     simulation_id = simulation["id"]
     assert client.get(f"/api/simulations/{simulation_id}").json() == simulation
@@ -82,7 +87,7 @@ def test_structured_errors_and_validation(client: TestClient, simulation_id: str
     assert missing.status_code == 404
     assert missing.json() == {
         "code": "simulation_not_found",
-        "message": "Simulation not found.",
+        "message": "Simulasi tidak ditemukan.",
         "retryable": False,
         "details": {"simulationId": "sim-missing"},
     }

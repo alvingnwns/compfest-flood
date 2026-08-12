@@ -12,6 +12,9 @@ describe("API contract examples", () => {
     expect(result.inventory.length).toBeGreaterThan(0);
     expect(result.facilities.filter((item) => item.kind === "supplier")).toHaveLength(2);
     expect(simulationSchema.parse(simulationFixture).status).toBe("completed");
+    const provenance = simulationSchema.parse(simulationFixture).modelProvenance;
+    expect(provenance?.trainingData).toBe("real-historical-global-flood-database-indonesia");
+    expect(provenance?.jakartaValidationStatus).toBe("not_validated");
   });
 
   it("parses disruption, recovery, and impact responses", () => {

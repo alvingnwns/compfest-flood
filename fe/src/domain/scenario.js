@@ -25,9 +25,22 @@ export const scenarioSchema = z.object({
     products: z.array(productSchema), materials: z.array(materialSchema), inventory: z.array(inventorySchema), orders: z.array(orderSchema),
 });
 export const simulationStatusSchema = z.enum(["queued", "processing", "completed", "failed"]);
+export const modelProvenanceSchema = z.object({
+    trainingData: z.string(),
+    source: z.string(),
+    target: z.string(),
+    algorithm: z.string(),
+    trainingScope: z.string(),
+    deploymentScope: z.string(),
+    trainingEvents: z.number().int().positive(),
+    trainingRegions: z.number().int().positive(),
+    jakartaValidationStatus: z.enum(["not_validated", "validated"]),
+    probabilitySemantics: z.string(),
+});
+
 export const simulationSchema = z.object({
     id: z.string(), scenarioId: z.string(), status: simulationStatusSchema, createdAt: z.iso.datetime({ offset: true }),
-    completedAt: z.iso.datetime({ offset: true }).optional(), modelVersion: z.string().optional(), optimizerVersion: z.string().optional(),
+    completedAt: z.iso.datetime({ offset: true }).optional(), modelVersion: z.string().optional(), modelProvenance: modelProvenanceSchema.optional(), optimizerVersion: z.string().optional(),
     dataMode: dataSourceModeSchema, historicalDataStatus: historicalDataStatusSchema, error: apiErrorSchema.optional(),
 });
 export const runSimulationRequestSchema = z.object({ scenarioId: z.string().min(1) });

@@ -7,8 +7,8 @@ from app.repositories.geospatial_repository import get_historical_flood_extent, 
 from app.repositories.scenario_repository import get_historical_jakarta
 from app.repositories.simulation_repository import simulation_repository
 from app.schemas.disruption import DisruptionAnalysis, RoadRisk
-from app.schemas.simulation import Simulation
-from app.services.flood_risk_service import model_version, predict_risk
+from app.schemas.simulation import ModelProvenance, Simulation
+from app.services.flood_risk_service import model_provenance, model_version, predict_risk
 from app.services.impact_service import calculate_impact
 from app.services.routing_service import calculate_routes
 
@@ -16,7 +16,7 @@ from app.services.routing_service import calculate_routes
 def create_simulation(scenario_id: str) -> Simulation:
     scenario = get_historical_jakarta()
     if scenario_id != scenario.id:
-        raise ApiError(404, "scenario_not_found", "Scenario not found.", details={"scenarioId": scenario_id})
+        raise ApiError(404, "scenario_not_found", "Skenario tidak ditemukan.", details={"scenarioId": scenario_id})
     existing = simulation_repository.get_for_scenario(scenario_id)
     if existing is not None:
         return existing
@@ -106,6 +106,7 @@ def create_simulation(scenario_id: str) -> Simulation:
                 "status": "completed",
                 "completed_at": datetime.now(UTC),
                 "model_version": model_version(),
+                "model_provenance": ModelProvenance.model_validate(model_provenance()),
                 "optimizer_version": "cp-sat-connected-v2",
             }
         )
@@ -118,7 +119,7 @@ def get_simulation(simulation_id: str) -> Simulation:
         raise ApiError(
             404,
             "simulation_not_found",
-            "Simulation not found.",
+            "Simulasi tidak ditemukan.",
             details={"simulationId": simulation_id},
         )
     return simulation
