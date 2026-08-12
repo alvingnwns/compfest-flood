@@ -12,6 +12,7 @@ def calculate_impact(scenario: Scenario, road_risks: list[RoadRisk], routes: lis
     impacted_stores: set[str] = set()
     issues: list[PrioritizedIssue] = []
     facility_kind = {facility.id: facility.kind for facility in scenario.facilities}
+    facility_name = {facility.id: facility.name for facility in scenario.facilities}
     for route in routes:
         if route.type != "baseline" or not risky_segments.intersection(route.affected_road_segment_ids):
             continue
@@ -23,12 +24,14 @@ def calculate_impact(scenario: Scenario, road_risks: list[RoadRisk], routes: lis
                 impacted_warehouses.add(facility_id)
             elif kind == "store":
                 impacted_stores.add(facility_id)
+        origin_name = facility_name.get(route.origin_facility_id, route.origin_facility_id)
+        dest_name = facility_name.get(route.destination_facility_id, route.destination_facility_id)
         issues.append(
             PrioritizedIssue(
                 id=f"issue-{route.id}",
                 severity=route.flood_exposure,
-                subject=f"Risk on {route.origin_facility_id} to {route.destination_facility_id}",
-                description="The baseline route crosses a road segment with high estimated flood exposure risk.",
+                subject=f"Risiko pada rute {origin_name} \u2192 {dest_name}",
+                description="Rute awal melewati segmen jalan dengan estimasi paparan banjir tinggi.",
             )
         )
     affected_products = {

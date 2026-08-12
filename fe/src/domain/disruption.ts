@@ -1,10 +1,12 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 import { lineGeometrySchema, moneySchema, polygonGeometrySchema, riskLevelSchema } from "./common";
 import { facilitySchema } from "./scenario";
 
 export const riskFactorSchema = z.object({ id: z.string(), label: z.string() });
 export const roadRiskSchema = z.object({
-  segmentId: z.string(), roadName: z.string(), geometry: lineGeometrySchema,
+  segmentId: z.string(), roadName: z.string(),
+  highwayClass: z.string().optional(), osmWayIds: z.array(z.string()).default([]),
+  geometry: lineGeometrySchema,
   riskProbability: z.number().min(0).max(1), riskLevel: riskLevelSchema,
   estimatedDelayMinutes: z.number().nonnegative(), riskFactors: z.array(riskFactorSchema),
   affectedSupplierIds: z.array(z.string()), affectedWarehouseIds: z.array(z.string()), affectedOrderIds: z.array(z.string()),

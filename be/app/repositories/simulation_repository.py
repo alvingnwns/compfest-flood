@@ -11,11 +11,12 @@ class SimulationRepository:
 
     def __init__(self) -> None:
         self._items: dict[str, Simulation] = {}
-        self._scenario_index: dict[str, str] = {}
+        self._scenario_index: dict[tuple[str, str], str] = {}
         self._disruptions: dict[str, Any] = {}
         self._recoveries: dict[tuple[str, str], Any] = {}
         self._latest_recovery: dict[str, str] = {}
         self._impacts: dict[str, Any] = {}
+        self._effective_scenarios: dict[str, Any] = {}
         self._sequence = 0
         self._lock = Lock()
 
@@ -24,19 +25,19 @@ class SimulationRepository:
             self._sequence += 1
             return f"sim-{scenario_id.removeprefix('scenario-')}-{self._sequence:03d}"
 
-    def save(self, simulation: Simulation) -> Simulation:
+    def save(self, simulation: Simulation, override_key: str = "") -> Simulation:
         with self._lock:
             self._items[simulation.id] = simulation
-            self._scenario_index[simulation.scenario_id] = simulation.id
+            self._scenario_index[(simulation.scenario_id, override_key)] = simulation.id
         return simulation
 
     def get(self, simulation_id: str) -> Simulation | None:
         with self._lock:
             return self._items.get(simulation_id)
 
-    def get_for_scenario(self, scenario_id: str) -> Simulation | None:
+    def get_for_scenario(self, scenario_id: str, override_key: str = "") -> Simulation | None:
         with self._lock:
-            simulation_id = self._scenario_index.get(scenario_id)
+            simulation_id = self._scenario_index.get((scenario_id, override_key))
             return self._items.get(simulation_id) if simulation_id else None
 
     def save_disruption(self, simulation_id: str, disruption: Any) -> None:
@@ -65,6 +66,14 @@ class SimulationRepository:
         with self._lock:
             return self._impacts.get(simulation_id)
 
+    def save_effective_scenario(self, simulation_id: str, scenario: Any) -> None:
+        with self._lock:
+            self._effective_scenarios[simulation_id] = scenario
+
+    def get_effective_scenario(self, simulation_id: str) -> Any | None:
+        with self._lock:
+            return self._effective_scenarios.get(simulation_id)
+
     def clear(self) -> None:
         with self._lock:
             self._items.clear()
@@ -73,6 +82,7 @@ class SimulationRepository:
             self._recoveries.clear()
             self._latest_recovery.clear()
             self._impacts.clear()
+            self._effective_scenarios.clear()
             self._sequence = 0
 
 

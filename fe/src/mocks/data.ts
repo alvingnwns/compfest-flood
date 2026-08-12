@@ -1,4 +1,4 @@
-﻿import type { DisruptionAnalysis } from "@/domain/disruption";
+import type { DisruptionAnalysis } from "@/domain/disruption";
 import type { ImpactComparison } from "@/domain/impact";
 import type { RecoveryPlan } from "@/domain/recovery";
 import type { Scenario, Simulation } from "@/domain/scenario";
@@ -22,9 +22,9 @@ export const scenarioFixture: Scenario = {
   dataSources: { mode: "historical_snapshot", historicalStatus: "available", operationalStatus: "simulated", historicalProvider: "arsip historis lokal", snapshotId: "jakarta-2025-03-04-v1" },
   companyName: "Nusantara Foods", facilities,
   vehicles: [
-    { id: "V-01", label: "Truk Boks 01", capacityUnits: 800 },
-    { id: "V-02", label: "Truk Boks 02", capacityUnits: 800 },
-    { id: "V-03", label: "Mobil Van 03", capacityUnits: 450 },
+    { id: "V-01", label: "Truk Boks 01", capacityUnits: 800, available: true },
+    { id: "V-02", label: "Truk Boks 02", capacityUnits: 800, available: true },
+    { id: "V-03", label: "Mobil Van 03", capacityUnits: 450, available: true },
   ],
   products: [{ id: "prod-a", name: "Produk A", unit: "unit" }, { id: "prod-b", name: "Produk B", unit: "unit" }],
   materials: [
@@ -65,8 +65,8 @@ export const disruptionFixture: DisruptionAnalysis = {
   simulationId: simulationFixture.id, facilities,
   historicalFloodGeometry: { type: "Polygon", coordinates: [[[106.815, -6.12], [106.9, -6.12], [106.91, -6.19], [106.84, -6.205], [106.815, -6.12]]] },
   roads: [
-    { segmentId: "road-gunung-sahari", roadName: "Jl. Gunung Sahari", geometry: { type: "LineString", coordinates: [[106.832, -6.145], [106.838, -6.153], [106.842, -6.164], [106.846, -6.177]] }, riskProbability: 0.82, riskLevel: "high", estimatedDelayMinutes: 48, riskFactors: [{ id: "historical", label: "Paparan historis" }, { id: "elevation", label: "Elevasi rendah" }], affectedSupplierIds: ["sup-a"], affectedWarehouseIds: ["wh-east"], affectedOrderIds: ["ORD-008", "ORD-014"] },
-    { segmentId: "road-kemayoran", roadName: "Jl. Benyamin Sueb", geometry: { type: "LineString", coordinates: [[106.86, -6.16], [106.875, -6.17], [106.89, -6.185]] }, riskProbability: 0.68, riskLevel: "medium", estimatedDelayMinutes: 31, riskFactors: [{ id: "drainage", label: "Tekanan drainase" }], affectedSupplierIds: [], affectedWarehouseIds: ["wh-east"], affectedOrderIds: ["ORD-005", "ORD-009"] },
+    { segmentId: "road-gunung-sahari", roadName: "Jl. Gunung Sahari", highwayClass: "primary", osmWayIds: ["749966273"], geometry: { type: "LineString", coordinates: [[106.832, -6.145], [106.838, -6.153], [106.842, -6.164], [106.846, -6.177]] }, riskProbability: 0.82, riskLevel: "high", estimatedDelayMinutes: 48, riskFactors: [{ id: "historical", label: "Paparan historis" }, { id: "elevation", label: "Elevasi rendah" }], affectedSupplierIds: ["sup-a"], affectedWarehouseIds: ["wh-east"], affectedOrderIds: ["ORD-008", "ORD-014"] },
+    { segmentId: "road-kemayoran", roadName: "Jl. Benyamin Sueb", highwayClass: "trunk", osmWayIds: ["839201948"], geometry: { type: "LineString", coordinates: [[106.86, -6.16], [106.875, -6.17], [106.89, -6.185]] }, riskProbability: 0.68, riskLevel: "medium", estimatedDelayMinutes: 31, riskFactors: [{ id: "drainage", label: "Tekanan drainase" }], affectedSupplierIds: [], affectedWarehouseIds: ["wh-east"], affectedOrderIds: ["ORD-005", "ORD-009"] },
   ],
   routes: [
     { id: "route-baseline", type: "baseline", originFacilityId: "sup-a", destinationFacilityId: "wh-east", geometry: { type: "LineString", coordinates: [[106.826, -6.139], [106.842, -6.164], [106.875, -6.19], [106.913, -6.229]] }, distanceKm: 18.4, etaMinutes: 27, floodExposure: "high", floodExposureProbability: 0.82, affectedRoadSegmentIds: ["road-gunung-sahari", "road-kemayoran"] },

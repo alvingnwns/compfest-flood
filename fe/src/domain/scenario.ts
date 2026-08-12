@@ -1,14 +1,30 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 import { apiErrorSchema, geoPointSchema } from "./common";
 
 export const facilityKindSchema = z.enum(["supplier", "factory", "warehouse", "store"]);
 export const facilitySchema = z.object({ id: z.string(), name: z.string(), kind: facilityKindSchema, location: geoPointSchema });
-export const vehicleSchema = z.object({ id: z.string(), label: z.string(), capacityUnits: z.number().int().positive() });
+export const vehicleSchema = z.object({ id: z.string(), label: z.string(), capacityUnits: z.number().int().positive(), available: z.boolean().optional().default(true) });
 export const productSchema = z.object({ id: z.string(), name: z.string(), unit: z.string() });
 export const materialSchema = z.object({ id: z.string(), name: z.string(), supplierId: z.string(), productIds: z.array(z.string()).min(1) });
 export const inventorySchema = z.object({ facilityId: z.string(), productId: z.string(), quantity: z.number().nonnegative(), unit: z.string() });
 export const orderSchema = z.object({
   id: z.string(), storeId: z.string(), productId: z.string(), quantity: z.number().int().positive(), priority: z.enum(["normal", "high", "critical"]),
+});
+
+export const vehicleOverrideSchema = z.object({
+  id: z.string(),
+  available: z.boolean().optional(),
+  capacityUnits: z.number().int().positive().optional(),
+});
+export const inventoryOverrideSchema = z.object({
+  facilityId: z.string(),
+  productId: z.string(),
+  quantity: z.number().nonnegative(),
+});
+export const runSimulationRequestSchema = z.object({
+  scenarioId: z.string().min(1),
+  vehicleOverrides: z.array(vehicleOverrideSchema).optional(),
+  inventoryOverrides: z.array(inventoryOverrideSchema).optional(),
 });
 
 export const dataSourceModeSchema = z.enum(["historical_snapshot", "live", "hybrid"]);
@@ -47,7 +63,6 @@ export const simulationSchema = z.object({
   completedAt: z.iso.datetime({ offset: true }).optional(), modelVersion: z.string().optional(), modelProvenance: modelProvenanceSchema.optional(), optimizerVersion: z.string().optional(),
   dataMode: dataSourceModeSchema, historicalDataStatus: historicalDataStatusSchema, error: apiErrorSchema.optional(),
 });
-export const runSimulationRequestSchema = z.object({ scenarioId: z.string().min(1) });
 
 export type Scenario = z.infer<typeof scenarioSchema>;
 export type Facility = z.infer<typeof facilitySchema>;
@@ -57,3 +72,6 @@ export type Material = z.infer<typeof materialSchema>;
 export type Inventory = z.infer<typeof inventorySchema>;
 export type Order = z.infer<typeof orderSchema>;
 export type Simulation = z.infer<typeof simulationSchema>;
+export type VehicleOverride = z.infer<typeof vehicleOverrideSchema>;
+export type InventoryOverride = z.infer<typeof inventoryOverrideSchema>;
+export type RunSimulationRequest = z.infer<typeof runSimulationRequestSchema>;

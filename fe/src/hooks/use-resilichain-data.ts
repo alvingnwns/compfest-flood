@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { analysisService } from "@/services/analysis-service";
 import { scenarioService } from "@/services/scenario-service";
 
@@ -13,9 +13,20 @@ export const useSimulation = (id: string) => useQuery({
   refetchInterval: (query) => ["queued", "processing"].includes(query.state.data?.status ?? "") ? POLL_INTERVAL_MS : false,
 });
 export const useDisruptionAnalysis = (id: string) => useQuery({ queryKey: ["disruption", id], queryFn: () => analysisService.getDisruption(id), enabled: Boolean(id) });
-export const useGenerateRecovery = () => useMutation({ mutationFn: analysisService.generateRecovery });
+export const useGenerateRecovery = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, constraints }: { id: string; constraints?: Parameters<typeof analysisService.generateRecovery>[1] }) =>
+      analysisService.generateRecovery(id, constraints),
+    onSuccess: (_, { id }) => {
+      void queryClient.invalidateQueries({ queryKey: ["recovery", id] });
+      void queryClient.invalidateQueries({ queryKey: ["impact", id] });
+    },
+  });
+};
 export const useRecoveryPlan = (id: string) => useQuery({
   queryKey: ["recovery", id], queryFn: () => analysisService.getRecovery(id), enabled: Boolean(id),
   refetchInterval: (query) => ["queued", "processing"].includes(query.state.data?.status ?? "") ? POLL_INTERVAL_MS : false,
 });
 export const useImpactComparison = (id: string) => useQuery({ queryKey: ["impact", id], queryFn: () => analysisService.getImpact(id), enabled: Boolean(id) });
+

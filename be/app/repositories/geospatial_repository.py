@@ -26,3 +26,13 @@ def get_road_features() -> dict[str, Any]:
 @lru_cache(maxsize=1)
 def get_routing_graph() -> dict[str, Any]:
     return _load_json(DATA_DIR / "roads" / "jakarta-2025-03-04-routing-graph.json")
+
+
+@lru_cache(maxsize=1)
+def get_road_context() -> dict[str, Any]:
+    """Load the surrounding display-only OSM road context layer.
+
+    This dataset is separate from the ResiliChain optimization graph.
+    It is NEVER used by NetworkX routing — display purposes only.
+    """
+    return _load_json(DATA_DIR / "roads" / "jakarta-road-context.geojson")

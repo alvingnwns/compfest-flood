@@ -56,6 +56,6 @@ def _metrics(scenario: Scenario, outcomes: list[OrderOutcome]) -> dict[str, floa
         "fulfilled": fulfilled,
         "failed": failed,
         "on_time": on_time / len(scenario.orders) if scenario.orders else 0,
-        "average_delay": sum(delays) / len(delays) if delays else 0,
+        "average_delay": round(sum(delays) / len(delays), 1) if delays else 0,
         "sales_exposure": sales_exposure,
     }

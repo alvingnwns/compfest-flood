@@ -132,6 +132,7 @@ def test_no_feasible_api_shape_matches_recovery_result_contract(
     for inventory in infeasible.inventory:
         inventory.quantity = 0
     monkeypatch.setattr(simulations_api, "get_historical_jakarta", lambda: infeasible)
+    simulations_api.simulation_repository.save_effective_scenario(simulation_id, infeasible)
     response = client.post(
         f"/api/simulations/{simulation_id}/recovery",
         json={"constraints": {"allowSubstitution": False, "maxAdditionalDelayMinutes": 30}},

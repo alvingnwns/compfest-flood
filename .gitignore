@@ -37,3 +37,6 @@ htmlcov/
 .idea/
 .DS_Store
 Thumbs.db
+.worktrees/
+be/cache/
+*.log

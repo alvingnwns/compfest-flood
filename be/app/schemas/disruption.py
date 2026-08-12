@@ -14,6 +14,8 @@ class RiskFactor(ApiModel):
 class RoadRisk(ApiModel):
     segment_id: str
     road_name: str
+    highway_class: str | None = None
+    osm_way_ids: list[str] = Field(default_factory=list)
     geometry: LineGeometry
     risk_probability: float = Field(ge=0, le=1)
     risk_level: RiskLevel

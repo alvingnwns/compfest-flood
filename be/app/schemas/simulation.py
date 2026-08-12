@@ -8,8 +8,26 @@ from pydantic import Field
 from app.schemas.common import ApiModel, ErrorResponse
 
 
+class VehicleOverride(ApiModel):
+    """Per-vehicle operational-state override for a specific simulation run."""
+
+    id: str
+    available: bool | None = None
+    capacity_units: int | None = Field(default=None, gt=0)
+
+
+class InventoryOverride(ApiModel):
+    """Per-warehouse/product inventory override for a specific simulation run."""
+
+    facility_id: str
+    product_id: str
+    quantity: float = Field(ge=0)
+
+
 class RunSimulationRequest(ApiModel):
     scenario_id: str = Field(min_length=1)
+    vehicle_overrides: list[VehicleOverride] = Field(default_factory=list)
+    inventory_overrides: list[InventoryOverride] = Field(default_factory=list)
 
 
 class ModelProvenance(ApiModel):

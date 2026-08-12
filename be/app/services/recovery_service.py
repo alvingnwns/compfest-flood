@@ -60,14 +60,16 @@ def generate_recovery_plan(
             logistics_actions=[],
             commerce_actions=[],
             possible_next_actions=[
-                "Restore material or inventory availability for critical orders.",
-                "Permit a safe route or relax the additional-delay constraint.",
+                "Pulihkan ketersediaan bahan baku atau persediaan gudang untuk pesanan prioritas.",
+                "Izinkan rute aman atau longgarkan kendala batas keterlambatan waktu.",
             ],
             error=ErrorResponse(
                 code="no_feasible_plan",
-                message="Critical-order demand cannot be satisfied under the supplied constraints.",
+                message=(
+                    "Permintaan pesanan kritis tidak dapat dipenuhi berdasarkan kendala operasional yang diberikan."
+                ),
                 retryable=False,
-                details={"criticalOrderPolicy": "all critical demand must be allocated"},
+                details={"criticalOrderPolicy": "semua permintaan pesanan kritis harus dialokasikan"},
             ),
             baseline_order_outcomes=baseline.outcomes,
             baseline_production=_production_outcomes(baseline.production),
@@ -99,9 +101,13 @@ def generate_recovery_plan(
                 baseline_quantity=before,
                 recovery_quantity=after,
                 change_quantity=after - before,
-                what=f"Adjust {product.name} production from {before} to {after} {product.unit}.",
-                why=f"Computed material availability and BOM requirements ({constrained_materials}) bound production.",
-                expected_impact="Production feeds the inventory available to the order-allocation model.",
+                what=f"Sesuaikan produksi {product.name} dari {before} menjadi {after} {product.unit}.",
+                why=(
+                    f"Ketersediaan bahan baku dan kebutuhan BOM ({constrained_materials}) membatasi kapasitas produksi."
+                ),
+                expected_impact=(
+                    "Penyesuaian produksi menyediakan persediaan yang dapat dialokasikan untuk pemenuhan pesanan."
+                ),
             )
         )
 
@@ -143,11 +149,13 @@ def generate_recovery_plan(
                 or (baseline_route.flood_exposure if baseline_route else "low"),
                 recovery_flood_exposure=after.flood_exposure or "low",
                 action=action,
-                what=f"Use {warehouses[after.warehouse_id].name} and vehicle {after.vehicle_id} for {order.id}.",
-                why=(
-                    "The CP-SAT allocation selected a feasible route and vehicle within capacity and delay constraints."
+                what=(
+                    f"Gunakan {warehouses[after.warehouse_id].name} dan kendaraan {after.vehicle_id} untuk {order.id}."
                 ),
-                expected_impact=f"ETA is {after.eta_minutes} minutes with {after.flood_exposure} flood exposure.",
+                why="Alokasi CP-SAT memilih rute dan kendaraan yang layak dalam batas kapasitas dan keterlambatan.",
+                expected_impact=(
+                    f"Waktu tempuh {after.eta_minutes} menit dengan tingkat paparan banjir {after.flood_exposure}."
+                ),
             )
         )
 
@@ -186,17 +194,14 @@ def generate_recovery_plan(
                     )
                     for product_id, quantity in allocations
                 ],
-                what=(
-                    f"{action.replace('-', ' ').title()} {order.id} with "
-                    f"{outcome.allocated_quantity}/{order.quantity} units."
-                ),
+                what=f"Penuhi pesanan {order.id} sebanyak {outcome.allocated_quantity}/{order.quantity} unit.",
                 why=(
-                    "The result follows inventory, computed production, substitution, "
-                    "route, vehicle, and deadline constraints."
+                    "Hasil alokasi memenuhi kendala persediaan, kapasitas produksi, substitusi produk, rute,"
+                    " kendaraan, dan batas waktu."
                 ),
                 expected_impact=(
-                    f"Expected delay is {outcome.delay_minutes} minutes; "
-                    f"protected value is IDR {outcome.allocated_value:.0f}."
+                    f"Perkiraan keterlambatan {outcome.delay_minutes} menit; nilai penjualan terlindungi sebesar IDR"
+                    f" {outcome.allocated_value:.0f}."
                 ),
             )
         )

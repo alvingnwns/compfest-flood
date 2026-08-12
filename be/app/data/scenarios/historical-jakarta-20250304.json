@@ -1,10 +1,10 @@
 {
   "id": "scenario-jakarta-20250304",
-  "name": "Jakarta Flood — 04 March 2025",
+  "name": "Banjir Jakarta — 04 Mar 2025",
   "mode": "historical-replay",
   "location": "Jakarta",
   "eventDate": "2025-03-04",
-  "eventType": "Urban Flood",
+  "eventType": "Banjir Perkotaan",
   "dataSources": {
     "mode": "historical_snapshot",
     "historicalStatus": "offline_snapshot",
@@ -14,29 +14,29 @@
   },
   "companyName": "Nusantara Foods",
   "facilities": [
-    {"id": "sup-a", "name": "Supplier A", "kind": "supplier", "location": {"type": "Point", "coordinates": [106.826, -6.139]}},
-    {"id": "sup-b", "name": "Supplier B", "kind": "supplier", "location": {"type": "Point", "coordinates": [106.910, -6.195]}},
-    {"id": "fac-1", "name": "Nusantara Foods Factory", "kind": "factory", "productionCapacityUnits": 500, "location": {"type": "Point", "coordinates": [106.875, -6.236]}},
-    {"id": "wh-east", "name": "Warehouse East", "kind": "warehouse", "location": {"type": "Point", "coordinates": [106.913, -6.229]}},
-    {"id": "wh-west", "name": "Warehouse West", "kind": "warehouse", "location": {"type": "Point", "coordinates": [106.770, -6.188]}},
-    {"id": "store-a", "name": "Store A", "kind": "store", "location": {"type": "Point", "coordinates": [106.808, -6.171]}},
-    {"id": "store-b", "name": "Store B", "kind": "store", "location": {"type": "Point", "coordinates": [106.852, -6.161]}},
-    {"id": "store-c", "name": "Store C", "kind": "store", "location": {"type": "Point", "coordinates": [106.893, -6.155]}},
-    {"id": "store-d", "name": "Store D", "kind": "store", "location": {"type": "Point", "coordinates": [106.927, -6.176]}},
-    {"id": "store-e", "name": "Store E", "kind": "store", "location": {"type": "Point", "coordinates": [106.827, -6.220]}}
+    {"id": "sup-a", "name": "Pemasok A", "kind": "supplier", "location": {"type": "Point", "coordinates": [106.826, -6.139]}},
+    {"id": "sup-b", "name": "Pemasok B", "kind": "supplier", "location": {"type": "Point", "coordinates": [106.910, -6.195]}},
+    {"id": "fac-1", "name": "Pabrik Utama", "kind": "factory", "productionCapacityUnits": 500, "location": {"type": "Point", "coordinates": [106.875, -6.236]}},
+    {"id": "wh-east", "name": "Gudang Timur", "kind": "warehouse", "location": {"type": "Point", "coordinates": [106.913, -6.229]}},
+    {"id": "wh-west", "name": "Gudang Barat", "kind": "warehouse", "location": {"type": "Point", "coordinates": [106.770, -6.188]}},
+    {"id": "store-a", "name": "Toko A", "kind": "store", "location": {"type": "Point", "coordinates": [106.808, -6.171]}},
+    {"id": "store-b", "name": "Toko B", "kind": "store", "location": {"type": "Point", "coordinates": [106.852, -6.161]}},
+    {"id": "store-c", "name": "Toko C", "kind": "store", "location": {"type": "Point", "coordinates": [106.893, -6.155]}},
+    {"id": "store-d", "name": "Toko D", "kind": "store", "location": {"type": "Point", "coordinates": [106.927, -6.176]}},
+    {"id": "store-e", "name": "Toko E", "kind": "store", "location": {"type": "Point", "coordinates": [106.827, -6.220]}}
   ],
   "vehicles": [
-    {"id": "V-01", "label": "Box Truck 01", "capacityUnits": 800, "available": true, "costPerKm": 8500},
-    {"id": "V-02", "label": "Box Truck 02", "capacityUnits": 800, "available": true, "costPerKm": 9000},
-    {"id": "V-03", "label": "Van 03", "capacityUnits": 450, "available": true, "costPerKm": 6500}
+    {"id": "V-01", "label": "Truk Box 01", "capacityUnits": 800, "available": true, "costPerKm": 8500},
+    {"id": "V-02", "label": "Truk Box 02", "capacityUnits": 800, "available": true, "costPerKm": 9000},
+    {"id": "V-03", "label": "Van Distribusi 03", "capacityUnits": 450, "available": true, "costPerKm": 6500}
   ],
   "products": [
-    {"id": "prod-a", "name": "Product A", "unit": "units", "unitPrice": 100000, "bom": [{"materialId": "mat-a", "quantityPerUnit": 1.0}, {"materialId": "mat-b", "quantityPerUnit": 0.2}], "substituteProductIds": ["prod-b"]},
-    {"id": "prod-b", "name": "Product B", "unit": "units", "unitPrice": 80000, "bom": [{"materialId": "mat-b", "quantityPerUnit": 0.5}], "substituteProductIds": ["prod-a"]}
+    {"id": "prod-a", "name": "Produk A", "unit": "unit", "unitPrice": 100000, "bom": [{"materialId": "mat-a", "quantityPerUnit": 1.0}, {"materialId": "mat-b", "quantityPerUnit": 0.2}], "substituteProductIds": ["prod-b"]},
+    {"id": "prod-b", "name": "Produk B", "unit": "unit", "unitPrice": 80000, "bom": [{"materialId": "mat-b", "quantityPerUnit": 0.5}], "substituteProductIds": ["prod-a"]}
   ],
   "materials": [
-    {"id": "mat-a", "name": "Primary Ingredient", "supplierId": "sup-a", "productIds": ["prod-a"], "availableQuantity": 600},
-    {"id": "mat-b", "name": "Shared Packaging", "supplierId": "sup-b", "productIds": ["prod-a", "prod-b"], "availableQuantity": 700}
+    {"id": "mat-a", "name": "Bahan Utama A", "supplierId": "sup-a", "productIds": ["prod-a"], "availableQuantity": 600},
+    {"id": "mat-b", "name": "Kemasan Bersama", "supplierId": "sup-b", "productIds": ["prod-a", "prod-b"], "availableQuantity": 700}
   ],
   "inventory": [
     {"facilityId": "wh-east", "productId": "prod-a", "quantity": 420, "unit": "units"},

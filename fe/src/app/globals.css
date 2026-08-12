@@ -36,6 +36,18 @@ button, a, input, select { outline-offset: 3px; }
 .kpi { font-size: 32px; line-height: 32px; font-weight: 600; letter-spacing: -.03em; }
 .maplibregl-canvas:focus { outline: none; }
 
+.custom-road-popup .maplibregl-popup-content {
+  padding: 0;
+  background: transparent;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-radius: 12px;
+}
+.custom-road-popup .maplibregl-popup-tip {
+  border-top-color: #ffffff !important;
+  border-bottom-color: #ffffff !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
