@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { publicEnv } from "@/config/public-env";
 import { scenarioFixture } from "@/mocks/data";
 import { scenarioService } from "./scenario-service";
 
@@ -9,7 +10,10 @@ describe("scenario service", () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify(scenarioFixture), { status: 200, headers: { "Content-Type": "application/json" } }));
     vi.stubGlobal("fetch", fetchMock);
     const scenario = await scenarioService.getHistoricalScenario();
-    expect(fetchMock).toHaveBeenCalledWith("/api/scenarios/historical-jakarta", expect.any(Object));
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${publicEnv.NEXT_PUBLIC_API_BASE_URL}/api/scenarios/historical-jakarta`,
+      expect.any(Object),
+    );
     expect(scenario.companyName).toBe("Nusantara Foods");
   });
 

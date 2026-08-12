@@ -14,5 +14,5 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     void import("@/mocks/browser").then(({ worker }) => worker.start({ onUnhandledRequest: "bypass" })).then(() => setReady(true));
   }, []);
 
-  return <QueryClientProvider client={queryClient}>{ready ? children : <div className="grid min-h-screen place-items-center bg-background"><div className="text-center"><div className="mx-auto mb-3 h-7 w-7 animate-spin rounded-full border-2 border-outline border-t-primary" /><p className="text-sm text-muted">Preparing historical snapshot…</p></div></div>}</QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}>{ready ? children : <div className="grid min-h-screen place-items-center bg-background"><div className="text-center"><div className="mx-auto mb-3 h-7 w-7 animate-spin rounded-full border-2 border-outline border-t-primary" /><p className="text-sm text-muted">Menyiapkan rekaman historis…</p></div></div>}</QueryClientProvider>;
 }

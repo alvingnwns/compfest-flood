@@ -56,4 +56,4 @@ Current default penalties are low 0, medium 2, high 5, and critical 15. NetworkX
 - This is a compact union of business-relevant alternative corridors, not every Jakarta road at runtime.
 - OSM is continuously edited; the committed snapshot represents the recorded retrieval.
 - Speeds are static assumptions and exclude congestion, incidents, turn penalties, and live closures.
-- The active flood-risk model is still the explicitly synthetic-label placeholder because the Earth Engine road-label feasibility gate failed with zero positive labels and no usable holdout. OSM provenance does not make the current risk probabilities historical.
+- The active model is the historical multi-region Indonesia corridor-exposure model. Jakarta remains an unvalidated, partially out-of-distribution deployment/demo pilot; the two earlier Jakarta-only feasibility failures remain documented separately.

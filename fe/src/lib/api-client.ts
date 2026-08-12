@@ -15,7 +15,7 @@ export async function apiRequest<T>(path: string, schema: ZodType<T>, init?: Req
   });
   if (!response.ok) {
     const parsed = apiErrorSchema.safeParse(await response.json().catch(() => null));
-    const fallback: ApiErrorPayload = { code: "unexpected_api_error", message: "The request could not be completed.", retryable: response.status >= 500 };
+    const fallback: ApiErrorPayload = { code: "unexpected_api_error", message: "Permintaan tidak dapat diselesaikan.", retryable: response.status >= 500 };
     throw new ApiError(response.status, parsed.success ? parsed.data : fallback);
   }
   return schema.parse(await response.json());

@@ -9,20 +9,20 @@ Next.js pages/components
   -> TanStack Query hooks
   -> scenario/analysis services
   -> shared HTTP client
-  -> MSW today OR FastAPI later
+  -> FastAPI in full-stack mode OR MSW in explicit mock mode
   -> Zod response validation
 ```
 
-Components never import fixtures or select a data source. MSW is a fake implementation of this contract. FastAPI can replace it at the HTTP boundary. JSON uses camelCase, raw numbers, stable entity IDs, ISO-8601 dates/timestamps, and GeoJSON-compatible geometry.
+Components never import fixtures or select a data source. FastAPI is the real full-stack implementation; MSW is an explicit development/test implementation of the same contract. JSON uses camelCase, raw numbers, stable entity IDs, ISO-8601 dates/timestamps, and GeoJSON-compatible geometry.
 
 ## Environment Configuration
 
 ```dotenv
-# Current local mock mode
+# Optional local mock mode
 NEXT_PUBLIC_DATA_SOURCE=mock
 NEXT_PUBLIC_API_BASE_URL=
 
-# Future local FastAPI mode
+# Current local FastAPI mode
 NEXT_PUBLIC_DATA_SOURCE=api
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 ```
@@ -131,7 +131,7 @@ Response `201` (an implementation may initially return `queued` and later advanc
   "status": "completed",
   "createdAt": "2026-08-09T10:15:00.000Z",
   "completedAt": "2026-08-09T10:15:04.000Z",
-  "modelVersion": "flood-risk-1.0.0",
+  "modelVersion": "indonesia-road-corridor-flood-exposure-v1",
   "optimizerVersion": "recovery-planner-1.0.0",
   "dataMode": "historical_snapshot",
   "historicalDataStatus": "available"
@@ -324,7 +324,7 @@ Recoverability and coordinated manufacturing, logistics, and commerce decisions,
 
 Baseline/recovery route geometry, distance, ETA, flood exposure probability/category, and affected road-segment IDs. OSMnx/NetworkX output must be normalized to GeoJSON before it reaches the frontend.
 
-## Mock to Real Backend Migration
+## Switching from Mock to Real Backend
 
 1. Implement these seven endpoints in FastAPI, preserving paths, camelCase JSON, states, status codes, and error envelopes.
 2. Validate response examples against the Zod schemas or generate equivalent Pydantic models.

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import { formatCompactIdr, formatMinutes, formatPercent, formatRisk } from "./format";
 
 describe("display formatting", () => {
@@ -9,6 +9,6 @@ describe("display formatting", () => {
   it("formats percentages, durations, and risk labels", () => {
     expect(formatPercent(0.82)).toBe("82%");
     expect(formatMinutes(128)).toBe("2j 8m");
-    expect(formatRisk("critical")).toBe("Critical");
+    expect(formatRisk("critical")).toBe("Kritis");
   });
 });

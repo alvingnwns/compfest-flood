@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Geist, JetBrains_Mono } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -9,9 +9,9 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
   title: "ResiliChain AI",
-  description: "Flood-aware supply-chain recovery decision support",
+  description: "Sistem pendukung keputusan pemulihan rantai pasok berbasis risiko banjir",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className={`${geist.variable} ${mono.variable} font-sans`}><AppProviders>{children}</AppProviders></body></html>;
+  return <html lang="id"><body className={`${geist.variable} ${mono.variable} font-sans`}><AppProviders>{children}</AppProviders></body></html>;
 }

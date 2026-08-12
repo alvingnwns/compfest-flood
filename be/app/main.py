@@ -32,7 +32,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     application = FastAPI(
         title="ResiliChain AI API",
         version="0.2.0",
-        description="Offline-first synthetic flood replay with connected business computation.",
+        description=(
+            "Offline-first historical flood-risk replay with simulated business inputs and connected computation."
+        ),
         lifespan=lifespan,
     )
     application.state.settings = configured

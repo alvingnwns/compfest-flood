@@ -1,10 +1,10 @@
 # ResiliChain AI
 
-Frontend-only MVP for flood-aware supply-chain recovery decision support. The application replays the Jakarta flood scenario from 04 March 2025 for Nusantara Foods and connects disruption risk to coordinated manufacturing, logistics, and commerce recommendations.
+Frontend for the ResiliChain flood-aware supply-chain recovery MVP. The application replays the Jakarta flood scenario from 04 March 2025 for Nusantara Foods and connects disruption risk to coordinated manufacturing, logistics, and commerce recommendations.
 
 ## Architecture
 
-The UI never imports business fixtures. Pages use TanStack Query hooks, which call services through a shared HTTP client. Responses are validated with Zod before entering the UI. In mock mode, MSW intercepts the same HTTP requests a future backend will implement.
+The UI never imports business fixtures. Pages use TanStack Query hooks, which call services through a shared HTTP client. Responses are validated with Zod before entering the UI. API mode calls FastAPI; explicit mock mode lets MSW intercept the same HTTP contract for isolated development and tests.
 
 ```text
 Pages and feature views
@@ -37,9 +37,9 @@ Open `http://localhost:3000/scenario`.
 | Variable | Values | Purpose |
 | --- | --- | --- |
 | `NEXT_PUBLIC_DATA_SOURCE` | `mock` or `api` | Selects the data source once, centrally |
-| `NEXT_PUBLIC_API_BASE_URL` | URL or blank | Base URL for the future API |
+| `NEXT_PUBLIC_API_BASE_URL` | Absolute URL | FastAPI base URL in API mode |
 
-Mock mode is the default when the variables are absent.
+API mode with `http://localhost:8000` is the default when variables are absent. Set `NEXT_PUBLIC_DATA_SOURCE=mock` explicitly for isolated mock development.
 
 ## Routes
 

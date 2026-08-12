@@ -44,6 +44,11 @@ def test_business_outputs_are_computed_and_referentially_valid(simulation_id: st
     assert {action.order_id for action in plan.commerce_actions or []} == orders
     assert {action.vehicle_id for action in plan.logistics_actions or []} <= vehicles
     assert {action.recovery_route_id for action in plan.logistics_actions or []} <= route_ids
+    baseline_routes = {route.id: route for route in disruption.routes if route.type == "baseline"}
+    for action in plan.logistics_actions or []:
+        baseline_route = baseline_routes[action.baseline_route_id]
+        assert action.baseline_eta_minutes == baseline_route.eta_minutes
+        assert action.baseline_flood_exposure == baseline_route.flood_exposure
 
 
 def test_maximum_additional_delay_changes_feasibility(simulation_id: str) -> None:

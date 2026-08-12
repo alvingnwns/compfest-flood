@@ -75,6 +75,11 @@ def generate_recovery_plan(
 
     baseline_by_order = {outcome.order_id: outcome for outcome in baseline.outcomes}
     recovery_by_order = {outcome.order_id: outcome for outcome in recovery.outcomes}
+    baseline_routes = {
+        (route.origin_facility_id, route.destination_facility_id): route
+        for route in disruption.routes
+        if route.type == "baseline"
+    }
     products = {product.id: product for product in scenario.products}
     stores = {facility.id: facility for facility in scenario.facilities if facility.kind == "store"}
     warehouses = {facility.id: facility for facility in scenario.facilities if facility.kind == "warehouse"}
@@ -105,6 +110,7 @@ def generate_recovery_plan(
     for order in scenario.orders:
         before = baseline_by_order.get(order.id)
         after = recovery_by_order.get(order.id)
+        baseline_route = baseline_routes.get((order.preferred_warehouse_id, order.store_id))
         if not before or not after or not after.warehouse_id or not after.route_id or not after.vehicle_id:
             continue
         warehouse_changed = before.warehouse_id != after.warehouse_id
@@ -129,11 +135,12 @@ def generate_recovery_plan(
                 recovery_warehouse_id=after.warehouse_id,
                 recovery_warehouse_name=warehouses[after.warehouse_id].name,
                 vehicle_id=after.vehicle_id,
-                baseline_route_id=before.route_id or after.route_id,
+                baseline_route_id=before.route_id or (baseline_route.id if baseline_route else after.route_id),
                 recovery_route_id=after.route_id,
-                baseline_eta_minutes=before.eta_minutes or 0,
+                baseline_eta_minutes=before.eta_minutes or (baseline_route.eta_minutes if baseline_route else 0),
                 recovery_eta_minutes=after.eta_minutes or 0,
-                baseline_flood_exposure=before.flood_exposure or "low",
+                baseline_flood_exposure=before.flood_exposure
+                or (baseline_route.flood_exposure if baseline_route else "low"),
                 recovery_flood_exposure=after.flood_exposure or "low",
                 action=action,
                 what=f"Use {warehouses[after.warehouse_id].name} and vehicle {after.vehicle_id} for {order.id}.",
