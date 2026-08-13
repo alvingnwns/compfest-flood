@@ -1,0 +1,27 @@
+{
+  "limitations": [
+    "No road-level dynamic flood ground truth exists; fusion strength is not accuracy-fitted.",
+    "Both input models are frozen and represent different targets.",
+    "The output is not a calibrated probability, road flood forecast, or closure forecast.",
+    "Temporal scenarios are Jakarta-wide and contain transformed source features without physical rainfall units.",
+    "Current category thresholds were designed for the static model and are only reused for sensitivity analysis.",
+    "Routing sensitivity covers the 12 facility OD pairs encoded in the existing Jakarta graph snapshot."
+  ],
+  "method": "logit_shift",
+  "output": "dynamicRoadRiskScore",
+  "parameter": 1.5,
+  "parameterGovernance": "policy/sensitivity calibrated; not fitted to supervised road-level dynamic labels",
+  "probabilityCalibrated": false,
+  "runtimeConfiguration": false,
+  "selectionBasis": [
+    "all five fusion invariants passed",
+    "strict spatial ordering preserved",
+    "Q1-to-Q4 road-score movement was material",
+    "at least 25% of existing NetworkX OD paths responded to Q1-to-Q4 escalation",
+    "preferred explainable bounded logit-shift family when eligible",
+    "smallest passing policy parameter within the preferred family"
+  ],
+  "sourceAnalysisSha256": "599e39086b866c54f9ed1d5f389935bc30483ad6ea40745e19522401422c6bb7",
+  "spatialInput": "existing road susceptibility",
+  "temporalInput": "relativeHazardIndex"
+}
