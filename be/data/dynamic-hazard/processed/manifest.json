@@ -1,0 +1,124 @@
+{
+  "archiveSha256": "522e4bd03adb39d940da8a133906c74153ed28495f944597c618bae008f0d3da",
+  "canonicalSampleSchema": {
+    "rainfallSequence": "30 x 4 source-preserved temporal tensor",
+    "referenceDate": "ISO-8601 date string copied from source dates array",
+    "split": "train, validation, or test",
+    "target": "0 or 1"
+  },
+  "classDistribution": {
+    "test": {
+      "0": 56,
+      "1": 11
+    },
+    "train": {
+      "0": 285,
+      "1": 50
+    },
+    "validation": {
+      "0": 57,
+      "1": 10
+    }
+  },
+  "datasetName": "Processed Flood Risk Prediction Dataset for Jakarta",
+  "datasetVersion": "jakarta-dynamic-hazard-temporal-v1",
+  "dateRanges": {
+    "test": {
+      "earliest": "2020-01-31",
+      "latest": "2020-12-26"
+    },
+    "train": {
+      "earliest": "2014-02-05",
+      "latest": "2018-12-26"
+    },
+    "validation": {
+      "earliest": "2019-01-31",
+      "latest": "2019-12-27"
+    }
+  },
+  "featureNames": [
+    "tj_priok",
+    "banten",
+    "kemayoran",
+    "month"
+  ],
+  "featureRepresentation": "source-provided transformed/scaled temporal values; physical rainfall units and transform parameters are not documented in the released dataset",
+  "graphEmbeddingShapes": {
+    "test": [
+      67,
+      48
+    ],
+    "train": [
+      335,
+      48
+    ],
+    "validation": [
+      67,
+      48
+    ]
+  },
+  "graphEmbeddingUniqueRows": 1,
+  "graphMetadataEdgeCount": 297,
+  "graphNodeCount": 384,
+  "groundTruthSource": "not documented in released dataset",
+  "knownLimitations": [
+    "Target ground-truth provenance is not documented in the released dataset.",
+    "Temporal station channels are transformed/scaled; raw rainfall units and transform parameters are absent.",
+    "Per-timestep observation dates are absent, so future-rainfall exclusion cannot be independently proven.",
+    "The released graph representation is static across temporal samples and therefore does not provide sample-specific dynamic spatial flood state.",
+    "Graph metadata reports node/edge counts, but no raw edge list, edge_index, adjacency matrix, or graph object is released.",
+    "Spatial embeddings cover 314 IDs while node positions cover 384 IDs; no mapping to Jakarta OSM road segments is provided."
+  ],
+  "processedFiles": {
+    "temporal_test.npz": {
+      "sampleCount": 67,
+      "sha256": "dd974199a414457801bd782e0f8e4ca1df5110decca47e5bab95002df4e1d2b8"
+    },
+    "temporal_train.npz": {
+      "sampleCount": 335,
+      "sha256": "cd6e162a08c9dcc0a8a1ed7bd4e89b9f8eda744d28516cde73508f44126ed080"
+    },
+    "temporal_validation.npz": {
+      "sampleCount": 67,
+      "sha256": "b3f13800bdabd0457681cbe165d125cd18038e496db96caa3c23fce6786502af"
+    }
+  },
+  "processingScript": "scripts/prepare_dynamic_hazard_dataset.py",
+  "processingScriptVersion": "1.0.0",
+  "processingTimestamp": "2026-08-13T11:38:52.813742Z",
+  "rawGraphAvailable": false,
+  "sampleCounts": {
+    "test": 67,
+    "train": 335,
+    "validation": 67
+  },
+  "sequenceLength": 30,
+  "sourceDatasetVersion": "not provided",
+  "sourceFilename": "Dataset_FloodRisk_Jakarta.zip",
+  "sourceFilesUsed": [
+    "temporal_artifacts/windows_T30_H3_stride5_train_ds.npz",
+    "temporal_artifacts/windows_T30_H3_stride5_val.npz",
+    "temporal_artifacts/windows_T30_H3_stride5_test.npz"
+  ],
+  "spatialEmbeddingShape": [
+    314,
+    64
+  ],
+  "splitDefinition": {
+    "test": "source-provided split; reference dates 2020",
+    "train": "source-provided split; reference dates 2014-2018",
+    "validation": "source-provided split; reference dates 2019"
+  },
+  "summaryFeatureNames": [
+    "tj_priok_sum7d",
+    "tj_priok_sum30d",
+    "banten_sum7d",
+    "banten_sum30d",
+    "kemayoran_sum7d",
+    "kemayoran_sum30d",
+    "month_sum7d",
+    "month_sum30d"
+  ],
+  "targetDefinition": "binary flood target as provided by source dataset",
+  "targetSemantics": "binary flood target as provided by source dataset"
+}
