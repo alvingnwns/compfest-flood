@@ -1,0 +1,6275 @@
+[
+  {
+    "complexity": "trivial",
+    "hyperparameters": {},
+    "model": "majority_class",
+    "representation": "constant",
+    "selectedThreshold": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": 0.5
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.14925373134328357,
+      "calibration": [
+        {
+          "count": 67,
+          "lower": 0.0,
+          "meanPredicted": 0.0,
+          "observedRate": 0.14925373134328357,
+          "upper": 0.2
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          10,
+          0
+        ]
+      ],
+      "f1": 0.0,
+      "prAuc": 0.14925373134328357,
+      "precision": 0.0,
+      "probabilityDistribution": {
+        "maximum": 0.0,
+        "median": 0.0,
+        "minimum": 0.0,
+        "p10": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "p90": 0.0
+      },
+      "recall": 0.0,
+      "rocAuc": 0.5,
+      "threshold": 0.5
+    }
+  },
+  {
+    "complexity": "trivial",
+    "hyperparameters": {
+      "trainPrevalence": 0.14925373134328357
+    },
+    "model": "train_prevalence",
+    "representation": "constant",
+    "selectedThreshold": {
+      "f1": 0.2597402597402597,
+      "precision": 0.14925373134328357,
+      "recall": 1.0,
+      "threshold": 0.01
+    },
+    "validation": {
+      "accuracy": 0.14925373134328357,
+      "brier": 0.12697705502339046,
+      "calibration": [
+        {
+          "count": 67,
+          "lower": 0.0,
+          "meanPredicted": 0.14925373134328354,
+          "observedRate": 0.14925373134328357,
+          "upper": 0.2
+        }
+      ],
+      "confusionMatrix": [
+        [
+          0,
+          57
+        ],
+        [
+          0,
+          10
+        ]
+      ],
+      "f1": 0.2597402597402597,
+      "prAuc": 0.14925373134328357,
+      "precision": 0.14925373134328357,
+      "probabilityDistribution": {
+        "maximum": 0.14925373134328357,
+        "median": 0.14925373134328357,
+        "minimum": 0.14925373134328357,
+        "p10": 0.14925373134328357,
+        "p25": 0.14925373134328357,
+        "p75": 0.14925373134328357,
+        "p90": 0.14925373134328357
+      },
+      "recall": 1.0,
+      "rocAuc": 0.5,
+      "threshold": 0.01
+    }
+  },
+  {
+    "complexity": "low",
+    "hyperparameters": {
+      "C": 0.01,
+      "classWeight": "balanced"
+    },
+    "model": "logistic_regression",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.6
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.2041364715950449,
+      "calibration": [
+        {
+          "count": 4,
+          "lower": 0.0,
+          "meanPredicted": 0.18145848193229397,
+          "observedRate": 0.5,
+          "upper": 0.2
+        },
+        {
+          "count": 32,
+          "lower": 0.2,
+          "meanPredicted": 0.301415026553407,
+          "observedRate": 0.09375,
+          "upper": 0.4
+        },
+        {
+          "count": 25,
+          "lower": 0.4,
+          "meanPredicted": 0.4783451740009703,
+          "observedRate": 0.08,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 4,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6594663865616289,
+          "observedRate": 0.5,
+          "upper": 0.8
+        },
+        {
+          "count": 2,
+          "lower": 0.8,
+          "meanPredicted": 0.8262164844981164,
+          "observedRate": 0.5,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.26556832594211793,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.8423850356712581,
+        "median": 0.3804865155625537,
+        "minimum": 0.14584584090437616,
+        "p10": 0.23483953262663473,
+        "p25": 0.296039185998619,
+        "p75": 0.4797335632279053,
+        "p90": 0.5905678838489802
+      },
+      "recall": 0.3,
+      "rocAuc": 0.4894736842105263,
+      "threshold": 0.6
+    }
+  },
+  {
+    "complexity": "low",
+    "hyperparameters": {
+      "C": 0.1,
+      "classWeight": "balanced"
+    },
+    "model": "logistic_regression",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42105263157894735,
+      "precision": 0.4444444444444444,
+      "recall": 0.4,
+      "threshold": 0.5700000000000001
+    },
+    "validation": {
+      "accuracy": 0.835820895522388,
+      "brier": 0.20183524329693517,
+      "calibration": [
+        {
+          "count": 28,
+          "lower": 0.0,
+          "meanPredicted": 0.1169004021190615,
+          "observedRate": 0.17857142857142858,
+          "upper": 0.2
+        },
+        {
+          "count": 19,
+          "lower": 0.2,
+          "meanPredicted": 0.31483726124228406,
+          "observedRate": 0.05263157894736842,
+          "upper": 0.4
+        },
+        {
+          "count": 13,
+          "lower": 0.4,
+          "meanPredicted": 0.5001384621457176,
+          "observedRate": 0.15384615384615385,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 2,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6744407975225474,
+          "observedRate": 0.0,
+          "upper": 0.8
+        },
+        {
+          "count": 5,
+          "lower": 0.8,
+          "meanPredicted": 0.884411257240088,
+          "observedRate": 0.4,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          52,
+          5
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.42105263157894735,
+      "prAuc": 0.3270614867628683,
+      "precision": 0.4444444444444444,
+      "probabilityDistribution": {
+        "maximum": 0.9565797342333722,
+        "median": 0.2616572478082589,
+        "minimum": 0.0016770532749414535,
+        "p10": 0.05044473147899152,
+        "p25": 0.15536271188389783,
+        "p75": 0.4363744772462932,
+        "p90": 0.6150153205587803
+      },
+      "recall": 0.4,
+      "rocAuc": 0.4578947368421053,
+      "threshold": 0.5700000000000001
+    }
+  },
+  {
+    "complexity": "low",
+    "hyperparameters": {
+      "C": 1.0,
+      "classWeight": "balanced"
+    },
+    "model": "logistic_regression",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.35294117647058826,
+      "precision": 0.42857142857142855,
+      "recall": 0.3,
+      "threshold": 0.72
+    },
+    "validation": {
+      "accuracy": 0.835820895522388,
+      "brier": 0.19934227619077236,
+      "calibration": [
+        {
+          "count": 42,
+          "lower": 0.0,
+          "meanPredicted": 0.05418174119894585,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.2
+        },
+        {
+          "count": 9,
+          "lower": 0.2,
+          "meanPredicted": 0.26982971472659956,
+          "observedRate": 0.0,
+          "upper": 0.4
+        },
+        {
+          "count": 5,
+          "lower": 0.4,
+          "meanPredicted": 0.502918176382739,
+          "observedRate": 0.2,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 4,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6965330728765688,
+          "observedRate": 0.0,
+          "upper": 0.8
+        },
+        {
+          "count": 7,
+          "lower": 0.8,
+          "meanPredicted": 0.9389999014735909,
+          "observedRate": 0.42857142857142855,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          53,
+          4
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.35294117647058826,
+      "prAuc": 0.2695684376625712,
+      "precision": 0.42857142857142855,
+      "probabilityDistribution": {
+        "maximum": 0.9948697690721715,
+        "median": 0.14717003497896983,
+        "minimum": 3.8424059158628596e-07,
+        "p10": 0.0005575532904076726,
+        "p25": 0.01892794417408695,
+        "p75": 0.36069361196142335,
+        "p90": 0.7658273352269354
+      },
+      "recall": 0.3,
+      "rocAuc": 0.45438596491228067,
+      "threshold": 0.72
+    }
+  },
+  {
+    "complexity": "low",
+    "hyperparameters": {
+      "C": 10.0,
+      "classWeight": "balanced"
+    },
+    "model": "logistic_regression",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.3333333333333333,
+      "precision": 0.375,
+      "recall": 0.3,
+      "threshold": 0.91
+    },
+    "validation": {
+      "accuracy": 0.8208955223880597,
+      "brier": 0.227819194910551,
+      "calibration": [
+        {
+          "count": 51,
+          "lower": 0.0,
+          "meanPredicted": 0.021746222617046142,
+          "observedRate": 0.11764705882352941,
+          "upper": 0.2
+        },
+        {
+          "count": 1,
+          "lower": 0.2,
+          "meanPredicted": 0.3551638618511257,
+          "observedRate": 0.0,
+          "upper": 0.4
+        },
+        {
+          "count": 1,
+          "lower": 0.4,
+          "meanPredicted": 0.4739883871724394,
+          "observedRate": 1.0,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 2,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.682169186662646,
+          "observedRate": 0.0,
+          "upper": 0.8
+        },
+        {
+          "count": 12,
+          "lower": 0.8,
+          "meanPredicted": 0.9395606035273363,
+          "observedRate": 0.25,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          52,
+          5
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.3333333333333333,
+      "prAuc": 0.23290607748812947,
+      "precision": 0.375,
+      "probabilityDistribution": {
+        "maximum": 0.999996402960146,
+        "median": 0.0065781716859123224,
+        "minimum": 3.6722843675535287e-14,
+        "p10": 5.487812112811791e-08,
+        "p25": 7.749129248487056e-05,
+        "p75": 0.15449252403277536,
+        "p90": 0.9288668561485471
+      },
+      "recall": 0.3,
+      "rocAuc": 0.4491228070175438,
+      "threshold": 0.91
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.44
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.1317992537313433,
+      "calibration": [
+        {
+          "count": 32,
+          "lower": 0.0,
+          "meanPredicted": 0.12203125,
+          "observedRate": 0.09375,
+          "upper": 0.2
+        },
+        {
+          "count": 25,
+          "lower": 0.2,
+          "meanPredicted": 0.2872,
+          "observedRate": 0.16,
+          "upper": 0.4
+        },
+        {
+          "count": 10,
+          "lower": 0.4,
+          "meanPredicted": 0.4405,
+          "observedRate": 0.3,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.3641350535429483,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.495,
+        "median": 0.2,
+        "minimum": 0.015,
+        "p10": 0.08900000000000001,
+        "p25": 0.1325,
+        "p75": 0.3375,
+        "p90": 0.427
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6473684210526316,
+      "threshold": 0.44
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.38095238095238093,
+      "precision": 0.36363636363636365,
+      "recall": 0.4,
+      "threshold": 0.21000000000000002
+    },
+    "validation": {
+      "accuracy": 0.8059701492537313,
+      "brier": 0.12347761194029853,
+      "calibration": [
+        {
+          "count": 54,
+          "lower": 0.0,
+          "meanPredicted": 0.0948148148148148,
+          "observedRate": 0.1111111111111111,
+          "upper": 0.2
+        },
+        {
+          "count": 13,
+          "lower": 0.2,
+          "meanPredicted": 0.2630769230769231,
+          "observedRate": 0.3076923076923077,
+          "upper": 0.4
+        }
+      ],
+      "confusionMatrix": [
+        [
+          50,
+          7
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.38095238095238093,
+      "prAuc": 0.2541080369083501,
+      "precision": 0.36363636363636365,
+      "probabilityDistribution": {
+        "maximum": 0.335,
+        "median": 0.1,
+        "minimum": 0.005,
+        "p10": 0.033,
+        "p25": 0.0675,
+        "p75": 0.185,
+        "p90": 0.259
+      },
+      "recall": 0.4,
+      "rocAuc": 0.662280701754386,
+      "threshold": 0.21000000000000002
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.5
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.14412528109967218,
+      "calibration": [
+        {
+          "count": 24,
+          "lower": 0.0,
+          "meanPredicted": 0.11865225469704643,
+          "observedRate": 0.125,
+          "upper": 0.2
+        },
+        {
+          "count": 27,
+          "lower": 0.2,
+          "meanPredicted": 0.27922262414180626,
+          "observedRate": 0.14814814814814814,
+          "upper": 0.4
+        },
+        {
+          "count": 16,
+          "lower": 0.4,
+          "meanPredicted": 0.4587542347341013,
+          "observedRate": 0.1875,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.3764745093914723,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.5325956890331891,
+        "median": 0.24087921729543246,
+        "minimum": 0.014163961038961038,
+        "p10": 0.08826559288664552,
+        "p25": 0.1555402895715396,
+        "p75": 0.3931342525938113,
+        "p90": 0.47508530803991317
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6017543859649124,
+      "threshold": 0.5
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.35000000000000003
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.12406124873970524,
+      "calibration": [
+        {
+          "count": 44,
+          "lower": 0.0,
+          "meanPredicted": 0.11670799114279494,
+          "observedRate": 0.11363636363636363,
+          "upper": 0.2
+        },
+        {
+          "count": 22,
+          "lower": 0.2,
+          "meanPredicted": 0.30764506117319645,
+          "observedRate": 0.18181818181818182,
+          "upper": 0.4
+        },
+        {
+          "count": 1,
+          "lower": 0.4,
+          "meanPredicted": 0.4259356504851739,
+          "observedRate": 1.0,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.4022121073031416,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.4259356504851739,
+        "median": 0.1619883362827375,
+        "minimum": 0.013611516263816303,
+        "p10": 0.05237131566076861,
+        "p25": 0.10233888899336868,
+        "p75": 0.2663788486736564,
+        "p90": 0.3443076135684191
+      },
+      "recall": 0.3,
+      "rocAuc": 0.656140350877193,
+      "threshold": 0.35000000000000003
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.53
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.14847575315585432,
+      "calibration": [
+        {
+          "count": 18,
+          "lower": 0.0,
+          "meanPredicted": 0.13097365794252502,
+          "observedRate": 0.05555555555555555,
+          "upper": 0.2
+        },
+        {
+          "count": 31,
+          "lower": 0.2,
+          "meanPredicted": 0.3010712014382979,
+          "observedRate": 0.12903225806451613,
+          "upper": 0.4
+        },
+        {
+          "count": 17,
+          "lower": 0.4,
+          "meanPredicted": 0.47702787313020184,
+          "observedRate": 0.23529411764705882,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6126048828785156,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.395861929210234,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.6126048828785156,
+        "median": 0.3038647380666196,
+        "minimum": 0.04904335248085248,
+        "p10": 0.11501459185564557,
+        "p25": 0.1958897350729388,
+        "p75": 0.4107967609415984,
+        "p90": 0.48857413078205086
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6543859649122807,
+      "threshold": 0.53
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.44
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.12678609461541496,
+      "calibration": [
+        {
+          "count": 37,
+          "lower": 0.0,
+          "meanPredicted": 0.13001590969723772,
+          "observedRate": 0.10810810810810811,
+          "upper": 0.2
+        },
+        {
+          "count": 23,
+          "lower": 0.2,
+          "meanPredicted": 0.30350068946580067,
+          "observedRate": 0.13043478260869565,
+          "upper": 0.4
+        },
+        {
+          "count": 7,
+          "lower": 0.4,
+          "meanPredicted": 0.4625535254758294,
+          "observedRate": 0.42857142857142855,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.3949406638738985,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.5347132868898773,
+        "median": 0.1862369187703928,
+        "minimum": 0.022527321639713528,
+        "p10": 0.06286829589239343,
+        "p25": 0.14055216878884008,
+        "p75": 0.33072614768021846,
+        "p90": 0.4077509061836256
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6631578947368422,
+      "threshold": 0.44
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.4166666666666667,
+      "precision": 0.35714285714285715,
+      "recall": 0.5,
+      "threshold": 0.42000000000000004
+    },
+    "validation": {
+      "accuracy": 0.7910447761194029,
+      "brier": 0.1466818737195422,
+      "calibration": [
+        {
+          "count": 15,
+          "lower": 0.0,
+          "meanPredicted": 0.147884397712582,
+          "observedRate": 0.13333333333333333,
+          "upper": 0.2
+        },
+        {
+          "count": 34,
+          "lower": 0.2,
+          "meanPredicted": 0.28150124570117324,
+          "observedRate": 0.08823529411764706,
+          "upper": 0.4
+        },
+        {
+          "count": 18,
+          "lower": 0.4,
+          "meanPredicted": 0.47652567375573945,
+          "observedRate": 0.2777777777777778,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          48,
+          9
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.4166666666666667,
+      "prAuc": 0.4194760813452688,
+      "precision": 0.35714285714285715,
+      "probabilityDistribution": {
+        "maximum": 0.5970775269427446,
+        "median": 0.27889711517171845,
+        "minimum": 0.07898498231008802,
+        "p10": 0.1400487333000487,
+        "p25": 0.2068048248953976,
+        "p75": 0.40788611787690665,
+        "p90": 0.4823098636339284
+      },
+      "recall": 0.5,
+      "rocAuc": 0.6508771929824562,
+      "threshold": 0.42000000000000004
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.4166666666666667,
+      "precision": 0.35714285714285715,
+      "recall": 0.5,
+      "threshold": 0.33
+    },
+    "validation": {
+      "accuracy": 0.7910447761194029,
+      "brier": 0.12663579932018693,
+      "calibration": [
+        {
+          "count": 36,
+          "lower": 0.0,
+          "meanPredicted": 0.1471544968057433,
+          "observedRate": 0.08333333333333333,
+          "upper": 0.2
+        },
+        {
+          "count": 22,
+          "lower": 0.2,
+          "meanPredicted": 0.2967701456390234,
+          "observedRate": 0.18181818181818182,
+          "upper": 0.4
+        },
+        {
+          "count": 9,
+          "lower": 0.4,
+          "meanPredicted": 0.43414436247297783,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          48,
+          9
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.4166666666666667,
+      "prAuc": 0.42436892684462446,
+      "precision": 0.35714285714285715,
+      "probabilityDistribution": {
+        "maximum": 0.46398820392712636,
+        "median": 0.19773085443169275,
+        "minimum": 0.0510046973221044,
+        "p10": 0.10943135226022513,
+        "p25": 0.15016527548577768,
+        "p75": 0.31793117601970045,
+        "p90": 0.4151694082193519
+      },
+      "recall": 0.5,
+      "rocAuc": 0.6912280701754386,
+      "threshold": 0.33
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.51
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.15267358927443636,
+      "calibration": [
+        {
+          "count": 15,
+          "lower": 0.0,
+          "meanPredicted": 0.14793095284002764,
+          "observedRate": 0.06666666666666667,
+          "upper": 0.2
+        },
+        {
+          "count": 33,
+          "lower": 0.2,
+          "meanPredicted": 0.2893677784839015,
+          "observedRate": 0.12121212121212122,
+          "upper": 0.4
+        },
+        {
+          "count": 19,
+          "lower": 0.4,
+          "meanPredicted": 0.48394755944330425,
+          "observedRate": 0.2631578947368421,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.39678055480024566,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.5885513931555684,
+        "median": 0.3026944669716951,
+        "minimum": 0.08908462047989907,
+        "p10": 0.14095487795947256,
+        "p25": 0.2076927359985712,
+        "p75": 0.4093571318826986,
+        "p90": 0.5063793406350924
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6368421052631579,
+      "threshold": 0.51
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.4551939555730579
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.1291916270939891,
+      "calibration": [
+        {
+          "count": 25,
+          "lower": 0.0,
+          "meanPredicted": 0.1353427304820176,
+          "observedRate": 0.08,
+          "upper": 0.2
+        },
+        {
+          "count": 33,
+          "lower": 0.2,
+          "meanPredicted": 0.27052995534431995,
+          "observedRate": 0.15151515151515152,
+          "upper": 0.4
+        },
+        {
+          "count": 9,
+          "lower": 0.4,
+          "meanPredicted": 0.44828658649983955,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.44382893749288077,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.4650361921810181,
+        "median": 0.2176290366299019,
+        "minimum": 0.07087382978423681,
+        "p10": 0.110710722610395,
+        "p25": 0.16083917728019703,
+        "p75": 0.3264225884787726,
+        "p90": 0.43580906441492534
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6842105263157895,
+      "threshold": 0.4551939555730579
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.54
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.15838905671503667,
+      "calibration": [
+        {
+          "count": 16,
+          "lower": 0.0,
+          "meanPredicted": 0.15944199072447768,
+          "observedRate": 0.0625,
+          "upper": 0.2
+        },
+        {
+          "count": 31,
+          "lower": 0.2,
+          "meanPredicted": 0.3059614689531631,
+          "observedRate": 0.12903225806451613,
+          "upper": 0.4
+        },
+        {
+          "count": 19,
+          "lower": 0.4,
+          "meanPredicted": 0.49103169014251913,
+          "observedRate": 0.21052631578947367,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6038646262811329,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.3442787259831469,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.6038646262811329,
+        "median": 0.31780054488600373,
+        "minimum": 0.094670911945637,
+        "p10": 0.15830325833098777,
+        "p25": 0.21696783428254413,
+        "p75": 0.4202169739949754,
+        "p90": 0.5237966141905097
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6298245614035087,
+      "threshold": 0.54
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.46
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.13200585609047943,
+      "calibration": [
+        {
+          "count": 24,
+          "lower": 0.0,
+          "meanPredicted": 0.14224282498562826,
+          "observedRate": 0.08333333333333333,
+          "upper": 0.2
+        },
+        {
+          "count": 32,
+          "lower": 0.2,
+          "meanPredicted": 0.2777831100364049,
+          "observedRate": 0.15625,
+          "upper": 0.4
+        },
+        {
+          "count": 11,
+          "lower": 0.4,
+          "meanPredicted": 0.45221049511315636,
+          "observedRate": 0.2727272727272727,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.4084307513856674,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.5168311198536872,
+        "median": 0.23270322653868764,
+        "minimum": 0.07220193047321163,
+        "p10": 0.10985415140225721,
+        "p25": 0.17186395319454467,
+        "p75": 0.3349299598732907,
+        "p90": 0.44308853001712467
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6807017543859649,
+      "threshold": 0.46
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.6,
+      "recall": 0.3,
+      "threshold": 0.45
+    },
+    "validation": {
+      "accuracy": 0.8656716417910447,
+      "brier": 0.13104296666138587,
+      "calibration": [
+        {
+          "count": 33,
+          "lower": 0.0,
+          "meanPredicted": 0.12599285715943068,
+          "observedRate": 0.09090909090909091,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.29144631206189686,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.4
+        },
+        {
+          "count": 10,
+          "lower": 0.4,
+          "meanPredicted": 0.4551665820340741,
+          "observedRate": 0.3,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          55,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.3790768537659589,
+      "precision": 0.6,
+      "probabilityDistribution": {
+        "maximum": 0.508236772835468,
+        "median": 0.20518479054335828,
+        "minimum": 0.0054513492721032075,
+        "p10": 0.09584055149181395,
+        "p25": 0.13267069654609742,
+        "p75": 0.3453733039693715,
+        "p90": 0.4256697536257354
+      },
+      "recall": 0.3,
+      "rocAuc": 0.656140350877193,
+      "threshold": 0.45
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.4166666666666667,
+      "precision": 0.35714285714285715,
+      "recall": 0.5,
+      "threshold": 0.21000000000000002
+    },
+    "validation": {
+      "accuracy": 0.7910447761194029,
+      "brier": 0.12357326501257593,
+      "calibration": [
+        {
+          "count": 51,
+          "lower": 0.0,
+          "meanPredicted": 0.09459448018124265,
+          "observedRate": 0.09803921568627451,
+          "upper": 0.2
+        },
+        {
+          "count": 16,
+          "lower": 0.2,
+          "meanPredicted": 0.2598964301925498,
+          "observedRate": 0.3125,
+          "upper": 0.4
+        }
+      ],
+      "confusionMatrix": [
+        [
+          48,
+          9
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.4166666666666667,
+      "prAuc": 0.2770958954511586,
+      "precision": 0.35714285714285715,
+      "probabilityDistribution": {
+        "maximum": 0.36424559008885005,
+        "median": 0.11253799579242163,
+        "minimum": 0.007406779661016949,
+        "p10": 0.03615970117843825,
+        "p25": 0.06906242794140768,
+        "p75": 0.18867960919916332,
+        "p90": 0.26534050083782296
+      },
+      "recall": 0.5,
+      "rocAuc": 0.6473684210526316,
+      "threshold": 0.21000000000000002
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.49
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.14401250458489714,
+      "calibration": [
+        {
+          "count": 23,
+          "lower": 0.0,
+          "meanPredicted": 0.11592421862424808,
+          "observedRate": 0.13043478260869565,
+          "upper": 0.2
+        },
+        {
+          "count": 28,
+          "lower": 0.2,
+          "meanPredicted": 0.2782972727155989,
+          "observedRate": 0.10714285714285714,
+          "upper": 0.4
+        },
+        {
+          "count": 16,
+          "lower": 0.4,
+          "meanPredicted": 0.46000092311289675,
+          "observedRate": 0.25,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.3815393733250876,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.5463258477633478,
+        "median": 0.24011532840654357,
+        "minimum": 0.016965052642511465,
+        "p10": 0.08961854108430606,
+        "p25": 0.1550670196465579,
+        "p75": 0.3884377602653579,
+        "p90": 0.47602761645134517
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6070175438596491,
+      "threshold": 0.49
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.3483407691459172
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.12437812333473083,
+      "calibration": [
+        {
+          "count": 43,
+          "lower": 0.0,
+          "meanPredicted": 0.11469158558370635,
+          "observedRate": 0.11627906976744186,
+          "upper": 0.2
+        },
+        {
+          "count": 23,
+          "lower": 0.2,
+          "meanPredicted": 0.3050509555933516,
+          "observedRate": 0.17391304347826086,
+          "upper": 0.4
+        },
+        {
+          "count": 1,
+          "lower": 0.4,
+          "meanPredicted": 0.42703647215875656,
+          "observedRate": 1.0,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.4025528673835126,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.42703647215875656,
+        "median": 0.16126013869867628,
+        "minimum": 0.01423783873525092,
+        "p10": 0.05508683066067592,
+        "p25": 0.10330942140526997,
+        "p75": 0.2712710403411617,
+        "p90": 0.3478315780988977
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6543859649122807,
+      "threshold": 0.3483407691459172
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.53
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.1484428198725441,
+      "calibration": [
+        {
+          "count": 18,
+          "lower": 0.0,
+          "meanPredicted": 0.13118733315620024,
+          "observedRate": 0.05555555555555555,
+          "upper": 0.2
+        },
+        {
+          "count": 31,
+          "lower": 0.2,
+          "meanPredicted": 0.300996759750953,
+          "observedRate": 0.12903225806451613,
+          "upper": 0.4
+        },
+        {
+          "count": 17,
+          "lower": 0.4,
+          "meanPredicted": 0.4772239515615744,
+          "observedRate": 0.23529411764705882,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6126048828785156,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.395861929210234,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.6126048828785156,
+        "median": 0.3038647380666196,
+        "minimum": 0.04904335248085248,
+        "p10": 0.11501459185564557,
+        "p25": 0.1958897350729388,
+        "p75": 0.4107967609415984,
+        "p90": 0.48857413078205086
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6543859649122807,
+      "threshold": 0.53
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.44
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.12676121037302238,
+      "calibration": [
+        {
+          "count": 37,
+          "lower": 0.0,
+          "meanPredicted": 0.13002714289933384,
+          "observedRate": 0.10810810810810811,
+          "upper": 0.2
+        },
+        {
+          "count": 23,
+          "lower": 0.2,
+          "meanPredicted": 0.3028926038421439,
+          "observedRate": 0.13043478260869565,
+          "upper": 0.4
+        },
+        {
+          "count": 7,
+          "lower": 0.4,
+          "meanPredicted": 0.4637527145118306,
+          "observedRate": 0.42857142857142855,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.3936248744002143,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.5397132868898773,
+        "median": 0.18351395861859018,
+        "minimum": 0.022527321639713528,
+        "p10": 0.06286829589239343,
+        "p25": 0.14055216878884008,
+        "p75": 0.33072614768021846,
+        "p90": 0.4057959947429457
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6614035087719298,
+      "threshold": 0.44
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.4325
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.13115830223880598,
+      "calibration": [
+        {
+          "count": 29,
+          "lower": 0.0,
+          "meanPredicted": 0.11844827586206894,
+          "observedRate": 0.10344827586206896,
+          "upper": 0.2
+        },
+        {
+          "count": 29,
+          "lower": 0.2,
+          "meanPredicted": 0.28465517241379307,
+          "observedRate": 0.13793103448275862,
+          "upper": 0.4
+        },
+        {
+          "count": 9,
+          "lower": 0.4,
+          "meanPredicted": 0.4475,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.37214832144979204,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.5025,
+        "median": 0.21,
+        "minimum": 0.015,
+        "p10": 0.081,
+        "p25": 0.135,
+        "p75": 0.33,
+        "p90": 0.4285
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6631578947368422,
+      "threshold": 0.4325
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.38095238095238093,
+      "precision": 0.36363636363636365,
+      "recall": 0.4,
+      "threshold": 0.21000000000000002
+    },
+    "validation": {
+      "accuracy": 0.8059701492537313,
+      "brier": 0.12266800373134329,
+      "calibration": [
+        {
+          "count": 54,
+          "lower": 0.0,
+          "meanPredicted": 0.09638888888888889,
+          "observedRate": 0.1111111111111111,
+          "upper": 0.2
+        },
+        {
+          "count": 13,
+          "lower": 0.2,
+          "meanPredicted": 0.26057692307692315,
+          "observedRate": 0.3076923076923077,
+          "upper": 0.4
+        }
+      ],
+      "confusionMatrix": [
+        [
+          50,
+          7
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.38095238095238093,
+      "prAuc": 0.2581104770646415,
+      "precision": 0.36363636363636365,
+      "probabilityDistribution": {
+        "maximum": 0.3225,
+        "median": 0.1025,
+        "minimum": 0.01,
+        "p10": 0.0375,
+        "p25": 0.06875,
+        "p75": 0.18125,
+        "p90": 0.2645
+      },
+      "recall": 0.4,
+      "rocAuc": 0.6745614035087719,
+      "threshold": 0.21000000000000002
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.51
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.14159517652669168,
+      "calibration": [
+        {
+          "count": 21,
+          "lower": 0.0,
+          "meanPredicted": 0.11760566655062825,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.2
+        },
+        {
+          "count": 31,
+          "lower": 0.2,
+          "meanPredicted": 0.2768671605647449,
+          "observedRate": 0.12903225806451613,
+          "upper": 0.4
+        },
+        {
+          "count": 15,
+          "lower": 0.4,
+          "meanPredicted": 0.47082874808827746,
+          "observedRate": 0.2,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.4430269643650967,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.5454293498576586,
+        "median": 0.24575308515014396,
+        "minimum": 0.022389672827172826,
+        "p10": 0.09300370417980715,
+        "p25": 0.1586778300335286,
+        "p75": 0.383617690205326,
+        "p90": 0.47265393476492545
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6403508771929824,
+      "threshold": 0.51
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.35714285714285715,
+      "precision": 0.2777777777777778,
+      "recall": 0.5,
+      "threshold": 0.25
+    },
+    "validation": {
+      "accuracy": 0.7313432835820896,
+      "brier": 0.12456219110545343,
+      "calibration": [
+        {
+          "count": 41,
+          "lower": 0.0,
+          "meanPredicted": 0.1098432944316229,
+          "observedRate": 0.0975609756097561,
+          "upper": 0.2
+        },
+        {
+          "count": 25,
+          "lower": 0.2,
+          "meanPredicted": 0.2862783070794163,
+          "observedRate": 0.2,
+          "upper": 0.4
+        },
+        {
+          "count": 1,
+          "lower": 0.4,
+          "meanPredicted": 0.42828657621279187,
+          "observedRate": 1.0,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          44,
+          13
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.35714285714285715,
+      "prAuc": 0.31771529828822376,
+      "precision": 0.2777777777777778,
+      "probabilityDistribution": {
+        "maximum": 0.42828657621279187,
+        "median": 0.16075075777452144,
+        "minimum": 0.012241277321191256,
+        "p10": 0.055187421892447464,
+        "p25": 0.09731289477167579,
+        "p75": 0.2573495804003287,
+        "p90": 0.340875714924746
+      },
+      "recall": 0.5,
+      "rocAuc": 0.6298245614035088,
+      "threshold": 0.25
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.55
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.14692423246605377,
+      "calibration": [
+        {
+          "count": 19,
+          "lower": 0.0,
+          "meanPredicted": 0.13438404197294818,
+          "observedRate": 0.10526315789473684,
+          "upper": 0.2
+        },
+        {
+          "count": 30,
+          "lower": 0.2,
+          "meanPredicted": 0.29436986838928225,
+          "observedRate": 0.1,
+          "upper": 0.4
+        },
+        {
+          "count": 18,
+          "lower": 0.4,
+          "meanPredicted": 0.4853682473635917,
+          "observedRate": 0.2777777777777778,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.45516016663075487,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.596954300383619,
+        "median": 0.2811875009388292,
+        "minimum": 0.04724239710452945,
+        "p10": 0.11248140915120074,
+        "p25": 0.1855425027390452,
+        "p75": 0.4076286327879237,
+        "p90": 0.49982899615929355
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6631578947368421,
+      "threshold": 0.55
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.46
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.1265953001070414,
+      "calibration": [
+        {
+          "count": 36,
+          "lower": 0.0,
+          "meanPredicted": 0.12416191979851011,
+          "observedRate": 0.1111111111111111,
+          "upper": 0.2
+        },
+        {
+          "count": 23,
+          "lower": 0.2,
+          "meanPredicted": 0.29049425606312146,
+          "observedRate": 0.13043478260869565,
+          "upper": 0.4
+        },
+        {
+          "count": 8,
+          "lower": 0.4,
+          "meanPredicted": 0.44455167615285607,
+          "observedRate": 0.375,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.4500499939469309,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.5220014609897043,
+        "median": 0.18010931517604212,
+        "minimum": 0.022244634842909505,
+        "p10": 0.06344445059128377,
+        "p25": 0.12685938396419577,
+        "p75": 0.31239129225105766,
+        "p90": 0.40666535775850626
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6543859649122807,
+      "threshold": 0.46
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.6,
+      "recall": 0.3,
+      "threshold": 0.5
+    },
+    "validation": {
+      "accuracy": 0.8656716417910447,
+      "brier": 0.1456986603029784,
+      "calibration": [
+        {
+          "count": 16,
+          "lower": 0.0,
+          "meanPredicted": 0.15472695717639068,
+          "observedRate": 0.0625,
+          "upper": 0.2
+        },
+        {
+          "count": 35,
+          "lower": 0.2,
+          "meanPredicted": 0.2886967051271118,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.4
+        },
+        {
+          "count": 16,
+          "lower": 0.4,
+          "meanPredicted": 0.4802826140486142,
+          "observedRate": 0.25,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          55,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.40987277540514855,
+      "precision": 0.6,
+      "probabilityDistribution": {
+        "maximum": 0.577778260055036,
+        "median": 0.2736892536088202,
+        "minimum": 0.09006329769348756,
+        "p10": 0.14271561657272627,
+        "p25": 0.20547183064808905,
+        "p75": 0.3913806603705967,
+        "p90": 0.48917576832266874
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6456140350877193,
+      "threshold": 0.5
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.4166666666666667,
+      "precision": 0.35714285714285715,
+      "recall": 0.5,
+      "threshold": 0.33
+    },
+    "validation": {
+      "accuracy": 0.7910447761194029,
+      "brier": 0.12729289719640302,
+      "calibration": [
+        {
+          "count": 32,
+          "lower": 0.0,
+          "meanPredicted": 0.1431696387929353,
+          "observedRate": 0.09375,
+          "upper": 0.2
+        },
+        {
+          "count": 27,
+          "lower": 0.2,
+          "meanPredicted": 0.2819611944184186,
+          "observedRate": 0.14814814814814814,
+          "upper": 0.4
+        },
+        {
+          "count": 8,
+          "lower": 0.4,
+          "meanPredicted": 0.4228925610502492,
+          "observedRate": 0.375,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          48,
+          9
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.4166666666666667,
+      "prAuc": 0.33097861973573545,
+      "precision": 0.35714285714285715,
+      "probabilityDistribution": {
+        "maximum": 0.44430617938847566,
+        "median": 0.20552444128405953,
+        "minimum": 0.05261144275515042,
+        "p10": 0.10629088881953251,
+        "p25": 0.15544648111084125,
+        "p75": 0.29408414844694125,
+        "p90": 0.40938303719045116
+      },
+      "recall": 0.5,
+      "rocAuc": 0.6824561403508772,
+      "threshold": 0.33
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.55
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.14956939137303144,
+      "calibration": [
+        {
+          "count": 14,
+          "lower": 0.0,
+          "meanPredicted": 0.1487173443123865,
+          "observedRate": 0.07142857142857142,
+          "upper": 0.2
+        },
+        {
+          "count": 35,
+          "lower": 0.2,
+          "meanPredicted": 0.28858243168098113,
+          "observedRate": 0.11428571428571428,
+          "upper": 0.4
+        },
+        {
+          "count": 17,
+          "lower": 0.4,
+          "meanPredicted": 0.481787623748971,
+          "observedRate": 0.23529411764705882,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6051335674716046,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.44749038371329386,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.6051335674716046,
+        "median": 0.30225839355896794,
+        "minimum": 0.09475976420909432,
+        "p10": 0.14354574751494834,
+        "p25": 0.2159086301018343,
+        "p75": 0.41098298806217715,
+        "p90": 0.5004894323888062
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6508771929824562,
+      "threshold": 0.55
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.43478260869565216,
+      "precision": 0.38461538461538464,
+      "recall": 0.5,
+      "threshold": 0.35368122707365685
+    },
+    "validation": {
+      "accuracy": 0.8059701492537313,
+      "brier": 0.12830470388724724,
+      "calibration": [
+        {
+          "count": 27,
+          "lower": 0.0,
+          "meanPredicted": 0.13812554933959056,
+          "observedRate": 0.07407407407407407,
+          "upper": 0.2
+        },
+        {
+          "count": 32,
+          "lower": 0.2,
+          "meanPredicted": 0.2777201282663634,
+          "observedRate": 0.15625,
+          "upper": 0.4
+        },
+        {
+          "count": 8,
+          "lower": 0.4,
+          "meanPredicted": 0.4324400401041464,
+          "observedRate": 0.375,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          49,
+          8
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.43478260869565216,
+      "prAuc": 0.38502666451195866,
+      "precision": 0.38461538461538464,
+      "probabilityDistribution": {
+        "maximum": 0.45515848289842614,
+        "median": 0.21838771657965458,
+        "minimum": 0.059995499495830266,
+        "p10": 0.11507577401280154,
+        "p25": 0.1543156699489906,
+        "p75": 0.3215855278831103,
+        "p90": 0.4174906565893868
+      },
+      "recall": 0.5,
+      "rocAuc": 0.6912280701754386,
+      "threshold": 0.35368122707365685
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.56
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.15473711556633485,
+      "calibration": [
+        {
+          "count": 12,
+          "lower": 0.0,
+          "meanPredicted": 0.1511591907975961,
+          "observedRate": 0.0,
+          "upper": 0.2
+        },
+        {
+          "count": 34,
+          "lower": 0.2,
+          "meanPredicted": 0.28725950013013873,
+          "observedRate": 0.14705882352941177,
+          "upper": 0.4
+        },
+        {
+          "count": 20,
+          "lower": 0.4,
+          "meanPredicted": 0.48072599384229353,
+          "observedRate": 0.2,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6006106974959003,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.4254870407933288,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.6006106974959003,
+        "median": 0.3128509694163283,
+        "minimum": 0.09880360858763312,
+        "p10": 0.15707106624549483,
+        "p25": 0.21908974327040023,
+        "p75": 0.42176619806603677,
+        "p90": 0.5113291506040395
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6578947368421053,
+      "threshold": 0.56
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.45379436043368243
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.1316157640812956,
+      "calibration": [
+        {
+          "count": 25,
+          "lower": 0.0,
+          "meanPredicted": 0.1410440125911325,
+          "observedRate": 0.08,
+          "upper": 0.2
+        },
+        {
+          "count": 32,
+          "lower": 0.2,
+          "meanPredicted": 0.2829027056882563,
+          "observedRate": 0.15625,
+          "upper": 0.4
+        },
+        {
+          "count": 10,
+          "lower": 0.4,
+          "meanPredicted": 0.4517351503671193,
+          "observedRate": 0.3,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.44325487443965705,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.5062843475661293,
+        "median": 0.22648013970589226,
+        "minimum": 0.061880734510456455,
+        "p10": 0.11568836135837933,
+        "p25": 0.16331911110482342,
+        "p75": 0.3442093789298567,
+        "p90": 0.4380714812816788
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6842105263157895,
+      "threshold": 0.45379436043368243
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.44
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.13104058739356284,
+      "calibration": [
+        {
+          "count": 28,
+          "lower": 0.0,
+          "meanPredicted": 0.11747229859940542,
+          "observedRate": 0.07142857142857142,
+          "upper": 0.2
+        },
+        {
+          "count": 30,
+          "lower": 0.2,
+          "meanPredicted": 0.28377583533401146,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.4
+        },
+        {
+          "count": 9,
+          "lower": 0.4,
+          "meanPredicted": 0.46181625512129554,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.3764401211788454,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.5165469578463054,
+        "median": 0.21973595618456845,
+        "minimum": 0.010981957430859668,
+        "p10": 0.08372504993290622,
+        "p25": 0.13378801054805833,
+        "p75": 0.33163874832539786,
+        "p90": 0.4332955062478802
+      },
+      "recall": 0.3,
+      "rocAuc": 0.668421052631579,
+      "threshold": 0.44
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.38461538461538464,
+      "precision": 0.3125,
+      "recall": 0.5,
+      "threshold": 0.19537799649580723
+    },
+    "validation": {
+      "accuracy": 0.7611940298507462,
+      "brier": 0.12297036133200528,
+      "calibration": [
+        {
+          "count": 52,
+          "lower": 0.0,
+          "meanPredicted": 0.09806879360909346,
+          "observedRate": 0.11538461538461539,
+          "upper": 0.2
+        },
+        {
+          "count": 15,
+          "lower": 0.2,
+          "meanPredicted": 0.2614885913012304,
+          "observedRate": 0.26666666666666666,
+          "upper": 0.4
+        }
+      ],
+      "confusionMatrix": [
+        [
+          46,
+          11
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.38461538461538464,
+      "prAuc": 0.25771901311213613,
+      "precision": 0.3125,
+      "probabilityDistribution": {
+        "maximum": 0.3167372996488758,
+        "median": 0.11535715737735662,
+        "minimum": 0.012192654752376676,
+        "p10": 0.03849714155138148,
+        "p25": 0.07251277539407311,
+        "p75": 0.19147422675612297,
+        "p90": 0.2817036529381266
+      },
+      "recall": 0.5,
+      "rocAuc": 0.656140350877193,
+      "threshold": 0.19537799649580723
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.51
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.1415394711855366,
+      "calibration": [
+        {
+          "count": 22,
+          "lower": 0.0,
+          "meanPredicted": 0.1220875295347367,
+          "observedRate": 0.13636363636363635,
+          "upper": 0.2
+        },
+        {
+          "count": 31,
+          "lower": 0.2,
+          "meanPredicted": 0.2848572038145511,
+          "observedRate": 0.12903225806451613,
+          "upper": 0.4
+        },
+        {
+          "count": 14,
+          "lower": 0.4,
+          "meanPredicted": 0.4757358854402846,
+          "observedRate": 0.21428571428571427,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.4434926107195014,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.552294429222738,
+        "median": 0.24624715807068737,
+        "minimum": 0.023790218628948038,
+        "p10": 0.09262110584809746,
+        "p25": 0.15689367531782913,
+        "p75": 0.38605261615745157,
+        "p90": 0.4720253228520512
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6421052631578947,
+      "threshold": 0.51
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.35714285714285715,
+      "precision": 0.2777777777777778,
+      "recall": 0.5,
+      "threshold": 0.25660881772174915
+    },
+    "validation": {
+      "accuracy": 0.7313432835820896,
+      "brier": 0.12478082805387039,
+      "calibration": [
+        {
+          "count": 41,
+          "lower": 0.0,
+          "meanPredicted": 0.10981182844828093,
+          "observedRate": 0.0975609756097561,
+          "upper": 0.2
+        },
+        {
+          "count": 25,
+          "lower": 0.2,
+          "meanPredicted": 0.2869629325490522,
+          "observedRate": 0.2,
+          "upper": 0.4
+        },
+        {
+          "count": 1,
+          "lower": 0.4,
+          "meanPredicted": 0.4266118068355486,
+          "observedRate": 1.0,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          44,
+          13
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.35714285714285715,
+      "prAuc": 0.31252818289058204,
+      "precision": 0.2777777777777778,
+      "probabilityDistribution": {
+        "maximum": 0.4266118068355486,
+        "median": 0.1575903010905861,
+        "minimum": 0.012554438556908565,
+        "p10": 0.05596204685975887,
+        "p25": 0.09563301410332226,
+        "p75": 0.2597118403610722,
+        "p90": 0.3404215712334812
+      },
+      "recall": 0.5,
+      "rocAuc": 0.6280701754385964,
+      "threshold": 0.25660881772174915
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.55
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.14691215668112956,
+      "calibration": [
+        {
+          "count": 19,
+          "lower": 0.0,
+          "meanPredicted": 0.13490099541424372,
+          "observedRate": 0.10526315789473684,
+          "upper": 0.2
+        },
+        {
+          "count": 30,
+          "lower": 0.2,
+          "meanPredicted": 0.2945312178853744,
+          "observedRate": 0.1,
+          "upper": 0.4
+        },
+        {
+          "count": 18,
+          "lower": 0.4,
+          "meanPredicted": 0.4854419059580837,
+          "observedRate": 0.2777777777777778,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.45516016663075487,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.596954300383619,
+        "median": 0.2821490394003677,
+        "minimum": 0.04724239710452945,
+        "p10": 0.11248140915120074,
+        "p25": 0.1865961886364811,
+        "p75": 0.4076286327879237,
+        "p90": 0.49982899615929355
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6631578947368421,
+      "threshold": 0.55
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.46
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.12659132290645006,
+      "calibration": [
+        {
+          "count": 36,
+          "lower": 0.0,
+          "meanPredicted": 0.12413657532056287,
+          "observedRate": 0.1111111111111111,
+          "upper": 0.2
+        },
+        {
+          "count": 23,
+          "lower": 0.2,
+          "meanPredicted": 0.2902463555406844,
+          "observedRate": 0.13043478260869565,
+          "upper": 0.4
+        },
+        {
+          "count": 8,
+          "lower": 0.4,
+          "meanPredicted": 0.44507632135610664,
+          "observedRate": 0.375,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.4494944383913754,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.5245014609897044,
+        "median": 0.18053533240970093,
+        "minimum": 0.022244634842909505,
+        "p10": 0.06344445059128377,
+        "p25": 0.12685938396419577,
+        "p75": 0.31239129225105766,
+        "p90": 0.4065047900837071
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6526315789473685,
+      "threshold": 0.46
+    }
+  },
+  {
+    "complexity": "low",
+    "hyperparameters": {
+      "C": 0.01,
+      "classWeight": "balanced"
+    },
+    "model": "logistic_regression",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.6
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.20044455259344313,
+      "calibration": [
+        {
+          "count": 7,
+          "lower": 0.0,
+          "meanPredicted": 0.18177637030411534,
+          "observedRate": 0.42857142857142855,
+          "upper": 0.2
+        },
+        {
+          "count": 33,
+          "lower": 0.2,
+          "meanPredicted": 0.30936871433336344,
+          "observedRate": 0.06060606060606061,
+          "upper": 0.4
+        },
+        {
+          "count": 21,
+          "lower": 0.4,
+          "meanPredicted": 0.49271740611680237,
+          "observedRate": 0.09523809523809523,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 4,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6575180478003377,
+          "observedRate": 0.5,
+          "upper": 0.8
+        },
+        {
+          "count": 2,
+          "lower": 0.8,
+          "meanPredicted": 0.8220743550902372,
+          "observedRate": 0.5,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.26955856071619105,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.8356328969228228,
+        "median": 0.3588094982283408,
+        "minimum": 0.13445101670900156,
+        "p10": 0.22927801591497915,
+        "p25": 0.281974314677239,
+        "p75": 0.4716057531885866,
+        "p90": 0.5957566806393648
+      },
+      "recall": 0.3,
+      "rocAuc": 0.5035087719298246,
+      "threshold": 0.6
+    }
+  },
+  {
+    "complexity": "low",
+    "hyperparameters": {
+      "C": 0.1,
+      "classWeight": "balanced"
+    },
+    "model": "logistic_regression",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.4,
+      "recall": 0.4,
+      "threshold": 0.53
+    },
+    "validation": {
+      "accuracy": 0.8208955223880597,
+      "brier": 0.19840606011393416,
+      "calibration": [
+        {
+          "count": 28,
+          "lower": 0.0,
+          "meanPredicted": 0.11066127756007234,
+          "observedRate": 0.17857142857142858,
+          "upper": 0.2
+        },
+        {
+          "count": 18,
+          "lower": 0.2,
+          "meanPredicted": 0.3043462892485221,
+          "observedRate": 0.05555555555555555,
+          "upper": 0.4
+        },
+        {
+          "count": 13,
+          "lower": 0.4,
+          "meanPredicted": 0.4804786349423465,
+          "observedRate": 0.15384615384615385,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 4,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6768281974504792,
+          "observedRate": 0.0,
+          "upper": 0.8
+        },
+        {
+          "count": 4,
+          "lower": 0.8,
+          "meanPredicted": 0.8891163299106233,
+          "observedRate": 0.5,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          51,
+          6
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.3183179711608001,
+      "precision": 0.4,
+      "probabilityDistribution": {
+        "maximum": 0.9504176259277155,
+        "median": 0.26027433274826467,
+        "minimum": 0.0015941744695718843,
+        "p10": 0.05401233673151549,
+        "p25": 0.14126026718428134,
+        "p75": 0.4387884840143522,
+        "p90": 0.6165872773140617
+      },
+      "recall": 0.4,
+      "rocAuc": 0.4543859649122807,
+      "threshold": 0.53
+    }
+  },
+  {
+    "complexity": "low",
+    "hyperparameters": {
+      "C": 1.0,
+      "classWeight": "balanced"
+    },
+    "model": "logistic_regression",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.35294117647058826,
+      "precision": 0.42857142857142855,
+      "recall": 0.3,
+      "threshold": 0.79
+    },
+    "validation": {
+      "accuracy": 0.835820895522388,
+      "brier": 0.20211122790164246,
+      "calibration": [
+        {
+          "count": 45,
+          "lower": 0.0,
+          "meanPredicted": 0.05228267180220562,
+          "observedRate": 0.13333333333333333,
+          "upper": 0.2
+        },
+        {
+          "count": 5,
+          "lower": 0.2,
+          "meanPredicted": 0.3128840280329374,
+          "observedRate": 0.0,
+          "upper": 0.4
+        },
+        {
+          "count": 6,
+          "lower": 0.4,
+          "meanPredicted": 0.514536374219969,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 6,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.721653234337199,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.8
+        },
+        {
+          "count": 5,
+          "lower": 0.8,
+          "meanPredicted": 0.9707487066204393,
+          "observedRate": 0.4,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          53,
+          4
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.35294117647058826,
+      "prAuc": 0.24938056068800507,
+      "precision": 0.42857142857142855,
+      "probabilityDistribution": {
+        "maximum": 0.994808583434516,
+        "median": 0.10600435960199134,
+        "minimum": 2.8573782031538647e-07,
+        "p10": 0.0006319763530266767,
+        "p25": 0.014795393413183235,
+        "p75": 0.40046133082619373,
+        "p90": 0.7875155708835974
+      },
+      "recall": 0.3,
+      "rocAuc": 0.45789473684210524,
+      "threshold": 0.79
+    }
+  },
+  {
+    "complexity": "low",
+    "hyperparameters": {
+      "C": 10.0,
+      "classWeight": "balanced"
+    },
+    "model": "logistic_regression",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.27586206896551724,
+      "precision": 0.21052631578947367,
+      "recall": 0.4,
+      "threshold": 0.13
+    },
+    "validation": {
+      "accuracy": 0.6865671641791045,
+      "brier": 0.2446219950061857,
+      "calibration": [
+        {
+          "count": 49,
+          "lower": 0.0,
+          "meanPredicted": 0.014409578076264425,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.2
+        },
+        {
+          "count": 1,
+          "lower": 0.2,
+          "meanPredicted": 0.2524070074511111,
+          "observedRate": 0.0,
+          "upper": 0.4
+        },
+        {
+          "count": 3,
+          "lower": 0.4,
+          "meanPredicted": 0.5272230403072239,
+          "observedRate": 0.0,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 4,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.7220325607307699,
+          "observedRate": 0.25,
+          "upper": 0.8
+        },
+        {
+          "count": 10,
+          "lower": 0.8,
+          "meanPredicted": 0.956435385032582,
+          "observedRate": 0.2,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          42,
+          15
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.27586206896551724,
+      "prAuc": 0.21787559790390693,
+      "precision": 0.21052631578947367,
+      "probabilityDistribution": {
+        "maximum": 0.9999958784963523,
+        "median": 0.003730702835442276,
+        "minimum": 8.635756395517112e-17,
+        "p10": 1.6034557533954964e-08,
+        "p25": 4.843587057735033e-05,
+        "p75": 0.3659725279622743,
+        "p90": 0.9209472317714222
+      },
+      "recall": 0.4,
+      "rocAuc": 0.44736842105263164,
+      "threshold": 0.13
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.35294117647058826,
+      "precision": 0.42857142857142855,
+      "recall": 0.3,
+      "threshold": 0.43
+    },
+    "validation": {
+      "accuracy": 0.835820895522388,
+      "brier": 0.13476455223880598,
+      "calibration": [
+        {
+          "count": 31,
+          "lower": 0.0,
+          "meanPredicted": 0.10838709677419359,
+          "observedRate": 0.12903225806451613,
+          "upper": 0.2
+        },
+        {
+          "count": 27,
+          "lower": 0.2,
+          "meanPredicted": 0.2874074074074074,
+          "observedRate": 0.1111111111111111,
+          "upper": 0.4
+        },
+        {
+          "count": 8,
+          "lower": 0.4,
+          "meanPredicted": 0.460625,
+          "observedRate": 0.25,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.61,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          53,
+          4
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.35294117647058826,
+      "prAuc": 0.34007849845420934,
+      "precision": 0.42857142857142855,
+      "probabilityDistribution": {
+        "maximum": 0.61,
+        "median": 0.21,
+        "minimum": 0.01,
+        "p10": 0.05900000000000001,
+        "p25": 0.13,
+        "p75": 0.33,
+        "p90": 0.427
+      },
+      "recall": 0.3,
+      "rocAuc": 0.612280701754386,
+      "threshold": 0.43
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.4444444444444444,
+      "precision": 0.5,
+      "recall": 0.4,
+      "threshold": 0.23
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.12043283582089553,
+      "calibration": [
+        {
+          "count": 54,
+          "lower": 0.0,
+          "meanPredicted": 0.08805555555555555,
+          "observedRate": 0.1111111111111111,
+          "upper": 0.2
+        },
+        {
+          "count": 13,
+          "lower": 0.2,
+          "meanPredicted": 0.2557692307692308,
+          "observedRate": 0.3076923076923077,
+          "upper": 0.4
+        }
+      ],
+      "confusionMatrix": [
+        [
+          53,
+          4
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.4444444444444444,
+      "prAuc": 0.41437184692998646,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.345,
+        "median": 0.1,
+        "minimum": 0.0,
+        "p10": 0.023000000000000003,
+        "p25": 0.055,
+        "p75": 0.1725,
+        "p90": 0.23399999999999999
+      },
+      "recall": 0.4,
+      "rocAuc": 0.6614035087719298,
+      "threshold": 0.23
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.45
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.14167534270241047,
+      "calibration": [
+        {
+          "count": 29,
+          "lower": 0.0,
+          "meanPredicted": 0.11461663439166911,
+          "observedRate": 0.13793103448275862,
+          "upper": 0.2
+        },
+        {
+          "count": 28,
+          "lower": 0.2,
+          "meanPredicted": 0.31172395255082125,
+          "observedRate": 0.10714285714285714,
+          "upper": 0.4
+        },
+        {
+          "count": 10,
+          "lower": 0.4,
+          "meanPredicted": 0.47548503316858576,
+          "observedRate": 0.3,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.3483155892289631,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.5576283698027119,
+        "median": 0.24677446164946168,
+        "minimum": 0.005833333333333333,
+        "p10": 0.067622557997558,
+        "p25": 0.13445270354645356,
+        "p75": 0.3647543952757768,
+        "p90": 0.4423639416139415
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6052631578947368,
+      "threshold": 0.45
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.373309016010368
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.12338058729469509,
+      "calibration": [
+        {
+          "count": 41,
+          "lower": 0.0,
+          "meanPredicted": 0.09458882891814471,
+          "observedRate": 0.12195121951219512,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.27765891195953846,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.4
+        },
+        {
+          "count": 2,
+          "lower": 0.4,
+          "meanPredicted": 0.4236636311014974,
+          "observedRate": 0.5,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.3799125097072591,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.44482986994283485,
+        "median": 0.1431971539435789,
+        "minimum": 0.00701533110367893,
+        "p10": 0.04039612174865121,
+        "p25": 0.08795881235461724,
+        "p75": 0.24689751072389196,
+        "p90": 0.3235560365161651
+      },
+      "recall": 0.3,
+      "rocAuc": 0.631578947368421,
+      "threshold": 0.373309016010368
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.52
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.14518446155511264,
+      "calibration": [
+        {
+          "count": 21,
+          "lower": 0.0,
+          "meanPredicted": 0.10624454288250045,
+          "observedRate": 0.09523809523809523,
+          "upper": 0.2
+        },
+        {
+          "count": 29,
+          "lower": 0.2,
+          "meanPredicted": 0.28448295683579977,
+          "observedRate": 0.1724137931034483,
+          "upper": 0.4
+        },
+        {
+          "count": 16,
+          "lower": 0.4,
+          "meanPredicted": 0.4665628245441238,
+          "observedRate": 0.125,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6061348039307382,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.43220007218454426,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.6061348039307382,
+        "median": 0.2573760421868787,
+        "minimum": 0.0338254351857293,
+        "p10": 0.0779029202007143,
+        "p25": 0.15571558969477597,
+        "p75": 0.40186291274524333,
+        "p90": 0.4723960551758234
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6228070175438596,
+      "threshold": 0.52
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.35294117647058826,
+      "precision": 0.42857142857142855,
+      "recall": 0.3,
+      "threshold": 0.3974696779182523
+    },
+    "validation": {
+      "accuracy": 0.835820895522388,
+      "brier": 0.12865932201475927,
+      "calibration": [
+        {
+          "count": 38,
+          "lower": 0.0,
+          "meanPredicted": 0.10840340012040152,
+          "observedRate": 0.10526315789473684,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.3059649554577259,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.4
+        },
+        {
+          "count": 5,
+          "lower": 0.4,
+          "meanPredicted": 0.44767437586037706,
+          "observedRate": 0.4,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          53,
+          4
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.35294117647058826,
+      "prAuc": 0.38033454073297923,
+      "precision": 0.42857142857142855,
+      "probabilityDistribution": {
+        "maximum": 0.4976522112097734,
+        "median": 0.17357728721276827,
+        "minimum": 0.026451043004382314,
+        "p10": 0.0489087167202551,
+        "p25": 0.10396578137682932,
+        "p75": 0.29508217603987674,
+        "p90": 0.39389733593999765
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6280701754385964,
+      "threshold": 0.3974696779182523
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.52
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.14490083545971608,
+      "calibration": [
+        {
+          "count": 20,
+          "lower": 0.0,
+          "meanPredicted": 0.1205919456398776,
+          "observedRate": 0.1,
+          "upper": 0.2
+        },
+        {
+          "count": 32,
+          "lower": 0.2,
+          "meanPredicted": 0.29045885089239976,
+          "observedRate": 0.15625,
+          "upper": 0.4
+        },
+        {
+          "count": 15,
+          "lower": 0.4,
+          "meanPredicted": 0.4858056662557527,
+          "observedRate": 0.2,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.3793114972960917,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.5796643026514012,
+        "median": 0.26035479210917273,
+        "minimum": 0.041204962203401585,
+        "p10": 0.09966350236727331,
+        "p25": 0.17175185068146917,
+        "p75": 0.39368350124228957,
+        "p90": 0.4867853248094929
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6245614035087719,
+      "threshold": 0.52
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.36363636363636365,
+      "precision": 0.3333333333333333,
+      "recall": 0.4,
+      "threshold": 0.35000000000000003
+    },
+    "validation": {
+      "accuracy": 0.7910447761194029,
+      "brier": 0.1301689022708824,
+      "calibration": [
+        {
+          "count": 34,
+          "lower": 0.0,
+          "meanPredicted": 0.106314065458597,
+          "observedRate": 0.11764705882352941,
+          "upper": 0.2
+        },
+        {
+          "count": 27,
+          "lower": 0.2,
+          "meanPredicted": 0.29359935417318916,
+          "observedRate": 0.14814814814814814,
+          "upper": 0.4
+        },
+        {
+          "count": 6,
+          "lower": 0.4,
+          "meanPredicted": 0.4520092163267006,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          49,
+          8
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.36363636363636365,
+      "prAuc": 0.28236902430726946,
+      "precision": 0.3333333333333333,
+      "probabilityDistribution": {
+        "maximum": 0.4866574563770991,
+        "median": 0.1769382866296468,
+        "minimum": 0.02475418817062871,
+        "p10": 0.05288358419264523,
+        "p25": 0.10527645019148603,
+        "p75": 0.30686729085767306,
+        "p90": 0.38727173436115947
+      },
+      "recall": 0.4,
+      "rocAuc": 0.6403508771929824,
+      "threshold": 0.35000000000000003
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.6,
+      "recall": 0.3,
+      "threshold": 0.53
+    },
+    "validation": {
+      "accuracy": 0.8656716417910447,
+      "brier": 0.15155436468315417,
+      "calibration": [
+        {
+          "count": 21,
+          "lower": 0.0,
+          "meanPredicted": 0.11819365982945133,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.2
+        },
+        {
+          "count": 27,
+          "lower": 0.2,
+          "meanPredicted": 0.2891910130939862,
+          "observedRate": 0.1111111111111111,
+          "upper": 0.4
+        },
+        {
+          "count": 19,
+          "lower": 0.4,
+          "meanPredicted": 0.4800218591970606,
+          "observedRate": 0.21052631578947367,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          55,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.3132861295733214,
+      "precision": 0.6,
+      "probabilityDistribution": {
+        "maximum": 0.5737343504409962,
+        "median": 0.29152579188995387,
+        "minimum": 0.04517573984258132,
+        "p10": 0.09886359747190158,
+        "p25": 0.1594874187191369,
+        "p75": 0.4129243883117746,
+        "p90": 0.5132009579010893
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6228070175438597,
+      "threshold": 0.53
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.44
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.1324457129571123,
+      "calibration": [
+        {
+          "count": 34,
+          "lower": 0.0,
+          "meanPredicted": 0.11598538676330339,
+          "observedRate": 0.11764705882352941,
+          "upper": 0.2
+        },
+        {
+          "count": 25,
+          "lower": 0.2,
+          "meanPredicted": 0.2955385119700074,
+          "observedRate": 0.12,
+          "upper": 0.4
+        },
+        {
+          "count": 8,
+          "lower": 0.4,
+          "meanPredicted": 0.4640130071940251,
+          "observedRate": 0.375,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.3601306717051398,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.5084226827150201,
+        "median": 0.1873478905015843,
+        "minimum": 0.02367951494151289,
+        "p10": 0.06942280498538127,
+        "p25": 0.11998777199610997,
+        "p75": 0.32624451254650366,
+        "p90": 0.42620364096609475
+      },
+      "recall": 0.3,
+      "rocAuc": 0.631578947368421,
+      "threshold": 0.44
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.53
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.1517272879073536,
+      "calibration": [
+        {
+          "count": 21,
+          "lower": 0.0,
+          "meanPredicted": 0.12239402428345057,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.2
+        },
+        {
+          "count": 26,
+          "lower": 0.2,
+          "meanPredicted": 0.2935605237228177,
+          "observedRate": 0.11538461538461539,
+          "upper": 0.4
+        },
+        {
+          "count": 19,
+          "lower": 0.4,
+          "meanPredicted": 0.47991874612769453,
+          "observedRate": 0.15789473684210525,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6466013541068366,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.4120253555967841,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.6466013541068366,
+        "median": 0.2941256209713391,
+        "minimum": 0.04764826226479079,
+        "p10": 0.09405926440579168,
+        "p25": 0.16539544624374672,
+        "p75": 0.41124525230901654,
+        "p90": 0.50661848515464
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6228070175438596,
+      "threshold": 0.53
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.35294117647058826,
+      "precision": 0.25,
+      "recall": 0.6,
+      "threshold": 0.27457250298806024
+    },
+    "validation": {
+      "accuracy": 0.6716417910447762,
+      "brier": 0.13497422685972046,
+      "calibration": [
+        {
+          "count": 32,
+          "lower": 0.0,
+          "meanPredicted": 0.11687372793654291,
+          "observedRate": 0.125,
+          "upper": 0.2
+        },
+        {
+          "count": 25,
+          "lower": 0.2,
+          "meanPredicted": 0.2974335670054179,
+          "observedRate": 0.12,
+          "upper": 0.4
+        },
+        {
+          "count": 10,
+          "lower": 0.4,
+          "meanPredicted": 0.45851712086198615,
+          "observedRate": 0.3,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          39,
+          18
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "f1": 0.35294117647058826,
+      "prAuc": 0.35021898595428,
+      "precision": 0.25,
+      "probabilityDistribution": {
+        "maximum": 0.5610536745896162,
+        "median": 0.21335054446055943,
+        "minimum": 0.034571639947932116,
+        "p10": 0.06900146710856014,
+        "p25": 0.13498924800955026,
+        "p75": 0.3283703424589134,
+        "p90": 0.4288009310361528
+      },
+      "recall": 0.6,
+      "rocAuc": 0.6385964912280702,
+      "threshold": 0.27457250298806024
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.35294117647058826,
+      "precision": 0.42857142857142855,
+      "recall": 0.3,
+      "threshold": 0.42000000000000004
+    },
+    "validation": {
+      "accuracy": 0.835820895522388,
+      "brier": 0.1354270164243415,
+      "calibration": [
+        {
+          "count": 32,
+          "lower": 0.0,
+          "meanPredicted": 0.1149497849698686,
+          "observedRate": 0.125,
+          "upper": 0.2
+        },
+        {
+          "count": 26,
+          "lower": 0.2,
+          "meanPredicted": 0.29537302731098464,
+          "observedRate": 0.11538461538461539,
+          "upper": 0.4
+        },
+        {
+          "count": 8,
+          "lower": 0.4,
+          "meanPredicted": 0.4514689804023534,
+          "observedRate": 0.25,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.624360780019411,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          53,
+          4
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.35294117647058826,
+      "prAuc": 0.3370477833713128,
+      "precision": 0.42857142857142855,
+      "probabilityDistribution": {
+        "maximum": 0.624360780019411,
+        "median": 0.20756114516311241,
+        "minimum": 0.00035545954438334637,
+        "p10": 0.05653154650090509,
+        "p25": 0.1313205084774161,
+        "p75": 0.32951463032434963,
+        "p90": 0.4206319782179107
+      },
+      "recall": 0.3,
+      "rocAuc": 0.5964912280701755,
+      "threshold": 0.42000000000000004
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 1,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.4,
+      "recall": 0.4,
+      "threshold": 0.23791304200029922
+    },
+    "validation": {
+      "accuracy": 0.8208955223880597,
+      "brier": 0.11962485101393643,
+      "calibration": [
+        {
+          "count": 53,
+          "lower": 0.0,
+          "meanPredicted": 0.09220670278615452,
+          "observedRate": 0.11320754716981132,
+          "upper": 0.2
+        },
+        {
+          "count": 14,
+          "lower": 0.2,
+          "meanPredicted": 0.27459201156514496,
+          "observedRate": 0.2857142857142857,
+          "upper": 0.4
+        }
+      ],
+      "confusionMatrix": [
+        [
+          51,
+          6
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.4227474962236001,
+      "precision": 0.4,
+      "probabilityDistribution": {
+        "maximum": 0.36986083716638823,
+        "median": 0.11170875529620425,
+        "minimum": 0.0,
+        "p10": 0.02854840936756647,
+        "p25": 0.05770809757678516,
+        "p75": 0.18338403294303027,
+        "p90": 0.2626175586016277
+      },
+      "recall": 0.4,
+      "rocAuc": 0.6631578947368422,
+      "threshold": 0.23791304200029922
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.35294117647058826,
+      "precision": 0.42857142857142855,
+      "recall": 0.3,
+      "threshold": 0.45
+    },
+    "validation": {
+      "accuracy": 0.835820895522388,
+      "brier": 0.14169834083601263,
+      "calibration": [
+        {
+          "count": 28,
+          "lower": 0.0,
+          "meanPredicted": 0.11183381851218269,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.2
+        },
+        {
+          "count": 29,
+          "lower": 0.2,
+          "meanPredicted": 0.3077931832388416,
+          "observedRate": 0.10344827586206896,
+          "upper": 0.4
+        },
+        {
+          "count": 10,
+          "lower": 0.4,
+          "meanPredicted": 0.4777690657168434,
+          "observedRate": 0.3,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          53,
+          4
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.35294117647058826,
+      "prAuc": 0.37390309047684167,
+      "precision": 0.42857142857142855,
+      "probabilityDistribution": {
+        "maximum": 0.5591907755469078,
+        "median": 0.24977227889069994,
+        "minimum": 0.005833333333333333,
+        "p10": 0.067622557997558,
+        "p25": 0.13635039082649375,
+        "p75": 0.36742491248293574,
+        "p90": 0.4502111940261224
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6052631578947368,
+      "threshold": 0.45
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 3,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.36000000000000004
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.1236864848796103,
+      "calibration": [
+        {
+          "count": 41,
+          "lower": 0.0,
+          "meanPredicted": 0.09518500809713809,
+          "observedRate": 0.12195121951219512,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.28021203081074925,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.4
+        },
+        {
+          "count": 2,
+          "lower": 0.4,
+          "meanPredicted": 0.4302052528532623,
+          "observedRate": 0.5,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.36025064307673005,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.4537846207050486,
+        "median": 0.14270376187309433,
+        "minimum": 0.00701533110367893,
+        "p10": 0.04227595547621207,
+        "p25": 0.08898186496349121,
+        "p75": 0.25063819222348876,
+        "p90": 0.3413500975941786
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6456140350877193,
+      "threshold": 0.36000000000000004
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.52
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.1450464706045854,
+      "calibration": [
+        {
+          "count": 21,
+          "lower": 0.0,
+          "meanPredicted": 0.10601558311677597,
+          "observedRate": 0.09523809523809523,
+          "upper": 0.2
+        },
+        {
+          "count": 29,
+          "lower": 0.2,
+          "meanPredicted": 0.28418122381842265,
+          "observedRate": 0.1724137931034483,
+          "upper": 0.4
+        },
+        {
+          "count": 16,
+          "lower": 0.4,
+          "meanPredicted": 0.4659049095424588,
+          "observedRate": 0.125,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6022459150418493,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.43220007218454426,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.6022459150418493,
+        "median": 0.2576076598339375,
+        "minimum": 0.0338254351857293,
+        "p10": 0.0779029202007143,
+        "p25": 0.153528089694776,
+        "p75": 0.40186291274524333,
+        "p90": 0.47144605517582333
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6228070175438596,
+      "threshold": 0.52
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 200
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.39858808497913834
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.12888836780572796,
+      "calibration": [
+        {
+          "count": 38,
+          "lower": 0.0,
+          "meanPredicted": 0.10903302631246628,
+          "observedRate": 0.10526315789473684,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.3073849767220882,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.4
+        },
+        {
+          "count": 5,
+          "lower": 0.4,
+          "meanPredicted": 0.448517078635169,
+          "observedRate": 0.4,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.38642834441612517,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.5026354165341891,
+        "median": 0.17578700385186244,
+        "minimum": 0.026451043004382314,
+        "p10": 0.0489087167202551,
+        "p25": 0.10396578137682932,
+        "p75": 0.2962646034659576,
+        "p90": 0.39406356217359995
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6280701754385964,
+      "threshold": 0.39858808497913834
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.3333333333333333,
+      "precision": 0.23076923076923078,
+      "recall": 0.6,
+      "threshold": 0.2575
+    },
+    "validation": {
+      "accuracy": 0.6417910447761194,
+      "brier": 0.13377472014925376,
+      "calibration": [
+        {
+          "count": 33,
+          "lower": 0.0,
+          "meanPredicted": 0.10954545454545454,
+          "observedRate": 0.12121212121212122,
+          "upper": 0.2
+        },
+        {
+          "count": 27,
+          "lower": 0.2,
+          "meanPredicted": 0.30157407407407405,
+          "observedRate": 0.14814814814814814,
+          "upper": 0.4
+        },
+        {
+          "count": 6,
+          "lower": 0.4,
+          "meanPredicted": 0.4658333333333333,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.61,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          37,
+          20
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "f1": 0.3333333333333333,
+      "prAuc": 0.3204515532776402,
+      "precision": 0.23076923076923078,
+      "probabilityDistribution": {
+        "maximum": 0.61,
+        "median": 0.205,
+        "minimum": 0.01,
+        "p10": 0.052000000000000005,
+        "p25": 0.12625,
+        "p75": 0.33375,
+        "p90": 0.40549999999999997
+      },
+      "recall": 0.6,
+      "rocAuc": 0.6236842105263157,
+      "threshold": 0.2575
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.38095238095238093,
+      "precision": 0.36363636363636365,
+      "recall": 0.4,
+      "threshold": 0.21000000000000002
+    },
+    "validation": {
+      "accuracy": 0.8059701492537313,
+      "brier": 0.12324085820895526,
+      "calibration": [
+        {
+          "count": 55,
+          "lower": 0.0,
+          "meanPredicted": 0.09000000000000002,
+          "observedRate": 0.10909090909090909,
+          "upper": 0.2
+        },
+        {
+          "count": 12,
+          "lower": 0.2,
+          "meanPredicted": 0.25750000000000006,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.4
+        }
+      ],
+      "confusionMatrix": [
+        [
+          50,
+          7
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.38095238095238093,
+      "prAuc": 0.27555726437305383,
+      "precision": 0.36363636363636365,
+      "probabilityDistribution": {
+        "maximum": 0.315,
+        "median": 0.0975,
+        "minimum": 0.005,
+        "p10": 0.021500000000000002,
+        "p25": 0.04875,
+        "p75": 0.18,
+        "p90": 0.25
+      },
+      "recall": 0.4,
+      "rocAuc": 0.6359649122807017,
+      "threshold": 0.21000000000000002
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.6,
+      "recall": 0.3,
+      "threshold": 0.4727711663336665
+    },
+    "validation": {
+      "accuracy": 0.8656716417910447,
+      "brier": 0.14067204410706433,
+      "calibration": [
+        {
+          "count": 29,
+          "lower": 0.0,
+          "meanPredicted": 0.11682806841976866,
+          "observedRate": 0.13793103448275862,
+          "upper": 0.2
+        },
+        {
+          "count": 23,
+          "lower": 0.2,
+          "meanPredicted": 0.29568931446375496,
+          "observedRate": 0.13043478260869565,
+          "upper": 0.4
+        },
+        {
+          "count": 15,
+          "lower": 0.4,
+          "meanPredicted": 0.4572922559549726,
+          "observedRate": 0.2,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          55,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.394827202596606,
+      "precision": 0.6,
+      "probabilityDistribution": {
+        "maximum": 0.5629280030684829,
+        "median": 0.2480469369811475,
+        "minimum": 0.008416666666666668,
+        "p10": 0.060368585581085585,
+        "p25": 0.14207899469059487,
+        "p75": 0.37506222571610515,
+        "p90": 0.4406228183452254
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6157894736842104,
+      "threshold": 0.4727711663336665
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.34
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.12446292745727343,
+      "calibration": [
+        {
+          "count": 44,
+          "lower": 0.0,
+          "meanPredicted": 0.09997502538381788,
+          "observedRate": 0.13636363636363635,
+          "upper": 0.2
+        },
+        {
+          "count": 22,
+          "lower": 0.2,
+          "meanPredicted": 0.2927046370865727,
+          "observedRate": 0.13636363636363635,
+          "upper": 0.4
+        },
+        {
+          "count": 1,
+          "lower": 0.4,
+          "meanPredicted": 0.4146961532062886,
+          "observedRate": 1.0,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.39161952861952865,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.4146961532062886,
+        "median": 0.1402513468823211,
+        "minimum": 0.005102291720063764,
+        "p10": 0.03702824149515971,
+        "p25": 0.08288091893937448,
+        "p75": 0.24808609296666032,
+        "p90": 0.3336846159488748
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6368421052631579,
+      "threshold": 0.34
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": null,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.54
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.14426912014125715,
+      "calibration": [
+        {
+          "count": 22,
+          "lower": 0.0,
+          "meanPredicted": 0.1121211589080859,
+          "observedRate": 0.13636363636363635,
+          "upper": 0.2
+        },
+        {
+          "count": 29,
+          "lower": 0.2,
+          "meanPredicted": 0.29147095554571034,
+          "observedRate": 0.13793103448275862,
+          "upper": 0.4
+        },
+        {
+          "count": 15,
+          "lower": 0.4,
+          "meanPredicted": 0.4791732126867006,
+          "observedRate": 0.13333333333333333,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6127445153158706,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.4427051639644146,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.6127445153158706,
+        "median": 0.27930234500048745,
+        "minimum": 0.027535282527929587,
+        "p10": 0.08085022093164611,
+        "p25": 0.1632446850391508,
+        "p75": 0.38977314739589086,
+        "p90": 0.48698323002714855
+      },
+      "recall": 0.3,
+      "rocAuc": 0.643859649122807,
+      "threshold": 0.54
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": null,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.4
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.12760613512318214,
+      "calibration": [
+        {
+          "count": 37,
+          "lower": 0.0,
+          "meanPredicted": 0.10511669946386601,
+          "observedRate": 0.10810810810810811,
+          "upper": 0.2
+        },
+        {
+          "count": 26,
+          "lower": 0.2,
+          "meanPredicted": 0.298859810309953,
+          "observedRate": 0.11538461538461539,
+          "upper": 0.4
+        },
+        {
+          "count": 4,
+          "lower": 0.4,
+          "meanPredicted": 0.4491224980630783,
+          "observedRate": 0.75,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.41833352522295464,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.4896898386769437,
+        "median": 0.17551406674226866,
+        "minimum": 0.021610509191459,
+        "p10": 0.049620976272096065,
+        "p25": 0.09652852102279331,
+        "p75": 0.2859143949101852,
+        "p90": 0.38763645008922837
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6385964912280702,
+      "threshold": 0.4
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.53
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.1440893614635056,
+      "calibration": [
+        {
+          "count": 20,
+          "lower": 0.0,
+          "meanPredicted": 0.11918025608016938,
+          "observedRate": 0.1,
+          "upper": 0.2
+        },
+        {
+          "count": 30,
+          "lower": 0.2,
+          "meanPredicted": 0.28737185865693704,
+          "observedRate": 0.13333333333333333,
+          "upper": 0.4
+        },
+        {
+          "count": 16,
+          "lower": 0.4,
+          "meanPredicted": 0.473824584883184,
+          "observedRate": 0.1875,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6037752894173967,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.4206426337957152,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.6037752894173967,
+        "median": 0.27781913199743774,
+        "minimum": 0.03531650286375396,
+        "p10": 0.09783625997539437,
+        "p25": 0.1816295683417127,
+        "p75": 0.39940220554843864,
+        "p90": 0.48497706899500076
+      },
+      "recall": 0.3,
+      "rocAuc": 0.643859649122807,
+      "threshold": 0.53
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.35714285714285715,
+      "precision": 0.2777777777777778,
+      "recall": 0.5,
+      "threshold": 0.2934687282543446
+    },
+    "validation": {
+      "accuracy": 0.7313432835820896,
+      "brier": 0.13092185442386794,
+      "calibration": [
+        {
+          "count": 34,
+          "lower": 0.0,
+          "meanPredicted": 0.10307094032004989,
+          "observedRate": 0.11764705882352941,
+          "upper": 0.2
+        },
+        {
+          "count": 26,
+          "lower": 0.2,
+          "meanPredicted": 0.28980322126827357,
+          "observedRate": 0.11538461538461539,
+          "upper": 0.4
+        },
+        {
+          "count": 7,
+          "lower": 0.4,
+          "meanPredicted": 0.4337168944833231,
+          "observedRate": 0.42857142857142855,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          44,
+          13
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "f1": 0.35714285714285715,
+      "prAuc": 0.2911667094557421,
+      "precision": 0.2777777777777778,
+      "probabilityDistribution": {
+        "maximum": 0.46034742517354177,
+        "median": 0.18433568291965227,
+        "minimum": 0.02357520434778512,
+        "p10": 0.06722229328302348,
+        "p25": 0.09915072925678833,
+        "p75": 0.3062534453722695,
+        "p90": 0.40141915498297515
+      },
+      "recall": 0.5,
+      "rocAuc": 0.6385964912280702,
+      "threshold": 0.2934687282543446
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.6,
+      "recall": 0.3,
+      "threshold": 0.52
+    },
+    "validation": {
+      "accuracy": 0.8656716417910447,
+      "brier": 0.14929082321693976,
+      "calibration": [
+        {
+          "count": 20,
+          "lower": 0.0,
+          "meanPredicted": 0.11613091518439293,
+          "observedRate": 0.1,
+          "upper": 0.2
+        },
+        {
+          "count": 28,
+          "lower": 0.2,
+          "meanPredicted": 0.2845978322057656,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.4
+        },
+        {
+          "count": 18,
+          "lower": 0.4,
+          "meanPredicted": 0.48006354669751466,
+          "observedRate": 0.16666666666666666,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6041742167749353,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          55,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.40152519628844063,
+      "precision": 0.6,
+      "probabilityDistribution": {
+        "maximum": 0.6041742167749353,
+        "median": 0.2898191894552315,
+        "minimum": 0.036416987911781565,
+        "p10": 0.09363529374321897,
+        "p25": 0.16659882627113748,
+        "p75": 0.42075489476590555,
+        "p90": 0.5000007553487508
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6333333333333333,
+      "threshold": 0.52
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.6,
+      "recall": 0.3,
+      "threshold": 0.44684484907041144
+    },
+    "validation": {
+      "accuracy": 0.8656716417910447,
+      "brier": 0.1331081366919354,
+      "calibration": [
+        {
+          "count": 34,
+          "lower": 0.0,
+          "meanPredicted": 0.11049662952458068,
+          "observedRate": 0.11764705882352941,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.29157406755265974,
+          "observedRate": 0.125,
+          "upper": 0.4
+        },
+        {
+          "count": 9,
+          "lower": 0.4,
+          "meanPredicted": 0.4502721391022175,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          55,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.3994438502465143,
+      "precision": 0.6,
+      "probabilityDistribution": {
+        "maximum": 0.493222021451518,
+        "median": 0.1848173410623392,
+        "minimum": 0.020716068659793616,
+        "p10": 0.07219364251747373,
+        "p25": 0.10915220775977347,
+        "p75": 0.32132138129735344,
+        "p90": 0.4288577638128546
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6245614035087719,
+      "threshold": 0.44684484907041144
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 5,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.75,
+      "recall": 0.3,
+      "threshold": 0.55
+    },
+    "validation": {
+      "accuracy": 0.8805970149253731,
+      "brier": 0.15118545299067995,
+      "calibration": [
+        {
+          "count": 19,
+          "lower": 0.0,
+          "meanPredicted": 0.11914810983381052,
+          "observedRate": 0.10526315789473684,
+          "upper": 0.2
+        },
+        {
+          "count": 30,
+          "lower": 0.2,
+          "meanPredicted": 0.29865542359462893,
+          "observedRate": 0.13333333333333333,
+          "upper": 0.4
+        },
+        {
+          "count": 17,
+          "lower": 0.4,
+          "meanPredicted": 0.49312864799794054,
+          "observedRate": 0.17647058823529413,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6399755251898229,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          56,
+          1
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.4202191987906273,
+      "precision": 0.75,
+      "probabilityDistribution": {
+        "maximum": 0.6399755251898229,
+        "median": 0.29522130900333626,
+        "minimum": 0.040561281670200414,
+        "p10": 0.10162918986109154,
+        "p25": 0.1636740548998612,
+        "p75": 0.4235760194334276,
+        "p90": 0.5018489184860824
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6403508771929824,
+      "threshold": 0.55
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 5,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.42847457988994997
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.13384534826045366,
+      "calibration": [
+        {
+          "count": 34,
+          "lower": 0.0,
+          "meanPredicted": 0.1204388187545441,
+          "observedRate": 0.11764705882352941,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.30695307431400554,
+          "observedRate": 0.125,
+          "upper": 0.4
+        },
+        {
+          "count": 9,
+          "lower": 0.4,
+          "meanPredicted": 0.4592071276371354,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.39578518935484874,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.5254977063232709,
+        "median": 0.1965254983675836,
+        "minimum": 0.026937078395855876,
+        "p10": 0.07101502920395934,
+        "p25": 0.12572512652115594,
+        "p75": 0.32909939750902384,
+        "p90": 0.423959761926489
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6403508771929824,
+      "threshold": 0.42847457988994997
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.3333333333333333,
+      "precision": 0.375,
+      "recall": 0.3,
+      "threshold": 0.4
+    },
+    "validation": {
+      "accuracy": 0.8208955223880597,
+      "brier": 0.1346140046047846,
+      "calibration": [
+        {
+          "count": 33,
+          "lower": 0.0,
+          "meanPredicted": 0.1128441986397223,
+          "observedRate": 0.12121212121212122,
+          "upper": 0.2
+        },
+        {
+          "count": 26,
+          "lower": 0.2,
+          "meanPredicted": 0.30167490615584575,
+          "observedRate": 0.11538461538461539,
+          "upper": 0.4
+        },
+        {
+          "count": 7,
+          "lower": 0.4,
+          "meanPredicted": 0.4591849470227619,
+          "observedRate": 0.2857142857142857,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6096998164852617,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          52,
+          5
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.3333333333333333,
+      "prAuc": 0.3238580012142297,
+      "precision": 0.375,
+      "probabilityDistribution": {
+        "maximum": 0.6096998164852617,
+        "median": 0.2003752446704501,
+        "minimum": 0.007677729772191673,
+        "p10": 0.050343384293109354,
+        "p25": 0.1274421436144516,
+        "p75": 0.3307722670990343,
+        "p90": 0.4149152899968247
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6210526315789474,
+      "threshold": 0.4
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 1,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.38095238095238093,
+      "precision": 0.36363636363636365,
+      "recall": 0.4,
+      "threshold": 0.22
+    },
+    "validation": {
+      "accuracy": 0.8059701492537313,
+      "brier": 0.1236137358453919,
+      "calibration": [
+        {
+          "count": 51,
+          "lower": 0.0,
+          "meanPredicted": 0.08845407262408864,
+          "observedRate": 0.11764705882352941,
+          "upper": 0.2
+        },
+        {
+          "count": 16,
+          "lower": 0.2,
+          "meanPredicted": 0.26493912982355694,
+          "observedRate": 0.25,
+          "upper": 0.4
+        }
+      ],
+      "confusionMatrix": [
+        [
+          50,
+          7
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "f1": 0.38095238095238093,
+      "prAuc": 0.3068695468618069,
+      "precision": 0.36363636363636365,
+      "probabilityDistribution": {
+        "maximum": 0.3573088986252044,
+        "median": 0.10435425404597691,
+        "minimum": 0.005,
+        "p10": 0.02392930505126207,
+        "p25": 0.05175621181415989,
+        "p75": 0.1956020350913546,
+        "p90": 0.2772425759887164
+      },
+      "recall": 0.4,
+      "rocAuc": 0.6368421052631579,
+      "threshold": 0.22
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.45
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.14046390098384828,
+      "calibration": [
+        {
+          "count": 29,
+          "lower": 0.0,
+          "meanPredicted": 0.11697850004297863,
+          "observedRate": 0.13793103448275862,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.30060426583185224,
+          "observedRate": 0.125,
+          "upper": 0.4
+        },
+        {
+          "count": 14,
+          "lower": 0.4,
+          "meanPredicted": 0.4626502940120044,
+          "observedRate": 0.21428571428571427,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.38651503529157283,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.5697357432023957,
+        "median": 0.2488269273992579,
+        "minimum": 0.008416666666666668,
+        "p10": 0.060109705572205574,
+        "p25": 0.14325511105788774,
+        "p75": 0.3736425619680047,
+        "p90": 0.4401750587569944
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6157894736842106,
+      "threshold": 0.45
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 3,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.375,
+      "precision": 0.5,
+      "recall": 0.3,
+      "threshold": 0.35000000000000003
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.12482998786604199,
+      "calibration": [
+        {
+          "count": 43,
+          "lower": 0.0,
+          "meanPredicted": 0.09832704880287631,
+          "observedRate": 0.13953488372093023,
+          "upper": 0.2
+        },
+        {
+          "count": 23,
+          "lower": 0.2,
+          "meanPredicted": 0.2905974745050433,
+          "observedRate": 0.13043478260869565,
+          "upper": 0.4
+        },
+        {
+          "count": 1,
+          "lower": 0.4,
+          "meanPredicted": 0.4210807099584298,
+          "observedRate": 1.0,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          54,
+          3
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.375,
+      "prAuc": 0.39319656043140583,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.4210807099584298,
+        "median": 0.1419751866600851,
+        "minimum": 0.005102291720063764,
+        "p10": 0.03886232675385459,
+        "p25": 0.0850679320764392,
+        "p75": 0.25120087970305865,
+        "p90": 0.34044425484341284
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6403508771929824,
+      "threshold": 0.35000000000000003
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.54
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.14403918141832658,
+      "calibration": [
+        {
+          "count": 21,
+          "lower": 0.0,
+          "meanPredicted": 0.10799977937392326,
+          "observedRate": 0.14285714285714285,
+          "upper": 0.2
+        },
+        {
+          "count": 30,
+          "lower": 0.2,
+          "meanPredicted": 0.2881082632225258,
+          "observedRate": 0.13333333333333333,
+          "upper": 0.4
+        },
+        {
+          "count": 15,
+          "lower": 0.4,
+          "meanPredicted": 0.4789755554077146,
+          "observedRate": 0.13333333333333333,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 1,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6089724842068831,
+          "observedRate": 1.0,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.4427051639644146,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.6089724842068831,
+        "median": 0.27774023622827293,
+        "minimum": 0.027535282527929587,
+        "p10": 0.0798252209316461,
+        "p25": 0.1624657854665012,
+        "p75": 0.3872789480711193,
+        "p90": 0.48586356115673596
+      },
+      "recall": 0.3,
+      "rocAuc": 0.643859649122807,
+      "threshold": 0.54
+    }
+  },
+  {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced_subsample",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_plus_source_summary",
+    "selectedThreshold": {
+      "f1": 0.4,
+      "precision": 0.6,
+      "recall": 0.3,
+      "threshold": 0.40061934078682127
+    },
+    "validation": {
+      "accuracy": 0.8656716417910447,
+      "brier": 0.12759694122636778,
+      "calibration": [
+        {
+          "count": 37,
+          "lower": 0.0,
+          "meanPredicted": 0.1058018285789327,
+          "observedRate": 0.10810810810810811,
+          "upper": 0.2
+        },
+        {
+          "count": 24,
+          "lower": 0.2,
+          "meanPredicted": 0.291961777354136,
+          "observedRate": 0.125,
+          "upper": 0.4
+        },
+        {
+          "count": 6,
+          "lower": 0.4,
+          "meanPredicted": 0.43333276918269076,
+          "observedRate": 0.5,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          55,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.4,
+      "prAuc": 0.4033335252229546,
+      "precision": 0.6,
+      "probabilityDistribution": {
+        "maximum": 0.49442883010233,
+        "median": 0.1765364941829019,
+        "minimum": 0.021610509191459,
+        "p10": 0.05065159438688462,
+        "p25": 0.09763876755388692,
+        "p75": 0.287979115229621,
+        "p90": 0.389320319064285
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6368421052631579,
+      "threshold": 0.40061934078682127
+    }
+  },
+  {
+    "bestEpoch": 21,
+    "bestValidationLogLoss": 0.6867626140703789,
+    "complexity": "medium",
+    "epochsRun": 51,
+    "hyperparameters": {
+      "alpha": 0.001,
+      "hiddenLayers": [
+        32
+      ],
+      "weightedBce": true
+    },
+    "model": "mlp",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.26666666666666666,
+      "precision": 0.15384615384615385,
+      "recall": 1.0,
+      "threshold": 0.03
+    },
+    "validation": {
+      "accuracy": 0.1791044776119403,
+      "brier": 0.22301727246274328,
+      "calibration": [
+        {
+          "count": 35,
+          "lower": 0.0,
+          "meanPredicted": 0.10302510740024093,
+          "observedRate": 0.2,
+          "upper": 0.2
+        },
+        {
+          "count": 14,
+          "lower": 0.2,
+          "meanPredicted": 0.3064047804665008,
+          "observedRate": 0.07142857142857142,
+          "upper": 0.4
+        },
+        {
+          "count": 9,
+          "lower": 0.4,
+          "meanPredicted": 0.5245649064693119,
+          "observedRate": 0.1111111111111111,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 6,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6832404044005541,
+          "observedRate": 0.0,
+          "upper": 0.8
+        },
+        {
+          "count": 3,
+          "lower": 0.8,
+          "meanPredicted": 0.9185840189551433,
+          "observedRate": 0.3333333333333333,
+          "upper": 1.0
+        }
+      ],
+      "confusionMatrix": [
+        [
+          2,
+          55
+        ],
+        [
+          0,
+          10
+        ]
+      ],
+      "f1": 0.26666666666666666,
+      "prAuc": 0.15577566854832992,
+      "precision": 0.15384615384615385,
+      "probabilityDistribution": {
+        "maximum": 0.955506142325988,
+        "median": 0.19643836189647215,
+        "minimum": 0.008624960028881195,
+        "p10": 0.060062377004829394,
+        "p25": 0.09053447766159026,
+        "p75": 0.49933854592796934,
+        "p90": 0.6519039951943957
+      },
+      "recall": 1.0,
+      "rocAuc": 0.380701754385965,
+      "threshold": 0.03
+    }
+  },
+  {
+    "bestEpoch": 10,
+    "bestValidationLogLoss": 0.5355315064855208,
+    "complexity": "medium",
+    "epochsRun": 40,
+    "hyperparameters": {
+      "alpha": 0.001,
+      "hiddenLayers": [
+        64,
+        16
+      ],
+      "weightedBce": true
+    },
+    "model": "mlp",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.2857142857142857,
+      "precision": 0.5,
+      "recall": 0.2,
+      "threshold": 0.52
+    },
+    "validation": {
+      "accuracy": 0.8507462686567164,
+      "brier": 0.16723573851107704,
+      "calibration": [
+        {
+          "count": 23,
+          "lower": 0.0,
+          "meanPredicted": 0.12580423380537228,
+          "observedRate": 0.21739130434782608,
+          "upper": 0.2
+        },
+        {
+          "count": 33,
+          "lower": 0.2,
+          "meanPredicted": 0.29170230884272863,
+          "observedRate": 0.09090909090909091,
+          "upper": 0.4
+        },
+        {
+          "count": 8,
+          "lower": 0.4,
+          "meanPredicted": 0.4836161936454204,
+          "observedRate": 0.125,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 3,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6251388526937344,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          55,
+          2
+        ],
+        [
+          8,
+          2
+        ]
+      ],
+      "f1": 0.2857142857142857,
+      "prAuc": 0.213010152605839,
+      "precision": 0.5,
+      "probabilityDistribution": {
+        "maximum": 0.6548391500635972,
+        "median": 0.2604323813404555,
+        "minimum": 0.04511901638102077,
+        "p10": 0.09982133838986719,
+        "p25": 0.16580542057863928,
+        "p75": 0.34332235314641135,
+        "p90": 0.48870602151399667
+      },
+      "recall": 0.2,
+      "rocAuc": 0.4245614035087719,
+      "threshold": 0.52
+    }
+  },
+  {
+    "bestEpoch": 25,
+    "bestValidationLogLoss": 0.47907703182388955,
+    "complexity": "medium",
+    "epochsRun": 55,
+    "hyperparameters": {
+      "hiddenSize": 16,
+      "l2": 0.0001,
+      "layers": 1,
+      "learningRate": 0.01,
+      "weightedBce": true
+    },
+    "implementation": "deterministic NumPy full-batch BPTT",
+    "model": "GRU",
+    "representation": "ordered_sequence",
+    "selectedThreshold": {
+      "f1": 0.42857142857142855,
+      "precision": 0.28125,
+      "recall": 0.9,
+      "threshold": 0.24000000000000002
+    },
+    "validation": {
+      "accuracy": 0.6417910447761194,
+      "brier": 0.1617191390876981,
+      "calibration": [
+        {
+          "count": 31,
+          "lower": 0.0,
+          "meanPredicted": 0.09840494866087134,
+          "observedRate": 0.03225806451612903,
+          "upper": 0.2
+        },
+        {
+          "count": 12,
+          "lower": 0.2,
+          "meanPredicted": 0.2855774548105398,
+          "observedRate": 0.25,
+          "upper": 0.4
+        },
+        {
+          "count": 15,
+          "lower": 0.4,
+          "meanPredicted": 0.500553477411935,
+          "observedRate": 0.26666666666666666,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 9,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6798625069827298,
+          "observedRate": 0.2222222222222222,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          34,
+          23
+        ],
+        [
+          1,
+          9
+        ]
+      ],
+      "f1": 0.42857142857142855,
+      "prAuc": 0.2638790389893331,
+      "precision": 0.28125,
+      "probabilityDistribution": {
+        "maximum": 0.7307556181068096,
+        "median": 0.23282324418205477,
+        "minimum": 0.058710105462953695,
+        "p10": 0.06744334591693397,
+        "p25": 0.08508575310168513,
+        "p75": 0.5031997539512341,
+        "p90": 0.6670232333869389
+      },
+      "recall": 0.9,
+      "rocAuc": 0.7087719298245614,
+      "threshold": 0.24000000000000002
+    }
+  },
+  {
+    "bestEpoch": 22,
+    "bestValidationLogLoss": 0.5089916869803963,
+    "complexity": "medium",
+    "epochsRun": 52,
+    "hyperparameters": {
+      "hiddenSize": 32,
+      "l2": 0.0001,
+      "layers": 1,
+      "learningRate": 0.01,
+      "weightedBce": true
+    },
+    "implementation": "deterministic NumPy full-batch BPTT",
+    "model": "GRU",
+    "representation": "ordered_sequence",
+    "selectedThreshold": {
+      "f1": 0.3673469387755102,
+      "precision": 0.23076923076923078,
+      "recall": 0.9,
+      "threshold": 0.11
+    },
+    "validation": {
+      "accuracy": 0.5373134328358209,
+      "brier": 0.1724184351620405,
+      "calibration": [
+        {
+          "count": 39,
+          "lower": 0.0,
+          "meanPredicted": 0.08012073614352078,
+          "observedRate": 0.1282051282051282,
+          "upper": 0.2
+        },
+        {
+          "count": 8,
+          "lower": 0.2,
+          "meanPredicted": 0.3220284257460957,
+          "observedRate": 0.25,
+          "upper": 0.4
+        },
+        {
+          "count": 13,
+          "lower": 0.4,
+          "meanPredicted": 0.490172644937069,
+          "observedRate": 0.07692307692307693,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 7,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6898889972484737,
+          "observedRate": 0.2857142857142857,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          27,
+          30
+        ],
+        [
+          1,
+          9
+        ]
+      ],
+      "f1": 0.3673469387755102,
+      "prAuc": 0.24974726095924255,
+      "precision": 0.23076923076923078,
+      "probabilityDistribution": {
+        "maximum": 0.7929501757483075,
+        "median": 0.16878336416779535,
+        "minimum": 0.015910882969172813,
+        "p10": 0.026906336288434363,
+        "p25": 0.054229347341601036,
+        "p75": 0.4278870301946002,
+        "p90": 0.5894406772196061
+      },
+      "recall": 0.9,
+      "rocAuc": 0.631578947368421,
+      "threshold": 0.11
+    }
+  },
+  {
+    "bestEpoch": 30,
+    "bestValidationLogLoss": 0.5390666697920151,
+    "complexity": "medium",
+    "epochsRun": 60,
+    "hyperparameters": {
+      "hiddenSize": 16,
+      "l2": 0.0001,
+      "layers": 1,
+      "learningRate": 0.01,
+      "weightedBce": true
+    },
+    "implementation": "deterministic NumPy full-batch BPTT",
+    "model": "LSTM",
+    "representation": "ordered_sequence",
+    "selectedThreshold": {
+      "f1": 0.3508771929824561,
+      "precision": 0.2127659574468085,
+      "recall": 1.0,
+      "threshold": 0.12
+    },
+    "validation": {
+      "accuracy": 0.44776119402985076,
+      "brier": 0.18954859138304428,
+      "calibration": [
+        {
+          "count": 24,
+          "lower": 0.0,
+          "meanPredicted": 0.06549424539990863,
+          "observedRate": 0.041666666666666664,
+          "upper": 0.2
+        },
+        {
+          "count": 12,
+          "lower": 0.2,
+          "meanPredicted": 0.29921963983900784,
+          "observedRate": 0.3333333333333333,
+          "upper": 0.4
+        },
+        {
+          "count": 20,
+          "lower": 0.4,
+          "meanPredicted": 0.48998987460426957,
+          "observedRate": 0.1,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 11,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.6888177683572773,
+          "observedRate": 0.2727272727272727,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          20,
+          37
+        ],
+        [
+          0,
+          10
+        ]
+      ],
+      "f1": 0.3508771929824561,
+      "prAuc": 0.29627606674864476,
+      "precision": 0.2127659574468085,
+      "probabilityDistribution": {
+        "maximum": 0.7607399428125772,
+        "median": 0.34489670359844377,
+        "minimum": 0.03377528141227311,
+        "p10": 0.03683595071514765,
+        "p25": 0.07293718775931221,
+        "p75": 0.5212227588489016,
+        "p90": 0.6577764905246287
+      },
+      "recall": 1.0,
+      "rocAuc": 0.6403508771929824,
+      "threshold": 0.12
+    }
+  },
+  {
+    "bestEpoch": 25,
+    "bestValidationLogLoss": 0.5538687603911241,
+    "complexity": "medium",
+    "epochsRun": 55,
+    "hyperparameters": {
+      "hiddenSize": 32,
+      "l2": 0.0001,
+      "layers": 1,
+      "learningRate": 0.01,
+      "weightedBce": true
+    },
+    "implementation": "deterministic NumPy full-batch BPTT",
+    "model": "LSTM",
+    "representation": "ordered_sequence",
+    "selectedThreshold": {
+      "f1": 0.3333333333333333,
+      "precision": 0.2,
+      "recall": 1.0,
+      "threshold": 0.05
+    },
+    "validation": {
+      "accuracy": 0.40298507462686567,
+      "brier": 0.19160619074427038,
+      "calibration": [
+        {
+          "count": 26,
+          "lower": 0.0,
+          "meanPredicted": 0.050365987688512526,
+          "observedRate": 0.11538461538461539,
+          "upper": 0.2
+        },
+        {
+          "count": 17,
+          "lower": 0.2,
+          "meanPredicted": 0.27984982664255637,
+          "observedRate": 0.23529411764705882,
+          "upper": 0.4
+        },
+        {
+          "count": 17,
+          "lower": 0.4,
+          "meanPredicted": 0.497764496569175,
+          "observedRate": 0.058823529411764705,
+          "upper": 0.6000000000000001
+        },
+        {
+          "count": 7,
+          "lower": 0.6000000000000001,
+          "meanPredicted": 0.7046418202430379,
+          "observedRate": 0.2857142857142857,
+          "upper": 0.8
+        }
+      ],
+      "confusionMatrix": [
+        [
+          17,
+          40
+        ],
+        [
+          0,
+          10
+        ]
+      ],
+      "f1": 0.3333333333333333,
+      "prAuc": 0.20594571975131515,
+      "precision": 0.2,
+      "probabilityDistribution": {
+        "maximum": 0.7625735388169352,
+        "median": 0.2685013796381764,
+        "minimum": 0.009908343302309417,
+        "p10": 0.012415766547064782,
+        "p25": 0.052204945962809675,
+        "p75": 0.47865129602409356,
+        "p90": 0.6077378234566283
+      },
+      "recall": 1.0,
+      "rocAuc": 0.5491228070175439,
+      "threshold": 0.05
+    }
+  }
+]
