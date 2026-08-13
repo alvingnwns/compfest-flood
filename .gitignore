@@ -40,3 +40,6 @@ Thumbs.db
 .worktrees/
 be/cache/
 *.log
+
+# Local source archive for Dynamic Hazard research data
+be/data/dynamic-hazard/raw/Dataset_FloodRisk_Jakarta.zip
