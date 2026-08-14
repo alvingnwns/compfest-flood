@@ -1,0 +1,26 @@
+{
+  "artifactType": "frozen-temporal-hazard-runtime-v1",
+  "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+  "modelType": "RandomForestClassifier",
+  "modelSha256": "043d9f9dd324166ec4dd403b713f5e8420ab606025dbadaac634e36498899d56",
+  "sourceExperiment": "artifacts/dynamic-hazard/experiments/phase2",
+  "sourceArtifact": "selected_model.joblib",
+  "sourceArtifactSha256": "49efd3931bc3b0030ffaa32beefac56375a19826901c4b3f2b487945c37f450c",
+  "datasetManifestSha256": "fcfebd04f53cb0330492a9fca59caedb97326aaf92a5686d5d31b2cd9b2022d6",
+  "datasetArchiveSha256": "522e4bd03adb39d940da8a133906c74153ed28495f944597c618bae008f0d3da",
+  "representation": "flattened_sequence",
+  "trainPeriod": "2014-2018",
+  "selectedThreshold": 0.55,
+  "probabilityCalibrated": false,
+  "fusion": {
+    "method": "logit_shift",
+    "beta": 1.5,
+    "probabilityCalibrated": false
+  },
+  "knownLimitations": [
+    "The source binary target provenance is undocumented.",
+    "Temporal channels are transformed source features without physical rainfall units.",
+    "The score is an uncalibrated relative temporal hazard score, not a flood probability.",
+    "Runtime scenarios are frozen train-derived research representatives, not weather forecasts."
+  ]
+}

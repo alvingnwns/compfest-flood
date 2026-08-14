@@ -18,6 +18,9 @@ class RoadRisk(ApiModel):
     osm_way_ids: list[str] = Field(default_factory=list)
     geometry: LineGeometry
     risk_probability: float = Field(ge=0, le=1)
+    dynamic_road_risk_score: float | None = Field(default=None, ge=0, le=1)
+    dynamic_risk_score_semantics: str | None = None
+    routing_band_basis: str | None = None
     risk_level: RiskLevel
     estimated_delay_minutes: float = Field(ge=0)
     risk_factors: list[RiskFactor]

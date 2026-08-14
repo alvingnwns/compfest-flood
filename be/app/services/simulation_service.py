@@ -10,10 +10,22 @@ from app.repositories.scenario_repository import get_historical_jakarta
 from app.repositories.simulation_repository import simulation_repository
 from app.schemas.disruption import DisruptionAnalysis, RoadRisk
 from app.schemas.scenario import Inventory, Scenario, Vehicle
-from app.schemas.simulation import ModelProvenance, RunSimulationRequest, Simulation
+from app.schemas.simulation import DynamicHazardMetadata, ModelProvenance, RunSimulationRequest, Simulation
 from app.services.flood_risk_service import model_provenance, model_version, predict_risk
 from app.services.impact_service import calculate_impact
+from app.services.rainfall_scenario_service import get_rainfall_scenario
+from app.services.relative_hazard_service import relative_hazard_index
+from app.services.road_risk_fusion_service import (
+    FUSION_BETA,
+    FUSION_METHOD,
+    dynamic_road_risk_score,
+    routing_band,
+)
 from app.services.routing_service import calculate_routes
+from app.services.temporal_hazard_service import predict_temporal_hazard
+
+HISTORICAL_REPLAY = "historical-replay"
+SCENARIO_SIMULATION = "scenario-simulation"
 
 
 def _apply_overrides(scenario: Scenario, request: RunSimulationRequest) -> Scenario:
@@ -57,6 +69,9 @@ def _override_fingerprint(request: RunSimulationRequest) -> str:
     """Stable hash of operational overrides so different configs create distinct simulations."""
     payload = json.dumps(
         {
+            "analysisMode": request.analysis_mode,
+            "region": request.region,
+            "rainfallScenario": request.rainfall_scenario,
             "vehicleOverrides": [ov.model_dump(mode="json") for ov in request.vehicle_overrides],
             "inventoryOverrides": [ov.model_dump(mode="json") for ov in request.inventory_overrides],
         },
@@ -67,11 +82,41 @@ def _override_fingerprint(request: RunSimulationRequest) -> str:
 
 
 def create_simulation(request: RunSimulationRequest) -> Simulation:
+    if request.analysis_mode not in {HISTORICAL_REPLAY, SCENARIO_SIMULATION}:
+        raise ApiError(
+            422,
+            "UNKNOWN_ANALYSIS_MODE",
+            "Mode analisis tidak dikenal.",
+            details={"analysisMode": request.analysis_mode},
+        )
+    if request.region != "jakarta":
+        raise ApiError(
+            422,
+            "UNSUPPORTED_REGION",
+            "Region belum didukung untuk simulasi dynamic hazard.",
+            details={"region": request.region, "supported": ["jakarta"]},
+        )
+    if request.analysis_mode == SCENARIO_SIMULATION and request.rainfall_scenario is None:
+        raise ApiError(
+            422,
+            "UNKNOWN_RAINFALL_SCENARIO",
+            "rainfallScenario wajib untuk scenario-simulation.",
+            details={"supported": ["Q1", "Q2", "Q3", "Q4"]},
+        )
+
     scenario = get_historical_jakarta()
     if request.scenario_id != scenario.id:
         raise ApiError(
             404, "scenario_not_found", "Skenario tidak ditemukan.", details={"scenarioId": request.scenario_id}
         )
+
+    rainfall = None
+    temporal = None
+    hazard_index = None
+    if request.analysis_mode == SCENARIO_SIMULATION:
+        rainfall = get_rainfall_scenario(request.rainfall_scenario or "")
+        temporal = predict_temporal_hazard(rainfall.representative_sequence)
+        hazard_index = relative_hazard_index(rainfall, temporal.temporal_hazard_score)
 
     override_key = _override_fingerprint(request)
     existing = simulation_repository.get_for_scenario(request.scenario_id, override_key)
@@ -87,14 +132,43 @@ def create_simulation(request: RunSimulationRequest) -> Simulation:
         created_at=datetime.now(UTC),
         data_mode=scenario.data_sources.mode,
         historical_data_status=scenario.data_sources.historical_status,
+        analysis_mode=request.analysis_mode,
+        region="jakarta",
     )
     simulation_repository.save(simulation, override_key)
     simulation_repository.save_effective_scenario(simulation.id, effective_scenario)
     road_features = get_road_features().get("features", [])
-    risk_results = {
+    static_risk_results = {
         feature["properties"]["segmentId"]: predict_risk(feature["properties"]).model_dump()
         for feature in road_features
     }
+    hazard_metadata = None
+    if request.analysis_mode == HISTORICAL_REPLAY:
+        risk_results = static_risk_results
+    else:
+        if rainfall is None or temporal is None or hazard_index is None:
+            raise ApiError(500, "DYNAMIC_HAZARD_RUNTIME_ERROR", "Dynamic hazard context tidak tersedia.")
+        risk_results = {}
+        for segment_id, static in static_risk_results.items():
+            dynamic_score = dynamic_road_risk_score(static["riskProbability"], hazard_index)
+            risk_results[segment_id] = {
+                **static,
+                "staticRoadSusceptibility": static["riskProbability"],
+                "riskProbability": dynamic_score,
+                "riskLevel": routing_band(dynamic_score),
+                "dynamicRoadRiskScore": dynamic_score,
+            }
+        hazard_metadata = DynamicHazardMetadata(
+            rainfall_scenario=rainfall.id,
+            temporal_hazard_score=temporal.temporal_hazard_score,
+            relative_hazard_index=hazard_index,
+            probability_calibrated=False,
+            model_version=temporal.model_version,
+            model_type=temporal.model_type,
+            fusion_method=FUSION_METHOD,
+            fusion_beta=FUSION_BETA,
+            risk_level_semantics="routing compatibility band from unchanged static-model thresholds",
+        )
     suppliers = [facility for facility in effective_scenario.facilities if facility.kind == "supplier"]
     factories = [facility for facility in effective_scenario.facilities if facility.kind == "factory"]
     warehouses = [facility for facility in effective_scenario.facilities if facility.kind == "warehouse"]
@@ -148,7 +222,18 @@ def create_simulation(request: RunSimulationRequest) -> Simulation:
                 highway_class=properties.get("highway"),
                 osm_way_ids=[str(w) for w in osm_way_ids if w is not None],
                 geometry=feature["geometry"],
-                risk_probability=risk["riskProbability"],
+                risk_probability=static_risk_results[segment_id]["riskProbability"],
+                dynamic_road_risk_score=risk.get("dynamicRoadRiskScore"),
+                dynamic_risk_score_semantics=(
+                    "scenario-conditioned relative road-risk score; not a calibrated probability"
+                    if request.analysis_mode == SCENARIO_SIMULATION
+                    else None
+                ),
+                routing_band_basis=(
+                    "unchanged static-model thresholds used only for routing compatibility"
+                    if request.analysis_mode == SCENARIO_SIMULATION
+                    else None
+                ),
                 risk_level=risk["riskLevel"],
                 estimated_delay_minutes=risk["estimatedDelayMinutes"],
                 risk_factors=risk["riskFactors"],
@@ -174,6 +259,7 @@ def create_simulation(request: RunSimulationRequest) -> Simulation:
                 "model_version": model_version(),
                 "model_provenance": ModelProvenance.model_validate(model_provenance()),
                 "optimizer_version": "cp-sat-connected-v2",
+                "hazard": hazard_metadata,
             }
         ),
         override_key,

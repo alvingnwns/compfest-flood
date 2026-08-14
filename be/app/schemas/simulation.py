@@ -26,6 +26,9 @@ class InventoryOverride(ApiModel):
 
 class RunSimulationRequest(ApiModel):
     scenario_id: str = Field(min_length=1)
+    analysis_mode: str = "historical-replay"
+    region: str = "jakarta"
+    rainfall_scenario: str | None = None
     vehicle_overrides: list[VehicleOverride] = Field(default_factory=list)
     inventory_overrides: list[InventoryOverride] = Field(default_factory=list)
 
@@ -43,6 +46,18 @@ class ModelProvenance(ApiModel):
     probability_semantics: str
 
 
+class DynamicHazardMetadata(ApiModel):
+    rainfall_scenario: Literal["Q1", "Q2", "Q3", "Q4"]
+    temporal_hazard_score: float = Field(ge=0, le=1)
+    relative_hazard_index: float = Field(ge=0, le=1)
+    probability_calibrated: Literal[False] = False
+    model_version: str
+    model_type: str
+    fusion_method: Literal["logit_shift"] = "logit_shift"
+    fusion_beta: float = 1.5
+    risk_level_semantics: str
+
+
 class Simulation(ApiModel):
     id: str
     scenario_id: str
@@ -54,4 +69,7 @@ class Simulation(ApiModel):
     optimizer_version: str | None = None
     data_mode: Literal["historical_snapshot", "live", "hybrid"]
     historical_data_status: Literal["available", "offline_snapshot", "unavailable"]
+    analysis_mode: Literal["historical-replay", "scenario-simulation"] = "historical-replay"
+    region: Literal["jakarta"] = "jakarta"
+    hazard: DynamicHazardMetadata | None = None
     error: ErrorResponse | None = None
