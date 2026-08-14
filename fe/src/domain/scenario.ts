@@ -21,11 +21,26 @@ export const inventoryOverrideSchema = z.object({
   productId: z.string(),
   quantity: z.number().nonnegative(),
 });
-export const runSimulationRequestSchema = z.object({
+export const analysisModeSchema = z.enum(["historical-replay", "scenario-simulation"]);
+export const regionSchema = z.literal("jakarta");
+export const rainfallScenarioSchema = z.enum(["Q1", "Q2", "Q3", "Q4"]);
+const runSimulationRequestBaseSchema = z.object({
   scenarioId: z.string().min(1),
   vehicleOverrides: z.array(vehicleOverrideSchema).optional(),
   inventoryOverrides: z.array(inventoryOverrideSchema).optional(),
 });
+export const runSimulationRequestSchema = z.union([
+  runSimulationRequestBaseSchema.extend({
+    analysisMode: z.literal("scenario-simulation"),
+    region: regionSchema,
+    rainfallScenario: rainfallScenarioSchema,
+  }),
+  runSimulationRequestBaseSchema.extend({
+    analysisMode: z.literal("historical-replay").default("historical-replay"),
+    region: regionSchema.optional(),
+    rainfallScenario: rainfallScenarioSchema.optional(),
+  }),
+]);
 
 export const dataSourceModeSchema = z.enum(["historical_snapshot", "live", "hybrid"]);
 export const historicalDataStatusSchema = z.enum(["available", "offline_snapshot", "unavailable"]);
@@ -57,11 +72,31 @@ export const modelProvenanceSchema = z.object({
   jakartaValidationStatus: z.enum(["not_validated", "validated"]),
   probabilitySemantics: z.string(),
 });
+export const dynamicHazardMetadataSchema = z.object({
+  rainfallScenario: rainfallScenarioSchema,
+  temporalHazardScore: z.number().min(0).max(1),
+  relativeHazardIndex: z.number().min(0).max(1),
+  probabilityCalibrated: z.literal(false),
+  modelVersion: z.string(),
+  modelType: z.string(),
+  fusionMethod: z.literal("logit_shift"),
+  fusionBeta: z.number(),
+  riskLevelSemantics: z.string(),
+});
 
 export const simulationSchema = z.object({
   id: z.string(), scenarioId: z.string(), status: simulationStatusSchema, createdAt: z.iso.datetime({ offset: true }),
   completedAt: z.iso.datetime({ offset: true }).optional(), modelVersion: z.string().optional(), modelProvenance: modelProvenanceSchema.optional(), optimizerVersion: z.string().optional(),
   dataMode: dataSourceModeSchema, historicalDataStatus: historicalDataStatusSchema, error: apiErrorSchema.optional(),
+  analysisMode: analysisModeSchema.default("historical-replay"), region: regionSchema.default("jakarta"),
+  hazard: dynamicHazardMetadataSchema.optional(),
+}).superRefine((value, context) => {
+  if (value.analysisMode === "scenario-simulation" && value.hazard === undefined) {
+    context.addIssue({ code: "custom", path: ["hazard"], message: "Metadata hazard wajib tersedia untuk simulasi kondisi." });
+  }
+  if (value.analysisMode === "historical-replay" && value.hazard !== undefined) {
+    context.addIssue({ code: "custom", path: ["hazard"], message: "Metadata hazard dinamis tidak berlaku untuk replay historis." });
+  }
 });
 
 export type Scenario = z.infer<typeof scenarioSchema>;
@@ -75,3 +110,5 @@ export type Simulation = z.infer<typeof simulationSchema>;
 export type VehicleOverride = z.infer<typeof vehicleOverrideSchema>;
 export type InventoryOverride = z.infer<typeof inventoryOverrideSchema>;
 export type RunSimulationRequest = z.infer<typeof runSimulationRequestSchema>;
+export type AnalysisMode = z.infer<typeof analysisModeSchema>;
+export type RainfallScenario = z.infer<typeof rainfallScenarioSchema>;

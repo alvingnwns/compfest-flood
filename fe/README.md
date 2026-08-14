@@ -41,6 +41,8 @@ Open `http://localhost:3000/scenario`.
 
 API mode with `http://localhost:8000` is the default when variables are absent. Set `NEXT_PUBLIC_DATA_SOURCE=mock` explicitly for isolated mock development.
 
+MSW dynamic responses are contract-level fixtures for isolated UI development. End-to-end dynamic routing, recovery, and KPI validation requires API mode; mock outcomes are not substitutes for the backend optimizer.
+
 ## Routes
 
 - `/scenario`

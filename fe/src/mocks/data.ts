@@ -45,6 +45,7 @@ export const scenarioFixture: Scenario = {
 
 export const simulationFixture: Simulation = {
   id: "sim-jakarta-20250304", scenarioId: scenarioFixture.id, status: "completed", createdAt: "2026-08-09T10:15:00.000Z", completedAt: "2026-08-09T10:15:04.000Z",
+  analysisMode: "historical-replay", region: "jakarta",
   modelVersion: "indonesia-road-corridor-flood-exposure-v1",
   modelProvenance: {
     trainingData: "real-historical-global-flood-database-indonesia",

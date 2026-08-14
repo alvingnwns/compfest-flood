@@ -29,6 +29,7 @@ export function DisruptionMap({
   onClearSelection: () => void;
   popupContent?: React.ReactNode;
 }) {
+  const dynamic = data.roads.some((road) => road.dynamicRoadRiskScore !== undefined);
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const popupRef = useRef<MapLibrePopup | null>(null);
@@ -72,7 +73,9 @@ export function DisruptionMap({
       map.addControl(
         new maplibregl.AttributionControl({
           compact: true,
-          customAttribution: "Data jalan © OpenStreetMap contributors · Pemutaran ulang historis Jakarta",
+          customAttribution: dynamic
+            ? "Data jalan © OpenStreetMap contributors · Simulasi kondisi Jakarta"
+            : "Data jalan © OpenStreetMap contributors · Pemutaran ulang historis Jakarta",
         })
       );
 
@@ -94,7 +97,7 @@ export function DisruptionMap({
         });
 
         // ── Layer 2: Flood scenario area ──
-        if (data.historicalFloodGeometry) {
+        if (!dynamic && data.historicalFloodGeometry) {
           map.addSource("flood", {
             type: "geojson",
             data: { type: "Feature", properties: {}, geometry: data.historicalFloodGeometry },
@@ -127,7 +130,7 @@ export function DisruptionMap({
                 roadName: road.roadName,
                 highwayClass: road.highwayClass ?? "",
                 osmWayIds: road.osmWayIds.join(", "),
-                riskProbability: road.riskProbability,
+                riskScore: road.dynamicRoadRiskScore ?? road.riskProbability,
               },
               geometry: road.geometry,
             })),
@@ -301,19 +304,19 @@ export function DisruptionMap({
       <div
         ref={container}
         className="h-full w-full"
-        aria-label="Peta risiko gangguan banjir Jakarta"
+        aria-label={dynamic ? "Peta skor risiko relatif jalan Jakarta" : "Peta kerentanan historis jalan Jakarta"}
       />
       {/* Hidden Portal Container for MapLibre Popup */}
       <div className="hidden">
         <div ref={popupPortalRef}>{popupContent}</div>
       </div>
       {/* Map legend */}
-      <MapLegend />
+      <MapLegend dynamic={dynamic} />
     </div>
   );
 }
 
-function MapLegend() {
+function MapLegend({ dynamic }: { dynamic: boolean }) {
   return (
     <div className="absolute bottom-8 left-3 z-10 rounded-lg border border-outline bg-surface/95 p-3 text-[10px] shadow-lg backdrop-blur-sm">
       <div className="eyebrow mb-2">Legenda Peta</div>
@@ -332,7 +335,7 @@ function MapLegend() {
         </div>
         <LegendRow color="#ba1a1a" label="Rute Awal" dashed />
         <LegendRow color="#00685f" label="Rute ResiliChain" dashed={false} thick />
-        <LegendRow color="#ba1a1a22" label="Zona Gangguan Skenario" fill />
+        {!dynamic && <LegendRow color="#ba1a1a22" label="Zona Gangguan Historis" fill />}
       </div>
       <div className="mt-2 border-t border-outline pt-1.5 text-muted">
         © OpenStreetMap contributors

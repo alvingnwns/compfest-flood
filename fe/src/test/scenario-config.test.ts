@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { HAZARD_SCENARIOS, OPERATIONAL_PRESETS, getOperationalPreset } from "@/features/scenario/scenario-presets";
+import { HAZARD_SCENARIOS, OPERATIONAL_PRESETS, RAINFALL_SCENARIOS, getOperationalPreset } from "@/features/scenario/scenario-presets";
 import { runSimulationRequestSchema } from "@/domain/scenario";
 import { publicEnv } from "@/config/public-env";
 
@@ -28,6 +28,19 @@ describe("scenario configuration & operational presets", () => {
     expect(parsed.scenarioId).toBe("scenario-jakarta-20250304");
     expect(parsed.vehicleOverrides?.[0]?.available).toBe(false);
     expect(parsed.inventoryOverrides?.[0]?.quantity).toBe(150);
+    expect(parsed.analysisMode).toBe("historical-replay");
+  });
+
+  it("requires region and rainfall pattern only for scenario simulation", () => {
+    expect(runSimulationRequestSchema.safeParse({ scenarioId: "scenario-jakarta-20250304", analysisMode: "scenario-simulation" }).success).toBe(false);
+    expect(runSimulationRequestSchema.safeParse({ scenarioId: "scenario-jakarta-20250304", analysisMode: "scenario-simulation", region: "jakarta", rainfallScenario: "Q3" }).success).toBe(true);
+    expect(runSimulationRequestSchema.safeParse({ scenarioId: "scenario-jakarta-20250304" }).success).toBe(true);
+  });
+
+  it("maps exactly four internal rainfall IDs to conservative display labels", () => {
+    expect(RAINFALL_SCENARIOS.map((item) => item.id)).toEqual(["Q1", "Q2", "Q3", "Q4"]);
+    expect(RAINFALL_SCENARIOS.every((item) => item.label.startsWith("Pola Hujan"))).toBe(true);
+    expect(RAINFALL_SCENARIOS.map((item) => item.label).join(" ").toLowerCase()).not.toContain("probabilitas");
   });
 
   it("ensures publicEnv defaults to api mode and not mock", () => {

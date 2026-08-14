@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { SimulationDetails } from "@/components/simulation/simulation-details";
+import { ScenarioContextCard } from "@/components/simulation/scenario-context-card";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
 import type { CommerceAction, LogisticsAction, ManufacturingAction } from "@/domain/recovery";
 import { useRecoveryPlan, useSimulation } from "@/hooks/use-resilichain-data";
@@ -187,6 +188,7 @@ function PlanSection({
 export function RecoveryPage() {
   const searchParams = useSearchParams();
   const simulationId = searchParams.get("simulation") ?? "";
+  const operationalCondition = searchParams.get("condition") ?? "normal";
   const plan = useRecoveryPlan(simulationId);
   const simulation = useSimulation(simulationId);
   const [details, setDetails] = useState(false);
@@ -218,6 +220,9 @@ export function RecoveryPage() {
           )}
           {plan.data?.status === "failed" && (
             <ErrorState message={plan.data.error.message} onRetry={() => void plan.refetch()} />
+          )}
+          {simulation.data && plan.data && !["queued", "processing", "failed"].includes(plan.data.status) && (
+            <ScenarioContextCard simulation={simulation.data} operationalCondition={operationalCondition} explanation />
           )}
           {plan.data?.status === "no-feasible-plan" && (
             <div className="card border-danger/30 p-6">
@@ -277,7 +282,7 @@ export function RecoveryPage() {
               {/* Navigation button */}
               <div className="flex justify-end pt-4">
                 <Link
-                  href={`/impact?simulation=${simulationId}`}
+                  href={`/impact?simulation=${simulationId}&condition=${encodeURIComponent(operationalCondition)}`}
                   className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark"
                 >
                   Bandingkan dengan Kondisi Awal <ArrowRight size={17} />

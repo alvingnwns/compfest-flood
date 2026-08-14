@@ -3,13 +3,17 @@
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import type { Simulation } from "@/domain/scenario";
+import { getRainfallScenario } from "@/features/scenario/scenario-presets";
 import { formatDataMode, formatHistoricalStatus } from "@/lib/format";
 
 export function SimulationDetails({ simulation, open, onClose }: { simulation: Simulation; open: boolean; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => { const dialog = ref.current; if (!dialog) return; if (open && !dialog.open) dialog.showModal(); if (!open && dialog.open) dialog.close(); }, [open]);
+  const dynamic = simulation.analysisMode === "scenario-simulation" && simulation.hazard !== undefined;
   const rows = [
-    ["ID Skenario", simulation.scenarioId], ["Mode Skenario", "Pemutaran Ulang Historis"], ["Versi Model", simulation.modelVersion ?? "Menunggu"],
+    ["ID Skenario", simulation.scenarioId], ["Mode Analisis", dynamic ? "Simulasi Kondisi" : "Pemutaran Ulang Historis"],
+    ...(dynamic ? [["Pola Curah Hujan", getRainfallScenario(simulation.hazard?.rainfallScenario)?.label ?? "Tidak tersedia"], ["Indeks Hazard Relatif", simulation.hazard?.relativeHazardIndex.toFixed(2) ?? "Tidak tersedia"]] : []),
+    ["Versi Model", simulation.modelVersion ?? "Menunggu"],
     ["Versi Pengoptimal", simulation.optimizerVersion ?? "Menunggu"], ["Waktu Simulasi", new Date(simulation.createdAt).toLocaleString("id-ID")],
     ["Mode Data", formatDataMode(simulation.dataMode)], ["Data Historis", formatHistoricalStatus(simulation.historicalDataStatus)],
   ];

@@ -13,8 +13,8 @@ export function ModelProvenanceCard({ provenance, version }: { provenance: Prove
       <span className="rounded bg-primary px-2 py-1 text-[9px] font-semibold uppercase text-white">Data Training Nyata</span>
     </div>
     <dl className="space-y-2 text-xs">
-      <div className="flex gap-2"><Database className="mt-0.5 shrink-0 text-primary" size={14} /><div><dt className="font-semibold">{provenance.algorithm}</dt><dd className="text-muted">Dilatih dari {provenance.trainingEvents} kejadian banjir di {provenance.trainingRegions} region Indonesia ? {provenance.source}</dd></div></div>
-      <div className="flex gap-2"><MapPinned className="mt-0.5 shrink-0 text-primary" size={14} /><div><dt className="font-semibold">Probabilitas per koridor OSM</dt><dd className="text-muted">{provenance.probabilitySemantics}.</dd></div></div>
+      <div className="flex gap-2"><Database className="mt-0.5 shrink-0 text-primary" size={14} /><div><dt className="font-semibold">{provenance.algorithm}</dt><dd className="text-muted">Dilatih dari {provenance.trainingEvents} kejadian banjir di {provenance.trainingRegions} region Indonesia · {provenance.source}</dd></div></div>
+      <div className="flex gap-2"><MapPinned className="mt-0.5 shrink-0 text-primary" size={14} /><div><dt className="font-semibold">Kerentanan historis per koridor OSM</dt><dd className="text-muted">{provenance.probabilitySemantics}.</dd></div></div>
     </dl>
     <div className="mt-3 border-t border-primary/15 pt-3 text-[10px] leading-relaxed text-muted">
       <strong className="text-ink">Batas klaim:</strong> Jakarta adalah pilot inferensi dan belum menjadi region validasi berlabel. Geometri replay Maret 2025 bersifat perkiraan; data bisnis tetap simulasi.

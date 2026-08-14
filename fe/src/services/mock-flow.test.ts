@@ -43,4 +43,17 @@ describe("primary mocked API flow", () => {
     expect(response.status).toBe(404);
     expect(apiErrorSchema.parse(await response.json()).code).toBe("scenario_not_found");
   });
+
+  it("keeps MSW dynamic responses aligned with backend schemas", async () => {
+    const response = await fetch(`${api}/simulations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ scenarioId: "scenario-jakarta-20250304", analysisMode: "scenario-simulation", region: "jakarta", rainfallScenario: "Q3" }),
+    });
+    const simulation = simulationSchema.parse(await response.json());
+    expect(simulation.analysisMode).toBe("scenario-simulation");
+    expect(simulation.hazard?.rainfallScenario).toBe("Q3");
+    const disruption = disruptionAnalysisSchema.parse(await (await fetch(`${api}/simulations/${simulation.id}/disruption`)).json());
+    expect(disruption.roads.every((road) => road.dynamicRoadRiskScore !== undefined)).toBe(true);
+  });
 });

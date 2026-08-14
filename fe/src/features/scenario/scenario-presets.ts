@@ -7,7 +7,7 @@
  * - Operational Condition: Business state presets (vehicle availability, capacity, inventory).
  */
 
-import type { InventoryOverride, VehicleOverride } from "@/domain/scenario";
+import type { InventoryOverride, RainfallScenario, VehicleOverride } from "@/domain/scenario";
 
 export type HazardScenario = {
   id: string;
@@ -31,6 +31,23 @@ export type OperationalPreset = {
   description: string;
   overrides: OperationalOverrides;
 };
+
+export type RainfallScenarioOption = {
+  id: RainfallScenario;
+  label: string;
+  description: string;
+};
+
+export const RAINFALL_SCENARIOS: RainfallScenarioOption[] = [
+  { id: "Q1", label: "Pola Hujan Relatif Rendah", description: "Pola temporal dengan kondisi relatif rendah terhadap rentang historis." },
+  { id: "Q2", label: "Pola Hujan Menengah", description: "Pola temporal pada rentang menengah dari data historis." },
+  { id: "Q3", label: "Pola Hujan Meningkat", description: "Pola temporal yang menunjukkan peningkatan risiko relatif." },
+  { id: "Q4", label: "Pola Hujan Tinggi dan Persisten", description: "Pola temporal tinggi yang bertahan dalam rangkaian historis." },
+];
+
+export function getRainfallScenario(id?: RainfallScenario): RainfallScenarioOption | undefined {
+  return RAINFALL_SCENARIOS.find((scenario) => scenario.id === id);
+}
 
 export const HAZARD_SCENARIOS: HazardScenario[] = [
   {

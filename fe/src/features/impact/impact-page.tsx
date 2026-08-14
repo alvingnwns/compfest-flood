@@ -4,9 +4,10 @@ import { AlertCircle, ArrowDown, ArrowUp, CheckCircle2, Clock3, Download, Factor
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
+import { ScenarioContextCard } from "@/components/simulation/scenario-context-card";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
 import type { ImpactMetric } from "@/domain/impact";
-import { useImpactComparison } from "@/hooks/use-resilichain-data";
+import { useImpactComparison, useSimulation } from "@/hooks/use-resilichain-data";
 import { formatCompactIdr, formatMinutes, formatPercent } from "@/lib/format";
 import { exportService } from "@/services/export-service";
 
@@ -131,7 +132,9 @@ function evaluateMetric(metric: ImpactMetric): MetricEvaluation {
 export function ImpactPage() {
   const searchParams = useSearchParams();
   const simulationId = searchParams.get("simulation") ?? "";
+  const operationalCondition = searchParams.get("condition") ?? "normal";
   const query = useImpactComparison(simulationId);
+  const simulation = useSimulation(simulationId);
   const [menu, setMenu] = useState(false);
 
   // Derive trade-off sentence dynamically if present
@@ -210,6 +213,7 @@ export function ImpactPage() {
                   </div>
                 </div>
               </div>
+              {simulation.data && <ScenarioContextCard simulation={simulation.data} operationalCondition={operationalCondition} />}
 
               {/* Dynamic Trade-off communication banner */}
               {tradeOffSentence && (

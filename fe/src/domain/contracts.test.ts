@@ -30,6 +30,31 @@ describe("API contract examples", () => {
     expect(recoveryPlanSchema.parse({ id: "plan-pending", simulationId: simulationFixture.id, createdAt: simulationFixture.createdAt, status: "queued" }).status).toBe("queued");
   });
 
+  it("parses dynamic metadata while preserving historical responses without it", () => {
+    const dynamic = simulationSchema.parse({
+      ...simulationFixture,
+      analysisMode: "scenario-simulation",
+      hazard: {
+        rainfallScenario: "Q3",
+        temporalHazardScore: 0.2525,
+        relativeHazardIndex: 0.6463,
+        probabilityCalibrated: false,
+        modelVersion: "temporal-hazard-v1",
+        modelType: "random_forest",
+        fusionMethod: "logit_shift",
+        fusionBeta: 1.5,
+        riskLevelSemantics: "routing compatibility band",
+      },
+    });
+    expect(dynamic.hazard?.rainfallScenario).toBe("Q3");
+    expect(simulationSchema.parse(simulationFixture).hazard).toBeUndefined();
+    expect(() => simulationSchema.parse({ ...simulationFixture, analysisMode: "scenario-simulation" })).toThrow();
+    expect(disruptionAnalysisSchema.parse({
+      ...disruptionFixture,
+      roads: [{ ...disruptionFixture.roads[0], dynamicRoadRiskScore: 0.6463, dynamicRiskScoreSemantics: "relative", routingBandBasis: "routing" }],
+    }).roads[0].dynamicRoadRiskScore).toBeCloseTo(0.6463);
+  });
+
   it("supports backend-produced multi geometries", () => {
     const multiLine = { ...disruptionFixture.roads[0], geometry: { type: "MultiLineString" as const, coordinates: [[[106.8, -6.1], [106.9, -6.2]]] } };
     const multiPolygon = { type: "MultiPolygon" as const, coordinates: [[[[106.8, -6.1], [106.9, -6.1], [106.9, -6.2], [106.8, -6.1]]]] };

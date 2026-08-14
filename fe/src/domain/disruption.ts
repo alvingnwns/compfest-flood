@@ -8,6 +8,9 @@ export const roadRiskSchema = z.object({
   highwayClass: z.string().optional(), osmWayIds: z.array(z.string()).default([]),
   geometry: lineGeometrySchema,
   riskProbability: z.number().min(0).max(1), riskLevel: riskLevelSchema,
+  dynamicRoadRiskScore: z.number().min(0).max(1).optional(),
+  dynamicRiskScoreSemantics: z.string().optional(),
+  routingBandBasis: z.string().optional(),
   estimatedDelayMinutes: z.number().nonnegative(), riskFactors: z.array(riskFactorSchema),
   affectedSupplierIds: z.array(z.string()), affectedWarehouseIds: z.array(z.string()), affectedOrderIds: z.array(z.string()),
 });

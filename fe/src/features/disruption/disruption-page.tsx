@@ -4,6 +4,7 @@ import { AlertTriangle, ArrowRight, Factory, Route, ShieldAlert, ShoppingBag, Tr
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
+import { ScenarioContextCard } from "@/components/simulation/scenario-context-card";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
 import { ModelProvenanceCard } from "@/components/simulation/model-provenance-card";
 import type { RoadRisk } from "@/domain/disruption";
@@ -21,6 +22,7 @@ const severityClass = {
 export function DisruptionPage() {
   const searchParams = useSearchParams();
   const simulationId = searchParams.get("simulation") ?? "";
+  const operationalCondition = searchParams.get("condition") ?? "normal";
   const query = useDisruptionAnalysis(simulationId);
   const simulation = useSimulation(simulationId);
   const generate = useGenerateRecovery();
@@ -58,7 +60,7 @@ export function DisruptionPage() {
   const createPlan = () =>
     generate.mutate(
       { id: simulationId },
-      { onSuccess: () => router.push(`/recovery?simulation=${simulationId}`) }
+      { onSuccess: () => router.push(`/recovery?simulation=${simulationId}&condition=${encodeURIComponent(operationalCondition)}`) }
     );
 
   const popupNode = selectedState ? (
@@ -94,10 +96,26 @@ export function DisruptionPage() {
             : "border-primary bg-primary/5 text-primary"
         }`}
       >
-        <Waves size={15} /> {formatPercent(selectedState.road.riskProbability)} {formatRisk(selectedState.road.riskLevel)} risiko gangguan
+        <Waves size={15} /> {formatRisk(selectedState.road.riskLevel)} risiko rute
       </div>
 
       <dl className="space-y-1.5 text-xs">
+        <div className="flex justify-between border-b border-outline/40 pb-1">
+          <dt className="text-muted">Risk Band</dt>
+          <dd className="font-semibold text-ink">{formatRisk(selectedState.road.riskLevel)}</dd>
+        </div>
+        {selectedState.road.dynamicRoadRiskScore !== undefined && (
+          <div className="flex justify-between border-b border-outline/40 pb-1">
+            <dt className="text-muted">Skor Risiko Relatif</dt>
+            <dd className="mono font-semibold text-ink">{selectedState.road.dynamicRoadRiskScore.toFixed(2)}</dd>
+          </div>
+        )}
+        {selectedState.road.dynamicRoadRiskScore === undefined && (
+          <div className="flex justify-between border-b border-outline/40 pb-1">
+            <dt className="text-muted">Estimasi Paparan Historis</dt>
+            <dd className="mono font-semibold text-ink">{formatPercent(selectedState.road.riskProbability)}</dd>
+          </div>
+        )}
         <div className="flex justify-between border-b border-outline/40 pb-1">
           <dt className="text-muted">ID Segmen ResiliChain</dt>
           <dd className="mono font-semibold text-ink">{selectedState.road.segmentId}</dd>
@@ -128,7 +146,7 @@ export function DisruptionPage() {
         </div>
         <div className="flex justify-between border-b border-outline/40 pb-1">
           <dt className="text-muted">Model Risk</dt>
-          <dd className="mono font-medium text-ink">Historical Flood Exposure v1</dd>
+          <dd className="mono font-medium text-ink">{selectedState.road.dynamicRoadRiskScore === undefined ? "Historical Flood Exposure v1" : "Scenario-conditioned risk fusion"}</dd>
         </div>
         <div className="flex justify-between gap-4 border-b border-outline/40 pb-1">
           <dt className="text-muted">Faktor Risiko</dt>
@@ -145,7 +163,7 @@ export function DisruptionPage() {
       {!simulationId && (
         <EmptyState
           title="Belum ada simulasi yang dipilih"
-          message="Jalankan skenario historis sebelum membuka analisis gangguan."
+          message="Jalankan analisis skenario sebelum membuka analisis gangguan."
         />
       )}
       {simulationId && query.isLoading && <LoadingState label="Memetakan risiko gangguan banjir…" />}
@@ -162,7 +180,7 @@ export function DisruptionPage() {
               popupContent={popupNode}
             />
             <h1 className="absolute left-4 top-4 rounded-lg border border-outline bg-white/95 px-4 py-2 text-xl font-semibold shadow-sm backdrop-blur">
-              Analisis Gangguan Banjir
+              Analisis Gangguan
             </h1>
             <div className="absolute bottom-5 left-5 space-y-2">
               {baselineRoute && (
@@ -189,7 +207,7 @@ export function DisruptionPage() {
                   )}
                 </div>
               )}
-              <p className="mono text-[10px] text-muted">Estimasi risiko — bukan jaminan banjir akan terjadi.</p>
+              <p className="mono text-[10px] text-muted">Skor risiko adalah indikator relatif untuk routing, bukan probabilitas kejadian.</p>
             </div>
           </section>
 
@@ -198,6 +216,7 @@ export function DisruptionPage() {
               <h2 className="text-lg font-semibold">Dampak Operasional</h2>
               <ShieldAlert className="text-muted" size={20} />
             </div>
+            {simulation.data && <ScenarioContextCard simulation={simulation.data} operationalCondition={operationalCondition} />}
             {simulation.data?.modelProvenance && (
               <ModelProvenanceCard provenance={simulation.data.modelProvenance} version={simulation.data.modelVersion} />
             )}
