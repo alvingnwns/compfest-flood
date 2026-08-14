@@ -1,0 +1,5264 @@
+{
+  "analysisVersion": "dynamic-hazard-phase5a-v1",
+  "traces": [
+    {
+      "causalChain": {
+        "assignmentChanges": [],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 24
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q1",
+          "relativeHazardIndex": 0.15223880597014924,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.14393991896426608
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.11029599911187873,
+        "routingChangesFromQ1": []
+      },
+      "classification": "NON_BINDING",
+      "conditionId": "normal",
+      "rainfallScenario": "Q1",
+      "reason": "Q1 is the within-condition reference for incremental binding analysis."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-002",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-003",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-baseline-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-015",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-baseline-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-018",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-020",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-baseline-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 44
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q2",
+          "relativeHazardIndex": 0.4626865671641791,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.250166672988461
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.1649224089372925,
+        "routingChangesFromQ1": []
+      },
+      "classification": "PARTIALLY_BINDING",
+      "conditionId": "normal",
+      "rainfallScenario": "Q2",
+      "reason": "Routing/CP-SAT decisions change, but headline KPI remains buffered by operational slack."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-002",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-003",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-004",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-006",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-007",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-009",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-011",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-012",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-012",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-012",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-014",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-015",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-016",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-017",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-018",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-019",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-020",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 65
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q3",
+          "relativeHazardIndex": 0.6462686567164179,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.2525212779653498
+        },
+        "kpiChanges": {
+          "average-delay": {
+            "from": 0.6,
+            "to": 1.8
+          }
+        },
+        "productionChanges": {},
+        "roadRiskMedian": 0.20641427171080726,
+        "routingChangesFromQ1": [
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "a33301ad4f3f5649560ba5814a39bfbdbbe9df35b096876077484304617d5072",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "e79646a64276a3ab63d5559a07175a0d05b8dedab2849fb00094528041a24a8a"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "ee67937224be557a727b23d4805ff4d9f13c15907ffa6de373e189e923a503cd",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "eb005a56745ebf1c075bd36970369baa059370dd809e870fbb19de7bfc346161"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "95e2bb676a7280487507d93af34f74be500a7dfdbbede7d8dc5ba4212d05d880",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "ce30774ef24bfb42271ffa3999dcc95549a4b4e6be75d10ea0cb007eb325a719"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "fa6f99a929781f2a21d99852cf1986293537c2d7af3fd9cf9aba84e4cd006961",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "1b5d00b70b690cc334b9e4ca192a297707160129dca3bf6e498f1619fb78d358"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "dd85b71ca11a3d8e8d513682ef12ee6016f8c84a38e0e87c1cb732c1dae2ccdf",
+            "routingBand": {
+              "from": "high",
+              "to": "high"
+            },
+            "scenarioPathSha256": "ef3bc789ca8409a84d60289ae8dac52b863f3d118e6039c383a5badf9916e3f3"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "18b519a21a661735e82c9f151eed4c251a464c6732eb85ab9f36ee5c75da7608",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "db40ccf8d3a28b3a4028add082ff3363335cac5cef6dbdf6b04e9579100bc20c"
+          }
+        ]
+      },
+      "classification": "BINDING",
+      "conditionId": "normal",
+      "rainfallScenario": "Q3",
+      "reason": "Hazard changes reach production and/or KPI outcomes through existing constraints."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-002",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-003",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-004",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-006",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-007",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-009",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-011",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-012",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-012",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-012",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-014",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-015",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-016",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-017",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-018",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-019",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-020",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": [
+              "sup-b"
+            ]
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 77
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q4",
+          "relativeHazardIndex": 0.7313432835820896,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.2950839237115458
+        },
+        "kpiChanges": {
+          "average-delay": {
+            "from": 0.6,
+            "to": 1.8
+          }
+        },
+        "productionChanges": {},
+        "roadRiskMedian": 0.22810113103664562,
+        "routingChangesFromQ1": [
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "a33301ad4f3f5649560ba5814a39bfbdbbe9df35b096876077484304617d5072",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "0dee437b62a6d06e17ee45afd5db0962580b6444baba10efbab9f58093323a8b"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "ee67937224be557a727b23d4805ff4d9f13c15907ffa6de373e189e923a503cd",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "eb005a56745ebf1c075bd36970369baa059370dd809e870fbb19de7bfc346161"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "95e2bb676a7280487507d93af34f74be500a7dfdbbede7d8dc5ba4212d05d880",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "ce30774ef24bfb42271ffa3999dcc95549a4b4e6be75d10ea0cb007eb325a719"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "dd85b71ca11a3d8e8d513682ef12ee6016f8c84a38e0e87c1cb732c1dae2ccdf",
+            "routingBand": {
+              "from": "high",
+              "to": "high"
+            },
+            "scenarioPathSha256": "ef3bc789ca8409a84d60289ae8dac52b863f3d118e6039c383a5badf9916e3f3"
+          },
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "90048d834603751eba00c01f1270c590a75689daa979d452a1747851d012654d",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "944483ed7cefe982c21ac17b55ef7386cac54ed7776e7b8332e50312155dfe7e"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "0b044afeb10252ec41367f70b32c36457f7fceed0bbb208b4482244ddce90d83",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "648ec789d2afb250436961d445fded1e69e1328c05d23c59a7d947246c9ded6f"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "02a21577496732a664e16ea6662ab15a210091fd58f68c3780b36889aa5babf4",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "d38eaed02147514e6b0b290b38d2adf2da840205f6f55c18cd146d17bf3e61b4"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "18b519a21a661735e82c9f151eed4c251a464c6732eb85ab9f36ee5c75da7608",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "56261a50943ae498d20ed72a19a9d3a80a43415d658ea5066d23c40c7eed4025"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "17a87db478c61d22c79c8eed69bfec9d9549f1ddb8cc0232de51b7bf6180e914",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "1be0d11b3c313531cb8b256cec4f8df01b302b8227087e0f74b90040cd3533bd"
+          }
+        ]
+      },
+      "classification": "BINDING",
+      "conditionId": "normal",
+      "rainfallScenario": "Q4",
+      "reason": "Hazard changes reach production and/or KPI outcomes through existing constraints."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 24
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q1",
+          "relativeHazardIndex": 0.15223880597014924,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.14393991896426608
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.11029599911187873,
+        "routingChangesFromQ1": []
+      },
+      "classification": "NON_BINDING",
+      "conditionId": "limited-vehicle",
+      "rainfallScenario": "Q1",
+      "reason": "Q1 is the within-condition reference for incremental binding analysis."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-011",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-015",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-baseline-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-016",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-020",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-baseline-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 44
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q2",
+          "relativeHazardIndex": 0.4626865671641791,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.250166672988461
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.1649224089372925,
+        "routingChangesFromQ1": []
+      },
+      "classification": "PARTIALLY_BINDING",
+      "conditionId": "limited-vehicle",
+      "rainfallScenario": "Q2",
+      "reason": "Routing/CP-SAT decisions change, but headline KPI remains buffered by operational slack."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-002",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-003",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-004",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-006",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-007",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-009",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-011",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-012",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-012",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-012",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-014",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-015",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-016",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-017",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-018",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-019",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-020",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 65
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q3",
+          "relativeHazardIndex": 0.6462686567164179,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.2525212779653498
+        },
+        "kpiChanges": {
+          "average-delay": {
+            "from": 0.6,
+            "to": 1.8
+          }
+        },
+        "productionChanges": {},
+        "roadRiskMedian": 0.20641427171080726,
+        "routingChangesFromQ1": [
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "a33301ad4f3f5649560ba5814a39bfbdbbe9df35b096876077484304617d5072",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "e79646a64276a3ab63d5559a07175a0d05b8dedab2849fb00094528041a24a8a"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "ee67937224be557a727b23d4805ff4d9f13c15907ffa6de373e189e923a503cd",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "eb005a56745ebf1c075bd36970369baa059370dd809e870fbb19de7bfc346161"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "95e2bb676a7280487507d93af34f74be500a7dfdbbede7d8dc5ba4212d05d880",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "ce30774ef24bfb42271ffa3999dcc95549a4b4e6be75d10ea0cb007eb325a719"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "fa6f99a929781f2a21d99852cf1986293537c2d7af3fd9cf9aba84e4cd006961",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "1b5d00b70b690cc334b9e4ca192a297707160129dca3bf6e498f1619fb78d358"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "dd85b71ca11a3d8e8d513682ef12ee6016f8c84a38e0e87c1cb732c1dae2ccdf",
+            "routingBand": {
+              "from": "high",
+              "to": "high"
+            },
+            "scenarioPathSha256": "ef3bc789ca8409a84d60289ae8dac52b863f3d118e6039c383a5badf9916e3f3"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "18b519a21a661735e82c9f151eed4c251a464c6732eb85ab9f36ee5c75da7608",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "db40ccf8d3a28b3a4028add082ff3363335cac5cef6dbdf6b04e9579100bc20c"
+          }
+        ]
+      },
+      "classification": "BINDING",
+      "conditionId": "limited-vehicle",
+      "rainfallScenario": "Q3",
+      "reason": "Hazard changes reach production and/or KPI outcomes through existing constraints."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-002",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-002",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-003",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-003",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-004",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-006",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-007",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-009",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-011",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-012",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-012",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-012",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-014",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-015",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-015",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-016",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-017",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-018",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-018",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-019",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-020",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-020",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-east"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": [
+              "sup-b"
+            ]
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 77
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q4",
+          "relativeHazardIndex": 0.7313432835820896,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.2950839237115458
+        },
+        "kpiChanges": {
+          "average-delay": {
+            "from": 0.6,
+            "to": 1.8
+          }
+        },
+        "productionChanges": {},
+        "roadRiskMedian": 0.22810113103664562,
+        "routingChangesFromQ1": [
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "a33301ad4f3f5649560ba5814a39bfbdbbe9df35b096876077484304617d5072",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "0dee437b62a6d06e17ee45afd5db0962580b6444baba10efbab9f58093323a8b"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "ee67937224be557a727b23d4805ff4d9f13c15907ffa6de373e189e923a503cd",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "eb005a56745ebf1c075bd36970369baa059370dd809e870fbb19de7bfc346161"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "95e2bb676a7280487507d93af34f74be500a7dfdbbede7d8dc5ba4212d05d880",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "ce30774ef24bfb42271ffa3999dcc95549a4b4e6be75d10ea0cb007eb325a719"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "dd85b71ca11a3d8e8d513682ef12ee6016f8c84a38e0e87c1cb732c1dae2ccdf",
+            "routingBand": {
+              "from": "high",
+              "to": "high"
+            },
+            "scenarioPathSha256": "ef3bc789ca8409a84d60289ae8dac52b863f3d118e6039c383a5badf9916e3f3"
+          },
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "90048d834603751eba00c01f1270c590a75689daa979d452a1747851d012654d",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "944483ed7cefe982c21ac17b55ef7386cac54ed7776e7b8332e50312155dfe7e"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "0b044afeb10252ec41367f70b32c36457f7fceed0bbb208b4482244ddce90d83",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "648ec789d2afb250436961d445fded1e69e1328c05d23c59a7d947246c9ded6f"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "02a21577496732a664e16ea6662ab15a210091fd58f68c3780b36889aa5babf4",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "d38eaed02147514e6b0b290b38d2adf2da840205f6f55c18cd146d17bf3e61b4"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "18b519a21a661735e82c9f151eed4c251a464c6732eb85ab9f36ee5c75da7608",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "56261a50943ae498d20ed72a19a9d3a80a43415d658ea5066d23c40c7eed4025"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "17a87db478c61d22c79c8eed69bfec9d9549f1ddb8cc0232de51b7bf6180e914",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "1be0d11b3c313531cb8b256cec4f8df01b302b8227087e0f74b90040cd3533bd"
+          }
+        ]
+      },
+      "classification": "BINDING",
+      "conditionId": "limited-vehicle",
+      "rainfallScenario": "Q4",
+      "reason": "Hazard changes reach production and/or KPI outcomes through existing constraints."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 24
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q1",
+          "relativeHazardIndex": 0.15223880597014924,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.14393991896426608
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.11029599911187873,
+        "routingChangesFromQ1": []
+      },
+      "classification": "NON_BINDING",
+      "conditionId": "critical-stock",
+      "rainfallScenario": "Q1",
+      "reason": "Q1 is the within-condition reference for incremental binding analysis."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 16,
+              "etaMinutes": 32,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-west-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-004",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 16,
+              "etaMinutes": 32,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-west-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-baseline-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-007",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 1,
+              "etaMinutes": 19,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-baseline-wh-east-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 44
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q2",
+          "relativeHazardIndex": 0.4626865671641791,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.250166672988461
+        },
+        "kpiChanges": {
+          "average-delay": {
+            "from": 3.6,
+            "to": 3.0
+          }
+        },
+        "productionChanges": {},
+        "roadRiskMedian": 0.1649224089372925,
+        "routingChangesFromQ1": []
+      },
+      "classification": "BINDING",
+      "conditionId": "critical-stock",
+      "rainfallScenario": "Q2",
+      "reason": "Hazard changes reach production and/or KPI outcomes through existing constraints."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 16,
+              "etaMinutes": 32,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-west-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-004",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-006",
+            "to": {
+              "allocatedQuantity": 0,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": null,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": null,
+              "routingBand": null,
+              "vehicleId": null,
+              "warehouseId": null
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-007",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-009",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-011",
+            "to": {
+              "allocatedQuantity": 0,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": null,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": null,
+              "routingBand": null,
+              "vehicleId": null,
+              "warehouseId": null
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-014",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-016",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-017",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 16,
+              "etaMinutes": 32,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-west-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-019",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 65
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q3",
+          "relativeHazardIndex": 0.6462686567164179,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.2525212779653498
+        },
+        "kpiChanges": {
+          "average-delay": {
+            "from": 3.6,
+            "to": 1.5
+          },
+          "failed-orders": {
+            "from": 6.0,
+            "to": 8.0
+          },
+          "on-time-delivery": {
+            "from": 0.5,
+            "to": 0.45
+          },
+          "orders-fulfilled": {
+            "from": 14.0,
+            "to": 11.0
+          },
+          "sales-exposure-risk": {
+            "from": 50000000.0,
+            "to": 62800000.0
+          }
+        },
+        "productionChanges": {
+          "prod-a": {
+            "from": 450,
+            "to": 330
+          },
+          "prod-b": {
+            "from": 50,
+            "to": 170
+          }
+        },
+        "roadRiskMedian": 0.20641427171080726,
+        "routingChangesFromQ1": [
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "a33301ad4f3f5649560ba5814a39bfbdbbe9df35b096876077484304617d5072",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "e79646a64276a3ab63d5559a07175a0d05b8dedab2849fb00094528041a24a8a"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "ee67937224be557a727b23d4805ff4d9f13c15907ffa6de373e189e923a503cd",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "eb005a56745ebf1c075bd36970369baa059370dd809e870fbb19de7bfc346161"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "95e2bb676a7280487507d93af34f74be500a7dfdbbede7d8dc5ba4212d05d880",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "ce30774ef24bfb42271ffa3999dcc95549a4b4e6be75d10ea0cb007eb325a719"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "fa6f99a929781f2a21d99852cf1986293537c2d7af3fd9cf9aba84e4cd006961",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "1b5d00b70b690cc334b9e4ca192a297707160129dca3bf6e498f1619fb78d358"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "dd85b71ca11a3d8e8d513682ef12ee6016f8c84a38e0e87c1cb732c1dae2ccdf",
+            "routingBand": {
+              "from": "high",
+              "to": "high"
+            },
+            "scenarioPathSha256": "ef3bc789ca8409a84d60289ae8dac52b863f3d118e6039c383a5badf9916e3f3"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "18b519a21a661735e82c9f151eed4c251a464c6732eb85ab9f36ee5c75da7608",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "db40ccf8d3a28b3a4028add082ff3363335cac5cef6dbdf6b04e9579100bc20c"
+          }
+        ]
+      },
+      "classification": "BINDING",
+      "conditionId": "critical-stock",
+      "rainfallScenario": "Q3",
+      "reason": "Hazard changes reach production and/or KPI outcomes through existing constraints."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 16,
+              "etaMinutes": 32,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-west-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-004",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-004",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 18,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-east-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-006",
+            "to": {
+              "allocatedQuantity": 0,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": null,
+              "orderId": "ORD-006",
+              "requestedQuantity": 60,
+              "routeId": null,
+              "routingBand": null,
+              "vehicleId": null,
+              "warehouseId": null
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-007",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-007",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-009",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-010",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-010",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-011",
+            "to": {
+              "allocatedQuantity": 0,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": null,
+              "orderId": "ORD-011",
+              "requestedQuantity": 60,
+              "routeId": null,
+              "routingBand": null,
+              "vehicleId": null,
+              "warehouseId": null
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-013",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-013",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-014",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-02",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-016",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-016",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-017",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 16,
+              "etaMinutes": 32,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-west-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-019",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-019",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-01",
+              "warehouseId": "wh-east"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": [
+              "sup-b"
+            ]
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 77
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q4",
+          "relativeHazardIndex": 0.7313432835820896,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.2950839237115458
+        },
+        "kpiChanges": {
+          "average-delay": {
+            "from": 3.6,
+            "to": 1.5
+          },
+          "failed-orders": {
+            "from": 6.0,
+            "to": 8.0
+          },
+          "on-time-delivery": {
+            "from": 0.5,
+            "to": 0.45
+          },
+          "orders-fulfilled": {
+            "from": 14.0,
+            "to": 11.0
+          },
+          "sales-exposure-risk": {
+            "from": 50000000.0,
+            "to": 62800000.0
+          }
+        },
+        "productionChanges": {
+          "prod-a": {
+            "from": 450,
+            "to": 330
+          },
+          "prod-b": {
+            "from": 50,
+            "to": 170
+          }
+        },
+        "roadRiskMedian": 0.22810113103664562,
+        "routingChangesFromQ1": [
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "a33301ad4f3f5649560ba5814a39bfbdbbe9df35b096876077484304617d5072",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "0dee437b62a6d06e17ee45afd5db0962580b6444baba10efbab9f58093323a8b"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "ee67937224be557a727b23d4805ff4d9f13c15907ffa6de373e189e923a503cd",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "eb005a56745ebf1c075bd36970369baa059370dd809e870fbb19de7bfc346161"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "95e2bb676a7280487507d93af34f74be500a7dfdbbede7d8dc5ba4212d05d880",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "ce30774ef24bfb42271ffa3999dcc95549a4b4e6be75d10ea0cb007eb325a719"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "dd85b71ca11a3d8e8d513682ef12ee6016f8c84a38e0e87c1cb732c1dae2ccdf",
+            "routingBand": {
+              "from": "high",
+              "to": "high"
+            },
+            "scenarioPathSha256": "ef3bc789ca8409a84d60289ae8dac52b863f3d118e6039c383a5badf9916e3f3"
+          },
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "90048d834603751eba00c01f1270c590a75689daa979d452a1747851d012654d",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "944483ed7cefe982c21ac17b55ef7386cac54ed7776e7b8332e50312155dfe7e"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "0b044afeb10252ec41367f70b32c36457f7fceed0bbb208b4482244ddce90d83",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "648ec789d2afb250436961d445fded1e69e1328c05d23c59a7d947246c9ded6f"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "02a21577496732a664e16ea6662ab15a210091fd58f68c3780b36889aa5babf4",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "d38eaed02147514e6b0b290b38d2adf2da840205f6f55c18cd146d17bf3e61b4"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "18b519a21a661735e82c9f151eed4c251a464c6732eb85ab9f36ee5c75da7608",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "56261a50943ae498d20ed72a19a9d3a80a43415d658ea5066d23c40c7eed4025"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "17a87db478c61d22c79c8eed69bfec9d9549f1ddb8cc0232de51b7bf6180e914",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "1be0d11b3c313531cb8b256cec4f8df01b302b8227087e0f74b90040cd3533bd"
+          }
+        ]
+      },
+      "classification": "BINDING",
+      "conditionId": "critical-stock",
+      "rainfallScenario": "Q4",
+      "reason": "Hazard changes reach production and/or KPI outcomes through existing constraints."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 24
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q1",
+          "relativeHazardIndex": 0.15223880597014924,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.14393991896426608
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.11029599911187873,
+        "routingChangesFromQ1": []
+      },
+      "classification": "NON_BINDING",
+      "conditionId": "severe-disruption",
+      "rainfallScenario": "Q1",
+      "reason": "Q1 is the within-condition reference for incremental binding analysis."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 44
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q2",
+          "relativeHazardIndex": 0.4626865671641791,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.250166672988461
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.1649224089372925,
+        "routingChangesFromQ1": []
+      },
+      "classification": "PARTIALLY_BINDING",
+      "conditionId": "severe-disruption",
+      "rainfallScenario": "Q2",
+      "reason": "Routing/CP-SAT decisions change, but headline KPI remains buffered by operational slack."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 50,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-009",
+            "to": {
+              "allocatedQuantity": 50,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-014",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-recovery-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-017",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": []
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 65
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q3",
+          "relativeHazardIndex": 0.6462686567164179,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.2525212779653498
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.20641427171080726,
+        "routingChangesFromQ1": [
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "a33301ad4f3f5649560ba5814a39bfbdbbe9df35b096876077484304617d5072",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "e79646a64276a3ab63d5559a07175a0d05b8dedab2849fb00094528041a24a8a"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "ee67937224be557a727b23d4805ff4d9f13c15907ffa6de373e189e923a503cd",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "eb005a56745ebf1c075bd36970369baa059370dd809e870fbb19de7bfc346161"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "95e2bb676a7280487507d93af34f74be500a7dfdbbede7d8dc5ba4212d05d880",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "ce30774ef24bfb42271ffa3999dcc95549a4b4e6be75d10ea0cb007eb325a719"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "fa6f99a929781f2a21d99852cf1986293537c2d7af3fd9cf9aba84e4cd006961",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "1b5d00b70b690cc334b9e4ca192a297707160129dca3bf6e498f1619fb78d358"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "dd85b71ca11a3d8e8d513682ef12ee6016f8c84a38e0e87c1cb732c1dae2ccdf",
+            "routingBand": {
+              "from": "high",
+              "to": "high"
+            },
+            "scenarioPathSha256": "ef3bc789ca8409a84d60289ae8dac52b863f3d118e6039c383a5badf9916e3f3"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "18b519a21a661735e82c9f151eed4c251a464c6732eb85ab9f36ee5c75da7608",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "db40ccf8d3a28b3a4028add082ff3363335cac5cef6dbdf6b04e9579100bc20c"
+          }
+        ]
+      },
+      "classification": "PARTIALLY_BINDING",
+      "conditionId": "severe-disruption",
+      "rainfallScenario": "Q3",
+      "reason": "Routing/CP-SAT decisions change, but headline KPI remains buffered by operational slack."
+    },
+    {
+      "causalChain": {
+        "assignmentChanges": [
+          {
+            "from": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-001",
+            "to": {
+              "allocatedQuantity": 60,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 8,
+              "orderId": "ORD-001",
+              "requestedQuantity": 60,
+              "routeId": "route-recovery-wh-west-store-a",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-005",
+            "to": {
+              "allocatedQuantity": 100,
+              "deadlineMinutes": 20,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-005",
+              "requestedQuantity": 100,
+              "routeId": "route-recovery-wh-west-store-e",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-008",
+            "to": {
+              "allocatedQuantity": 80,
+              "deadlineMinutes": 18,
+              "delayMinutes": 9,
+              "etaMinutes": 27,
+              "orderId": "ORD-008",
+              "requestedQuantity": 80,
+              "routeId": "route-recovery-wh-west-store-c",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 50,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-009",
+            "to": {
+              "allocatedQuantity": 50,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-009",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            },
+            "orderId": "ORD-014",
+            "to": {
+              "allocatedQuantity": 90,
+              "deadlineMinutes": 16,
+              "delayMinutes": 0,
+              "etaMinutes": 13,
+              "orderId": "ORD-014",
+              "requestedQuantity": 90,
+              "routeId": "route-baseline-wh-east-store-d",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-east"
+            }
+          },
+          {
+            "from": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "medium",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            },
+            "orderId": "ORD-017",
+            "to": {
+              "allocatedQuantity": 70,
+              "deadlineMinutes": 22,
+              "delayMinutes": 0,
+              "etaMinutes": 16,
+              "orderId": "ORD-017",
+              "requestedQuantity": 70,
+              "routeId": "route-recovery-wh-west-store-b",
+              "routingBand": "high",
+              "vehicleId": "V-03",
+              "warehouseId": "wh-west"
+            }
+          }
+        ],
+        "disruptionChangesFromQ1": {
+          "affectedSupplierIds": {
+            "from": [],
+            "to": [
+              "sup-b"
+            ]
+          },
+          "roadSegmentsAtRisk": {
+            "from": 24,
+            "to": 77
+          }
+        },
+        "hazard": {
+          "fusionBeta": 1.5,
+          "fusionMethod": "logit_shift",
+          "modelType": "RandomForestClassifier",
+          "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+          "probabilityCalibrated": false,
+          "rainfallScenario": "Q4",
+          "relativeHazardIndex": 0.7313432835820896,
+          "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds",
+          "temporalHazardScore": 0.2950839237115458
+        },
+        "kpiChanges": {},
+        "productionChanges": {},
+        "roadRiskMedian": 0.22810113103664562,
+        "routingChangesFromQ1": [
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "a33301ad4f3f5649560ba5814a39bfbdbbe9df35b096876077484304617d5072",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "0dee437b62a6d06e17ee45afd5db0962580b6444baba10efbab9f58093323a8b"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "ee67937224be557a727b23d4805ff4d9f13c15907ffa6de373e189e923a503cd",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "eb005a56745ebf1c075bd36970369baa059370dd809e870fbb19de7bfc346161"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 1.0,
+            "origin": "wh-east",
+            "q1PathSha256": "95e2bb676a7280487507d93af34f74be500a7dfdbbede7d8dc5ba4212d05d880",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "ce30774ef24bfb42271ffa3999dcc95549a4b4e6be75d10ea0cb007eb325a719"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-east",
+            "q1PathSha256": "dd85b71ca11a3d8e8d513682ef12ee6016f8c84a38e0e87c1cb732c1dae2ccdf",
+            "routingBand": {
+              "from": "high",
+              "to": "high"
+            },
+            "scenarioPathSha256": "ef3bc789ca8409a84d60289ae8dac52b863f3d118e6039c383a5badf9916e3f3"
+          },
+          {
+            "destination": "store-a",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "90048d834603751eba00c01f1270c590a75689daa979d452a1747851d012654d",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "944483ed7cefe982c21ac17b55ef7386cac54ed7776e7b8332e50312155dfe7e"
+          },
+          {
+            "destination": "store-b",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "0b044afeb10252ec41367f70b32c36457f7fceed0bbb208b4482244ddce90d83",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "648ec789d2afb250436961d445fded1e69e1328c05d23c59a7d947246c9ded6f"
+          },
+          {
+            "destination": "store-c",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "02a21577496732a664e16ea6662ab15a210091fd58f68c3780b36889aa5babf4",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "d38eaed02147514e6b0b290b38d2adf2da840205f6f55c18cd146d17bf3e61b4"
+          },
+          {
+            "destination": "store-d",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "18b519a21a661735e82c9f151eed4c251a464c6732eb85ab9f36ee5c75da7608",
+            "routingBand": {
+              "from": "high",
+              "to": "critical"
+            },
+            "scenarioPathSha256": "56261a50943ae498d20ed72a19a9d3a80a43415d658ea5066d23c40c7eed4025"
+          },
+          {
+            "destination": "store-e",
+            "etaChangeMinutes": 0.0,
+            "origin": "wh-west",
+            "q1PathSha256": "17a87db478c61d22c79c8eed69bfec9d9549f1ddb8cc0232de51b7bf6180e914",
+            "routingBand": {
+              "from": "medium",
+              "to": "high"
+            },
+            "scenarioPathSha256": "1be0d11b3c313531cb8b256cec4f8df01b302b8227087e0f74b90040cd3533bd"
+          }
+        ]
+      },
+      "classification": "PARTIALLY_BINDING",
+      "conditionId": "severe-disruption",
+      "rainfallScenario": "Q4",
+      "reason": "Routing/CP-SAT decisions change, but headline KPI remains buffered by operational slack."
+    }
+  ]
+}
