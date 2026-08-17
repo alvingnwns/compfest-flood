@@ -63,6 +63,18 @@ The provider prompt requires answers only from `CopilotContext`, prohibits inven
 
 The deterministic provider answers common route, supplier, order, bottleneck, trade-off, recovery, Dynamic Hazard, and KPI questions directly from the same context. It refuses unrelated or future-weather questions.
 
+## Response Policy
+
+- Default answers are executive-first, direct, and normally limited to 120 words.
+- Technical engine details, exact scores, OSM segments, and internal IDs appear only when explicitly requested.
+- A deterministic language rule makes Gemini, Qwen, and deterministic fallback match English or Bahasa Indonesia questions.
+- Default output uses human-readable names and suppresses database-like identifiers.
+- Responses are clean plain text; the frontend does not require a Markdown dependency.
+- Historical risk uses estimated road-corridor exposure language. Dynamic Hazard remains a relative what-if scenario, not live weather or a calibrated probability.
+- Every numerical claim must come from the current compact `CopilotContext` and be material to the question.
+- Operational recommendations such as monitoring are prohibited unless they are explicit simulation evidence.
+- Trade-offs are stated only when baseline/recovery values or recorded actions show a material downside.
+
 ## Provider configuration
 
 Backend-only variables in `be/.env`:

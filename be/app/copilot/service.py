@@ -6,6 +6,7 @@ from .context_builder import suggested_questions
 from .providers.deterministic import DeterministicCopilotProvider
 from .providers.gemini import GeminiCopilotProvider
 from .providers.openrouter_qwen import OpenRouterQwenCopilotProvider
+from .response_policy import classify_response_policy, finalize_provider_answer
 from .schemas import CopilotContext, CopilotRequest, CopilotResponse
 
 
@@ -40,9 +41,10 @@ def _openrouter_fallback_reason(error: Exception) -> str:
 def answer_copilot(request: CopilotRequest, context: CopilotContext, settings: Settings) -> CopilotResponse:
     fallback = DeterministicCopilotProvider()
     questions = suggested_questions(context)
+    response_policy = classify_response_policy(request.message)
     if settings.explanation_mode == "deterministic":
         return CopilotResponse(
-            answer=fallback.generate(request, context),
+            answer=finalize_provider_answer(fallback.generate(request, context), response_policy, context),
             provider="deterministic",
             suggested_questions=questions,
             fallback_reason="deterministic_mode",
@@ -57,7 +59,11 @@ def answer_copilot(request: CopilotRequest, context: CopilotContext, settings: S
                 model=settings.gemini_model,
                 timeout_ms=settings.gemini_timeout_ms,
             ).generate(request, context)
-            return CopilotResponse(answer=answer, provider="gemini", suggested_questions=questions)
+            return CopilotResponse(
+                answer=finalize_provider_answer(answer, response_policy, context),
+                provider="gemini",
+                suggested_questions=questions,
+            )
         except Exception as error:
             gemini_reason = _fallback_reason(error)
 
@@ -70,7 +76,7 @@ def answer_copilot(request: CopilotRequest, context: CopilotContext, settings: S
                 model=settings.openrouter_qwen_model,
             ).generate(request, context)
             return CopilotResponse(
-                answer=answer,
+                answer=finalize_provider_answer(answer, response_policy, context),
                 provider="qwen",
                 suggested_questions=questions,
                 fallback_reason=gemini_reason,
@@ -81,7 +87,7 @@ def answer_copilot(request: CopilotRequest, context: CopilotContext, settings: S
         fallback_reason = gemini_reason
 
     return CopilotResponse(
-        answer=fallback.generate(request, context),
+        answer=finalize_provider_answer(fallback.generate(request, context), response_policy, context),
         provider="deterministic",
         suggested_questions=questions,
         fallback_reason=fallback_reason,

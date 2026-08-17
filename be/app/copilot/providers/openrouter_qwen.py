@@ -5,6 +5,7 @@ import json
 import httpx
 
 from app.copilot.prompts import GROUNDING_PROMPT
+from app.copilot.response_policy import build_response_instruction, classify_response_policy
 from app.copilot.schemas import CopilotContext, CopilotRequest
 
 
@@ -18,7 +19,7 @@ class OpenRouterQwenCopilotProvider:
         self._timeout_seconds = timeout_ms / 1_000
 
     def generate(self, request: CopilotRequest, context: CopilotContext) -> str:
-        qwen_system_prompt = GROUNDING_PROMPT.removesuffix("\n\nReturn JSON matching the requested schema.")
+        policy = classify_response_policy(request.message)
         user_payload = {
             "currentSimulationEvidence": context.model_dump(mode="json", by_alias=True),
             "recentConversation": [item.model_dump(mode="json", by_alias=True) for item in request.recent_messages],
@@ -29,16 +30,14 @@ class OpenRouterQwenCopilotProvider:
             "messages": [
                 {
                     "role": "system",
-                    "content": (
-                        f"{qwen_system_prompt}\n\nFor this provider, return only the final answer as plain text."
-                    ),
+                    "content": f"{GROUNDING_PROMPT}\n\n{build_response_instruction(request.message)}",
                 },
                 {
                     "role": "user",
                     "content": json.dumps(user_payload, ensure_ascii=False, separators=(",", ":")),
                 },
             ],
-            "max_tokens": 700,
+            "max_tokens": policy.max_output_tokens,
         }
         with httpx.Client(timeout=self._timeout_seconds) as client:
             response = client.post(

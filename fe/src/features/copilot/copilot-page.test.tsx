@@ -49,7 +49,9 @@ describe("Copilot page", () => {
     expect(screen.getByText("Current Simulation Context")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Why was this route chosen?" }));
 
-    expect(await screen.findByText("The route follows the recorded optimizer rationale.")).toBeInTheDocument();
+    const answer = await screen.findByText("The route follows the recorded optimizer rationale.");
+    expect(answer).toBeInTheDocument();
+    expect(answer).toHaveClass("whitespace-pre-wrap", "break-words");
     expect(screen.getByText("Gemini · grounded")).toBeInTheDocument();
     expect(mocks.mutateAsync).toHaveBeenCalledWith(expect.objectContaining({ id: simulationFixture.id }));
   });

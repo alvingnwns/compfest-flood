@@ -128,7 +128,7 @@ export function CopilotPage() {
               <article key={message.id} className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 {message.role === "assistant" && <span className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-white"><Bot size={16} /></span>}
                 <div className={`max-w-[82%] rounded-xl px-4 py-3 text-sm leading-relaxed ${message.role === "user" ? "bg-primary text-white" : "border border-outline bg-surface text-ink"}`}>
-                  <p>{message.content}</p>
+                  <p className="whitespace-pre-wrap break-words">{message.content}</p>
                   {message.provider && <div className={`mono mt-2 text-[10px] uppercase ${message.role === "user" ? "text-white/70" : "text-muted"}`}>{message.provider === "gemini" ? "Gemini · grounded" : message.provider === "qwen" ? "Qwen · grounded" : "Deterministic fallback · grounded"}</div>}
                 </div>
                 {message.role === "user" && <span className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface-high text-muted"><UserRound size={16} /></span>}

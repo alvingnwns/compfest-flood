@@ -6,6 +6,7 @@ from google import genai
 from google.genai import types
 
 from app.copilot.prompts import GROUNDING_PROMPT
+from app.copilot.response_policy import build_response_instruction, classify_response_policy
 from app.copilot.schemas import CopilotContext, CopilotProviderOutput, CopilotRequest
 
 
@@ -18,6 +19,7 @@ class GeminiCopilotProvider:
         self._timeout_ms = timeout_ms
 
     def generate(self, request: CopilotRequest, context: CopilotContext) -> str:
+        policy = classify_response_policy(request.message)
         payload = {
             "currentSimulationEvidence": context.model_dump(mode="json", by_alias=True),
             "recentConversation": [item.model_dump(mode="json", by_alias=True) for item in request.recent_messages],
@@ -35,9 +37,9 @@ class GeminiCopilotProvider:
                 model=self._model,
                 contents=json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
                 config=types.GenerateContentConfig(
-                    system_instruction=GROUNDING_PROMPT,
+                    system_instruction=f"{GROUNDING_PROMPT}\n\n{build_response_instruction(request.message)}",
                     thinking_config=types.ThinkingConfig(thinking_level="minimal"),
-                    max_output_tokens=700,
+                    max_output_tokens=policy.max_output_tokens,
                     automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
                     response_mime_type="application/json",
                     response_json_schema=CopilotProviderOutput.model_json_schema(),
