@@ -2,7 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
@@ -17,6 +17,13 @@ class Settings(BaseSettings):
     frontend_origin: str = "http://localhost:3000"
     data_dir: Path = DEFAULT_DATA_DIR
     engine_mode: Literal["connected"] = "connected"
+    explanation_mode: Literal["auto", "deterministic"] = "auto"
+    gemini_api_key: SecretStr | None = None
+    gemini_model: str = "gemini-3.5-flash"
+    gemini_timeout_ms: int = Field(default=30_000, ge=10_000, le=30_000)
+    openrouter_api_key: SecretStr | None = None
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
+    openrouter_qwen_model: str = "qwen/qwen3.5-flash-02-23"
     risk_penalty_medium: int = Field(default=2, ge=0)
     risk_penalty_high: int = Field(default=5, ge=0)
     risk_penalty_critical: int = Field(default=15, ge=0)

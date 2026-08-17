@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from pydantic import SecretStr
 
 from app.core.config import Settings
 from app.main import create_app
@@ -13,7 +14,13 @@ from app.repositories.simulation_repository import simulation_repository
 def client() -> Iterator[TestClient]:
     simulation_repository.clear()
     data_dir = Path(__file__).resolve().parents[1] / "data"
-    with TestClient(create_app(Settings(app_env="test", data_dir=data_dir))) as test_client:
+    settings = Settings(
+        app_env="test",
+        data_dir=data_dir,
+        gemini_api_key=SecretStr(""),
+        openrouter_api_key=SecretStr(""),
+    )
+    with TestClient(create_app(settings)) as test_client:
         yield test_client
     simulation_repository.clear()
 

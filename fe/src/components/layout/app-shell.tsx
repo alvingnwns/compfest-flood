@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { Activity, ChartNoAxesCombined, Factory, LayoutDashboard, Map, RotateCcw, Settings2 } from "lucide-react";
+import { Activity, ChartNoAxesCombined, Factory, LayoutDashboard, Map, MessageSquareText, RotateCcw, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
@@ -11,6 +11,7 @@ const items: Array<{ href: string; label: string; icon: LucideIcon }> = [
   { href: "/disruption", label: "Peta Gangguan", icon: Map },
   { href: "/recovery", label: "Rencana Pemulihan", icon: RotateCcw },
   { href: "/impact", label: "Analisis Dampak", icon: ChartNoAxesCombined },
+  { href: "/copilot", label: "ResiliChain Copilot", icon: MessageSquareText },
 ];
 
 export function AppShell({ children, title, actions }: { children: React.ReactNode; title?: string; actions?: React.ReactNode }) {
@@ -34,7 +35,7 @@ export function AppShell({ children, title, actions }: { children: React.ReactNo
       <div className="flex items-center justify-center gap-2 rounded-lg border border-outline bg-surface-low px-3 py-2 text-xs font-semibold text-muted"><Activity size={16} /> Lingkungan Demo</div>
     </aside>
     <header className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-outline bg-surface/95 px-4 backdrop-blur md:left-60 md:px-8">
-      <div className="min-w-0"><div className="truncate text-sm font-semibold text-primary md:text-lg">{title ?? "Analisis Ketahanan Rantai Pasok · Jakarta"}</div><div className="mono hidden text-[10px] text-muted sm:block">Scenario → Disruption → Recovery → Impact</div></div>
+      <div className="min-w-0"><div className="truncate text-sm font-semibold text-primary md:text-lg">{title ?? "Analisis Ketahanan Rantai Pasok · Jakarta"}</div><div className="mono hidden text-[10px] text-muted sm:block">Scenario → Disruption → Recovery → Impact → Copilot</div></div>
       <div className="flex items-center gap-2">{actions}<span className="hidden rounded-full border border-outline bg-surface-low px-3 py-1.5 text-xs font-medium text-muted lg:inline">Data Historis Dimuat</span></div>
     </header>
     <main className="min-h-screen pt-16 md:ml-60">{children}</main>

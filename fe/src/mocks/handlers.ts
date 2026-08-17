@@ -1,5 +1,6 @@
 ﻿import { delay, http, HttpResponse } from "msw";
 import { recoveryGenerationRequestSchema } from "@/domain/recovery";
+import { copilotRequestSchema } from "@/domain/copilot";
 import type { DisruptionAnalysis } from "@/domain/disruption";
 import { runSimulationRequestSchema, type Simulation } from "@/domain/scenario";
 import { disruptionFixture, impactFixture, recoveryFixture, scenarioFixture, simulationFixture } from "./data";
@@ -82,4 +83,17 @@ export const handlers = [
   }),
   http.get("*/api/simulations/:id/recovery", async ({ params }) => { await latency(); return simulations.has(String(params.id)) ? HttpResponse.json({ ...recoveryFixture, simulationId: String(params.id) }) : error(404, "recovery_not_found", "Rencana pemulihan tidak tersedia."); }),
   http.get("*/api/simulations/:id/impact", async ({ params }) => { await latency(); return simulations.has(String(params.id)) ? HttpResponse.json({ ...impactFixture, simulationId: String(params.id) }) : error(404, "impact_not_found", "Perbandingan dampak tidak tersedia."); }),
+  http.post("*/api/simulations/:id/copilot", async ({ params, request }) => {
+    await latency();
+    if (!simulations.has(String(params.id))) return error(404, "simulation_not_found", "Simulasi tidak ditemukan.");
+    const body = copilotRequestSchema.safeParse(await request.json().catch(() => null));
+    if (!body.success) return error(422, "validation_error", "Pertanyaan Copilot tidak valid.");
+    return HttpResponse.json({
+      answer: `Berdasarkan simulasi saat ini: ${body.data.message} Jawaban ini hanya menjelaskan hasil yang sudah dihitung.`,
+      provider: "deterministic",
+      grounded: true,
+      suggestedQuestions: ["Why was this route chosen?", "Which orders remain at risk?"],
+      fallbackReason: "mock_mode",
+    });
+  }),
 ];

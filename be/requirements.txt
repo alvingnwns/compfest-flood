@@ -1,6 +1,8 @@
 # Compatibility install for environments that cannot install editable projects.
 # pyproject.toml is authoritative; keep these ranges synchronized with it.
 fastapi>=0.115,<1.0
+google-genai>=2.0,<3.0
+httpx>=0.28,<1.0
 joblib>=1.4,<2.0
 networkx>=3.4,<4.0
 numpy>=2.1,<3.0

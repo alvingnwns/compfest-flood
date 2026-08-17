@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { analysisService } from "@/services/analysis-service";
+import { copilotService } from "@/services/copilot-service";
 import { scenarioService } from "@/services/scenario-service";
 
 const POLL_INTERVAL_MS = 1_000;
@@ -30,4 +31,8 @@ export const useRecoveryPlan = (id: string) => useQuery({
   refetchInterval: (query) => ["queued", "processing"].includes(query.state.data?.status ?? "") ? POLL_INTERVAL_MS : false,
 });
 export const useImpactComparison = (id: string) => useQuery({ queryKey: ["impact", id], queryFn: () => analysisService.getImpact(id), enabled: Boolean(id) });
+export const useAskCopilot = () => useMutation({
+  mutationFn: ({ id, request }: { id: string; request: Parameters<typeof copilotService.ask>[1] }) =>
+    copilotService.ask(id, request),
+});
 
