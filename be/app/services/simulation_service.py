@@ -4,6 +4,8 @@ import hashlib
 import json
 from datetime import UTC, datetime
 
+from app.business_import.mapper import apply_snapshot_to_scenario
+from app.business_import.service import get_business_snapshot
 from app.errors import ApiError
 from app.repositories.geospatial_repository import get_historical_flood_extent, get_road_features
 from app.repositories.scenario_repository import get_historical_jakarta
@@ -72,6 +74,7 @@ def _override_fingerprint(request: RunSimulationRequest) -> str:
             "analysisMode": request.analysis_mode,
             "region": request.region,
             "rainfallScenario": request.rainfall_scenario,
+            "businessSnapshotId": request.business_snapshot_id,
             "vehicleOverrides": [ov.model_dump(mode="json") for ov in request.vehicle_overrides],
             "inventoryOverrides": [ov.model_dump(mode="json") for ov in request.inventory_overrides],
         },
@@ -104,8 +107,8 @@ def create_simulation(request: RunSimulationRequest) -> Simulation:
             details={"supported": ["Q1", "Q2", "Q3", "Q4"]},
         )
 
-    scenario = get_historical_jakarta()
-    if request.scenario_id != scenario.id:
+    demo_scenario = get_historical_jakarta()
+    if request.scenario_id != demo_scenario.id:
         raise ApiError(
             404, "scenario_not_found", "Skenario tidak ditemukan.", details={"scenarioId": request.scenario_id}
         )
@@ -123,6 +126,18 @@ def create_simulation(request: RunSimulationRequest) -> Simulation:
     if existing is not None:
         return existing
 
+    scenario = demo_scenario
+    business_source = "demo"
+    if request.business_snapshot_id:
+        snapshot = get_business_snapshot(request.business_snapshot_id)
+        scenario = apply_snapshot_to_scenario(
+            demo_scenario,
+            products=snapshot.products,
+            orders=snapshot.orders,
+            inventory=snapshot.inventory,
+            materials=snapshot.materials,
+        )
+        business_source = "custom"
     effective_scenario = _apply_overrides(scenario, request)
 
     simulation = Simulation(
@@ -132,6 +147,8 @@ def create_simulation(request: RunSimulationRequest) -> Simulation:
         created_at=datetime.now(UTC),
         data_mode=scenario.data_sources.mode,
         historical_data_status=scenario.data_sources.historical_status,
+        business_data_source=business_source,
+        business_snapshot_id=request.business_snapshot_id,
         analysis_mode=request.analysis_mode,
         region="jakarta",
     )

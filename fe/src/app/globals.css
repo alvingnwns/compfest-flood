@@ -16,8 +16,8 @@
   --color-danger: #ba1a1a;
   --color-danger-soft: #ffdad6;
   --color-warning: #c45f00;
-  --font-sans: var(--font-geist), "Segoe UI", sans-serif;
-  --font-mono: var(--font-mono), ui-monospace, monospace;
+  --font-sans: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 * { box-sizing: border-box; }
@@ -29,7 +29,7 @@ button, a, input, select { outline-offset: 3px; }
 ::-webkit-scrollbar-thumb { background: #bcc9c6; border-radius: 999px; }
 
 .card { border: 1px solid #d4dddb; border-radius: 8px; background: #fff; box-shadow: 0 4px 6px -1px rgb(15 23 42 / 5%); }
-.eyebrow { font: 600 11px/16px var(--font-geist), sans-serif; letter-spacing: .06em; text-transform: uppercase; color: #52615e; }
+.eyebrow { font: 600 11px/16px var(--font-sans); letter-spacing: .06em; text-transform: uppercase; color: #52615e; }
 .mono { font-family: var(--font-mono), ui-monospace, monospace; }
 .page-title { font-size: 32px; line-height: 40px; font-weight: 600; letter-spacing: -.02em; }
 .section-title { font-size: 20px; line-height: 28px; font-weight: 600; }

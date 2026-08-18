@@ -73,6 +73,7 @@ class CopilotContext(ApiModel):
     simulation_id: str
     scenario_id: str
     scenario_name: str
+    business_data_source: Literal["demo", "custom"]
     analysis_mode: Literal["historical-replay", "scenario-simulation"]
     region: str
     model_version: str | None

@@ -60,6 +60,7 @@ export const simulationFixture: Simulation = {
     probabilitySemantics: "Probabilitas paparan banjir koridor jalan, bukan kepastian jalan ditutup",
   },
   optimizerVersion: "cp-sat-connected-v2", dataMode: "historical_snapshot", historicalDataStatus: "available",
+  businessDataSource: "demo",
 };
 
 export const disruptionFixture: DisruptionAnalysis = {

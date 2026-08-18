@@ -26,6 +26,7 @@ export const regionSchema = z.literal("jakarta");
 export const rainfallScenarioSchema = z.enum(["Q1", "Q2", "Q3", "Q4"]);
 const runSimulationRequestBaseSchema = z.object({
   scenarioId: z.string().min(1),
+  businessSnapshotId: z.string().min(1).optional(),
   vehicleOverrides: z.array(vehicleOverrideSchema).optional(),
   inventoryOverrides: z.array(inventoryOverrideSchema).optional(),
 });
@@ -88,6 +89,7 @@ export const simulationSchema = z.object({
   id: z.string(), scenarioId: z.string(), status: simulationStatusSchema, createdAt: z.iso.datetime({ offset: true }),
   completedAt: z.iso.datetime({ offset: true }).optional(), modelVersion: z.string().optional(), modelProvenance: modelProvenanceSchema.optional(), optimizerVersion: z.string().optional(),
   dataMode: dataSourceModeSchema, historicalDataStatus: historicalDataStatusSchema, error: apiErrorSchema.optional(),
+  businessDataSource: z.enum(["demo", "custom"]).default("demo"), businessSnapshotId: z.string().optional(),
   analysisMode: analysisModeSchema.default("historical-replay"), region: regionSchema.default("jakarta"),
   hazard: dynamicHazardMetadataSchema.optional(),
 }).superRefine((value, context) => {

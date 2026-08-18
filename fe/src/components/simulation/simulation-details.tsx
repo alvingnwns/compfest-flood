@@ -15,6 +15,7 @@ export function SimulationDetails({ simulation, open, onClose }: { simulation: S
     ...(dynamic ? [["Pola Curah Hujan", getRainfallScenario(simulation.hazard?.rainfallScenario)?.label ?? "Tidak tersedia"], ["Indeks Hazard Relatif", simulation.hazard?.relativeHazardIndex.toFixed(2) ?? "Tidak tersedia"]] : []),
     ["Versi Model", simulation.modelVersion ?? "Menunggu"],
     ["Versi Pengoptimal", simulation.optimizerVersion ?? "Menunggu"], ["Waktu Simulasi", new Date(simulation.createdAt).toLocaleString("id-ID")],
+    ["Business Data", simulation.businessDataSource === "custom" ? "Custom Upload" : "Demo"],
     ["Mode Data", formatDataMode(simulation.dataMode)], ["Data Historis", formatHistoricalStatus(simulation.historicalDataStatus)],
   ];
   return <dialog ref={ref} onClose={onClose} className="m-auto w-[min(92vw,560px)] rounded-xl border border-outline bg-surface p-0 text-ink shadow-2xl backdrop:bg-slate-950/30">

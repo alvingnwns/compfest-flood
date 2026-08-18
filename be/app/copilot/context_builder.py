@@ -104,6 +104,7 @@ def build_copilot_context(simulation_id: str) -> CopilotContext:
         simulation_id=simulation.id,
         scenario_id=simulation.scenario_id,
         scenario_name=scenario.name,
+        business_data_source=simulation.business_data_source,
         analysis_mode=simulation.analysis_mode,
         region=simulation.region,
         model_version=simulation.model_version,

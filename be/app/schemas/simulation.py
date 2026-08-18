@@ -29,6 +29,7 @@ class RunSimulationRequest(ApiModel):
     analysis_mode: str = "historical-replay"
     region: str = "jakarta"
     rainfall_scenario: str | None = None
+    business_snapshot_id: str | None = None
     vehicle_overrides: list[VehicleOverride] = Field(default_factory=list)
     inventory_overrides: list[InventoryOverride] = Field(default_factory=list)
 
@@ -69,6 +70,8 @@ class Simulation(ApiModel):
     optimizer_version: str | None = None
     data_mode: Literal["historical_snapshot", "live", "hybrid"]
     historical_data_status: Literal["available", "offline_snapshot", "unavailable"]
+    business_data_source: Literal["demo", "custom"] = "demo"
+    business_snapshot_id: str | None = None
     analysis_mode: Literal["historical-replay", "scenario-simulation"] = "historical-replay"
     region: Literal["jakarta"] = "jakarta"
     hazard: DynamicHazardMetadata | None = None

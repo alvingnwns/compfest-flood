@@ -9,6 +9,23 @@ const latency = () => delay(process.env.NODE_ENV === "test" ? 0 : 350);
 const error = (status: number, code: string, message: string, retryable = false) => HttpResponse.json({ code, message, retryable }, { status });
 const simulations = new Map<string, Simulation>([[simulationFixture.id, simulationFixture]]);
 const relativeHazard = { Q1: 0.15, Q2: 0.46, Q3: 0.65, Q4: 0.73 } as const;
+const businessSnapshotId = "business-mock-001";
+const businessImportFixture = {
+  valid: true as const,
+  businessSnapshotId,
+  businessDataSource: "custom" as const,
+  expiresAt: "2026-08-18T16:00:00.000Z",
+  summary: {
+    productsLoaded: 2,
+    ordersLoaded: 2,
+    inventoryRows: 2,
+    materialsLoaded: 2,
+    bomRelationships: 3,
+    totalOrderValue: 9_280_000,
+    currency: "IDR" as const,
+  },
+  errors: [],
+};
 
 function mockIdentity(value: unknown): string {
   return Array.from(JSON.stringify(value)).reduce((checksum, character) => ((checksum * 31) + character.charCodeAt(0)) >>> 0, 0).toString(36);
@@ -46,17 +63,45 @@ function disruptionFor(simulation: Simulation): DisruptionAnalysis {
 }
 
 export const handlers = [
+  http.get("*/api/business-data/template", async () => {
+    await latency();
+    return new HttpResponse(new Uint8Array([80, 75]), {
+      headers: { "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+    });
+  }),
+  http.post("*/api/business-data/import", async () => {
+    await latency();
+    return HttpResponse.json(businessImportFixture, { status: 201 });
+  }),
+  http.get("*/api/business-data/:id", async ({ params }) => {
+    await latency();
+    return params.id === businessSnapshotId
+      ? HttpResponse.json(businessImportFixture)
+      : error(404, "BUSINESS_SNAPSHOT_NOT_FOUND", "Snapshot bisnis tidak ditemukan atau kedaluwarsa.");
+  }),
   http.get("*/api/scenarios/historical-jakarta", async () => { await latency(); return HttpResponse.json(scenarioFixture); }),
   http.post("*/api/simulations", async ({ request }) => {
     await latency();
     const body = runSimulationRequestSchema.safeParse(await request.json().catch(() => null));
     if (!body.success) return error(422, "validation_error", "The simulation request is invalid.");
     if (body.data.scenarioId !== scenarioFixture.id) return error(404, "scenario_not_found", "Scenario not found.");
-    if (body.data.analysisMode === "historical-replay") return HttpResponse.json(simulationFixture, { status: 201 });
+    if (body.data.businessSnapshotId && body.data.businessSnapshotId !== businessSnapshotId) return error(404, "BUSINESS_SNAPSHOT_NOT_FOUND", "Snapshot bisnis tidak ditemukan atau kedaluwarsa.");
+    if (body.data.analysisMode === "historical-replay") {
+      const simulation: Simulation = {
+        ...simulationFixture,
+        id: body.data.businessSnapshotId ? `${simulationFixture.id}-custom` : simulationFixture.id,
+        businessDataSource: body.data.businessSnapshotId ? "custom" : "demo",
+        businessSnapshotId: body.data.businessSnapshotId,
+      };
+      simulations.set(simulation.id, simulation);
+      return HttpResponse.json(simulation, { status: 201 });
+    }
     const suffix = `${body.data.rainfallScenario}-${mockIdentity({ vehicleOverrides: body.data.vehicleOverrides ?? [], inventoryOverrides: body.data.inventoryOverrides ?? [] })}`;
     const simulation: Simulation = {
       ...simulationFixture,
       id: `${simulationFixture.id}-${suffix}`,
+      businessDataSource: body.data.businessSnapshotId ? "custom" : "demo",
+      businessSnapshotId: body.data.businessSnapshotId,
       analysisMode: "scenario-simulation",
       hazard: {
         rainfallScenario: body.data.rainfallScenario,

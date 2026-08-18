@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { analysisService } from "@/services/analysis-service";
+import { businessDataService } from "@/services/business-data-service";
 import { copilotService } from "@/services/copilot-service";
 import { scenarioService } from "@/services/scenario-service";
 
@@ -10,6 +11,7 @@ export const simulationQueryKey = (id: string) => ["simulation", id] as const;
 
 export const useScenario = () => useQuery({ queryKey: ["scenario", "historical-jakarta"], queryFn: scenarioService.getHistoricalScenario });
 export const useRunSimulation = () => useMutation({ mutationFn: scenarioService.runSimulation });
+export const useImportBusinessData = () => useMutation({ mutationFn: businessDataService.importWorkbook });
 export const useSimulation = (id: string) => useQuery({
   queryKey: simulationQueryKey(id), queryFn: () => scenarioService.getSimulation(id), enabled: Boolean(id),
   refetchInterval: (query) => ["queued", "processing"].includes(query.state.data?.status ?? "") ? POLL_INTERVAL_MS : false,

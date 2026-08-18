@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { setupServer } from "msw/node";
+import { businessImportResponseSchema } from "@/domain/business-data";
 import { apiErrorSchema } from "@/domain/common";
 import { disruptionAnalysisSchema } from "@/domain/disruption";
 import { impactComparisonSchema } from "@/domain/impact";
@@ -55,5 +56,29 @@ describe("primary mocked API flow", () => {
     expect(simulation.hazard?.rainfallScenario).toBe("Q3");
     const disruption = disruptionAnalysisSchema.parse(await (await fetch(`${api}/simulations/${simulation.id}/disruption`)).json());
     expect(disruption.roads.every((road) => road.dynamicRoadRiskScore !== undefined)).toBe(true);
+  });
+
+  it("completes custom upload preview -> simulation -> impact provenance flow", async () => {
+    const template = await fetch(`${api}/business-data/template`);
+    expect(template.status).toBe(200);
+    const form = new FormData();
+    form.append("file", new File([await template.blob()], "business.xlsx"));
+    const imported = businessImportResponseSchema.parse(await (await fetch(`${api}/business-data/import`, {
+      method: "POST",
+      body: form,
+    })).json());
+    expect(imported.summary.totalOrderValue).toBe(9_280_000);
+
+    const simulation = simulationSchema.parse(await (await fetch(`${api}/simulations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        scenarioId: "scenario-jakarta-20250304",
+        businessSnapshotId: imported.businessSnapshotId,
+      }),
+    })).json());
+    expect(simulation.businessDataSource).toBe("custom");
+    expect(simulation.businessSnapshotId).toBe(imported.businessSnapshotId);
+    expect(disruptionAnalysisSchema.parse(await (await fetch(`${api}/simulations/${simulation.id}/disruption`)).json()).simulationId).toBe(simulation.id);
   });
 });

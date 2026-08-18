@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { ErrorState, LoadingState } from "@/components/ui/states";
+import type { BusinessImportResponse } from "@/domain/business-data";
 import type { AnalysisMode, RainfallScenario, RunSimulationRequest } from "@/domain/scenario";
-import { useRunSimulation, useScenario, useSimulation } from "@/hooks/use-resilichain-data";
+import { useImportBusinessData, useRunSimulation, useScenario, useSimulation } from "@/hooks/use-resilichain-data";
+import { ApiError } from "@/lib/api-client";
 import { AnalysisModePanel } from "./analysis-mode-panel";
+import { BusinessDataPanel } from "./business-data-panel";
 import { OperationalConditionPanel } from "./operational-condition-panel";
 import { OperationalConfigDrawer } from "./operational-config-drawer";
 import {
@@ -32,6 +35,7 @@ function countChanges(overrides: OperationalOverrides): number {
 export function ScenarioPage() {
   const scenario = useScenario();
   const run = useRunSimulation();
+  const businessImport = useImportBusinessData();
   const router = useRouter();
   const [activeSimulationId, setActiveSimulationId] = useState("");
   const simulation = useSimulation(activeSimulationId);
@@ -42,11 +46,15 @@ export function ScenarioPage() {
   const [overrides, setOverrides] = useState<OperationalOverrides>(OPERATIONAL_PRESETS[0].overrides);
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [businessMode, setBusinessMode] = useState<"demo" | "custom">("demo");
+  const [businessPreview, setBusinessPreview] = useState<BusinessImportResponse>();
+  const [businessSnapshotId, setBusinessSnapshotId] = useState("");
   const [step, setStep] = useState(-1);
 
   const selectedPreset = getOperationalPreset(opPresetId);
   const busy = step >= 0 || run.isPending;
-  const simulationReady = analysisMode === "historical-replay" || rainfallScenario !== undefined;
+  const businessReady = businessMode === "demo" || Boolean(businessSnapshotId);
+  const simulationReady = businessReady && (analysisMode === "historical-replay" || rainfallScenario !== undefined);
 
   const clearPreviousResult = () => {
     run.reset();
@@ -84,6 +92,28 @@ export function ScenarioPage() {
     clearPreviousResult();
   };
 
+  const handleBusinessModeChange = (mode: "demo" | "custom") => {
+    setBusinessMode(mode);
+    clearPreviousResult();
+  };
+
+  const handleBusinessUpload = async (file: File) => {
+    businessImport.reset();
+    setBusinessSnapshotId("");
+    clearPreviousResult();
+    try {
+      setBusinessPreview(await businessImport.mutateAsync(file));
+    } catch {
+      setBusinessPreview(undefined);
+    }
+  };
+
+  const handleBusinessConfirm = () => {
+    if (!businessPreview) return;
+    setBusinessSnapshotId(businessPreview.businessSnapshotId);
+    clearPreviousResult();
+  };
+
   useEffect(() => {
     if (step < 0 || step >= progressSteps.length) return;
     const timer = window.setTimeout(() => setStep((value) => value + 1), 420);
@@ -105,6 +135,7 @@ export function ScenarioPage() {
     setStep(0);
     try {
       const operationalOverrides = {
+        businessSnapshotId: businessMode === "custom" ? businessSnapshotId : undefined,
         vehicleOverrides: overrides.vehicleOverrides.length > 0 ? overrides.vehicleOverrides : undefined,
         inventoryOverrides: overrides.inventoryOverrides.length > 0 ? overrides.inventoryOverrides : undefined,
       };
@@ -121,7 +152,11 @@ export function ScenarioPage() {
       };
       const result = await run.mutateAsync(request);
       setActiveSimulationId(result.id);
-    } catch {
+    } catch (error) {
+      if (error instanceof ApiError && error.code === "BUSINESS_SNAPSHOT_NOT_FOUND") {
+        setBusinessSnapshotId("");
+        setBusinessPreview(undefined);
+      }
       setStep(-1);
     }
   };
@@ -154,6 +189,18 @@ export function ScenarioPage() {
               <Info size={16} className="mt-0.5 shrink-0 text-primary" />
               <span><strong className="text-ink">Dua dimensi independen:</strong> kondisi lingkungan menentukan konteks risiko jalan; kondisi operasional menentukan armada dan persediaan. Keduanya digabungkan saat analisis dijalankan.</span>
             </div>
+
+            <BusinessDataPanel
+              mode={businessMode}
+              preview={businessPreview}
+              activeSnapshotId={businessSnapshotId}
+              pending={businessImport.isPending}
+              error={businessImport.error}
+              disabled={busy}
+              onModeChange={handleBusinessModeChange}
+              onUpload={(file) => void handleBusinessUpload(file)}
+              onConfirm={handleBusinessConfirm}
+            />
 
             <div className="grid gap-6 xl:grid-cols-2">
               <AnalysisModePanel analysisMode={analysisMode} rainfallScenario={rainfallScenario} disabled={busy} onModeChange={handleModeChange} onRainfallChange={handleRainfallChange} />

@@ -161,6 +161,7 @@ export function CopilotPage() {
           <div className="space-y-3">
             <ContextItem label="Scenario" value={scenario.data?.name ?? simulation.data?.scenarioId ?? "Unavailable"} />
             <ContextItem label="Analysis mode" value={simulation.data?.analysisMode === "scenario-simulation" ? `What-if · ${simulation.data.hazard?.rainfallScenario}` : "Historical replay"} />
+            <ContextItem label="Business data" value={simulation.data?.businessDataSource === "custom" ? "Custom upload" : "Demo"} />
             <ContextItem label="Overall road risk" value={overallRisk ? formatRisk(overallRisk) : "Loading…"} />
             <ContextItem label="Affected entities" value={disruption.data ? `${disruption.data.impact.impactedSupplierIds.length} suppliers · ${disruption.data.impact.impactedWarehouseIds.length} warehouses` : "Loading…"} />
             <ContextItem label="Selected recovery route" value={logisticsAction ? `${logisticsAction.originalWarehouseName} → ${logisticsAction.recoveryWarehouseName}` : "Not available"} />
