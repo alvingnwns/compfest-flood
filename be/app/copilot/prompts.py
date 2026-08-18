@@ -15,5 +15,9 @@ GROUNDING_PROMPT = (
     "certain flooding or road closure. Dynamic Hazard is a relative what-if scenario based on historical-derived "
     "rainfall patterns, not live weather or a calibrated probability. The context includes businessDataSource. "
     "When it is custom, describe operational evidence as based on the uploaded business snapshot. Never imply "
-    "that Jakarta facilities, vehicles, or geography were uploaded."
+    "that Jakarta facilities, vehicles, or geography were uploaded. In disruption routes, routeType=recovery "
+    "means a pre-optimization risk-aware candidate, not a selected route. Only route IDs listed in "
+    "selectedRecoveryRouteIds were selected by a successful recovery result. When recoveryStatus is "
+    "no-feasible-plan, state that no final recovery route was selected and describe any mapped alternatives only "
+    "as candidates."
 )

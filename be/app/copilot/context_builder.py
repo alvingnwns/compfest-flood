@@ -69,6 +69,7 @@ def build_copilot_context(simulation_id: str) -> CopilotContext:
     ]
 
     recovery_actions: list[RecoveryActionContext] = []
+    selected_recovery_route_ids: list[str] = []
     if recovery is not None:
         action_groups = (
             ("manufacturing", recovery.manufacturing_actions or []),
@@ -85,6 +86,17 @@ def build_copilot_context(simulation_id: str) -> CopilotContext:
                     expected_impact=action.expected_impact,
                 )
                 for action in actions[:MAX_ACTIONS_PER_CATEGORY]
+            )
+        if recovery.status in {"ready", "partial"}:
+            selected_recovery_route_ids = list(
+                dict.fromkeys(
+                    [
+                        outcome.route_id
+                        for outcome in recovery.recovery_order_outcomes
+                        if outcome.route_id is not None and outcome.allocated_quantity > 0
+                    ]
+                    + [action.recovery_route_id for action in (recovery.logistics_actions or [])]
+                )
             )
 
     hazard = None
@@ -112,6 +124,7 @@ def build_copilot_context(simulation_id: str) -> CopilotContext:
         hazard=hazard,
         affected_roads=affected_roads,
         routes=routes,
+        selected_recovery_route_ids=selected_recovery_route_ids,
         impacted_suppliers=[facility_names.get(item, item) for item in disruption.impact.impacted_supplier_ids],
         impacted_warehouses=[facility_names.get(item, item) for item in disruption.impact.impacted_warehouse_ids],
         impacted_orders=disruption.impact.impacted_order_ids,
@@ -146,8 +159,10 @@ def build_copilot_context(simulation_id: str) -> CopilotContext:
 
 def suggested_questions(context: CopilotContext) -> list[str]:
     questions = ["Which supplier is most affected?", "What is the biggest bottleneck?"]
-    if context.routes:
+    if context.selected_recovery_route_ids:
         questions.append("Why was this route chosen?")
+    elif any(route.route_type == "recovery" for route in context.routes):
+        questions.append("What are the risk-aware candidate routes?")
     if context.recovery_actions:
         questions.extend(["Why was this recovery plan selected?", "What trade-offs does this plan make?"])
     if context.impacted_orders:

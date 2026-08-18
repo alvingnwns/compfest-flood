@@ -135,6 +135,16 @@ _INTERNAL_ID_RE = re.compile(
 )
 _ENGINE_RE = re.compile(r"\b(?:NetworkX|CP-SAT|Random Forest)\b", re.IGNORECASE)
 _RAW_SCORE_RE = re.compile(r"(?<![\d.])0\.\d{3,}(?!\d)")
+_ROUTE_SELECTION_CLAIM_RE = re.compile(
+    r"\b(?:route|rute)\b.{0,50}\b(?:selected|chosen|recommended|dipilih|terpilih|direkomendasikan)\b"
+    r"|\b(?:selected|chosen|recommended|dipilih|terpilih|direkomendasikan)\b.{0,50}\b(?:route|rute)\b",
+    re.IGNORECASE,
+)
+_NO_ROUTE_SELECTED_RE = re.compile(
+    r"\b(?:no|not|none|tidak ada|belum ada)\b.{0,60}\b(?:route|rute)\b.{0,40}\b(?:selected|chosen|dipilih|terpilih)\b"
+    r"|\b(?:no|not|none|tidak ada|belum ada)\b.{0,60}\b(?:selected|chosen|dipilih|terpilih)\b.{0,40}\b(?:route|rute)\b",
+    re.IGNORECASE,
+)
 _REASONING_LEAK_PATTERNS = (
     re.compile(r"(?im)^\s*thinking process\s*:"),
     re.compile(r"(?im)^\s*(?:system prompt|internal reasoning|user question|response policy)\s*:"),
@@ -340,12 +350,11 @@ def _context_has_material_tradeoff(context: CopilotContext, policy: ResponsePoli
             baseline_by_destination.setdefault(route.destination, route)
     selected_route_tradeoff = False
     route_tradeoff = False
-    selected_recovery_seen = False
-    for route in context.routes:
-        if route.route_type != "recovery":
-            continue
-        is_selected_recovery = not selected_recovery_seen
-        selected_recovery_seen = True
+    routes_by_id = {route.route_id: route for route in context.routes}
+    selected_routes = [
+        routes_by_id[route_id] for route_id in context.selected_recovery_route_ids if route_id in routes_by_id
+    ]
+    for index, route in enumerate(selected_routes):
         baseline = baseline_by_destination.get(route.destination)
         if baseline is None:
             continue
@@ -353,7 +362,7 @@ def _context_has_material_tradeoff(context: CopilotContext, policy: ResponsePoli
             _RISK_RANK[route.flood_exposure] > _RISK_RANK[baseline.flood_exposure]
         )
         route_tradeoff = route_tradeoff or has_tradeoff
-        if is_selected_recovery:
+        if index == 0:
             selected_route_tradeoff = has_tradeoff
 
     if policy.topic == "route":
@@ -396,6 +405,16 @@ def finalize_provider_answer(answer: str, policy: ResponsePolicy, context: Copil
         raise ResponsePolicyViolation(
             "unsupported_monitoring",
             "Provider response invented an unsupported monitoring recommendation.",
+        )
+    if (
+        policy.topic == "route"
+        and not context.selected_recovery_route_ids
+        and _ROUTE_SELECTION_CLAIM_RE.search(cleaned)
+        and not _NO_ROUTE_SELECTED_RE.search(cleaned)
+    ):
+        raise ResponsePolicyViolation(
+            "unsupported_route_selection",
+            "Provider described a pre-optimization candidate as a selected recovery route.",
         )
     if (
         _TRADEOFF_CLAIM_RE.search(cleaned)

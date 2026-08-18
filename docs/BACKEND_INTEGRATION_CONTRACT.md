@@ -163,6 +163,8 @@ Relevant statuses: `200`, `404`, `500`.
 
 Purpose: return backend/AI-owned road risk, route geometry, entity impact, and operational exposure. Consumer: Disruption Map. Path param: `simulationId`. Query params/body: none. Schema: `disruptionAnalysisSchema` in `fe/src/domain/disruption.ts`.
 
+Route semantics are stage-specific. A disruption route with `type: "baseline"` is the normal NetworkX shortest path. The legacy `type: "recovery"` value means a risk-aware, pre-optimization NetworkX candidate; it is not proof of optimizer selection. A final selected recovery route exists only when its route ID is referenced by a successful (`ready` or `partial`) recovery outcome or logistics action. A `no-feasible-plan` result has no selected recovery route even when disruption candidates remain available for analysis.
+
 Response `200`:
 
 ```json

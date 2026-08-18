@@ -11,6 +11,7 @@ import type { RoadRisk } from "@/domain/disruption";
 import { useDisruptionAnalysis, useGenerateRecovery, useSimulation } from "@/hooks/use-resilichain-data";
 import { formatCompactIdr, formatPercent, formatRisk } from "@/lib/format";
 import { DisruptionMap } from "./disruption-map";
+import { CANDIDATE_ROUTE_COLOR, riskAwareCandidateLabel } from "./route-semantics";
 
 const severityClass = {
   critical: "text-danger bg-danger/10",
@@ -44,17 +45,17 @@ export function DisruptionPage() {
 
   const facilities = useMemo(() => new Map(query.data?.facilities.map((item) => [item.id, item.name])), [query.data]);
 
-  const recoveryRoute = query.data?.routes.find((route) => route.type === "recovery");
+  const candidateRoute = query.data?.routes.find((route) => route.type === "recovery");
   const baselineRoute = query.data?.routes.find(
     (route) =>
       route.type === "baseline" &&
-      (!recoveryRoute ||
-        (route.originFacilityId === recoveryRoute.originFacilityId &&
-          route.destinationFacilityId === recoveryRoute.destinationFacilityId))
+      (!candidateRoute ||
+        (route.originFacilityId === candidateRoute.originFacilityId &&
+          route.destinationFacilityId === candidateRoute.destinationFacilityId))
   );
   const exposureReduction =
-    baselineRoute && recoveryRoute && baselineRoute.floodExposureProbability > 0
-      ? Math.round((1 - recoveryRoute.floodExposureProbability / baselineRoute.floodExposureProbability) * 100)
+    baselineRoute && candidateRoute && baselineRoute.floodExposureProbability > 0
+      ? Math.round((1 - candidateRoute.floodExposureProbability / baselineRoute.floodExposureProbability) * 100)
       : null;
 
   const createPlan = () =>
@@ -189,14 +190,14 @@ export function DisruptionPage() {
                   Rute normal · {baselineRoute.etaMinutes} mnt · {formatRisk(baselineRoute.floodExposure)} paparan
                 </div>
               )}
-              {recoveryRoute && (
-                <div className="card w-max px-4 py-2 text-[10px] font-semibold uppercase text-primary">
-                  <span className="mr-3 inline-block h-0.5 w-8 bg-primary align-middle" />
-                  Rute ResiliChain · {recoveryRoute.etaMinutes} mnt · {formatRisk(recoveryRoute.floodExposure)} paparan
+              {candidateRoute && (
+                <div className="card max-w-[520px] px-4 py-2 text-[10px] font-semibold uppercase">
+                  <span className="mr-3 inline-block w-8 border-t-2 border-dashed align-middle" style={{ borderColor: CANDIDATE_ROUTE_COLOR }} />
+                  {riskAwareCandidateLabel(candidateRoute.floodExposure)} · {candidateRoute.etaMinutes} mnt · {formatRisk(candidateRoute.floodExposure)} paparan
                   {baselineRoute && (
                     <div className="mono ml-11 mt-1 normal-case text-muted">
-                      {recoveryRoute.etaMinutes - baselineRoute.etaMinutes >= 0 ? "+" : ""}
-                      {recoveryRoute.etaMinutes - baselineRoute.etaMinutes} menit waktu tempuh
+                      {candidateRoute.etaMinutes - baselineRoute.etaMinutes >= 0 ? "+" : ""}
+                      {candidateRoute.etaMinutes - baselineRoute.etaMinutes} menit waktu tempuh
                       {exposureReduction !== null && (
                         <>
                           {" "}
@@ -205,6 +206,9 @@ export function DisruptionPage() {
                       )}
                     </div>
                   )}
+                  <div className="ml-11 mt-1 normal-case text-muted">
+                    Generated before recovery optimization; not a selected recovery route.
+                  </div>
                 </div>
               )}
               <p className="mono text-[10px] text-muted">Skor risiko adalah indikator relatif untuk routing, bukan probabilitas kejadian.</p>

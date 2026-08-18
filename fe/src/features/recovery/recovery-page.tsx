@@ -11,6 +11,7 @@ import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
 import type { CommerceAction, LogisticsAction, ManufacturingAction } from "@/domain/recovery";
 import { useRecoveryPlan, useSimulation } from "@/hooks/use-resilichain-data";
 import { formatAction, formatMinutes, formatRisk } from "@/lib/format";
+import { SELECTED_RECOVERY_ROUTE_LABEL } from "@/features/disruption/route-semantics";
 
 function Reasoning({ action }: { action: { what: string; why: string; expectedImpact: string } }) {
   return (
@@ -81,7 +82,7 @@ function LogisticsCard({ actions }: { actions: LogisticsAction[] }) {
   const action = actions[0];
   if (!action) return null;
   return (
-    <PlanSection icon={Truck} title="Pengalihan Rute Logistik" accent="bg-primary">
+    <PlanSection icon={Truck} title="Rute Pemulihan Terpilih" accent="bg-primary">
       <div className="space-y-4">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
@@ -107,6 +108,7 @@ function LogisticsCard({ actions }: { actions: LogisticsAction[] }) {
                     <div className="mono text-[11px]">{formatMinutes(item.baselineEtaMinutes)}</div>
                   </td>
                   <td className="py-3 pr-4 font-medium text-primary">
+                    <div className="mb-1 text-[10px] font-semibold uppercase">{SELECTED_RECOVERY_ROUTE_LABEL}</div>
                     <div>{formatRisk(item.recoveryFloodExposure)} risiko</div>
                     <div className="mono text-[11px]">{formatMinutes(item.recoveryEtaMinutes)}</div>
                   </td>

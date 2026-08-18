@@ -13,6 +13,7 @@ from app.copilot.providers.gemini import GeminiCopilotProvider
 from app.copilot.providers.openrouter_qwen import OpenRouterQwenCopilotProvider
 from app.copilot.schemas import CopilotRequest
 from app.core.config import BACKEND_ENV_FILE, Settings
+from app.repositories.simulation_repository import simulation_repository
 
 
 def _completed_recovery(client) -> str:
@@ -21,6 +22,28 @@ def _completed_recovery(client) -> str:
     simulation_id = simulation.json()["id"]
     recovery = client.post(f"/api/simulations/{simulation_id}/recovery", json={})
     assert recovery.status_code == 201
+    return simulation_id
+
+
+def _selected_route(context):
+    assert context.selected_recovery_route_ids
+    selected_id = context.selected_recovery_route_ids[0]
+    return next(route for route in context.routes if route.route_id == selected_id)
+
+
+def _no_feasible_recovery(client) -> str:
+    simulation = client.post("/api/simulations", json={"scenarioId": "scenario-jakarta-20250304"})
+    assert simulation.status_code == 201
+    simulation_id = simulation.json()["id"]
+    scenario = simulation_repository.get_effective_scenario(simulation_id).model_copy(deep=True)
+    for material in scenario.materials:
+        material.available_quantity = 0
+    for inventory in scenario.inventory:
+        inventory.quantity = 0
+    simulation_repository.save_effective_scenario(simulation_id, scenario)
+    recovery = client.post(f"/api/simulations/{simulation_id}/recovery", json={})
+    assert recovery.status_code == 201
+    assert recovery.json()["status"] == "no-feasible-plan"
     return simulation_id
 
 
@@ -74,7 +97,7 @@ def test_missing_keys_emit_safe_provider_attempt_diagnostics(client, caplog) -> 
 def test_default_route_answer_is_concise_business_readable_and_hides_internal_details(client) -> None:
     simulation_id = _completed_recovery(client)
     context = build_copilot_context(simulation_id)
-    route = next(item for item in context.routes if item.route_type == "recovery")
+    route = _selected_route(context)
     response = client.post(
         f"/api/simulations/{simulation_id}/copilot",
         json={"message": "Why was this route chosen?"},
@@ -96,10 +119,75 @@ def test_default_route_answer_is_concise_business_readable_and_hides_internal_de
     assert re.search(r"\b[0-9a-f]{8}-[0-9a-f]{4}-", answer, re.IGNORECASE) is None
 
 
+def test_candidate_routes_are_not_described_as_selected_before_recovery(client) -> None:
+    simulation = client.post("/api/simulations", json={"scenarioId": "scenario-jakarta-20250304"})
+    assert simulation.status_code == 201
+    simulation_id = simulation.json()["id"]
+    context = build_copilot_context(simulation_id)
+
+    assert any(route.route_type == "recovery" for route in context.routes)
+    assert context.selected_recovery_route_ids == []
+
+    response = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": "What are these green routes?"},
+    )
+    assert response.status_code == 200
+    answer = response.json()["answer"]
+
+    assert "risk-aware route candidates" in answer
+    assert "generated during disruption analysis" in answer
+    assert "was selected" not in answer
+
+
+def test_no_feasible_plan_does_not_claim_a_candidate_was_chosen(client) -> None:
+    simulation_id = _no_feasible_recovery(client)
+    context = build_copilot_context(simulation_id)
+
+    assert context.recovery_status == "no-feasible-plan"
+    assert any(route.route_type == "recovery" for route in context.routes)
+    assert context.selected_recovery_route_ids == []
+
+    response = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": "Why was this route chosen?"},
+    )
+    assert response.status_code == 200
+    answer = response.json()["answer"]
+
+    assert answer.startswith("No recovery route was ultimately selected.")
+    assert "risk-aware candidate routes" in answer
+    assert "none formed part of a feasible recovery plan" in answer
+
+
+def test_successful_route_selection_is_grounded_in_optimizer_outcomes(client) -> None:
+    simulation_id = _completed_recovery(client)
+    context = build_copilot_context(simulation_id)
+    recovery = simulation_repository.get_recovery(simulation_id)
+    expected_ids = {
+        outcome.route_id
+        for outcome in recovery.recovery_order_outcomes
+        if outcome.route_id is not None and outcome.allocated_quantity > 0
+    }
+
+    assert expected_ids
+    assert set(context.selected_recovery_route_ids) == expected_ids
+    selected = _selected_route(context)
+
+    answer = DeterministicCopilotProvider().generate(
+        CopilotRequest(message="Why was this route chosen?"),
+        context,
+    )
+
+    assert selected.origin in answer
+    assert selected.destination in answer
+    assert "was selected" in answer
+
+
 def test_explicit_technical_route_question_can_show_osm_segments(client) -> None:
     simulation_id = _completed_recovery(client)
     context = build_copilot_context(simulation_id)
-    route = next(item for item in context.routes if item.route_type == "recovery")
+    route = _selected_route(context)
     response = client.post(
         f"/api/simulations/{simulation_id}/copilot",
         json={"message": "Show me the technical OSM segments used by this route."},
@@ -307,7 +395,7 @@ def test_unsupported_route_tradeoff_is_rejected_from_both_remote_providers(clien
 def test_deterministic_mentions_only_a_computed_eta_tradeoff(client) -> None:
     simulation_id = _completed_recovery(client)
     context = build_copilot_context(simulation_id)
-    recovery = next(route for route in context.routes if route.route_type == "recovery")
+    recovery = _selected_route(context)
     baseline = next(
         route
         for route in context.routes

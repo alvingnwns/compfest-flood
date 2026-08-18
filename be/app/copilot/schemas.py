@@ -81,6 +81,7 @@ class CopilotContext(ApiModel):
     hazard: HazardContext | None
     affected_roads: list[RoadContext]
     routes: list[RouteContext]
+    selected_recovery_route_ids: list[str] = Field(default_factory=list)
     impacted_suppliers: list[str]
     impacted_warehouses: list[str]
     impacted_orders: list[str]

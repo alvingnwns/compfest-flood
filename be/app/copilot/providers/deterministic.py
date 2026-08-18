@@ -33,7 +33,15 @@ def _risk_label(level: RiskLevel, language: str) -> str:
 
 
 def _selected_recovery_route(context: CopilotContext) -> RouteContext | None:
-    return next((route for route in context.routes if route.route_type == "recovery"), None)
+    routes_by_id = {route.route_id: route for route in context.routes}
+    return next(
+        (routes_by_id[route_id] for route_id in context.selected_recovery_route_ids if route_id in routes_by_id),
+        None,
+    )
+
+
+def _risk_aware_candidates(context: CopilotContext) -> list[RouteContext]:
+    return [route for route in context.routes if route.route_type == "recovery"]
 
 
 def _matching_baseline_route(context: CopilotContext, recovery_route: RouteContext) -> RouteContext | None:
@@ -102,6 +110,11 @@ class DeterministicCopilotProvider:
         if policy.topic == "sales_exposure":
             return self._sales_exposure_answer(context, language)
         if policy.topic == "route":
+            if any(
+                term in question
+                for term in ("candidate", "candidates", "green route", "green routes", "kandidat", "rute hijau")
+            ):
+                return self._candidate_route_answer(context, language)
             return self._route_answer(context, language, detailed=policy.detailed)
         if policy.topic == "supplier":
             return self._supplier_answer(context, language)
@@ -191,6 +204,20 @@ class DeterministicCopilotProvider:
     def _route_answer(self, context: CopilotContext, language: str, *, detailed: bool = False) -> str:
         route = _selected_recovery_route(context)
         if route is None:
+            if context.recovery_status == "no-feasible-plan":
+                if language == "id":
+                    return (
+                        "Tidak ada rute pemulihan yang akhirnya dipilih. Peta menampilkan kandidat rute sadar "
+                        "risiko yang dibuat sebelum optimasi, tetapi tidak ada yang menjadi bagian dari rencana "
+                        "pemulihan yang layak dalam kendala operasional saat ini."
+                    )
+                return (
+                    "No recovery route was ultimately selected. The map shows risk-aware candidate routes "
+                    "generated before optimization, but none formed part of a feasible recovery plan under the "
+                    "current operational constraints."
+                )
+            if _risk_aware_candidates(context):
+                return self._candidate_route_answer(context, language)
             if language == "id":
                 return "Rute pemulihan terpilih belum tersedia dalam konteks simulasi saat ini."
             return "A selected recovery route is not available in the current simulation context."
@@ -220,6 +247,24 @@ class DeterministicCopilotProvider:
                 f"minutes and {_risk_label(baseline.flood_exposure, language)} estimated exposure."
             )
         return f"{answer} {tradeoff}" if tradeoff else answer
+
+    def _candidate_route_answer(self, context: CopilotContext, language: str) -> str:
+        count = len(_risk_aware_candidates(context))
+        if count == 0:
+            if language == "id":
+                return "Kandidat rute sadar risiko tidak tersedia dalam analisis gangguan saat ini."
+            return "Risk-aware route candidates are not available in the current disruption analysis."
+        if language == "id":
+            return (
+                f"Peta menampilkan {count} kandidat rute sadar risiko yang dibuat selama analisis gangguan. "
+                "Kandidat tersebut dievaluasi kemudian bersama kendala inventori, kendaraan, produksi, dan "
+                "pesanan sebelum rencana pemulihan akhir dapat dipilih."
+            )
+        return (
+            f"The map shows {count} risk-aware route candidates generated during disruption analysis. They are "
+            "evaluated later with inventory, vehicle, production, and order constraints before a final recovery "
+            "plan can be selected."
+        )
 
     def _supplier_answer(self, context: CopilotContext, language: str) -> str:
         if not context.impacted_suppliers:

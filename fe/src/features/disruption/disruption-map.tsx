@@ -4,6 +4,12 @@ import type { Map as MapLibreMap, MapLayerMouseEvent, Popup as MapLibrePopup } f
 import { useEffect, useRef } from "react";
 import type { DisruptionAnalysis, RoadRisk } from "@/domain/disruption";
 import { publicEnv } from "@/config/public-env";
+import {
+  BASELINE_ROUTE_LABEL,
+  CANDIDATE_ROUTE_COLOR,
+  CANDIDATE_ROUTE_DASHARRAY,
+  RISK_AWARE_CANDIDATE_LABEL,
+} from "./route-semantics";
 
 const ROAD_CONTEXT_URL = `${publicEnv.NEXT_PUBLIC_API_BASE_URL}/api/map/road-context`;
 
@@ -169,10 +175,10 @@ export function DisruptionMap({
             type: "line",
             source: id,
             paint: {
-              "line-color": routeType === "baseline" ? "#ba1a1a" : "#00685f",
-              "line-width": routeType === "baseline" ? 3 : 4.5,
-              "line-opacity": routeType === "baseline" ? 0.6 : 1,
-              ...(routeType === "baseline" ? { "line-dasharray": [2, 2] } : {}),
+              "line-color": routeType === "baseline" ? "#ba1a1a" : CANDIDATE_ROUTE_COLOR,
+              "line-width": routeType === "baseline" ? 3 : 4,
+              "line-opacity": routeType === "baseline" ? 0.6 : 0.85,
+              "line-dasharray": routeType === "baseline" ? [2, 2] : CANDIDATE_ROUTE_DASHARRAY,
             },
           });
         }
@@ -311,12 +317,16 @@ export function DisruptionMap({
         <div ref={popupPortalRef}>{popupContent}</div>
       </div>
       {/* Map legend */}
-      <MapLegend dynamic={dynamic} />
+      <MapLegend
+        dynamic={dynamic}
+        hasBaseline={data.routes.some((route) => route.type === "baseline")}
+        hasCandidate={data.routes.some((route) => route.type === "recovery")}
+      />
     </div>
   );
 }
 
-function MapLegend({ dynamic }: { dynamic: boolean }) {
+function MapLegend({ dynamic, hasBaseline, hasCandidate }: { dynamic: boolean; hasBaseline: boolean; hasCandidate: boolean }) {
   return (
     <div className="absolute bottom-8 left-3 z-10 rounded-lg border border-outline bg-surface/95 p-3 text-[10px] shadow-lg backdrop-blur-sm">
       <div className="eyebrow mb-2">Legenda Peta</div>
@@ -333,8 +343,8 @@ function MapLegend({ dynamic }: { dynamic: boolean }) {
             />
           ))}
         </div>
-        <LegendRow color="#ba1a1a" label="Rute Awal" dashed />
-        <LegendRow color="#00685f" label="Rute ResiliChain" dashed={false} thick />
+        {hasBaseline && <LegendRow color="#ba1a1a" label={BASELINE_ROUTE_LABEL} dashed />}
+        {hasCandidate && <LegendRow color={CANDIDATE_ROUTE_COLOR} label={RISK_AWARE_CANDIDATE_LABEL} dashed thick />}
         {!dynamic && <LegendRow color="#ba1a1a22" label="Zona Gangguan Historis" fill />}
       </div>
       <div className="mt-2 border-t border-outline pt-1.5 text-muted">
