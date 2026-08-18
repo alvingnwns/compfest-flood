@@ -1,19 +1,15 @@
 "use client";
 
-import { ArrowRight, Bot, Send, ShieldCheck, UserRound } from "lucide-react";
+import { ArrowRight, Bot, Send, ShieldCheck, Trash2, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { type FormEvent, useMemo, useRef, useState } from "react";
+import { type FormEvent, useMemo, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { ErrorState, LoadingState } from "@/components/ui/states";
-import type { CopilotConversationMessage } from "@/domain/copilot";
+import { useCopilotConversation } from "./copilot-conversation-store";
+import { toRecentCopilotMessages } from "./copilot-session";
 import { useAskCopilot, useDisruptionAnalysis, useImpactComparison, useRecoveryPlan, useScenario, useSimulation } from "@/hooks/use-resilichain-data";
 import { formatCompactIdr, formatRisk } from "@/lib/format";
-
-type DisplayMessage = CopilotConversationMessage & {
-  id: number;
-  provider?: "gemini" | "qwen" | "deterministic";
-};
 
 const initialQuestions = [
   "Which supplier is most affected?",
@@ -31,10 +27,14 @@ export function CopilotPage() {
   const recovery = useRecoveryPlan(simulationId);
   const impact = useImpactComparison(simulationId);
   const ask = useAskCopilot();
+  const conversation = useCopilotConversation(simulationId);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<DisplayMessage[]>([]);
-  const [suggestedQuestions, setSuggestedQuestions] = useState(initialQuestions);
-  const nextMessageId = useRef(0);
+  const { messages, suggestedQuestions } = conversation.thread;
+  const visibleQuestions = suggestedQuestions.length > 0
+    ? suggestedQuestions
+    : messages.length === 0
+      ? initialQuestions
+      : [];
 
   const recoveryData = recovery.data && "summary" in recovery.data ? recovery.data : undefined;
   const logisticsAction = recoveryData?.logisticsActions[0];
@@ -51,20 +51,34 @@ export function CopilotPage() {
 
   const submit = async (message: string) => {
     const trimmed = message.trim();
-    if (!trimmed || !simulationId || ask.isPending) return;
-    const recentMessages = messages.slice(-6).map(({ role, content }) => ({ role, content }));
-    const userMessage: DisplayMessage = { id: ++nextMessageId.current, role: "user", content: trimmed };
-    setMessages((current) => [...current, userMessage]);
+    if (
+      !trimmed
+      || !simulationId
+      || !conversation.hydrated
+      || conversation.isSending
+      || simulation.data?.status !== "completed"
+    ) return;
+    const requestSimulationId = simulationId;
+    const recentMessages = toRecentCopilotMessages(messages);
+    conversation.append([{ role: "user", content: trimmed }]);
+    conversation.setSending(true);
     setInput("");
     try {
-      const response = await ask.mutateAsync({ id: simulationId, request: { message: trimmed, recentMessages } });
-      setMessages((current) => [
-        ...current,
-        { id: ++nextMessageId.current, role: "assistant", content: response.answer, provider: response.provider },
-      ]);
-      setSuggestedQuestions(response.suggestedQuestions);
+      const response = await ask.mutateAsync({
+        id: requestSimulationId,
+        request: { message: trimmed, recentMessages },
+      });
+      conversation.append([{
+        role: "assistant",
+        content: response.answer,
+        provider: response.provider,
+        grounded: response.grounded,
+      }]);
+      conversation.setSuggestions(response.suggestedQuestions);
     } catch {
       // The mutation error is rendered below without replacing conversation history.
+    } finally {
+      conversation.setSending(false);
     }
   };
 
@@ -94,6 +108,7 @@ export function CopilotPage() {
 
   if (simulation.isLoading) return <AppShell title="ResiliChain Copilot"><LoadingState label="Loading simulation context…" /></AppShell>;
   if (simulation.isError) return <AppShell title="ResiliChain Copilot"><ErrorState message={simulation.error.message} onRetry={() => void simulation.refetch()} /></AppShell>;
+  if (!conversation.hydrated) return <AppShell title="ResiliChain Copilot"><LoadingState label="Restoring conversation…" /></AppShell>;
 
   return (
     <AppShell title="ResiliChain Copilot">
@@ -105,9 +120,16 @@ export function CopilotPage() {
                 <div className="eyebrow mb-1">Grounded decision explanation</div>
                 <h1 className="text-xl font-semibold text-ink">ResiliChain Copilot</h1>
               </div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary">
-                <ShieldCheck size={14} /> Computed context only
-              </span>
+              <div className="flex items-center gap-2">
+                {messages.length > 0 && (
+                  <button type="button" onClick={conversation.clear} disabled={conversation.isSending} className="inline-flex items-center gap-1.5 rounded-lg border border-outline px-2.5 py-1.5 text-xs font-medium text-muted hover:text-danger disabled:opacity-50">
+                    <Trash2 size={14} /> Clear conversation
+                  </button>
+                )}
+                <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary">
+                  <ShieldCheck size={14} /> Computed context only
+                </span>
+              </div>
             </div>
           </header>
 
@@ -134,14 +156,14 @@ export function CopilotPage() {
                 {message.role === "user" && <span className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface-high text-muted"><UserRound size={16} /></span>}
               </article>
             ))}
-            {ask.isPending && <div className="flex items-center gap-3 text-sm text-muted"><span className="h-2 w-2 animate-pulse rounded-full bg-primary" /> Reviewing computed evidence…</div>}
+            {conversation.isSending && <div className="flex items-center gap-3 text-sm text-muted"><span className="h-2 w-2 animate-pulse rounded-full bg-primary" /> Reviewing computed evidence…</div>}
             {ask.isError && <div role="alert" className="rounded-lg border border-danger/30 bg-danger-soft/30 p-3 text-sm text-danger">{ask.error.message}</div>}
           </div>
 
           <footer className="border-t border-outline bg-surface p-4 md:px-8">
             <div className="mb-3 flex flex-wrap gap-2">
-              {suggestedQuestions.map((question) => (
-                <button key={question} type="button" onClick={() => void submit(question)} disabled={ask.isPending} className="rounded-full border border-outline bg-surface-low px-3 py-1.5 text-xs font-medium text-muted hover:border-primary/40 hover:text-primary disabled:opacity-50">
+              {visibleQuestions.map((question) => (
+                <button key={question} type="button" onClick={() => void submit(question)} disabled={conversation.isSending} className="rounded-full border border-outline bg-surface-low px-3 py-1.5 text-xs font-medium text-muted hover:border-primary/40 hover:text-primary disabled:opacity-50">
                   {question}
                 </button>
               ))}
@@ -149,7 +171,7 @@ export function CopilotPage() {
             <form onSubmit={onSubmit} className="flex gap-2">
               <label htmlFor="copilot-message" className="sr-only">Ask ResiliChain Copilot</label>
               <input id="copilot-message" value={input} onChange={(event) => setInput(event.target.value)} maxLength={1_000} placeholder="Ask about the current route, recovery plan, or KPI…" className="min-w-0 flex-1 rounded-lg border border-outline bg-background px-4 py-3 text-sm outline-none focus:border-primary" />
-              <button type="submit" disabled={!input.trim() || ask.isPending} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50">
+              <button type="submit" disabled={!input.trim() || conversation.isSending || simulation.data?.status !== "completed"} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50">
                 <Send size={16} /> <span className="hidden sm:inline">Send</span>
               </button>
             </form>

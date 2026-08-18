@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { disruptionFixture, impactFixture, recoveryFixture, scenarioFixture, simulationFixture } from "@/mocks/data";
 import { CopilotPage } from "./copilot-page";
+import { CopilotConversationProvider } from "./copilot-conversation-store";
 
 const mocks = vi.hoisted(() => ({
   simulationId: "",
@@ -27,10 +28,13 @@ describe("Copilot page", () => {
   beforeEach(() => {
     mocks.simulationId = "";
     mocks.mutateAsync.mockReset();
+    window.sessionStorage.clear();
   });
 
+  const renderPage = () => render(<CopilotConversationProvider><CopilotPage /></CopilotConversationProvider>);
+
   it("requires a current simulation instead of hallucinating context", () => {
-    render(<CopilotPage />);
+    renderPage();
     expect(screen.getByText("Run a simulation first")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Open Scenario/ })).toHaveAttribute("href", "/scenario");
   });
@@ -44,9 +48,9 @@ describe("Copilot page", () => {
       suggestedQuestions: ["Which orders remain at risk?"],
     });
     const user = userEvent.setup();
-    render(<CopilotPage />);
+    renderPage();
 
-    expect(screen.getByText("Current Simulation Context")).toBeInTheDocument();
+    expect(await screen.findByText("Current Simulation Context")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Why was this route chosen?" }));
 
     const answer = await screen.findByText("The route follows the recorded optimizer rationale.");
@@ -72,9 +76,9 @@ describe("Copilot page", () => {
         suggestedQuestions: [],
       });
     const user = userEvent.setup();
-    render(<CopilotPage />);
+    renderPage();
 
-    const input = screen.getByRole("textbox", { name: "Ask ResiliChain Copilot" });
+    const input = await screen.findByRole("textbox", { name: "Ask ResiliChain Copilot" });
     await user.type(input, "jelaskan tentang rencana pemulihannya");
     await user.click(screen.getByRole("button", { name: "Send" }));
     await screen.findByText("Rencana pemulihan mencakup tindakan operasional yang telah dihitung.");
