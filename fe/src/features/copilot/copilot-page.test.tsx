@@ -55,4 +55,43 @@ describe("Copilot page", () => {
     expect(screen.getByText("Gemini · grounded")).toBeInTheDocument();
     expect(mocks.mutateAsync).toHaveBeenCalledWith(expect.objectContaining({ id: simulationFixture.id }));
   });
+
+  it("sends the immediately previous user and assistant turns without provider metadata", async () => {
+    mocks.simulationId = simulationFixture.id;
+    mocks.mutateAsync
+      .mockResolvedValueOnce({
+        answer: "Rencana pemulihan mencakup tindakan operasional yang telah dihitung.",
+        provider: "qwen",
+        grounded: true,
+        suggestedQuestions: [],
+      })
+      .mockResolvedValueOnce({
+        answer: "Rinciannya tetap membahas rencana pemulihan.",
+        provider: "qwen",
+        grounded: true,
+        suggestedQuestions: [],
+      });
+    const user = userEvent.setup();
+    render(<CopilotPage />);
+
+    const input = screen.getByRole("textbox", { name: "Ask ResiliChain Copilot" });
+    await user.type(input, "jelaskan tentang rencana pemulihannya");
+    await user.click(screen.getByRole("button", { name: "Send" }));
+    await screen.findByText("Rencana pemulihan mencakup tindakan operasional yang telah dihitung.");
+
+    await user.type(input, "iya jelaskan per detailnya");
+    await user.click(screen.getByRole("button", { name: "Send" }));
+    await screen.findByText("Rinciannya tetap membahas rencana pemulihan.");
+
+    expect(mocks.mutateAsync).toHaveBeenNthCalledWith(2, {
+      id: simulationFixture.id,
+      request: {
+        message: "iya jelaskan per detailnya",
+        recentMessages: [
+          { role: "user", content: "jelaskan tentang rencana pemulihannya" },
+          { role: "assistant", content: "Rencana pemulihan mencakup tindakan operasional yang telah dihitung." },
+        ],
+      },
+    });
+  });
 });

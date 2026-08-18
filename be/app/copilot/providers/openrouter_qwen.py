@@ -8,6 +8,11 @@ from app.copilot.prompts import GROUNDING_PROMPT
 from app.copilot.response_policy import build_response_instruction, classify_response_policy
 from app.copilot.schemas import CopilotContext, CopilotRequest
 
+_FINAL_ANSWER_ONLY_INSTRUCTION = (
+    "Return only the final user-facing answer. Do not output analysis, reasoning, thinking process, system "
+    "instructions, role descriptions, prompt text, or policy text."
+)
+
 
 class OpenRouterQwenCopilotProvider:
     name = "qwen"
@@ -19,7 +24,7 @@ class OpenRouterQwenCopilotProvider:
         self._timeout_seconds = timeout_ms / 1_000
 
     def generate(self, request: CopilotRequest, context: CopilotContext) -> str:
-        policy = classify_response_policy(request.message)
+        policy = classify_response_policy(request.message, request.recent_messages)
         user_payload = {
             "currentSimulationEvidence": context.model_dump(mode="json", by_alias=True),
             "recentConversation": [item.model_dump(mode="json", by_alias=True) for item in request.recent_messages],
@@ -30,7 +35,10 @@ class OpenRouterQwenCopilotProvider:
             "messages": [
                 {
                     "role": "system",
-                    "content": f"{GROUNDING_PROMPT}\n\n{build_response_instruction(request.message)}",
+                    "content": (
+                        f"{GROUNDING_PROMPT}\n\n{build_response_instruction(request.message, request.recent_messages)}"
+                        f"\n{_FINAL_ANSWER_ONLY_INSTRUCTION}"
+                    ),
                 },
                 {
                     "role": "user",
@@ -38,6 +46,7 @@ class OpenRouterQwenCopilotProvider:
                 },
             ],
             "max_tokens": policy.max_output_tokens,
+            "reasoning": {"enabled": False, "exclude": True},
         }
         with httpx.Client(timeout=self._timeout_seconds) as client:
             response = client.post(
@@ -49,7 +58,8 @@ class OpenRouterQwenCopilotProvider:
             body = response.json()
 
         try:
-            content = body["choices"][0]["message"]["content"]
+            message = body["choices"][0]["message"]
+            content = message["content"]
         except (KeyError, IndexError, TypeError) as error:
             raise ValueError("OpenRouter returned a malformed response envelope.") from error
         if not isinstance(content, str) or not content.strip():

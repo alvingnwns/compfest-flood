@@ -74,7 +74,7 @@ class DeterministicCopilotProvider:
 
     def generate(self, request: CopilotRequest, context: CopilotContext) -> str:
         question = request.message.casefold()
-        policy = classify_response_policy(request.message)
+        policy = classify_response_policy(request.message, request.recent_messages)
         language = policy.language
 
         if policy.technical:
@@ -94,22 +94,31 @@ class DeterministicCopilotProvider:
                 "what-if condition for comparing relative risk, not live weather or a calibrated flood probability."
             )
 
-        if any(term in question for term in ("sales exposure", "paparan penjualan")):
-            return self._sales_exposure_answer(context, language)
-        if any(term in question for term in ("route", "rute")):
-            return self._route_answer(context, language)
-        if any(term in question for term in ("supplier", "pemasok")):
-            return self._supplier_answer(context, language)
-        if any(term in question for term in ("bottleneck", "hambatan", "kendala")):
-            return self._bottleneck_answer(context, language)
-        if any(term in question for term in ("order", "pesanan", "priority", "prioritas")):
-            return self._orders_answer(context, language)
         if any(term in question for term in ("trade-off", "tradeoff", "kompromi")):
             return self._tradeoff_answer(context, language)
-        if any(term in question for term in ("recovery plan", "rencana pemulihan", "selected", "dipilih")):
-            return self._recovery_answer(context, language)
-        if any(term in question for term in ("dynamic hazard", "rainfall", "hujan")):
+        if any(term in question for term in ("bottleneck", "hambatan", "kendala")):
+            return self._bottleneck_answer(context, language)
+
+        if policy.topic == "sales_exposure":
+            return self._sales_exposure_answer(context, language)
+        if policy.topic == "route":
+            return self._route_answer(context, language, detailed=policy.detailed)
+        if policy.topic == "supplier":
+            return self._supplier_answer(context, language)
+        if policy.topic == "warehouse":
+            return self._warehouse_answer(context, language)
+        if policy.topic == "order":
+            return self._orders_answer(context, language)
+        if policy.topic in {"manufacturing", "logistics", "commerce"}:
+            return self._category_answer(context, language, policy.topic)
+        if policy.topic == "kpi":
+            return self._kpi_answer(context, language)
+        if policy.topic == "recovery_plan":
+            return self._recovery_answer(context, language, detailed=policy.detailed)
+        if policy.topic == "dynamic_hazard":
             return self._dynamic_hazard_answer(context, language)
+        if policy.topic == "disruption":
+            return self._disruption_answer(context, language)
         if any(term in question for term in ("joke", "capital of", "president", "weather in", "ibu kota")):
             return self._unavailable(language)
 
@@ -179,7 +188,7 @@ class DeterministicCopilotProvider:
             )
         return f"Sales exposure decreases by {reduced}, from {baseline} to {recovery} after recovery."
 
-    def _route_answer(self, context: CopilotContext, language: str) -> str:
+    def _route_answer(self, context: CopilotContext, language: str, *, detailed: bool = False) -> str:
         route = _selected_recovery_route(context)
         if route is None:
             if language == "id":
@@ -187,18 +196,29 @@ class DeterministicCopilotProvider:
             return "A selected recovery route is not available in the current simulation context."
         risk = _risk_label(route.flood_exposure, language)
         tradeoff = _route_tradeoff(context, route, language)
+        baseline = _matching_baseline_route(context, route)
         if language == "id":
             answer = (
                 f"Rute pemulihan dari {route.origin} ke {route.destination} dipilih untuk menjaga pengiriman tetap "
                 "layak dalam batas kapasitas dan waktu yang tercatat. ETA rute sekitar "
                 f"{_format_minutes(route.eta_minutes)} menit dengan estimasi paparan banjir {risk}."
             )
+            if detailed and baseline is not None:
+                answer += (
+                    f" Sebagai pembanding, rute awal memiliki ETA {_format_minutes(baseline.eta_minutes)} menit "
+                    f"dan estimasi paparan {_risk_label(baseline.flood_exposure, language)}."
+                )
             return f"{answer} {tradeoff}" if tradeoff else answer
         answer = (
             f"The recovery route from {route.origin} to {route.destination} was selected to keep the delivery "
             "feasible within the recorded capacity and timing constraints. Its ETA is about "
             f"{_format_minutes(route.eta_minutes)} minutes, with {risk} estimated flood exposure."
         )
+        if detailed and baseline is not None:
+            answer += (
+                f" For comparison, the baseline route has an ETA of {_format_minutes(baseline.eta_minutes)} "
+                f"minutes and {_risk_label(baseline.flood_exposure, language)} estimated exposure."
+            )
         return f"{answer} {tradeoff}" if tradeoff else answer
 
     def _supplier_answer(self, context: CopilotContext, language: str) -> str:
@@ -222,6 +242,18 @@ class DeterministicCopilotProvider:
             f"{supplier} is recorded as an impacted supplier. The current evidence does not provide enough "
             "supplier-level scoring to rank it against other suppliers."
         )
+
+    def _warehouse_answer(self, context: CopilotContext, language: str) -> str:
+        if not context.impacted_warehouses:
+            return (
+                "Tidak ada gudang terdampak yang tercatat dalam simulasi ini."
+                if language == "id"
+                else "No impacted warehouse is recorded in this simulation."
+            )
+        warehouses = ", ".join(context.impacted_warehouses[:3])
+        if language == "id":
+            return f"Gudang terdampak yang tercatat adalah {warehouses}."
+        return f"The recorded impacted warehouses are {warehouses}."
 
     def _bottleneck_answer(self, context: CopilotContext, language: str) -> str:
         if not context.prioritized_issues:
@@ -261,6 +293,51 @@ class DeterministicCopilotProvider:
             "available only where the recovery plan records it."
         )
 
+    def _category_answer(self, context: CopilotContext, language: str, category: str) -> str:
+        actions = [item for item in context.recovery_actions if item.category == category]
+        labels = {
+            "manufacturing": ("manufaktur", "manufacturing"),
+            "logistics": ("logistik", "logistics"),
+            "commerce": ("perdagangan", "commerce"),
+        }
+        label = labels[category][0 if language == "id" else 1]
+        if not actions:
+            if language == "id":
+                return f"Tidak ada tindakan {label} yang tercatat dalam rencana pemulihan ini."
+            return f"No {label} action is recorded in this recovery plan."
+        detail = _safe_issue_text(
+            actions[0].what,
+            "Penyesuaian operasional tercatat dalam kategori ini."
+            if language == "id"
+            else "An operational adjustment is recorded in this category.",
+        )
+        if language == "id":
+            return f"Rencana pemulihan memuat {len(actions)} tindakan {label}. Contoh tindakan tercatat: {detail}"
+        return f"The recovery plan contains {len(actions)} {label} actions. One recorded action is: {detail}"
+
+    def _kpi_answer(self, context: CopilotContext, language: str) -> str:
+        if not context.kpis:
+            return (
+                "KPI pemulihan belum tersedia dalam konteks simulasi ini."
+                if language == "id"
+                else "Recovery KPIs are not available in this simulation context."
+            )
+        if language == "id":
+            return f"Simulasi mencatat {len(context.kpis)} KPI perbandingan kondisi awal dan pemulihan."
+        return f"The simulation records {len(context.kpis)} KPIs comparing baseline and recovery outcomes."
+
+    def _disruption_answer(self, context: CopilotContext, language: str) -> str:
+        if language == "id":
+            return (
+                f"Analisis gangguan mencatat {context.road_segments_at_risk} ruas jalan berisiko, "
+                f"{len(context.impacted_suppliers)} pemasok terdampak, dan {len(context.impacted_orders)} "
+                "pesanan terdampak."
+            )
+        return (
+            f"The disruption analysis records {context.road_segments_at_risk} road segments at risk, "
+            f"{len(context.impacted_suppliers)} impacted suppliers, and {len(context.impacted_orders)} impacted orders."
+        )
+
     def _tradeoff_answer(self, context: CopilotContext, language: str) -> str:
         route = _selected_recovery_route(context)
         if route is None:
@@ -274,12 +351,52 @@ class DeterministicCopilotProvider:
             return "Simulasi saat ini tidak mencatat trade-off material untuk rute pemulihan terpilih."
         return "The current simulation does not record a material trade-off for the selected recovery route."
 
-    def _recovery_answer(self, context: CopilotContext, language: str) -> str:
+    def _recovery_answer(self, context: CopilotContext, language: str, *, detailed: bool = False) -> str:
         if not context.recovery_actions:
             if language == "id":
                 return "Rencana pemulihan belum tersedia dalam konteks simulasi saat ini."
             return "A recovery plan is not available in the current simulation context."
-        categories = {item.category for item in context.recovery_actions}
+        category_counts = {
+            category: sum(item.category == category for item in context.recovery_actions)
+            for category in ("manufacturing", "logistics", "commerce")
+        }
+        categories = {category for category, count in category_counts.items() if count}
+        if detailed:
+            summary = context.recovery_summary or {}
+            recoverable = summary.get("recoverable_orders")
+            total = summary.get("total_orders")
+            route = _selected_recovery_route(context)
+            fulfillment = (
+                f" Rencana ini memulihkan {recoverable} dari {total} pesanan."
+                if language == "id" and recoverable is not None and total is not None
+                else f" The plan recovers {recoverable} of {total} orders."
+                if recoverable is not None and total is not None
+                else ""
+            )
+            route_detail = ""
+            if route is not None:
+                risk = _risk_label(route.flood_exposure, language)
+                if language == "id":
+                    route_detail = (
+                        f" Keputusan logistik menggunakan rute {route.origin} ke {route.destination} dengan ETA "
+                        f"{_format_minutes(route.eta_minutes)} menit dan estimasi paparan {risk}."
+                    )
+                else:
+                    route_detail = (
+                        f" The logistics decision uses the {route.origin} to {route.destination} route with an ETA "
+                        f"of {_format_minutes(route.eta_minutes)} minutes and {risk} estimated exposure."
+                    )
+            if language == "id":
+                return (
+                    f"Rinciannya: {category_counts['manufacturing']} tindakan manufaktur, "
+                    f"{category_counts['logistics']} tindakan logistik, dan {category_counts['commerce']} tindakan "
+                    f"perdagangan.{fulfillment}{route_detail}"
+                )
+            return (
+                f"In detail, the plan contains {category_counts['manufacturing']} manufacturing actions, "
+                f"{category_counts['logistics']} logistics actions, and {category_counts['commerce']} commerce "
+                f"actions.{fulfillment}{route_detail}"
+            )
         if language == "id":
             return (
                 f"Rencana pemulihan memuat {len(context.recovery_actions)} tindakan pada "

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import re
 from types import SimpleNamespace
 
@@ -11,6 +12,7 @@ from app.copilot.providers.deterministic import DeterministicCopilotProvider
 from app.copilot.providers.gemini import GeminiCopilotProvider
 from app.copilot.providers.openrouter_qwen import OpenRouterQwenCopilotProvider
 from app.copilot.schemas import CopilotRequest
+from app.core.config import BACKEND_ENV_FILE, Settings
 
 
 def _completed_recovery(client) -> str:
@@ -45,6 +47,28 @@ def test_missing_key_uses_grounded_numerical_fallback(client) -> None:
     assert body["fallbackReason"] == "gemini_key_missing"
     assert f"{metric['baseline']:,.0f}" in body["answer"]
     assert f"{metric['recovery']:,.0f}" in body["answer"]
+
+
+def test_backend_env_file_is_resolved_independently_of_working_directory() -> None:
+    assert Settings.model_config["env_file"] == BACKEND_ENV_FILE
+    assert BACKEND_ENV_FILE.name == ".env"
+    assert BACKEND_ENV_FILE.parent.name == "be"
+
+
+def test_missing_keys_emit_safe_provider_attempt_diagnostics(client, caplog) -> None:
+    simulation_id = _completed_recovery(client)
+    caplog.set_level(logging.INFO, logger="app.copilot.service")
+
+    response = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": "Why was this route chosen?"},
+    )
+
+    assert response.json()["fallbackReason"] == "gemini_key_missing"
+    messages = [record.getMessage() for record in caplog.records]
+    assert any("provider=gemini status=skipped reason_code=gemini_key_missing" in item for item in messages)
+    assert any("provider=qwen status=skipped reason_code=openrouter_key_missing" in item for item in messages)
+    assert all("test-only" not in item for item in messages)
 
 
 def test_default_route_answer_is_concise_business_readable_and_hides_internal_details(client) -> None:
@@ -157,6 +181,78 @@ def test_provider_markdown_is_cleaned_before_returning_to_frontend(client, monke
     assert response.json()["answer"] == "The recovery route keeps the delivery feasible."
 
 
+def test_valid_multisentence_provider_answer_is_compacted_without_fallback(client, monkeypatch) -> None:
+    simulation_id = _completed_recovery(client)
+    client.app.state.settings.gemini_api_key = SecretStr("test-only-key")
+    sentence = " ".join(["The route remains grounded in computed operational evidence"] * 9) + "."
+
+    class VerboseGemini:
+        def __init__(self, **_kwargs) -> None: ...
+
+        def generate(self, _request, _context) -> str:
+            return f"{sentence} {sentence}"
+
+    monkeypatch.setattr("app.copilot.service.GeminiCopilotProvider", VerboseGemini)
+    response = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": "Why was this route chosen?"},
+    )
+
+    assert response.json()["provider"] == "gemini"
+    assert len(response.json()["answer"].split()) <= 120
+    assert response.json()["answer"] == sentence
+
+
+def test_qwen_reasoning_leak_is_rejected_before_api_response(client, monkeypatch) -> None:
+    simulation_id = _completed_recovery(client)
+    client.app.state.settings.openrouter_api_key = SecretStr("test-only-openrouter-key")
+
+    class LeakingQwen:
+        def __init__(self, **_kwargs) -> None: ...
+
+        def generate(self, _request, _context) -> str:
+            return (
+                "Thinking Process: 1. Analyze the Request. Role: ResiliChain Copilot. "
+                "Constraints: Answer only from supplied evidence. Final answer: Route B was selected."
+            )
+
+    monkeypatch.setattr("app.copilot.service.OpenRouterQwenCopilotProvider", LeakingQwen)
+    response = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": "Why was this route chosen?"},
+    )
+
+    body = response.json()
+    assert body["provider"] == "deterministic"
+    assert body["fallbackReason"] == "openrouter_guardrail_reasoning_leak"
+    for forbidden in ("Thinking Process:", "Role: ResiliChain Copilot", "Constraints:", "Analyze the Request"):
+        assert forbidden not in body["answer"]
+
+
+def test_technical_qwen_answer_allows_operational_details_but_not_reasoning(client, monkeypatch) -> None:
+    simulation_id = _completed_recovery(client)
+    client.app.state.settings.openrouter_api_key = SecretStr("test-only-openrouter-key")
+
+    class TechnicalQwen:
+        def __init__(self, **_kwargs) -> None: ...
+
+        def generate(self, _request, _context) -> str:
+            return "Technical route route-recovery-main uses OSM segment osm-123 and NetworkX routing evidence."
+
+    monkeypatch.setattr("app.copilot.service.OpenRouterQwenCopilotProvider", TechnicalQwen)
+    response = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": "Show exact technical OSM IDs and NetworkX details for the route."},
+    )
+
+    body = response.json()
+    assert body["provider"] == "qwen"
+    assert "osm-123" in body["answer"]
+    assert "NetworkX" in body["answer"]
+    for forbidden in ("Thinking Process:", "System Prompt:", "Analyze the Request"):
+        assert forbidden not in body["answer"]
+
+
 def test_unsupported_monitoring_recommendation_is_rejected_from_both_remote_providers(
     client,
     monkeypatch,
@@ -180,7 +276,7 @@ def test_unsupported_monitoring_recommendation_is_rejected_from_both_remote_prov
 
     answer = response.json()["answer"]
     assert response.json()["provider"] == "deterministic"
-    assert response.json()["fallbackReason"] == "openrouter_malformed_response"
+    assert response.json()["fallbackReason"] == "openrouter_guardrail_unsupported_monitoring"
     assert "monitor" not in answer.casefold()
     assert "trade-off" not in answer.casefold()
 
@@ -204,7 +300,7 @@ def test_unsupported_route_tradeoff_is_rejected_from_both_remote_providers(clien
     )
 
     assert response.json()["provider"] == "deterministic"
-    assert response.json()["fallbackReason"] == "openrouter_malformed_response"
+    assert response.json()["fallbackReason"] == "openrouter_guardrail_unsupported_tradeoff"
     assert "trade-off" not in response.json()["answer"].casefold()
 
 
@@ -231,6 +327,121 @@ def test_deterministic_mentions_only_a_computed_eta_tradeoff(client) -> None:
 
     assert f"{eta_increase} minutes longer" in answer
     assert "monitor" not in answer.casefold()
+
+
+def test_follow_up_inherits_recovery_plan_and_returns_business_detail(client) -> None:
+    simulation_id = _completed_recovery(client)
+    first_question = "jelaskan tentang rencana pemulihannya"
+    first = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": first_question},
+    ).json()
+    second = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={
+            "message": "iya jelaskan per detailnya",
+            "recentMessages": [
+                {"role": "user", "content": first_question},
+                {"role": "assistant", "content": first["answer"]},
+            ],
+        },
+    ).json()
+
+    assert first["provider"] == "deterministic"
+    assert second["provider"] == "deterministic"
+    assert second["answer"].startswith("Rinciannya:")
+    for topic in ("manufaktur", "logistik", "perdagangan"):
+        assert topic in second["answer"].casefold()
+    assert "Simulasi ini mencatat" not in second["answer"]
+
+
+def test_follow_up_inherits_route_without_enabling_technical_mode(client) -> None:
+    simulation_id = _completed_recovery(client)
+    first_question = "Why was this route chosen?"
+    first = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": first_question},
+    ).json()
+    second = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={
+            "message": "Tell me more.",
+            "recentMessages": [
+                {"role": "user", "content": first_question},
+                {"role": "assistant", "content": first["answer"]},
+            ],
+        },
+    ).json()
+
+    assert "For comparison" in second["answer"]
+    for forbidden in ("osm-", "NetworkX", "CP-SAT"):
+        assert forbidden not in second["answer"]
+
+
+def test_short_why_inherits_supplier_topic_and_indonesian(client) -> None:
+    simulation_id = _completed_recovery(client)
+    first_question = "Supplier mana yang paling terdampak?"
+    first = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": first_question},
+    ).json()
+    second = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={
+            "message": "kenapa?",
+            "recentMessages": [
+                {"role": "user", "content": first_question},
+                {"role": "assistant", "content": first["answer"]},
+            ],
+        },
+    ).json()
+
+    assert "pemasok" in second["answer"].casefold()
+    assert "Simulasi ini mencatat" not in second["answer"]
+
+
+def test_explicit_sales_exposure_topic_overrides_recovery_history(client) -> None:
+    simulation_id = _completed_recovery(client)
+    first_question = "jelaskan recovery plan"
+    first = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": first_question},
+    ).json()
+    second = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={
+            "message": "berapa sales exposure-nya?",
+            "recentMessages": [
+                {"role": "user", "content": first_question},
+                {"role": "assistant", "content": first["answer"]},
+            ],
+        },
+    ).json()
+
+    assert "Paparan penjualan" in second["answer"]
+    assert "Rinciannya:" not in second["answer"]
+
+
+def test_explicit_technical_follow_up_keeps_route_topic_and_allows_ids(client) -> None:
+    simulation_id = _completed_recovery(client)
+    first_question = "jelaskan rutenya"
+    first = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": first_question},
+    ).json()
+    second = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={
+            "message": "show exact OSM segments",
+            "recentMessages": [
+                {"role": "user", "content": first_question},
+                {"role": "assistant", "content": first["answer"]},
+            ],
+        },
+    ).json()
+
+    assert "osm-" in second["answer"]
+    assert "Technical route" in second["answer"]
 
 
 @pytest.mark.parametrize(
@@ -331,10 +542,11 @@ def test_official_provider_uses_structured_output(monkeypatch, client) -> None:
     assert captured["client"]["http_options"].timeout == 30_000
     assert captured["config"].response_mime_type == "application/json"
     assert captured["config"].response_json_schema
-    assert captured["config"].max_output_tokens == 300
+    assert captured["config"].max_output_tokens == 180
     assert "Required response language: English" in captured["config"].system_instruction
     assert "executive mode" in captured["config"].system_instruction
     assert "Never recommend monitoring" in captured["config"].system_instruction
+    assert "Current conversation topic: route" in captured["config"].system_instruction
     assert captured["config"].thinking_config.thinking_level.value == "MINIMAL"
     assert captured["config"].automatic_function_calling.disable is True
     assert captured["closed"] is True
@@ -349,7 +561,17 @@ def test_openrouter_provider_uses_qwen_grounded_chat_completion(monkeypatch, cli
         def raise_for_status(self) -> None: ...
 
         def json(self) -> dict:
-            return {"choices": [{"message": {"content": "Grounded Qwen answer."}}]}
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": "Grounded Qwen answer.",
+                            "reasoning": "Hidden reasoning must be ignored.",
+                            "reasoning_details": [{"type": "reasoning.text", "text": "Also ignored."}],
+                        }
+                    }
+                ]
+            }
 
     class FakeClient:
         def __init__(self, **kwargs) -> None:
@@ -383,7 +605,9 @@ def test_openrouter_provider_uses_qwen_grounded_chat_completion(monkeypatch, cli
     assert "Required response language: English" in captured["json"]["messages"][0]["content"]
     assert "executive mode" in captured["json"]["messages"][0]["content"]
     assert "Never recommend monitoring" in captured["json"]["messages"][0]["content"]
-    assert captured["json"]["max_tokens"] == 300
+    assert "Return only the final user-facing answer" in captured["json"]["messages"][0]["content"]
+    assert captured["json"]["max_tokens"] == 180
+    assert captured["json"]["reasoning"] == {"enabled": False, "exclude": True}
     assert "response_format" not in captured["json"]
 
 

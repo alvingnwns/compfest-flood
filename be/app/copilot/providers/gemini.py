@@ -19,7 +19,7 @@ class GeminiCopilotProvider:
         self._timeout_ms = timeout_ms
 
     def generate(self, request: CopilotRequest, context: CopilotContext) -> str:
-        policy = classify_response_policy(request.message)
+        policy = classify_response_policy(request.message, request.recent_messages)
         payload = {
             "currentSimulationEvidence": context.model_dump(mode="json", by_alias=True),
             "recentConversation": [item.model_dump(mode="json", by_alias=True) for item in request.recent_messages],
@@ -37,7 +37,9 @@ class GeminiCopilotProvider:
                 model=self._model,
                 contents=json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
                 config=types.GenerateContentConfig(
-                    system_instruction=f"{GROUNDING_PROMPT}\n\n{build_response_instruction(request.message)}",
+                    system_instruction=(
+                        f"{GROUNDING_PROMPT}\n\n{build_response_instruction(request.message, request.recent_messages)}"
+                    ),
                     thinking_config=types.ThinkingConfig(thinking_level="minimal"),
                     max_output_tokens=policy.max_output_tokens,
                     automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
