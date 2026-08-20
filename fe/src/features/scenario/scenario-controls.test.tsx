@@ -20,18 +20,17 @@ function Harness() {
 }
 
 describe("dynamic scenario controls", () => {
-  it("defaults to historical replay and hides temporal controls", () => {
+  it("renders the historical option alongside all weather patterns", () => {
     render(<Harness />);
     expect(screen.getByTestId("selection")).toHaveTextContent("historical-replay|none|normal");
-    expect(screen.getByText("Jakarta · 04 Mar 2025")).toBeInTheDocument();
-    expect(screen.queryByText("Pola Curah Hujan")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "SIMULASI CUACA" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: /Gunakan Data Simulasi Historis/ })).toHaveAttribute("aria-checked", "true");
+    expect(screen.getAllByRole("radio", { name: /Pola Hujan/ })).toHaveLength(4);
   });
 
   it("switches mode, maps Q3, and keeps operational selection independent", async () => {
     const user = userEvent.setup();
     render(<Harness />);
-    await user.click(screen.getByRole("radio", { name: /Simulasi Kondisi/ }));
-    expect(screen.getByText("Pola Curah Hujan")).toBeInTheDocument();
     await user.click(screen.getByRole("radio", { name: /Pola Hujan Meningkat/ }));
     await user.click(screen.getByRole("radio", { name: /Stok Gudang Kritis/ }));
     expect(screen.getByTestId("selection")).toHaveTextContent("scenario-simulation|Q3|critical-stock");

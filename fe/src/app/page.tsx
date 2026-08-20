@@ -1,3 +1,5 @@
-import { redirect } from "next/navigation";
+import { LandingPage } from "@/features/landing/landing-page";
 
-export default function Home() { redirect("/scenario"); }
+export default function Home() {
+  return <LandingPage />;
+}

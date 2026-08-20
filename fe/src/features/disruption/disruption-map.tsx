@@ -27,6 +27,7 @@ export function DisruptionMap({
   onSelectRoad,
   onClearSelection,
   popupContent,
+  showChrome = true,
 }: {
   data: DisruptionAnalysis;
   selectedRoadId?: string;
@@ -34,6 +35,7 @@ export function DisruptionMap({
   onSelectRoad: (road: RoadRisk, coords: [number, number]) => void;
   onClearSelection: () => void;
   popupContent?: React.ReactNode;
+  showChrome?: boolean;
 }) {
   const dynamic = data.roads.some((road) => road.dynamicRoadRiskScore !== undefined);
   const container = useRef<HTMLDivElement>(null);
@@ -317,11 +319,13 @@ export function DisruptionMap({
         <div ref={popupPortalRef}>{popupContent}</div>
       </div>
       {/* Map legend */}
-      <MapLegend
-        dynamic={dynamic}
-        hasBaseline={data.routes.some((route) => route.type === "baseline")}
-        hasCandidate={data.routes.some((route) => route.type === "recovery")}
-      />
+      {showChrome && (
+        <MapLegend
+          dynamic={dynamic}
+          hasBaseline={data.routes.some((route) => route.type === "baseline")}
+          hasCandidate={data.routes.some((route) => route.type === "recovery")}
+        />
+      )}
     </div>
   );
 }

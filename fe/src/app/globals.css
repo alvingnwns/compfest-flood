@@ -1,39 +1,107 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #f8f9fa;
+  --color-background: #f7fbff;
   --color-surface: #ffffff;
-  --color-surface-low: #f3f4f5;
-  --color-surface-high: #e7e8e9;
-  --color-surface-highest: #e1e3e4;
-  --color-ink: #191c1d;
-  --color-muted: #3d4947;
-  --color-outline: #bcc9c6;
-  --color-primary: #00685f;
-  --color-primary-dark: #005049;
-  --color-primary-soft: #d8f3ee;
-  --color-secondary-soft: #dae2fd;
+  --color-surface-low: #f4f8fc;
+  --color-surface-high: #eaf2f8;
+  --color-surface-highest: #dce8f2;
+  --color-ink: #17283b;
+  --color-muted: #526a83;
+  --color-outline: #c5d6e5;
+  --color-primary: #39597e;
+  --color-primary-dark: #29405b;
+  --color-primary-soft: #dcecf8;
+  --color-secondary-soft: #a4cae9;
+  --color-accent: #f5a716;
+  --color-success: #00b98e;
   --color-danger: #ba1a1a;
   --color-danger-soft: #ffdad6;
   --color-warning: #c45f00;
-  --font-sans: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Montserrat", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   --font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 * { box-sizing: border-box; }
 html, body { min-height: 100%; }
-body { margin: 0; background: #f8f9fa; color: #191c1d; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #f7fbff; color: #17283b; }
 button, a, input, select { outline-offset: 3px; }
-:focus-visible { outline: 2px solid #0d9488; }
+:focus-visible { outline: 3px solid #f5a716; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-thumb { background: #bcc9c6; border-radius: 999px; }
 
-.card { border: 1px solid #d4dddb; border-radius: 8px; background: #fff; box-shadow: 0 4px 6px -1px rgb(15 23 42 / 5%); }
+.card { border: 1px solid #c5d6e5; border-radius: 8px; background: #fff; box-shadow: 0 4px 10px rgb(41 64 91 / 8%); }
 .eyebrow { font: 600 11px/16px var(--font-sans); letter-spacing: .06em; text-transform: uppercase; color: #52615e; }
 .mono { font-family: var(--font-mono), ui-monospace, monospace; }
-.page-title { font-size: 32px; line-height: 40px; font-weight: 600; letter-spacing: -.02em; }
+.page-title { font-size: 32px; line-height: 40px; font-weight: 700; }
 .section-title { font-size: 20px; line-height: 28px; font-weight: 600; }
-.kpi { font-size: 32px; line-height: 32px; font-weight: 600; letter-spacing: -.03em; }
+.kpi { font-size: 32px; line-height: 32px; font-weight: 600; }
+.scenario-pattern {
+  background-color: #f9fcff;
+  background-image:
+    linear-gradient(30deg, transparent 24%, #d8edfd 25%, #d8edfd 26%, transparent 27%, transparent 74%, #d8edfd 75%, #d8edfd 76%, transparent 77%),
+    linear-gradient(150deg, transparent 24%, #d8edfd 25%, #d8edfd 26%, transparent 27%, transparent 74%, #d8edfd 75%, #d8edfd 76%, transparent 77%);
+  background-size: 42px 72px;
+}
+.landing-grid {
+  background-image:
+    linear-gradient(rgb(164 202 233 / 9%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(164 202 233 / 9%) 1px, transparent 1px);
+  background-size: 92px 92px;
+}
+.landing-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(90deg, transparent 50%, rgb(164 202 233 / 7%) 50%),
+    linear-gradient(transparent 50%, rgb(164 202 233 / 7%) 50%);
+  background-size: 184px 184px;
+  pointer-events: none;
+}
+.landing-honeycomb {
+  background-image:
+    linear-gradient(30deg, rgb(57 89 126 / 7%) 12%, transparent 12.5%, transparent 87%, rgb(57 89 126 / 7%) 87.5%),
+    linear-gradient(150deg, rgb(57 89 126 / 7%) 12%, transparent 12.5%, transparent 87%, rgb(57 89 126 / 7%) 87.5%);
+  background-size: 44px 76px;
+}
+.impact-pattern {
+  background-color: #fbfdff;
+  background-image:
+    linear-gradient(30deg, transparent 24%, rgb(164 202 233 / 38%) 25%, rgb(164 202 233 / 38%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 38%) 75%, rgb(164 202 233 / 38%) 77%, transparent 78%),
+    linear-gradient(150deg, transparent 24%, rgb(164 202 233 / 38%) 25%, rgb(164 202 233 / 38%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 38%) 75%, rgb(164 202 233 / 38%) 77%, transparent 78%);
+  background-size: 42px 72px;
+}
+.copilot-pattern {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(30deg, transparent 24%, rgb(164 202 233 / 38%) 25%, rgb(164 202 233 / 38%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 38%) 75%, rgb(164 202 233 / 38%) 77%, transparent 78%),
+    linear-gradient(150deg, transparent 24%, rgb(164 202 233 / 38%) 25%, rgb(164 202 233 / 38%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 38%) 75%, rgb(164 202 233 / 38%) 77%, transparent 78%);
+  background-size: 42px 72px;
+}
+.copilot-pattern {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(30deg, transparent 24%, rgb(164 202 233 / 38%) 25%, rgb(164 202 233 / 38%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 38%) 75%, rgb(164 202 233 / 38%) 77%, transparent 78%),
+    linear-gradient(150deg, transparent 24%, rgb(164 202 233 / 38%) 25%, rgb(164 202 233 / 38%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 38%) 75%, rgb(164 202 233 / 38%) 77%, transparent 78%);
+  background-size: 42px 72px;
+}
+@keyframes landing-slide-copy {
+  from { opacity: 0; transform: translateX(-36px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes landing-slide-image {
+  from { opacity: 0; transform: translateX(42px) scale(.97); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes landing-slide-progress {
+  from { width: 0; }
+  to { width: 100%; }
+}
+.landing-slide-copy { animation: landing-slide-copy .7s cubic-bezier(.22, 1, .36, 1) both; }
+.landing-slide-image { animation: landing-slide-image .85s cubic-bezier(.22, 1, .36, 1) both; }
+.landing-slide-progress { animation: landing-slide-progress 5.5s linear both; }
 .maplibregl-canvas:focus { outline: none; }
 
 .custom-road-popup .maplibregl-popup-content {

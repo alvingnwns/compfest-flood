@@ -1,15 +1,20 @@
-import { CheckCircle2, Network, PackageCheck, RotateCcw, Truck, Warehouse } from "lucide-react";
-import type { InventoryOverride, Scenario, VehicleOverride } from "@/domain/scenario";
+import type { Scenario } from "@/domain/scenario";
 import { OPERATIONAL_PRESETS, type OperationalOverrides, type OperationalPreset } from "./scenario-presets";
 
+const visualOrder = ["normal", "severe-disruption", "limited-vehicle", "critical-stock"];
+
+const figmaDescriptions: Record<string, string> = {
+  normal: "Operasional berjalan lancar.",
+  "severe-disruption": "Keterbatasan kendaraan dan stok.",
+  "limited-vehicle": "Sebagian kendaraan tidak tersedia.",
+  "critical-stock": "Persediaan gudang mulai menipis.",
+};
+
 export function OperationalConditionPanel({
-  scenario,
   selectedPresetId,
-  overrides,
   custom,
   disabled,
   onSelect,
-  onReset,
 }: {
   scenario: Scenario;
   selectedPresetId: string;
@@ -19,23 +24,17 @@ export function OperationalConditionPanel({
   onSelect: (preset: OperationalPreset) => void;
   onReset: () => void;
 }) {
-  const disabledVehicles = overrides.vehicleOverrides.filter((item: VehicleOverride) => item.available === false).length;
-  const limitedCapacity = overrides.vehicleOverrides.filter((item: VehicleOverride) => item.capacityUnits !== undefined).length;
-  const criticalInventory = overrides.inventoryOverrides.filter((item: InventoryOverride) => item.quantity <= 50).length;
+  const presets = visualOrder.map((id) => OPERATIONAL_PRESETS.find((preset) => preset.id === id)!);
 
   return (
-    <section className="card flex flex-col p-5 md:p-6">
-      <div className="mb-4 flex items-center justify-between gap-3 border-b border-outline pb-3">
-        <div className="flex items-center gap-2">
-          <Network className="text-primary" size={20} />
-          <h2 className="section-title text-ink">2. Kondisi Operasional</h2>
-        </div>
-        {custom && <button type="button" onClick={onReset} disabled={disabled} className="inline-flex items-center gap-1 text-xs text-primary hover:underline"><RotateCcw size={12} /> Reset Normal</button>}
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Kondisi operasional">
-        {OPERATIONAL_PRESETS.map((preset) => {
+    <section aria-labelledby="condition-title" className="mx-auto w-full max-w-[1504px]">
+      <h2 id="condition-title" className="mb-3 text-center text-[24px] font-bold text-primary-dark md:text-[32px]">
+        KONDISI LINGKUNGAN
+      </h2>
+      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4" role="radiogroup" aria-label="Kondisi operasional">
+        {presets.map((preset) => {
           const selected = !custom && selectedPresetId === preset.id;
+          const title = preset.id === "severe-disruption" ? "Gangguan Operasional" : preset.label;
           return (
             <button
               key={preset.id}
@@ -44,29 +43,18 @@ export function OperationalConditionPanel({
               aria-checked={selected}
               disabled={disabled}
               onClick={() => onSelect(preset)}
-              className={`min-h-[108px] rounded-lg border p-3 text-left transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${selected ? "border-primary bg-primary/10" : "border-outline bg-surface hover:bg-surface-high"}`}
+              className={`relative min-h-[92px] rounded-[25px] px-5 py-4 text-left shadow-[0_0_7px_rgb(0_0_0/25%)] transition ${selected ? "bg-primary text-white" : "bg-white text-primary hover:-translate-y-0.5"}`}
             >
-              <span className="flex items-center justify-between gap-2">
-                <strong className="text-sm text-ink">{preset.label}</strong>
-                {selected && <CheckCircle2 size={16} className="text-primary" />}
+              <span className="block pr-7 text-[18px] font-bold leading-tight md:text-[22px]">{title}</span>
+              <span className="mt-1 block pr-4 text-[11px] font-medium leading-snug md:text-[14px]">{figmaDescriptions[preset.id]}</span>
+              <span className={`absolute right-3 top-3 grid h-6 w-6 place-items-center rounded-full border ${selected ? "border-white" : "border-primary"}`} aria-hidden="true">
+                {selected && <span className="h-2.5 w-2.5 rounded-full bg-white" />}
               </span>
-              <span className="mt-1 block text-xs leading-relaxed text-muted">{preset.description}</span>
             </button>
           );
         })}
       </div>
-
-      {custom && <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">Kondisi operasional disesuaikan melalui panel konfigurasi.</div>}
-
-      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
-        <Status icon={Truck} label="Kendaraan" value={`${scenario.vehicles.length - disabledVehicles}/${scenario.vehicles.length} tersedia${limitedCapacity > 0 ? " · kapasitas dibatasi" : ""}`} />
-        <Status icon={Warehouse} label="Persediaan" value={criticalInventory > 0 ? `${criticalInventory} stok kritis` : "Persediaan normal"} />
-        <Status icon={PackageCheck} label="Pesanan" value={`${scenario.orders.length} pesanan aktif`} />
-      </div>
+      {custom && <p className="mt-3 text-center text-sm font-semibold text-primary">Konfigurasi operasional disesuaikan secara manual.</p>}
     </section>
   );
-}
-
-function Status({ icon: Icon, label, value }: { icon: typeof Truck; label: string; value: string }) {
-  return <div className="rounded-lg border border-outline/60 bg-surface-low p-3 text-center"><div className="eyebrow mb-1 flex items-center justify-center gap-1"><Icon size={13} /> {label}</div><div className="text-xs font-semibold text-ink">{value}</div></div>;
 }

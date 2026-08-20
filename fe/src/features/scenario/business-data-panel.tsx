@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Download, FileSpreadsheet, Upload } from "lucide-react";
+import { BarChart3, CheckCircle2, Download, FileSpreadsheet, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { importValidationIssueSchema, type BusinessImportResponse } from "@/domain/business-data";
 import { ApiError } from "@/lib/api-client";
@@ -47,86 +47,76 @@ export function BusinessDataPanel({
       setLocalError("Ukuran workbook melebihi batas 5 MB.");
       return;
     }
+    onModeChange("custom");
     onUpload(file);
   };
 
   return (
-    <section className="card mb-6 p-5" aria-labelledby="business-data-title">
-      <div className="mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
-        <div>
-          <div className="eyebrow mb-1">Business Data</div>
-          <h2 id="business-data-title" className="section-title">Snapshot Bisnis</h2>
-          <p className="mt-1 text-xs text-muted">Pilih data demo atau unggah snapshot operasional Anda.</p>
+    <section aria-labelledby="business-data-title" className="mx-auto w-full max-w-[700px] text-center">
+      <fieldset className="sr-only">
+        <legend>Sumber Business Data</legend>
+        <label><input type="radio" name="business-data-mode" checked={mode === "demo"} onChange={() => onModeChange("demo")} /> Demo Business Data</label>
+        <label><input type="radio" name="business-data-mode" checked={mode === "custom"} onChange={() => onModeChange("custom")} /> Custom Business Data</label>
+      </fieldset>
+
+      <h2 id="business-data-title" className="text-[24px] font-bold text-primary-dark md:text-[32px]">SNAPSHOT BISNIS</h2>
+      <p className="mt-1 text-[16px] font-medium text-primary-dark md:text-[20px]">Unggah snapshot operasional bisnis Anda</p>
+      <p className="sr-only">Business Data: {mode === "custom" && activeSnapshotId ? "Custom Upload" : "Demo"}</p>
+
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+        <a href={businessDataService.templateUrl} download className="inline-flex h-[43px] items-center gap-2 rounded-[10px] border border-primary/50 bg-white px-4 text-[14px] font-bold text-primary transition hover:bg-surface-low hover:ring-[3px] hover:ring-primary hover:ring-offset-[3px] focus-visible:ring-[3px] focus-visible:ring-primary focus-visible:ring-offset-[3px]">
+          <Download className="h-[26px] w-[26px]" /> Download Excel Template
+        </a>
+        <button type="button" disabled={pending || disabled} onClick={() => { onModeChange("custom"); inputRef.current?.click(); }} className="inline-flex h-[43px] items-center gap-2 rounded-[10px] bg-primary px-4 text-[14px] font-bold text-white transition hover:bg-primary-dark hover:ring-[3px] hover:ring-primary hover:ring-offset-[3px] focus-visible:ring-[3px] focus-visible:ring-primary focus-visible:ring-offset-[3px] disabled:opacity-50 disabled:hover:ring-0">
+          <Upload className="h-[25px] w-[25px]" /> {pending ? "Memvalidasi..." : "Upload Business Data"}
+        </button>
+        <input ref={inputRef} type="file" className="sr-only" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" aria-label="Upload Business Data" onChange={(event) => selectFile(event.target.files?.[0])} />
+      </div>
+
+      <p className="my-3 text-[18px] font-semibold text-primary-dark">atau</p>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => onModeChange("demo")}
+        className="inline-flex h-[43px] items-center gap-2 rounded-[10px] border border-[#856019] bg-gradient-to-br from-[#eba92d] to-[#856019] px-4 text-[14px] font-bold text-white transition hover:brightness-105 hover:ring-[3px] hover:ring-[#eba92d] hover:ring-offset-[3px] focus-visible:ring-[3px] focus-visible:ring-[#eba92d] focus-visible:ring-offset-[3px] disabled:opacity-50 disabled:hover:ring-0"
+      >
+        <BarChart3 className="h-5 w-5" /> Gunakan Demo Data Bisnis
+      </button>
+
+      {(localError || error) && (
+        <div className="mx-auto mt-5 max-w-xl rounded-lg border border-danger/30 bg-danger-soft/70 p-3 text-left text-xs text-danger" role="alert">
+          <p className="font-semibold">{localError || error?.message}</p>
+          {issues?.success && issues.data.length > 0 && (
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-muted">
+              {issues.data.slice(0, 8).map((issue, index) => <li key={`${issue.sheet}-${issue.row}-${issue.code}-${index}`}>{issue.message}</li>)}
+            </ul>
+          )}
         </div>
-        <span className="rounded-full border border-outline bg-surface-low px-2.5 py-1 text-[11px] font-semibold text-muted">
-          Business Data: {mode === "custom" && activeSnapshotId ? "Custom Upload" : "Demo"}
-        </span>
-      </div>
+      )}
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <label className={`rounded-lg border p-3 ${mode === "demo" ? "border-primary bg-primary/5" : "border-outline"}`}>
-          <span className="flex items-center gap-2 text-sm font-semibold text-ink">
-            <input type="radio" name="business-data-mode" checked={mode === "demo"} disabled={disabled} onChange={() => onModeChange("demo")} />
-            Demo Business Data
-          </span>
-          <span className="mt-1 block pl-6 text-xs text-muted">Menggunakan snapshot perusahaan demo bawaan ResiliChain.</span>
-        </label>
-        <label className={`rounded-lg border p-3 ${mode === "custom" ? "border-primary bg-primary/5" : "border-outline"}`}>
-          <span className="flex items-center gap-2 text-sm font-semibold text-ink">
-            <input type="radio" name="business-data-mode" checked={mode === "custom"} disabled={disabled} onChange={() => onModeChange("custom")} />
-            Custom Business Data
-          </span>
-          <span className="mt-1 block pl-6 text-xs text-muted">Produk, harga, pesanan, inventori, material, dan BOM dari workbook Anda.</span>
-        </label>
-      </div>
+      {mode === "custom" && !preview && !error && (
+        <p className="mt-4 text-xs text-muted">Data operasional pengguna berjalan pada jaringan logistik demo Jakarta ResiliChain.</p>
+      )}
 
-      {mode === "custom" && (
-        <div className="mt-4 rounded-lg border border-outline bg-surface-low p-4">
-          <p className="mb-3 text-xs text-muted">
-            Data operasional pengguna berjalan pada jaringan logistik demo Jakarta ResiliChain. Fasilitas, kendaraan, dan geografi tetap data demo.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <a href={businessDataService.templateUrl} download className="inline-flex items-center gap-2 rounded-lg border border-outline bg-surface px-3 py-2 text-sm font-medium text-ink hover:bg-surface-high">
-              <Download size={16} /> Download Excel Template
-            </a>
-            <button type="button" disabled={pending || disabled} onClick={() => inputRef.current?.click()} className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-primary-dark disabled:opacity-50">
-              <Upload size={16} /> {pending ? "Memvalidasi…" : "Upload Business Data"}
-            </button>
-            <input ref={inputRef} type="file" className="sr-only" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" aria-label="Upload Business Data" onChange={(event) => selectFile(event.target.files?.[0])} />
+      {preview && (
+        <div className="mx-auto mt-5 max-w-2xl rounded-[20px] bg-white p-4 text-left shadow-[0_0_7px_rgb(0_0_0/20%)]">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
+            <CheckCircle2 size={18} className="text-success" /> Data tervalidasi
           </div>
-
-          {(localError || error) && (
-            <div className="mt-3 rounded-lg border border-danger/30 bg-danger/5 p-3 text-xs text-danger" role="alert">
-              <p className="font-semibold">{localError || error?.message}</p>
-              {issues?.success && issues.data.length > 0 && (
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-muted">
-                  {issues.data.slice(0, 8).map((issue, index) => <li key={`${issue.sheet}-${issue.row}-${issue.code}-${index}`}>{issue.message}</li>)}
-                </ul>
-              )}
-            </div>
-          )}
-
-          {preview && (
-            <div className="mt-4 rounded-lg border border-primary/25 bg-surface p-4">
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
-                <CheckCircle2 size={18} className="text-success" /> Data tervalidasi
-              </div>
-              <dl className="grid grid-cols-2 gap-x-5 gap-y-2 text-xs sm:grid-cols-3 lg:grid-cols-6">
-                <Metric label="Produk" value={preview.summary.productsLoaded} />
-                <Metric label="Pesanan" value={preview.summary.ordersLoaded} />
-                <Metric label="Inventori" value={preview.summary.inventoryRows} />
-                <Metric label="Material" value={preview.summary.materialsLoaded} />
-                <Metric label="Relasi BOM" value={preview.summary.bomRelationships} />
-                <Metric label="Nilai Pesanan" value={formatIdr(preview.summary.totalOrderValue)} />
-              </dl>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 text-xs text-muted"><FileSpreadsheet size={14} /> Snapshot tersimpan sementara hingga sesi backend berakhir atau kedaluwarsa.</span>
-                <button type="button" disabled={Boolean(activeSnapshotId) || disabled} onClick={onConfirm} className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-primary-dark disabled:opacity-60">
-                  {activeSnapshotId ? "Data Aktif" : "Gunakan Data"}
-                </button>
-              </div>
-            </div>
-          )}
+          <dl className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-3">
+            <Metric label="Produk" value={preview.summary.productsLoaded} />
+            <Metric label="Pesanan" value={preview.summary.ordersLoaded} />
+            <Metric label="Inventori" value={preview.summary.inventoryRows} />
+            <Metric label="Material" value={preview.summary.materialsLoaded} />
+            <Metric label="Relasi BOM" value={preview.summary.bomRelationships} />
+            <Metric label="Nilai Pesanan" value={formatIdr(preview.summary.totalOrderValue)} />
+          </dl>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <span className="inline-flex items-center gap-1.5 text-xs text-muted"><FileSpreadsheet size={14} /> Snapshot tersimpan sementara.</span>
+            <button type="button" disabled={Boolean(activeSnapshotId) || disabled} onClick={onConfirm} className="rounded-[10px] bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark disabled:opacity-60">
+              {activeSnapshotId ? "Data Aktif" : "Gunakan Data"}
+            </button>
+          </div>
         </div>
       )}
     </section>

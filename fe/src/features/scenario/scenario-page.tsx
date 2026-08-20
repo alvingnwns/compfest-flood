@@ -1,6 +1,6 @@
 "use client";
 
-import { Info, Network, Play, Settings2 } from "lucide-react";
+import { Network, Play, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
@@ -12,10 +12,9 @@ import { ApiError } from "@/lib/api-client";
 import { AnalysisModePanel } from "./analysis-mode-panel";
 import { BusinessDataPanel } from "./business-data-panel";
 import { OperationalConditionPanel } from "./operational-condition-panel";
-import { OperationalConfigDrawer } from "./operational-config-drawer";
+import { OperationalEditor } from "./operational-editor";
 import {
   OPERATIONAL_PRESETS,
-  getOperationalPreset,
   type OperationalOverrides,
   type OperationalPreset,
 } from "./scenario-presets";
@@ -28,10 +27,6 @@ const progressSteps = [
   "Menyiapkan hasil analisis",
 ];
 
-function countChanges(overrides: OperationalOverrides): number {
-  return overrides.vehicleOverrides.length + overrides.inventoryOverrides.length;
-}
-
 export function ScenarioPage() {
   const scenario = useScenario();
   const run = useRunSimulation();
@@ -40,18 +35,16 @@ export function ScenarioPage() {
   const [activeSimulationId, setActiveSimulationId] = useState("");
   const simulation = useSimulation(activeSimulationId);
 
-  const [analysisMode, setAnalysisMode] = useState<AnalysisMode>("historical-replay");
-  const [rainfallScenario, setRainfallScenario] = useState<RainfallScenario>();
-  const [opPresetId, setOpPresetId] = useState("normal");
-  const [overrides, setOverrides] = useState<OperationalOverrides>(OPERATIONAL_PRESETS[0].overrides);
+  const [analysisMode, setAnalysisMode] = useState<AnalysisMode>("scenario-simulation");
+  const [rainfallScenario, setRainfallScenario] = useState<RainfallScenario>("Q1");
+  const [opPresetId, setOpPresetId] = useState("severe-disruption");
+  const [overrides, setOverrides] = useState<OperationalOverrides>(OPERATIONAL_PRESETS[3].overrides);
   const [isCustomMode, setIsCustomMode] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [businessMode, setBusinessMode] = useState<"demo" | "custom">("demo");
   const [businessPreview, setBusinessPreview] = useState<BusinessImportResponse>();
   const [businessSnapshotId, setBusinessSnapshotId] = useState("");
   const [step, setStep] = useState(-1);
 
-  const selectedPreset = getOperationalPreset(opPresetId);
   const busy = step >= 0 || run.isPending;
   const businessReady = businessMode === "demo" || Boolean(businessSnapshotId);
   const simulationReady = businessReady && (analysisMode === "historical-replay" || rainfallScenario !== undefined);
@@ -90,6 +83,15 @@ export function ScenarioPage() {
     setOverrides(OPERATIONAL_PRESETS[0].overrides);
     setIsCustomMode(false);
     clearPreviousResult();
+  };
+
+  const handleResetToDefault = () => {
+    setAnalysisMode("scenario-simulation");
+    setRainfallScenario("Q1");
+    setBusinessMode("demo");
+    setBusinessPreview(undefined);
+    setBusinessSnapshotId("");
+    handleResetToNormal();
   };
 
   const handleBusinessModeChange = (mode: "demo" | "custom") => {
@@ -162,34 +164,26 @@ export function ScenarioPage() {
   };
 
   return (
-    <AppShell>
-      <div className="relative p-4 md:p-8">
+    <AppShell
+      title="Skenario"
+      actions={
+        <>
+          <button type="button" onClick={handleResetToDefault} disabled={busy} className="inline-flex h-11 items-center justify-center gap-3 rounded-[14px] bg-primary-dark px-4 text-[12px] font-semibold text-white transition hover:brightness-110 disabled:opacity-50 md:h-[90px] md:w-[301px] md:rounded-[27px] md:px-6 md:text-[21px]">
+            <RefreshCcw className="h-5 w-5 shrink-0 md:h-10 md:w-10" />
+            <span className="hidden leading-tight sm:inline">Kembalikan ke Default</span>
+          </button>
+          <button type="button" id="btn-run-simulation" onClick={() => void start()} disabled={busy || !simulationReady} className="inline-flex h-11 items-center justify-center gap-3 rounded-[14px] bg-gradient-to-r from-[#eba92d] to-[#ffa600] px-5 text-[14px] font-bold text-white transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 md:h-[90px] md:w-[436px] md:rounded-[27px] md:text-[27px]">
+            <Play className="h-6 w-6 shrink-0 md:h-[52px] md:w-[52px]" fill="none" />
+            <span className="hidden sm:inline">Jalankan Analisis</span>
+          </button>
+        </>
+      }
+    >
+      <div className="scenario-pattern relative min-h-[calc(100vh-80px)] px-4 py-10 md:min-h-[calc(100vh-125px)] md:px-[35px] md:py-[45px]">
         {scenario.isLoading && <LoadingState label="Memuat skenario Jakarta…" />}
         {scenario.isError && <ErrorState message={scenario.error.message} onRetry={() => void scenario.refetch()} />}
         {scenario.data && (
           <>
-            <header className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
-              <div>
-                <div className="eyebrow mb-1">Analisis Risiko</div>
-                <h1 className="page-title">Konfigurasi Skenario Rantai Pasok</h1>
-                <p className="mt-1 max-w-2xl text-sm text-muted">ResiliChain mengevaluasi bagaimana risiko lingkungan berinteraksi dengan kondisi operasional perusahaan.</p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <button type="button" id="btn-config-operational" onClick={() => setDrawerOpen(true)} disabled={busy} className="inline-flex items-center gap-2 rounded-lg border border-outline bg-surface px-3 py-2 text-sm font-medium text-muted transition hover:bg-surface-high disabled:opacity-50">
-                  <Settings2 size={16} /> Atur Data Operasional
-                  {countChanges(overrides) > 0 && <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-white">{countChanges(overrides)}</span>}
-                </button>
-                <button type="button" id="btn-run-simulation" onClick={() => void start()} disabled={busy || !simulationReady} className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50">
-                  <Play size={18} fill="currentColor" /> Jalankan Analisis
-                </button>
-              </div>
-            </header>
-
-            <div className="mb-6 flex items-start gap-3 rounded-lg border border-outline bg-surface-low p-3.5 text-xs leading-relaxed text-muted shadow-sm">
-              <Info size={16} className="mt-0.5 shrink-0 text-primary" />
-              <span><strong className="text-ink">Dua dimensi independen:</strong> kondisi lingkungan menentukan konteks risiko jalan; kondisi operasional menentukan armada dan persediaan. Keduanya digabungkan saat analisis dijalankan.</span>
-            </div>
-
             <BusinessDataPanel
               mode={businessMode}
               preview={businessPreview}
@@ -201,15 +195,9 @@ export function ScenarioPage() {
               onUpload={(file) => void handleBusinessUpload(file)}
               onConfirm={handleBusinessConfirm}
             />
-
-            <div className="grid gap-6 xl:grid-cols-2">
-              <AnalysisModePanel analysisMode={analysisMode} rainfallScenario={rainfallScenario} disabled={busy} onModeChange={handleModeChange} onRainfallChange={handleRainfallChange} />
-              <OperationalConditionPanel scenario={scenario.data} selectedPresetId={opPresetId} overrides={overrides} custom={isCustomMode} disabled={busy} onSelect={handleOpPresetSelect} onReset={handleResetToNormal} />
-            </div>
-
-            {analysisMode === "scenario-simulation" && rainfallScenario === undefined && (
-              <p className="mt-4 text-sm text-muted" role="status">Pilih satu pola curah hujan untuk menjalankan simulasi kondisi.</p>
-            )}
+            <div className="mt-[70px]"><AnalysisModePanel analysisMode={analysisMode} rainfallScenario={rainfallScenario} disabled={busy} onModeChange={handleModeChange} onRainfallChange={handleRainfallChange} /></div>
+            <div className="mt-16"><OperationalConditionPanel scenario={scenario.data} selectedPresetId={opPresetId} overrides={overrides} custom={isCustomMode} disabled={busy} onSelect={handleOpPresetSelect} onReset={handleResetToNormal} /></div>
+            <div className="mt-12"><OperationalEditor scenario={scenario.data} overrides={overrides} disabled={busy} onChange={handleApplyDrawerOverrides} /></div>
           </>
         )}
 
@@ -232,7 +220,6 @@ export function ScenarioPage() {
         )}
       </div>
 
-      {scenario.data && <OperationalConfigDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} scenario={scenario.data} preset={selectedPreset} overrides={overrides} onApply={handleApplyDrawerOverrides} />}
     </AppShell>
   );
 }

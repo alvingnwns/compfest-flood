@@ -39,10 +39,10 @@ export type RainfallScenarioOption = {
 };
 
 export const RAINFALL_SCENARIOS: RainfallScenarioOption[] = [
-  { id: "Q1", label: "Pola Hujan Relatif Rendah", description: "Pola temporal dengan kondisi relatif rendah terhadap rentang historis." },
-  { id: "Q2", label: "Pola Hujan Menengah", description: "Pola temporal pada rentang menengah dari data historis." },
-  { id: "Q3", label: "Pola Hujan Meningkat", description: "Pola temporal yang menunjukkan peningkatan risiko relatif." },
-  { id: "Q4", label: "Pola Hujan Tinggi dan Persisten", description: "Pola temporal tinggi yang bertahan dalam rangkaian historis." },
+  { id: "Q1", label: "Pola Hujan Relatif Rendah", description: "Curah hujan cenderung rendah dan stabil, sehingga potensi gangguan akibat hujan relatif kecil." },
+  { id: "Q2", label: "Pola Hujan Menengah", description: "Curah hujan berada pada tingkat sedang dengan peningkatan intensitas yang mulai perlu diperhatikan." },
+  { id: "Q3", label: "Pola Hujan Meningkat", description: "Curah hujan semakin tinggi dan dapat meningkatkan potensi gangguan serta risiko banjir di wilayah terdampak." },
+  { id: "Q4", label: "Pola Hujan Tinggi dan Persisten", description: "Curah hujan tinggi berlangsung terus-menerus, dapat meningkatkan risiko banjir serta gangguan pada jalan." },
 ];
 
 export function getRainfallScenario(id?: RainfallScenario): RainfallScenarioOption | undefined {
@@ -100,7 +100,7 @@ export const OPERATIONAL_PRESETS: OperationalPreset[] = [
   },
   {
     id: "severe-disruption",
-    label: "Gangguan Operasional Berat",
+    label: "Gangguan Operasional",
     badge: "TINGGI",
     description:
       "Dua kendaraan distribusi (V-01 dan V-02) tidak tersedia bersamaan dengan pengosongan persediaan Produk A di Gudang Timur (0 unit).",

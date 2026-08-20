@@ -1,189 +1,254 @@
 "use client";
 
-import { ArrowRight, CheckCircle2, Factory, Info, Route, ShoppingBag, Truck, Waves } from "lucide-react";
+import {
+  ArrowRight,
+  BadgeCheck,
+  CloudRain,
+  Factory,
+  MapPin,
+  RotateCcw,
+} from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
-import { SimulationDetails } from "@/components/simulation/simulation-details";
-import { ScenarioContextCard } from "@/components/simulation/scenario-context-card";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
 import type { CommerceAction, LogisticsAction, ManufacturingAction } from "@/domain/recovery";
+import type { Simulation } from "@/domain/scenario";
+import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
+import { getRainfallScenario } from "@/features/scenario/scenario-presets";
 import { useRecoveryPlan, useSimulation } from "@/hooks/use-resilichain-data";
-import { formatAction, formatMinutes, formatRisk } from "@/lib/format";
-import { SELECTED_RECOVERY_ROUTE_LABEL } from "@/features/disruption/route-semantics";
+import { formatAction, formatMinutes } from "@/lib/format";
 
-function Reasoning({ action }: { action: { what: string; why: string; expectedImpact: string } }) {
+type RecoveryView = "production" | "routes" | "commerce";
+
+const recoveryViews: Array<{ id: RecoveryView; label: string }> = [
+  { id: "production", label: "Penyesuaian Produksi" },
+  { id: "routes", label: "Pengalihan Rute" },
+  { id: "commerce", label: "Alokasi Perdagangan" },
+];
+
+function RecoveryContext({
+  simulation,
+  operationalCondition,
+}: {
+  simulation: Simulation;
+  operationalCondition: string;
+}) {
+  const rainfall =
+    simulation.analysisMode === "scenario-simulation"
+      ? getRainfallScenario(simulation.hazard?.rainfallScenario)?.label
+      : "04 Mar 2025";
+  const simulationLabel =
+    simulation.analysisMode === "scenario-simulation" ? "Simulasi Kondisi" : "Simulasi Banjir Jakarta";
+
   return (
-    <div className="mt-5 border-t border-outline/40 pt-5">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div className="rounded-lg border border-outline/40 bg-surface-low p-4">
-          <div className="eyebrow mb-1 text-muted">Apa</div>
-          <p className="text-sm font-medium text-ink">{action.what}</p>
-        </div>
-        <div className="rounded-lg border border-outline/40 bg-surface-low p-4">
-          <div className="eyebrow mb-1 text-muted">Alasan</div>
-          <p className="text-sm leading-snug text-muted">{action.why}</p>
-        </div>
-        <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-          <div className="eyebrow mb-1 flex items-center gap-1 text-primary">
-            <CheckCircle2 size={15} /> Proyeksi Dampak
+    <section className="overflow-hidden rounded-[22px] bg-white shadow-[0_0_15px_rgb(0_0_0/18%)]" aria-label="Konteks rencana pemulihan">
+      <div className="bg-primary px-5 py-3 text-center text-[20px] font-bold text-white">Rencana Pemulihan</div>
+      <div className="grid grid-cols-2 gap-5 px-7 py-5">
+        <div>
+          <div className="mb-2 flex items-center gap-2 text-[12px] font-bold text-[#979797]">
+            KONDISI LINGKUNGAN <CloudRain size={15} className="text-primary" />
           </div>
-          <p className="text-sm font-semibold leading-snug text-primary">{action.expectedImpact}</p>
+          <div className="text-[13px] font-semibold text-black">{rainfall ?? "Pola Hujan"}</div>
+          <div className="mt-1 text-[12px] leading-tight text-[#5a5a5a]">{simulationLabel}</div>
         </div>
+        <div>
+          <div className="mb-2 flex items-center gap-2 text-[12px] font-bold text-[#979797]">
+            KONDISI OPERASIONAL <Factory size={14} className="text-primary" />
+          </div>
+          <div className="text-[13px] font-semibold text-black">{operationalConditionLabel(operationalCondition)}</div>
+          <div className="mt-1 flex items-center gap-1 text-[12px] text-[#5a5a5a]"><MapPin size={12} /> Jakarta</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RecoveryTabs({
+  active,
+  onChange,
+}: {
+  active: RecoveryView;
+  onChange: (view: RecoveryView) => void;
+}) {
+  return (
+    <div className="mt-6 rounded-[22px] border-[6px] border-primary bg-primary p-0.5" role="tablist" aria-label="Bagian rencana pemulihan">
+      {recoveryViews.map((view) => (
+        <button
+          key={view.id}
+          type="button"
+          role="tab"
+          aria-selected={active === view.id}
+          onClick={() => onChange(view.id)}
+          className={`mb-1 flex h-[57px] w-full items-center justify-center rounded-[14px] px-4 text-[16px] font-bold transition duration-200 last:mb-0 ${active === view.id ? "bg-[#eba92d] text-white shadow-sm" : "bg-[#fff1dd] text-primary hover:bg-[#ffe5bd]"}`}
+        >
+          {view.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function RecoverySummary({
+  status,
+  risks,
+  changes,
+  recoverable,
+  total,
+}: {
+  status: "ready" | "partial";
+  risks: number;
+  changes: number;
+  recoverable: number;
+  total: number;
+}) {
+  const metrics = [
+    {
+      label: "STATUS",
+      value: status === "partial" ? "Rencana Parsial" : "Rencana Siap",
+      icon: true,
+    },
+    { label: "RISIKO\nDITANGANI", value: String(risks) },
+    { label: "PERUBAHAN\nOPERASIONAL", value: String(changes) },
+    { label: "PEMULIHAN\nPESANAN", value: `${recoverable}/${total}` },
+  ];
+
+  return (
+    <section className="shrink-0 overflow-hidden rounded-t-[58px] bg-white shadow-[0_0_8px_rgb(0_0_0/20%)]" aria-label="Ringkasan rencana pemulihan">
+      <div className="bg-primary px-6 py-[25px] text-center text-[24px] font-semibold tracking-[3px] text-white">
+        RINGKASAN RENCANA PEMULIHAN
+      </div>
+      <div className="grid min-h-[140px] grid-cols-2 divide-x divide-primary/80 px-4 py-4 md:grid-cols-4">
+        {metrics.map((metric) => (
+          <div key={metric.label} className="flex min-w-0 flex-col items-center justify-center px-3 text-center">
+            <div className="whitespace-pre-line text-[14px] font-semibold leading-tight tracking-[2px] text-[#5a5a5a]">{metric.label}</div>
+            {metric.icon ? (
+              <>
+                <BadgeCheck className="mt-2 h-12 w-12 text-[#00b98e]" strokeWidth={2.5} />
+                <div className="text-[13px] font-semibold text-[#00b98e]">{metric.value}</div>
+              </>
+            ) : (
+              <div className="mt-2 text-[42px] font-semibold leading-none text-[#00b98e]">{metric.value}</div>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ReasoningCards({ action }: { action?: { what: string; why: string; expectedImpact: string } }) {
+  if (!action) return null;
+  const cards = [
+    ["SARAN", action.what],
+    ["ALASAN", action.why],
+    ["DAMPAK", action.expectedImpact],
+  ];
+  return (
+    <div className="grid gap-4 md:grid-cols-3">
+      {cards.map(([label, value]) => (
+        <div key={label} className="min-h-[150px] rounded-[20px] border border-[#b3b3b3] bg-gradient-to-b from-[#ededed] to-[#c4c4c4] px-5 py-4 text-[#323232]">
+          <div className="mb-2 text-center text-[15px] font-bold tracking-[2px] text-[#5a5a5a]">{label}</div>
+          <p className="text-[12px] leading-snug">{value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProductionView({ actions }: { actions: ManufacturingAction[] }) {
+  return (
+    <div>
+      <h2 className="mb-7 text-center text-[26px] font-bold tracking-[3px] text-primary">PENYESUAIAN PRODUKSI</h2>
+      <div className="rounded-[42px] bg-white p-6 shadow-sm">
+        <div className="mb-4 grid gap-4 md:grid-cols-2">
+          {actions.map((action) => {
+            const negative = action.changeQuantity < 0;
+            return (
+              <article key={action.id} className={`flex min-h-[150px] items-center justify-between gap-4 rounded-[20px] border px-7 py-5 ${negative ? "border-[#bc0000] bg-[#f3cfcf] text-[#5a0000]" : "border-[#84b7ab] bg-[#d5eee8] text-[#005a45]"}`}>
+                <div>
+                  <h3 className="mb-3 text-[21px] font-bold">{action.productName}</h3>
+                  <div className="flex gap-2 text-center text-white">
+                    <div className={`rounded-[10px] px-3 py-2 ${negative ? "bg-[#b75152]" : "bg-[#00b98e]"}`}>
+                      <div className="text-[10px] opacity-70">Sebelum</div>
+                      <strong className="text-[17px]">{action.baselineQuantity}</strong>
+                    </div>
+                    <div className={`rounded-[10px] px-3 py-2 ${negative ? "bg-[#721516]" : "bg-[#00a82d]"}`}>
+                      <div className="text-[10px] opacity-70">Setelah</div>
+                      <strong className="text-[17px]">{action.recoveryQuantity}</strong>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <strong className="block text-[48px] leading-none">{action.changeQuantity > 0 ? "+" : ""}{action.changeQuantity}</strong>
+                  <span className="text-[21px] font-bold">Unit</span>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        <ReasoningCards action={actions[0]} />
       </div>
     </div>
   );
 }
 
-function ManufacturingCard({ actions }: { actions: ManufacturingAction[] }) {
-  const explanation = actions[0];
+function RoutesView({ actions }: { actions: LogisticsAction[] }) {
   return (
-    <PlanSection icon={Factory} title="Penyesuaian Produksi" accent="bg-primary">
-      <div className="space-y-4">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {actions.map((action) => (
-            <div
-              key={action.id}
-              className={`flex items-center justify-between rounded-lg border p-4 ${
-                action.changeQuantity < 0
-                  ? "border-danger/20 bg-danger-soft/20"
-                  : "border-primary/20 bg-primary/5"
-              }`}
-            >
-              <div>
-                <div className="text-sm font-semibold text-ink">{action.productName}</div>
-                <div className="text-xs text-muted">
-                  Kondisi awal: {action.baselineQuantity.toLocaleString()} · Pemulihan: {action.recoveryQuantity.toLocaleString()}
-                </div>
-              </div>
-              <strong className={`text-sm ${action.changeQuantity < 0 ? "text-danger" : "text-primary"}`}>
-                {action.changeQuantity > 0 ? "+" : ""}
-                {action.changeQuantity} unit
-              </strong>
-            </div>
-          ))}
-        </div>
-        {explanation && (
-          <Reasoning
-            action={{
-              what: actions.map((x) => x.what).join(" "),
-              why: explanation.why,
-              expectedImpact: actions.map((x) => x.expectedImpact).join(" "),
-            }}
-          />
-        )}
-      </div>
-    </PlanSection>
-  );
-}
-
-function LogisticsCard({ actions }: { actions: LogisticsAction[] }) {
-  const action = actions[0];
-  if (!action) return null;
-  return (
-    <PlanSection icon={Truck} title="Rute Pemulihan Terpilih" accent="bg-primary">
-      <div className="space-y-4">
+    <div>
+      <h2 className="mb-7 text-center text-[26px] font-bold tracking-[3px] text-primary">PENGALIHAN RUTE LOGISTIK</h2>
+      <div className="overflow-hidden rounded-[42px] bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-outline">
-                <th className="eyebrow pb-2">Pesanan & Rute</th>
-                <th className="eyebrow pb-2">Rute Normal</th>
-                <th className="eyebrow pb-2">Rute Pemulihan</th>
-                <th className="eyebrow pb-2">Kendaraan</th>
-                <th className="eyebrow pb-2 text-right">Tindakan</th>
+          <table className="w-full min-w-[760px] border-collapse text-left">
+            <thead className="bg-primary text-[12px] font-semibold text-white">
+              <tr>
+                <th className="px-5 py-5 text-center">ID</th>
+                <th className="px-4 py-5 text-center">PESANAN &amp;<br />RUTE</th>
+                <th className="px-4 py-5 text-center">RUTE<br />NORMAL</th>
+                <th className="px-4 py-5 text-center">RUTE<br />PEMULIHAN</th>
+                <th className="px-4 py-5 text-center">KENDARAAN</th>
+                <th className="px-4 py-5 text-center">TRANSAKSI</th>
               </tr>
             </thead>
             <tbody>
-              {actions.map((item) => (
-                <tr key={item.id} className="border-b border-outline/30 last:border-b-0">
-                  <td className="py-3 pr-4">
-                    <strong className="text-sm text-ink">
-                      {item.orderId}: {item.originalWarehouseName} → {item.recoveryWarehouseName}
-                    </strong>
-                  </td>
-                  <td className="py-3 pr-4 text-danger">
-                    <div>{formatRisk(item.baselineFloodExposure)} risiko</div>
-                    <div className="mono text-[11px]">{formatMinutes(item.baselineEtaMinutes)}</div>
-                  </td>
-                  <td className="py-3 pr-4 font-medium text-primary">
-                    <div className="mb-1 text-[10px] font-semibold uppercase">{SELECTED_RECOVERY_ROUTE_LABEL}</div>
-                    <div>{formatRisk(item.recoveryFloodExposure)} risiko</div>
-                    <div className="mono text-[11px]">{formatMinutes(item.recoveryEtaMinutes)}</div>
-                  </td>
-                  <td className="py-3 pr-4 mono text-muted">
-                    {item.vehicleId}
-                  </td>
-                  <td className="py-3 text-right align-middle">
-                    <span className="inline-block rounded bg-primary/10 px-2.5 py-1 font-semibold uppercase text-primary text-[11px]">
-                      {formatAction(item.action)}
-                    </span>
+              {actions.map((action, index) => (
+                <tr key={action.id} className="border-b border-[#b3b3b3] last:border-b-0">
+                  <td className="px-5 py-4 text-center text-[23px] font-bold">{String(index + 1).padStart(2, "0")}</td>
+                  <td className="px-4 py-4 text-[14px] font-medium">{action.originalWarehouseName} -<br />{action.recoveryWarehouseName}</td>
+                  <td className="px-4 py-4 text-center text-[18px]">{formatMinutes(action.baselineEtaMinutes)}</td>
+                  <td className="px-4 py-4 text-center text-[18px]">{formatMinutes(action.recoveryEtaMinutes)}</td>
+                  <td className="px-4 py-4 text-center text-[14px]">{action.vehicleId}</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="mb-1 inline-block rounded-full bg-[#a9eadb] px-3 py-1 text-[12px] font-semibold text-[#006c53]">{formatAction(action.action)}</span>
+                    <div><span className="inline-block rounded-full bg-[#a9eadb] px-3 py-1 text-[12px] font-semibold text-[#006c53]">UBAH RUTE</span></div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <Reasoning action={action} />
       </div>
-    </PlanSection>
+    </div>
   );
 }
 
-function CommerceCard({ actions }: { actions: CommerceAction[] }) {
-  const action = actions[0];
-  if (!action) return null;
+function CommerceView({ actions }: { actions: CommerceAction[] }) {
   return (
-    <PlanSection icon={ShoppingBag} title="Alokasi Perdagangan" accent="bg-slate-600">
-      <div className="space-y-4">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {actions.map((item) => (
-            <div key={item.id} className="rounded-lg border border-outline/40 bg-surface-low p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <strong className="text-sm text-ink">
-                    {item.orderId} ({item.storeName})
-                  </strong>
-                  <p className="mt-1 text-xs text-muted">Rekomendasi: {formatAction(item.action)}</p>
-                </div>
-                <div className="text-right text-xs font-semibold text-primary">
-                  {item.allocations.map((allocation) => (
-                    <div key={allocation.productName}>
-                      {allocation.quantity} {allocation.productName}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <Reasoning action={action} />
+    <div>
+      <h2 className="mb-7 text-center text-[26px] font-bold tracking-[3px] text-primary">ALOKASI PERDAGANGAN</h2>
+      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+        {actions.map((action) => (
+          <article key={action.id} className="min-h-[154px] rounded-[34px] bg-white px-7 py-6 shadow-sm">
+            <h3 className="mb-3 text-[24px] font-bold text-black">{action.orderId}</h3>
+            <p className="text-[14px] text-[#5a5a5a]">Rekomendasi: {formatAction(action.action)}</p>
+            {action.allocations.map((allocation) => (
+              <p key={allocation.productId} className="text-[14px] text-[#5a5a5a]">{allocation.quantity} {allocation.productName}</p>
+            ))}
+          </article>
+        ))}
       </div>
-    </PlanSection>
-  );
-}
-
-function PlanSection({
-  icon: Icon,
-  title,
-  accent,
-  children,
-}: {
-  icon: typeof Factory;
-  title: string;
-  accent: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="relative mb-8 pl-8 before:absolute before:bottom-[-32px] before:left-[11px] before:top-6 before:w-0.5 before:bg-outline last:before:hidden">
-      <span className={`absolute left-[6px] top-5 h-3 w-3 rounded-full border-2 border-white ${accent}`} />
-      <div className="mb-3 flex items-center gap-2">
-        <Icon size={20} className="text-primary" />
-        <h2 className="section-title text-ink">{title}</h2>
-      </div>
-      <div className="card p-5">{children}</div>
-    </section>
+    </div>
   );
 }
 
@@ -193,110 +258,54 @@ export function RecoveryPage() {
   const operationalCondition = searchParams.get("condition") ?? "normal";
   const plan = useRecoveryPlan(simulationId);
   const simulation = useSimulation(simulationId);
-  const [details, setDetails] = useState(false);
+  const [activeView, setActiveView] = useState<RecoveryView>("production");
+
+  const readyPlan = plan.data && (plan.data.status === "ready" || plan.data.status === "partial") ? plan.data : undefined;
 
   return (
-    <AppShell
-      title="Rencana Pemulihan AI"
-      actions={
-        <button
-          onClick={() => setDetails(true)}
-          className="hidden items-center gap-2 rounded-lg border border-outline px-3 py-2 text-xs font-semibold hover:bg-surface-low sm:flex"
-        >
-          <Info size={16} /> Detail Simulasi
-        </button>
-      }
-    >
-      <div className="p-4 md:p-8">
-        <div className="w-full">
-          {!simulationId && (
-            <EmptyState
-              title="Belum ada simulasi yang dipilih"
-              message="Buat rencana pemulihan dari analisis gangguan terlebih dahulu."
-            />
-          )}
-          {simulationId && plan.isLoading && <LoadingState label="Memuat rencana pemulihan terkoordinasi…" />}
-          {plan.isError && <ErrorState message={plan.error.message} onRetry={() => void plan.refetch()} />}
-          {(plan.data?.status === "queued" || plan.data?.status === "processing") && (
-            <LoadingState label="Menyusun rencana pemulihan terkoordinasi…" />
-          )}
-          {plan.data?.status === "failed" && (
-            <ErrorState message={plan.data.error.message} onRetry={() => void plan.refetch()} />
-          )}
-          {simulation.data && plan.data && !["queued", "processing", "failed"].includes(plan.data.status) && (
-            <ScenarioContextCard simulation={simulation.data} operationalCondition={operationalCondition} explanation />
-          )}
-          {plan.data?.status === "no-feasible-plan" && (
-            <div className="card border-danger/30 p-6">
-              <Waves className="mb-3 text-danger" />
-              <h1 className="section-title text-danger">Tidak Ada Rencana Pemulihan yang Sepenuhnya Layak</h1>
-              <p className="mt-2 text-sm text-muted">
-                Pesanan yang dapat dipulihkan: {plan.data.summary.recoverableOrders} / {plan.data.summary.totalOrders}
-              </p>
-              <ul className="mt-4 list-disc pl-5 text-sm text-muted">
-                {plan.data.possibleNextActions.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {plan.data && (plan.data.status === "ready" || plan.data.status === "partial") && (
-            <>
-              {/* Summary KPIs bar */}
-              <div className="mb-8">
-                <div className="eyebrow mb-3">Ringkasan Pemulihan Keseluruhan</div>
-                <div className="card grid grid-cols-2 gap-4 p-5 lg:grid-cols-4">
-                  {[
-                    [
-                      "Status",
-                      plan.data.status === "partial" ? "Direkomendasikan · Sebagian" : "Rencana Siap",
-                      CheckCircle2,
-                    ],
-                    ["Risiko Ditangani", plan.data.summary.risksMitigated, Waves],
-                    ["Perubahan Operasional", plan.data.summary.operationalChanges, Route],
-                    [
-                      "Pemulihan Pesanan",
-                      `${plan.data.summary.recoverableOrders}/${plan.data.summary.totalOrders}`,
-                      ShoppingBag,
-                    ],
-                  ].map(([label, value, Icon]) => {
-                    const I = Icon as typeof CheckCircle2;
-                    return (
-                      <div key={String(label)} className="border-r-0 border-outline last:border-r-0 lg:border-r">
-                        <div className="eyebrow mb-1">{String(label)}</div>
-                        <div className="flex items-center gap-2 text-xl font-semibold text-primary">
-                          <I size={20} />
-                          {String(value)}
-                        </div>
-                      </div>
-                    );
-                  })}
+    <AppShell title="Rencana Pemulihan">
+      <div className="impact-pattern min-h-[calc(100vh-80px)] p-4 md:min-h-[calc(100vh-125px)] md:p-8 xl:h-[calc(100vh-125px)] xl:overflow-hidden xl:px-[65px] xl:py-[33px]">
+        {!simulationId && (
+          <EmptyState title="Belum ada simulasi yang dipilih" message="Buat rencana pemulihan dari analisis gangguan terlebih dahulu." />
+        )}
+        {simulationId && (plan.isLoading || simulation.isLoading) && <LoadingState label="Memuat rencana pemulihan terkoordinasi..." />}
+        {plan.isError && <ErrorState message={plan.error.message} onRetry={() => void plan.refetch()} />}
+        {(plan.data?.status === "queued" || plan.data?.status === "processing") && <LoadingState label="Menyusun rencana pemulihan terkoordinasi..." />}
+        {plan.data?.status === "failed" && <ErrorState message={plan.data.error.message} onRetry={() => void plan.refetch()} />}
+        {plan.data?.status === "no-feasible-plan" && (
+          <div className="rounded-[24px] border border-danger/30 bg-white p-6 shadow-sm">
+            <h1 className="text-xl font-bold text-danger">Tidak Ada Rencana Pemulihan yang Sepenuhnya Layak</h1>
+            <p className="mt-2 text-sm text-muted">Pesanan yang dapat dipulihkan: {plan.data.summary.recoverableOrders} / {plan.data.summary.totalOrders}</p>
+          </div>
+        )}
+        {simulation.data && readyPlan && (
+          <div className="mx-auto grid max-w-[1475px] gap-7 xl:h-full xl:grid-cols-[325px_minmax(0,1fr)] xl:gap-[52px]">
+            <aside className="xl:min-h-0">
+              <RecoveryContext simulation={simulation.data} operationalCondition={operationalCondition} />
+              <RecoveryTabs active={activeView} onChange={setActiveView} />
+            </aside>
+            <section className="flex min-w-0 flex-col overflow-hidden rounded-t-[58px] bg-[#dce9f3]/80 shadow-[0_0_15px_rgb(0_0_0/18%)] xl:min-h-0">
+              <RecoverySummary
+                status={readyPlan.status === "partial" ? "partial" : "ready"}
+                risks={readyPlan.summary.risksMitigated}
+                changes={readyPlan.summary.operationalChanges}
+                recoverable={readyPlan.summary.recoverableOrders}
+                total={readyPlan.summary.totalOrders}
+              />
+              <div className="min-h-0 flex-1 overflow-y-auto px-6 py-8 md:px-12">
+                {activeView === "production" && <ProductionView actions={readyPlan.manufacturingActions} />}
+                {activeView === "routes" && <RoutesView actions={readyPlan.logisticsActions} />}
+                {activeView === "commerce" && <CommerceView actions={readyPlan.commerceActions} />}
+                <div className="mt-10 flex justify-center pb-3">
+                  <Link href={`/impact?simulation=${simulationId}&condition=${encodeURIComponent(operationalCondition)}`} className="inline-flex min-h-[72px] items-center gap-4 rounded-[32px] bg-[#eba92d] px-9 text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d89a22] active:scale-[.98]">
+                    <RotateCcw size={29} /> BANDINGKAN DENGAN KONDISI AWAL <ArrowRight size={22} />
+                  </Link>
                 </div>
               </div>
-
-              {/* Action sections */}
-              <div>
-                <ManufacturingCard actions={plan.data.manufacturingActions} />
-                <LogisticsCard actions={plan.data.logisticsActions} />
-                <CommerceCard actions={plan.data.commerceActions} />
-              </div>
-
-              {/* Navigation button */}
-              <div className="flex justify-end pt-4">
-                <Link
-                  href={`/impact?simulation=${simulationId}&condition=${encodeURIComponent(operationalCondition)}`}
-                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark"
-                >
-                  Bandingkan dengan Kondisi Awal <ArrowRight size={17} />
-                </Link>
-              </div>
-            </>
-          )}
-        </div>
+            </section>
+          </div>
+        )}
       </div>
-      {simulation.data && (
-        <SimulationDetails simulation={simulation.data} open={details} onClose={() => setDetails(false)} />
-      )}
     </AppShell>
   );
 }

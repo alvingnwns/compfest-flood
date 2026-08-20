@@ -1,6 +1,13 @@
-import { CheckCircle2, CloudRain, History, MapPin } from "lucide-react";
+import { History } from "lucide-react";
 import type { AnalysisMode, RainfallScenario } from "@/domain/scenario";
-import { HAZARD_SCENARIOS, RAINFALL_SCENARIOS } from "./scenario-presets";
+import { RAINFALL_SCENARIOS } from "./scenario-presets";
+
+const activeWeatherStyles: Record<RainfallScenario, string> = {
+  Q1: "bg-gradient-to-br from-[#72ee8d] to-[#00b98e] text-black",
+  Q2: "bg-gradient-to-br from-[#ffd36c] to-[#ffa718] text-black",
+  Q3: "bg-gradient-to-br from-[#ff956c] to-[#f13024] text-black",
+  Q4: "bg-gradient-to-br from-[#aa0ac7] to-[#37003f] text-white",
+};
 
 export function AnalysisModePanel({
   analysisMode,
@@ -15,70 +22,46 @@ export function AnalysisModePanel({
   onModeChange: (mode: AnalysisMode) => void;
   onRainfallChange: (scenario: RainfallScenario) => void;
 }) {
-  const historical = HAZARD_SCENARIOS[0];
+  const chooseRainfall = (value: RainfallScenario) => {
+    onModeChange("scenario-simulation");
+    onRainfallChange(value);
+  };
+
   return (
-    <section className="card flex flex-col p-5 md:p-6">
-      <div className="mb-4 flex items-center gap-2 border-b border-outline pb-3">
-        <CloudRain className="text-primary" size={20} />
-        <h2 className="section-title text-ink">1. Kondisi Lingkungan</h2>
-      </div>
-      <fieldset disabled={disabled}>
-        <legend className="eyebrow mb-2">Mode Analisis</legend>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Mode analisis">
-          {([
-            ["scenario-simulation", "Simulasi Kondisi", CloudRain],
-            ["historical-replay", "Pemutaran Ulang Historis", History],
-          ] as const).map(([value, label, Icon]) => (
+    <section aria-labelledby="weather-title" className="mx-auto w-full max-w-[1308px]">
+      <h2 id="weather-title" className="mb-3 text-center text-[24px] font-bold text-primary-dark md:text-[32px]">
+        SIMULASI CUACA
+      </h2>
+      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4" role="radiogroup" aria-label="Pola curah hujan">
+        {RAINFALL_SCENARIOS.map((scenario) => {
+          const selected = analysisMode === "scenario-simulation" && rainfallScenario === scenario.id;
+          return (
             <button
-              key={value}
+              key={scenario.id}
               type="button"
               role="radio"
-              aria-checked={analysisMode === value}
-              onClick={() => onModeChange(value)}
-              className={`flex min-h-11 items-center justify-between rounded-lg border px-3 py-2 text-left text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${analysisMode === value ? "border-primary bg-primary/10 text-primary" : "border-outline bg-surface hover:bg-surface-high"}`}
+              aria-checked={selected}
+              disabled={disabled}
+              onClick={() => chooseRainfall(scenario.id)}
+              className={`min-h-[150px] rounded-[28px] p-5 text-left shadow-[0_0_7px_rgb(0_0_0/25%)] transition md:min-h-[183px] md:px-4 md:py-6 ${selected ? activeWeatherStyles[scenario.id] : "bg-white text-black hover:-translate-y-0.5"}`}
             >
-              <span className="flex items-center gap-2"><Icon size={16} /> {label}</span>
-              {analysisMode === value && <CheckCircle2 size={16} />}
+              <span className="block text-[20px] font-bold leading-[1.08] md:text-[25px]">{scenario.label}</span>
+              <span className="mt-4 block text-[12px] font-medium leading-[1.35] md:text-[14px]">{scenario.description}</span>
             </button>
-          ))}
-        </div>
-      </fieldset>
-
-      {analysisMode === "scenario-simulation" ? (
-        <div className="mt-5">
-          <div className="mb-4 rounded-lg border border-outline/70 bg-surface-low p-3 text-xs">
-            <span className="eyebrow mr-2">Wilayah</span>
-            <strong className="inline-flex items-center gap-1 text-ink"><MapPin size={13} /> Jakarta</strong>
-          </div>
-          <fieldset disabled={disabled}>
-            <legend className="eyebrow mb-2">Pola Curah Hujan</legend>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {RAINFALL_SCENARIOS.map((scenario) => (
-                <button
-                  key={scenario.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={rainfallScenario === scenario.id}
-                  onClick={() => onRainfallChange(scenario.id)}
-                  className={`rounded-lg border p-3 text-left transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${rainfallScenario === scenario.id ? "border-primary bg-primary/10" : "border-outline bg-surface hover:bg-surface-high"}`}
-                >
-                  <span className="block text-sm font-semibold text-ink">{scenario.label}</span>
-                  <span className="mt-1 block text-xs leading-relaxed text-muted">{scenario.description}</span>
-                </button>
-              ))}
-            </div>
-          </fieldset>
-          <p className="mt-3 text-xs leading-relaxed text-muted">Representasi pola temporal 30 hari yang diturunkan dari data historis.</p>
-        </div>
-      ) : (
-        <div className="mt-5 rounded-lg border border-outline bg-surface-low p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div><h3 className="font-semibold text-ink">{historical.name}</h3><p className="mt-1 text-xs text-muted">{historical.description}</p></div>
-            <span className="rounded bg-primary/10 px-2 py-1 text-[10px] font-bold text-primary">HISTORIS</span>
-          </div>
-          <div className="mt-3 flex items-center gap-2 text-xs font-medium text-ink"><MapPin size={14} className="text-primary" /> Jakarta · 04 Mar 2025</div>
-        </div>
-      )}
+          );
+        })}
+      </div>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={analysisMode === "historical-replay"}
+        disabled={disabled}
+        onClick={() => onModeChange("historical-replay")}
+        className={`mt-3 flex min-h-[58px] w-full items-center justify-between rounded-[28px] px-7 text-left text-[18px] font-bold text-primary shadow-[0_0_7px_rgb(0_0_0/20%)] transition md:text-[22px] ${analysisMode === "historical-replay" ? "bg-primary-soft" : "bg-white hover:bg-surface-low"}`}
+      >
+        <span>Gunakan Data Simulasi Historis</span>
+        <History className="h-7 w-7 shrink-0" aria-hidden="true" />
+      </button>
     </section>
   );
 }
