@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
-import { ChartNoAxesCombined, LayoutDashboard, Map, MessageCircleMore, RefreshCcw, Settings2 } from "lucide-react";
+import { ChartNoAxesCombined, ChevronLeft, ChevronRight, LayoutDashboard, Map, MessageCircleMore, RefreshCcw, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 
 const items: Array<{ href: string; label: string; icon: LucideIcon }> = [
@@ -18,25 +19,73 @@ export function AppShell({ children, title, actions }: { children: React.ReactNo
   const pathname = usePathname();
   const params = useSearchParams();
   const simulation = params.get("simulation");
+  const [collapsed, setCollapsed] = useState(false);
 
-  return <div className="min-h-screen bg-background text-ink">
-    <aside className="fixed inset-y-0 left-0 z-50 hidden w-[315px] flex-col bg-primary px-[29px] md:flex">
-      <div className="-mx-[29px] flex h-[125px] items-center rounded-b-[50px] bg-primary-dark px-[29px]">
-        <div className="h-[53px] w-[50px] rounded-[14px] bg-secondary-soft" aria-hidden="true" />
-        <div className="ml-3 whitespace-nowrap text-[24px] font-semibold text-white [text-shadow:0_0_10px_rgb(0_0_0/25%)]">ResiliChain AI</div>
-      </div>
-      <nav aria-label="Navigasi utama" className="mt-10 flex-1 space-y-3">
-        {items.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href;
-          const target = simulation && href !== "/scenario" && href !== "/overview" ? `${href}?simulation=${simulation}` : href;
-          return <Link key={href} href={target} aria-current={active ? "page" : undefined} className={`-mx-[14px] flex h-[50px] w-[285px] items-center gap-[10px] rounded-[15px] px-[14px] text-[20px] font-semibold text-white transition duration-200 active:scale-[.98] ${active ? "bg-primary-dark text-[#ffc558]" : "hover:bg-primary-dark/55"}`}><Icon className="h-[37px] w-[37px] shrink-0" strokeWidth={2.1} aria-hidden="true" /><span className="whitespace-nowrap">{label}</span></Link>;
-        })}
-      </nav>
-    </aside>
-    <header className="fixed inset-x-0 top-0 z-40 flex h-20 items-center justify-between bg-white px-5 shadow-[0_2px_4px_rgb(0_0_0/25%)] md:left-[315px] md:h-[125px] md:px-[65px]">
-      <div className="min-w-0 truncate text-[30px] font-extrabold text-primary md:text-[64px] md:leading-none">{title ?? "Ringkasan"}</div>
-      <div className="flex shrink-0 items-center gap-3">{actions}</div>
-    </header>
-    <main className="min-h-screen pt-20 md:ml-[315px] md:pt-[125px]">{children}</main>
-  </div>;
+  const sidebarW = collapsed ? "72px" : "260px";
+
+  return (
+    <div className="min-h-screen bg-background text-ink">
+      {/* Sidebar */}
+      <aside
+        className="fixed inset-y-0 left-0 z-50 hidden flex-col bg-primary md:flex overflow-hidden transition-all duration-300"
+        style={{ width: sidebarW }}
+      >
+        {/* Header — flat, no curve, contains collapse toggle */}
+        <div className="flex h-20 shrink-0 items-center bg-primary-dark px-3 gap-2">
+          <div className="h-[38px] w-[38px] shrink-0 rounded-[10px] bg-secondary-soft" aria-hidden="true" />
+          {!collapsed && (
+            <div className="ml-1 flex-1 whitespace-nowrap text-[18px] font-semibold text-white [text-shadow:0_0_8px_rgb(0_0_0/25%)]">
+              ResiliChain AI
+            </div>
+          )}
+          {/* Collapse toggle button — top, icon only */}
+          <button
+            type="button"
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={collapsed ? "Buka sidebar" : "Tutup sidebar"}
+            className="grid size-8 shrink-0 place-items-center rounded-[8px] text-white/70 transition hover:bg-white/15 hover:text-white"
+          >
+            {collapsed ? <ChevronRight className="size-5" /> : <ChevronLeft className="size-5" />}
+          </button>
+        </div>
+
+        {/* Nav items */}
+        <nav aria-label="Navigasi utama" className="mt-8 flex-1 space-y-2 px-3 overflow-hidden">
+          {items.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href;
+            const target = simulation && href !== "/scenario" && href !== "/overview" ? `${href}?simulation=${simulation}` : href;
+            return (
+              <Link
+                key={href}
+                href={target}
+                aria-current={active ? "page" : undefined}
+                title={collapsed ? label : undefined}
+                className={`flex h-11 w-full items-center gap-3 rounded-[12px] px-3.5 text-[15px] font-semibold transition duration-200 active:scale-[.98] ${active ? "bg-primary-dark text-[#ffc558]" : "text-white hover:bg-primary-dark/55"}`}
+              >
+                <Icon className="h-5 w-5 shrink-0" strokeWidth={2.1} aria-hidden="true" />
+                {!collapsed && <span className="whitespace-nowrap">{label}</span>}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* Top header */}
+      <header
+        className="fixed top-0 right-0 z-40 flex h-20 items-center justify-between bg-white px-5 shadow-[0_2px_4px_rgb(0_0_0/25%)] md:h-20 md:px-8 transition-all duration-300"
+        style={{ left: sidebarW }}
+      >
+        <div className="min-w-0 truncate text-[24px] font-bold text-primary md:text-[32px]">{title ?? "Ringkasan"}</div>
+        <div className="flex shrink-0 items-center gap-3">{actions}</div>
+      </header>
+
+      {/* Main content */}
+      <main
+        className="min-h-screen pt-20 transition-all duration-300"
+        style={{ marginLeft: sidebarW }}
+      >
+        {children}
+      </main>
+    </div>
+  );
 }

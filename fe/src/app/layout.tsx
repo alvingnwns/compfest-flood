@@ -1,7 +1,15 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
+import { Montserrat } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "600", "700", "800"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "ResiliChain AI",
@@ -9,5 +17,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="id"><body className="font-sans"><AppProviders>{children}</AppProviders></body></html>;
+  return (
+    <html lang="id" className={montserrat.variable}>
+      <body className={`${montserrat.className} font-sans`}>
+        <AppProviders>{children}</AppProviders>
+      </body>
+    </html>
+  );
 }
+

@@ -168,22 +168,33 @@ export function ScenarioPage() {
       title="Skenario"
       actions={
         <>
-          <button type="button" onClick={handleResetToDefault} disabled={busy} className="inline-flex h-11 items-center justify-center gap-3 rounded-[14px] bg-primary-dark px-4 text-[12px] font-semibold text-white transition hover:brightness-110 disabled:opacity-50 md:h-[90px] md:w-[301px] md:rounded-[27px] md:px-6 md:text-[21px]">
-            <RefreshCcw className="h-5 w-5 shrink-0 md:h-10 md:w-10" />
-            <span className="hidden leading-tight sm:inline">Kembalikan ke Default</span>
+          <button
+            type="button"
+            onClick={handleResetToDefault}
+            disabled={busy}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-[12px] bg-primary-dark px-4 text-[13px] font-semibold text-white transition hover:brightness-110 disabled:opacity-50 md:h-11 md:px-5 md:text-[14px]"
+          >
+            <RefreshCcw className="h-4 w-4 shrink-0" />
+            <span className="hidden sm:inline">Kembalikan ke Default</span>
           </button>
-          <button type="button" id="btn-run-simulation" onClick={() => void start()} disabled={busy || !simulationReady} className="inline-flex h-11 items-center justify-center gap-3 rounded-[14px] bg-gradient-to-r from-[#eba92d] to-[#ffa600] px-5 text-[14px] font-bold text-white transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 md:h-[90px] md:w-[436px] md:rounded-[27px] md:text-[27px]">
-            <Play className="h-6 w-6 shrink-0 md:h-[52px] md:w-[52px]" fill="none" />
+          <button
+            type="button"
+            id="btn-run-simulation"
+            onClick={() => void start()}
+            disabled={busy || !simulationReady}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-[12px] bg-gradient-to-r from-[#eba92d] to-[#ffa600] px-5 text-[13px] font-bold text-white transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 md:h-11 md:px-6 md:text-[14px]"
+          >
+            <Play className="h-4 w-4 shrink-0" fill="none" />
             <span className="hidden sm:inline">Jalankan Analisis</span>
           </button>
         </>
       }
     >
-      <div className="scenario-pattern relative min-h-[calc(100vh-80px)] px-4 py-10 md:min-h-[calc(100vh-125px)] md:px-[35px] md:py-[45px]">
+      <div className="scenario-pattern relative min-h-[calc(100vh-80px)] px-4 py-8 md:px-8 md:py-10">
         {scenario.isLoading && <LoadingState label="Memuat skenario Jakarta…" />}
         {scenario.isError && <ErrorState message={scenario.error.message} onRetry={() => void scenario.refetch()} />}
         {scenario.data && (
-          <>
+          <div className="mx-auto max-w-[1456px] space-y-12">
             <BusinessDataPanel
               mode={businessMode}
               preview={businessPreview}
@@ -195,13 +206,20 @@ export function ScenarioPage() {
               onUpload={(file) => void handleBusinessUpload(file)}
               onConfirm={handleBusinessConfirm}
             />
-            <div className="mt-[70px]"><AnalysisModePanel analysisMode={analysisMode} rainfallScenario={rainfallScenario} disabled={busy} onModeChange={handleModeChange} onRainfallChange={handleRainfallChange} /></div>
-            <div className="mt-16"><OperationalConditionPanel scenario={scenario.data} selectedPresetId={opPresetId} overrides={overrides} custom={isCustomMode} disabled={busy} onSelect={handleOpPresetSelect} onReset={handleResetToNormal} /></div>
-            <div className="mt-12"><OperationalEditor scenario={scenario.data} overrides={overrides} disabled={busy} onChange={handleApplyDrawerOverrides} /></div>
-          </>
+            <AnalysisModePanel analysisMode={analysisMode} rainfallScenario={rainfallScenario} disabled={busy} onModeChange={handleModeChange} onRainfallChange={handleRainfallChange} />
+            <OperationalConditionPanel scenario={scenario.data} selectedPresetId={opPresetId} overrides={overrides} custom={isCustomMode} disabled={busy} onSelect={handleOpPresetSelect} onReset={handleResetToNormal} />
+            <OperationalEditor
+              scenario={scenario.data}
+              overrides={overrides}
+              presetId={opPresetId}
+              custom={isCustomMode}
+              disabled={busy}
+              onChange={handleApplyDrawerOverrides}
+            />
+          </div>
         )}
 
-        {(run.isError || simulation.isError || simulation.data?.status === "failed") && (
+        {(run.error || simulation.isError || simulation.data?.status === "failed") && (
           <ErrorState
             message={run.error?.message ?? simulation.error?.message ?? simulation.data?.error?.message ?? "Simulasi tidak dapat diselesaikan."}
             onRetry={simulation.isError ? () => void simulation.refetch() : simulationReady ? () => void start() : undefined}

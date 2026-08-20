@@ -64,7 +64,7 @@ export function ImpactPage() {
   const query = useImpactComparison(simulationId), simulation = useSimulation(simulationId);
   const [menu, setMenu] = useState(false);
 
-  return <AppShell title="Analisis Dampak"><div className="impact-pattern min-h-[calc(100vh-125px)] px-5 py-10 lg:px-10 xl:h-[calc(100vh-125px)] xl:min-h-0 xl:overflow-hidden">
+  return <AppShell title="Analisis Dampak"><div className="impact-pattern min-h-[calc(100vh-80px)] px-5 py-8 lg:px-8 xl:h-[calc(100vh-80px)] xl:min-h-0 xl:overflow-hidden">
     <div className="mx-auto grid max-w-[1480px] items-start gap-8 xl:h-full xl:grid-cols-[325px_minmax(0,1094px)] xl:gap-[33px]">
       <div className="xl:h-full">{!simulationId && <EmptyState title="Belum ada simulasi yang dipilih" message="Selesaikan rencana pemulihan sebelum membandingkan dampak." />}{simulation.data && <ScenarioStatus simulation={simulation.data} condition={condition} />}</div>
       <div className="xl:h-full xl:overflow-y-auto xl:overscroll-contain xl:pb-10 xl:pr-3">

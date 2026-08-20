@@ -264,7 +264,7 @@ export function RecoveryPage() {
 
   return (
     <AppShell title="Rencana Pemulihan">
-      <div className="impact-pattern min-h-[calc(100vh-80px)] p-4 md:min-h-[calc(100vh-125px)] md:p-8 xl:h-[calc(100vh-125px)] xl:overflow-hidden xl:px-[65px] xl:py-[33px]">
+      <div className="impact-pattern min-h-[calc(100vh-80px)] p-4 md:min-h-[calc(100vh-80px)] md:p-6 xl:h-[calc(100vh-80px)] xl:overflow-hidden xl:px-8 xl:py-6">
         {!simulationId && (
           <EmptyState title="Belum ada simulasi yang dipilih" message="Buat rencana pemulihan dari analisis gangguan terlebih dahulu." />
         )}

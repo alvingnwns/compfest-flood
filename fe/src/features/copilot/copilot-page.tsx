@@ -69,7 +69,7 @@ export function CopilotPage() {
     void submit(input);
   };
 
-  if (!simulationId) return <AppShell title="ResiliChain Copilot"><div className="grid min-h-[calc(100vh-125px)] place-items-center p-6"><section className="rounded-lg border border-outline bg-white p-8 text-center shadow-sm"><ShieldCheck className="mx-auto mb-4 text-primary" size={36} /><h1 className="mb-2 text-xl font-semibold">Run a simulation first</h1><p className="mb-6 max-w-lg text-sm text-muted">Run a simulation first to give Copilot operational context. Copilot will not answer without computed evidence.</p><Link href="/scenario" className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white">Open Scenario <ArrowRight size={17} /></Link></section></div></AppShell>;
+  if (!simulationId) return <AppShell title="ResiliChain Copilot"><div className="grid min-h-[calc(100vh-80px)] place-items-center p-6"><section className="rounded-lg border border-outline bg-white p-8 text-center shadow-sm"><ShieldCheck className="mx-auto mb-4 text-primary" size={36} /><h1 className="mb-2 text-xl font-semibold">Run a simulation first</h1><p className="mb-6 max-w-lg text-sm text-muted">Run a simulation first to give Copilot operational context. Copilot will not answer without computed evidence.</p><Link href="/scenario" className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white">Open Scenario <ArrowRight size={17} /></Link></section></div></AppShell>;
   if (simulation.isLoading) return <AppShell title="ResiliChain Copilot"><LoadingState label="Loading simulation context..." /></AppShell>;
   if (simulation.isError) return <AppShell title="ResiliChain Copilot"><ErrorState message={simulation.error.message} onRetry={() => void simulation.refetch()} /></AppShell>;
   if (!conversation.hydrated) return <AppShell title="ResiliChain Copilot"><LoadingState label="Restoring conversation..." /></AppShell>;
@@ -86,7 +86,7 @@ export function CopilotPage() {
   ];
 
   return <AppShell title="ResiliChain Copilot">
-    <div className="copilot-pattern grid min-h-[calc(100vh-125px)] xl:h-[calc(100vh-125px)] xl:min-h-0 xl:grid-cols-[minmax(0,1fr)_370px] xl:overflow-hidden">
+    <div className="copilot-pattern grid min-h-[calc(100vh-80px)] xl:h-[calc(100vh-80px)] xl:min-h-0 xl:grid-cols-[minmax(0,1fr)_370px] xl:overflow-hidden">
       <section className="relative flex min-h-[720px] flex-col overflow-hidden border-r border-outline xl:min-h-0">
         {messages.length > 0 && <button type="button" onClick={conversation.clear} disabled={conversation.isSending} aria-label="Hapus percakapan" title="Hapus percakapan" className="absolute left-5 top-5 z-20 grid size-10 place-items-center rounded-full border border-outline bg-white/90 text-muted shadow-sm hover:text-danger disabled:opacity-50"><Trash2 className="size-4" /></button>}
 

@@ -29,10 +29,10 @@ export function AnalysisModePanel({
 
   return (
     <section aria-labelledby="weather-title" className="mx-auto w-full max-w-[1308px]">
-      <h2 id="weather-title" className="mb-3 text-center text-[24px] font-bold text-primary-dark md:text-[32px]">
+      <h2 id="weather-title" className="mb-3 text-center text-[20px] font-bold text-primary-dark md:text-[22px]">
         SIMULASI CUACA
       </h2>
-      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4" role="radiogroup" aria-label="Pola curah hujan">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" role="radiogroup" aria-label="Pola curah hujan">
         {RAINFALL_SCENARIOS.map((scenario) => {
           const selected = analysisMode === "scenario-simulation" && rainfallScenario === scenario.id;
           return (
@@ -43,10 +43,10 @@ export function AnalysisModePanel({
               aria-checked={selected}
               disabled={disabled}
               onClick={() => chooseRainfall(scenario.id)}
-              className={`min-h-[150px] rounded-[28px] p-5 text-left shadow-[0_0_7px_rgb(0_0_0/25%)] transition md:min-h-[183px] md:px-4 md:py-6 ${selected ? activeWeatherStyles[scenario.id] : "bg-white text-black hover:-translate-y-0.5"}`}
+              className={`min-h-[135px] rounded-[20px] p-4 text-left shadow-sm transition md:min-h-[150px] md:p-5 ${selected ? activeWeatherStyles[scenario.id] : "bg-white text-black hover:-translate-y-0.5"}`}
             >
-              <span className="block text-[20px] font-bold leading-[1.08] md:text-[25px]">{scenario.label}</span>
-              <span className="mt-4 block text-[12px] font-medium leading-[1.35] md:text-[14px]">{scenario.description}</span>
+              <span className="block text-[16px] font-bold leading-[1.15] md:text-[18px]">{scenario.label}</span>
+              <span className="mt-2.5 block text-[12px] font-medium leading-[1.35] md:text-[13px]">{scenario.description}</span>
             </button>
           );
         })}
@@ -57,10 +57,10 @@ export function AnalysisModePanel({
         aria-checked={analysisMode === "historical-replay"}
         disabled={disabled}
         onClick={() => onModeChange("historical-replay")}
-        className={`mt-3 flex min-h-[58px] w-full items-center justify-between rounded-[28px] px-7 text-left text-[18px] font-bold text-primary shadow-[0_0_7px_rgb(0_0_0/20%)] transition md:text-[22px] ${analysisMode === "historical-replay" ? "bg-primary-soft" : "bg-white hover:bg-surface-low"}`}
+        className={`mt-3 flex min-h-[48px] w-full items-center justify-between rounded-[20px] px-6 text-left text-[15px] font-bold text-primary shadow-sm transition md:text-[16px] ${analysisMode === "historical-replay" ? "bg-primary-soft" : "bg-white hover:bg-surface-low"}`}
       >
         <span>Gunakan Data Simulasi Historis</span>
-        <History className="h-7 w-7 shrink-0" aria-hidden="true" />
+        <History className="h-5 w-5 shrink-0" aria-hidden="true" />
       </button>
     </section>
   );

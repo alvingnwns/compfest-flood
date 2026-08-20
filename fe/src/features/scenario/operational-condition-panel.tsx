@@ -28,10 +28,10 @@ export function OperationalConditionPanel({
 
   return (
     <section aria-labelledby="condition-title" className="mx-auto w-full max-w-[1504px]">
-      <h2 id="condition-title" className="mb-3 text-center text-[24px] font-bold text-primary-dark md:text-[32px]">
+      <h2 id="condition-title" className="mb-3 text-center text-[20px] font-bold text-primary-dark md:text-[22px]">
         KONDISI LINGKUNGAN
       </h2>
-      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4" role="radiogroup" aria-label="Kondisi operasional">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" role="radiogroup" aria-label="Kondisi operasional">
         {presets.map((preset) => {
           const selected = !custom && selectedPresetId === preset.id;
           const title = preset.id === "severe-disruption" ? "Gangguan Operasional" : preset.label;
@@ -43,12 +43,12 @@ export function OperationalConditionPanel({
               aria-checked={selected}
               disabled={disabled}
               onClick={() => onSelect(preset)}
-              className={`relative min-h-[92px] rounded-[25px] px-5 py-4 text-left shadow-[0_0_7px_rgb(0_0_0/25%)] transition ${selected ? "bg-primary text-white" : "bg-white text-primary hover:-translate-y-0.5"}`}
+              className={`relative min-h-[80px] rounded-[18px] px-4 py-3 text-left shadow-sm transition ${selected ? "bg-primary-dark text-white" : "bg-white text-primary hover:-translate-y-0.5"}`}
             >
-              <span className="block pr-7 text-[18px] font-bold leading-tight md:text-[22px]">{title}</span>
-              <span className="mt-1 block pr-4 text-[11px] font-medium leading-snug md:text-[14px]">{figmaDescriptions[preset.id]}</span>
-              <span className={`absolute right-3 top-3 grid h-6 w-6 place-items-center rounded-full border ${selected ? "border-white" : "border-primary"}`} aria-hidden="true">
-                {selected && <span className="h-2.5 w-2.5 rounded-full bg-white" />}
+              <span className="block pr-6 text-[15px] font-bold leading-tight md:text-[16px]">{title}</span>
+              <span className="mt-1 block pr-4 text-[11px] font-medium leading-snug md:text-[12px] opacity-80">{figmaDescriptions[preset.id]}</span>
+              <span className={`absolute right-3 top-3 grid h-5 w-5 place-items-center rounded-full border ${selected ? "border-white" : "border-primary/60"}`} aria-hidden="true">
+                {selected && <span className="h-2 w-2 rounded-full bg-white" />}
               </span>
             </button>
           );

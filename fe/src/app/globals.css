@@ -18,7 +18,7 @@
   --color-danger: #ba1a1a;
   --color-danger-soft: #ffdad6;
   --color-warning: #c45f00;
-  --font-sans: "Montserrat", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --font-sans: var(--font-montserrat), "Montserrat", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   --font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 

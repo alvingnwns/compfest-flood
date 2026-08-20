@@ -8,10 +8,58 @@ import { useCallback, useEffect, useState } from "react";
 const SLIDE_DURATION_MS = 5500;
 
 const slides = [
-  { title: <>Siapkan Bisnis Anda <span className="text-white">Hadapi Banjir</span></>, description: "Kenali risiko lebih awal, ambil langkah lebih cepat.", image: "/landing/asset-1.png", alt: "Tim bisnis merencanakan ketahanan rantai pasok" },
-  { title: <>Memprediksi Risiko Banjir <span className="text-accent">Lebih Awal</span></>, description: "ResiliChain menggunakan model Random Forest Classifier untuk membantu bisnis mengantisipasi gangguan dan mempersiapkan langkah lebih awal.", image: "/landing/asset-3.png", alt: "Visualisasi banjir perkotaan" },
-  { title: <>Memetakan <span className="text-accent">Dampak Banjir</span> <span className="text-white">pada Jalan</span></>, description: "Identifikasi jalan yang berpotensi terdampak banjir dan pahami pengaruhnya terhadap akses serta distribusi barang.", image: "/landing/asset-5.png", alt: "Visualisasi jaringan jalan terdampak banjir" },
-  { title: <>Menentukan Strategi saat <span className="text-accent">Terjadi Banjir</span></>, description: "Analisis kondisi jalan untuk menentukan rute alternatif dan prioritas distribusi agar bisnis dapat mengurangi dampak gangguan.", image: "/landing/asset-7.png", alt: "Visualisasi strategi dan rute pemulihan" },
+  {
+    title: (
+      <>
+        <span className="text-[#ffc558]">Siapkan<br />Bisnis Anda</span>{" "}
+        <span className="text-white">Hadapi Banjir</span>
+      </>
+    ),
+    description: "Kenali risiko lebih awal, ambil langkah lebih cepat.",
+    image: "/landing/asset-1.png",
+    alt: "Tim bisnis merencanakan ketahanan rantai pasok",
+    hasCta: true,
+  },
+  {
+    title: (
+      <>
+        <span className="text-white">Memprediksi<br />Resiko Banjir</span>{" "}
+        <span className="text-[#ffc558]">Lebih Awal</span>
+      </>
+    ),
+    description:
+      "ResiliChain menggunakan model Random Forest Classifier untuk membantu bisnis mengantisipasi gangguan dan mempersiapkan langkah lebih awal.",
+    image: "/landing/asset-3.png",
+    alt: "Visualisasi prediksi risiko banjir perkotaan",
+    hasCta: false,
+  },
+  {
+    title: (
+      <>
+        <span className="text-white">Memetakan</span><br />
+        <span className="text-[#ffc558]">Dampak Banjir</span>{" "}
+        <span className="text-white">pada Jalan</span>
+      </>
+    ),
+    description:
+      "Identifikasi jalan yang berpotensi terdampak banjir dan pahami pengaruhnya terhadap akses serta distribusi barang.",
+    image: "/landing/asset-5.png",
+    alt: "Visualisasi jaringan jalan terdampak banjir",
+    hasCta: false,
+  },
+  {
+    title: (
+      <>
+        <span className="text-white">Menentukan<br />Strategi saat</span>{" "}
+        <span className="text-[#ffc558]">Terjadi Banjir</span>
+      </>
+    ),
+    description:
+      "Analisis kondisi jalan untuk menentukan rute alternatif dan prioritas distribusi agar bisnis dapat mengurangi dampak gangguan.",
+    image: "/landing/asset-7.png",
+    alt: "Visualisasi penentuan strategi pemulihan",
+    hasCta: false,
+  },
 ];
 
 const steps = [
@@ -65,8 +113,32 @@ export function LandingPage() {
     <section id="beranda" className="landing-grid relative min-h-[840px] scroll-mt-[96px] bg-primary pt-[96px]">
       <h1 className="sr-only">ResiliChain AI</h1>
       <div className="relative mx-auto grid min-h-[620px] w-full max-w-[1480px] items-center gap-10 px-6 pb-20 pt-8 lg:grid-cols-[minmax(0,620px)_minmax(360px,560px)] lg:justify-between lg:px-12">
-        <div key={`copy-${activeSlide}`} aria-live="polite" className="landing-slide-copy relative z-10"><p className="max-w-[620px] text-[46px] font-bold leading-[1.06] text-[#ffc558] [text-shadow:0_0_19px_rgb(0_0_0/25%)] md:text-[64px] lg:text-[76px]">{slide.title}</p><p className="mt-7 max-w-[600px] text-[17px] leading-relaxed text-[#eaeced] md:text-[21px]">{slide.description}</p><Link href="/scenario" className="mt-9 inline-flex h-[72px] min-w-[290px] items-center justify-center rounded-full bg-[linear-gradient(90deg,#eba92d,#856019)] px-8 text-[18px] font-semibold text-white shadow-xl transition hover:brightness-110">EXPLORE NOW!</Link></div>
-        <div key={`image-${activeSlide}`} className="landing-slide-image relative mx-auto aspect-square w-full max-w-[520px]"><Image src={slide.image} alt={slide.alt} fill priority={activeSlide === 0} sizes="(max-width: 1024px) 90vw, 520px" className="object-contain drop-shadow-[0_12px_28px_rgb(255_255_255/14%)]" /></div>
+        <div key={`copy-${activeSlide}`} aria-live="polite" className="landing-slide-copy relative z-10">
+          <div className="max-w-[620px] text-[46px] font-bold leading-[1.06] [text-shadow:0_0_19px_rgb(0_0_0/25%)] md:text-[64px] lg:text-[76px]">
+            {slide.title}
+          </div>
+          <p className="mt-7 max-w-[600px] text-[17px] leading-relaxed text-[#eaeced] md:text-[21px]">
+            {slide.description}
+          </p>
+          {slide.hasCta && (
+            <Link
+              href="/scenario"
+              className="mt-9 inline-flex h-[72px] min-w-[290px] items-center justify-center rounded-full bg-[linear-gradient(90deg,#eba92d,#856019)] px-8 text-[18px] font-semibold text-white shadow-xl transition hover:brightness-110"
+            >
+              EXPLORE NOW!
+            </Link>
+          )}
+        </div>
+        <div key={`image-${activeSlide}`} className="landing-slide-image relative mx-auto aspect-square w-full max-w-[520px]">
+          <Image
+            src={slide.image}
+            alt={slide.alt}
+            fill
+            priority={activeSlide === 0}
+            sizes="(max-width: 1024px) 90vw, 520px"
+            className="object-contain drop-shadow-[0_12px_28px_rgb(255_255_255/14%)]"
+          />
+        </div>
       </div>
       <div className="absolute bottom-9 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4">
         <button type="button" onClick={() => move(-1)} aria-label="Slide sebelumnya" className="grid size-9 place-items-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white"><ChevronLeft /></button>
@@ -80,12 +152,12 @@ export function LandingPage() {
     </section>
 
     <section id="cara-kerja" className="scroll-mt-[96px] bg-primary px-6 py-20"><div className="mx-auto max-w-[1480px]">
-      <p className="text-center text-[18px] font-semibold text-[#d9d9d9]">CARA KERJA</p><h2 className="mt-6 text-[38px] font-extrabold text-[#ffc558] md:text-[54px]">Dari Data Menjadi Keputusan</h2><p className="mt-3 max-w-[1250px] text-[18px] leading-relaxed text-[#eaeced] md:text-[23px]">ResiliChain mengolah data banjir, jaringan jalan, dan distribusi untuk menghasilkan rekomendasi yang dapat ditindaklanjuti.</p>
+      <p className="text-center text-[22px] font-bold tracking-[0.15em] text-[#d9d9d9] md:text-[26px]">CARA KERJA</p><h2 className="mt-6 text-[38px] font-extrabold text-[#ffc558] md:text-[54px]">Dari Data Menjadi Keputusan</h2><p className="mt-3 max-w-[1250px] text-[18px] leading-relaxed text-[#eaeced] md:text-[23px]">ResiliChain mengolah data banjir, jaringan jalan, dan distribusi untuk menghasilkan rekomendasi yang dapat ditindaklanjuti.</p>
       <ol className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">{steps.map(([title, description], index) => <li key={title} className="min-h-[330px] rounded-[20px] bg-white px-5 py-8 text-center text-black"><span className="mx-auto grid size-[58px] place-items-center rounded-full bg-primary text-[28px] font-bold text-white shadow-lg">{index + 1}</span><h3 className="mt-5 text-[18px] font-bold leading-tight">{title}</h3><p className="mt-4 text-[14px] font-medium leading-relaxed text-[#5a5a5a]">{description}</p></li>)}</ol>
     </div></section>
 
     <section id="fitur" className="landing-honeycomb scroll-mt-[96px] bg-secondary-soft px-6 py-20 text-primary"><div className="mx-auto max-w-[1480px]">
-      <p className="text-center text-[18px] font-semibold text-primary-dark">FITUR</p><h2 className="mt-6 text-[38px] font-extrabold md:text-[54px]">Solusi Cerdas untuk Bisnis</h2><p className="mt-3 max-w-[1280px] text-[18px] leading-relaxed md:text-[23px]">Dari prediksi banjir hingga rute alternatif, ResiliChain membantu bisnis menghadapi gangguan dengan lebih siap.</p>
+      <p className="text-center text-[22px] font-bold tracking-[0.15em] text-primary-dark md:text-[26px]">FITUR</p><h2 className="mt-6 text-[38px] font-extrabold md:text-[54px]">Solusi Cerdas untuk Bisnis</h2><p className="mt-3 max-w-[1280px] text-[18px] leading-relaxed md:text-[23px]">Dari prediksi banjir hingga rute alternatif, ResiliChain membantu bisnis menghadapi gangguan dengan lebih siap.</p>
       <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">{features.map(([title, description], index) => <article key={title} className="min-h-[350px] rounded-[20px] bg-white/75 px-6 py-9 text-center text-black shadow-sm"><span className="mx-auto grid size-[68px] place-items-center rounded-full bg-accent text-[30px] font-bold text-white shadow-lg">{index + 1}</span><h3 className="mt-6 text-[20px] font-bold leading-tight">{title}</h3><p className="mt-5 text-[15px] font-semibold leading-relaxed text-[#5a5a5a]">{description}</p></article>)}</div>
     </div></section>
 

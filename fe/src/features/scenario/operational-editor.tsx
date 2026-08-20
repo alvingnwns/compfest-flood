@@ -1,128 +1,443 @@
-import { Pencil, Plus } from "lucide-react";
+"use client";
+
+import { Check, Pencil, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { Scenario, VehicleOverride } from "@/domain/scenario";
 import type { OperationalOverrides } from "./scenario-presets";
 
 type Props = {
   scenario: Scenario;
   overrides: OperationalOverrides;
+  presetId?: string;
+  custom?: boolean;
   disabled?: boolean;
   onChange: (overrides: OperationalOverrides) => void;
 };
 
+type ProductItem = {
+  id: string;
+  name: string;
+  quantity: number;
+};
+
+type WarehouseItem = {
+  id: string;
+  name: string;
+  items: ProductItem[];
+};
+
+type VehicleItem = {
+  id: string;
+  label: string;
+  capacityUnits: number;
+  available: boolean;
+};
+
 const warehouseHeaderColors = [
-  "bg-[#633695]",
-  "bg-[#39863e]",
-  "bg-[#9c2a5d]",
-  "bg-[#be6d12]",
+  "bg-[#5c2a72]",
+  "bg-[#2e7d32]",
+  "bg-[#880e4f]",
+  "bg-[#af601a]",
 ];
 
-export function OperationalEditor({ scenario, overrides, disabled, onChange }: Props) {
-  const vehicleMap = Object.fromEntries(overrides.vehicleOverrides.map((item) => [item.id, item]));
-  const inventoryMap = Object.fromEntries(overrides.inventoryOverrides.map((item) => [`${item.facilityId}:${item.productId}`, item]));
-  const products = Object.fromEntries(scenario.products.map((product) => [product.id, product]));
-  const warehouses = scenario.facilities.filter((facility) => facility.kind === "warehouse");
+function createPureTemplateWarehouses(presetId: string): WarehouseItem[] {
+  const initialNames = ["Gudang 1", "Gudang 2", "Gudang 3", "Gudang 4"];
+  const ids = ["wh-east", "wh-west", "wh-3", "wh-4"];
 
-  const updateVehicle = (id: string, update: Partial<VehicleOverride>) => {
-    const next = overrides.vehicleOverrides.filter((item) => item.id !== id);
-    onChange({ ...overrides, vehicleOverrides: [...next, { ...vehicleMap[id], id, ...update }] });
+  return initialNames.map((name, index) => {
+    let p1Qty = 0;
+    let p2Qty = 0;
+    if (presetId === "severe-disruption") {
+      p1Qty = index === 0 ? 0 : index === 1 ? 310 : 0;
+      p2Qty = index === 1 ? 500 : 0;
+    } else if (presetId === "critical-stock") {
+      p1Qty = index === 0 ? 50 : index === 1 ? 50 : 0;
+      p2Qty = index === 1 ? 500 : 0;
+    } else {
+      // normal & limited-vehicle
+      p1Qty = index === 0 ? 420 : index === 1 ? 310 : 0;
+      p2Qty = index === 1 ? 500 : 0;
+    }
+
+    return {
+      id: ids[index],
+      name,
+      items: [
+        { id: "prod-1", name: "Produk 1", quantity: p1Qty },
+        { id: "prod-2", name: "Produk 2", quantity: p2Qty },
+        { id: "prod-3", name: "Produk 3", quantity: 0 },
+      ],
+    };
+  });
+}
+
+function createPureTemplateVehicles(presetId: string): VehicleItem[] {
+  return [
+    {
+      id: "V-01",
+      label: "Kendaraan 1",
+      capacityUnits: 800,
+      available: presetId === "severe-disruption" ? false : true,
+    },
+    {
+      id: "V-02",
+      label: "Kendaraan 2",
+      capacityUnits: 800,
+      available: presetId === "severe-disruption" ? false : true,
+    },
+    {
+      id: "V-03",
+      label: "Kendaraan 3",
+      capacityUnits: 450,
+      available: presetId === "limited-vehicle" ? false : true,
+    },
+  ];
+}
+
+export function OperationalEditor({
+  scenario,
+  overrides,
+  presetId = "severe-disruption",
+  custom = false,
+  disabled,
+  onChange,
+}: Props) {
+  // Initial default warehouses matching pure 4-warehouse template
+  const [warehouses, setWarehouses] = useState<WarehouseItem[]>(() => createPureTemplateWarehouses(presetId));
+
+  // Initial default vehicles matching pure 3-vehicle template
+  const [vehicles, setVehicles] = useState<VehicleItem[]>(() => createPureTemplateVehicles(presetId));
+
+  // Inline editing state
+  const [editingWarehouseId, setEditingWarehouseId] = useState<string | null>(null);
+  const [editingWarehouseName, setEditingWarehouseName] = useState("");
+  const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
+  const [editingVehicleName, setEditingVehicleName] = useState("");
+
+  // When presetId changes and we are NOT in custom mode, hard reset to pure template
+  useEffect(() => {
+    if (!custom) {
+      setWarehouses(createPureTemplateWarehouses(presetId));
+      setVehicles(createPureTemplateVehicles(presetId));
+    }
+  }, [presetId, custom]);
+
+  const emitChange = (updatedVehicles: VehicleItem[], updatedWarehouses: WarehouseItem[]) => {
+    const vehicleOverrides: VehicleOverride[] = updatedVehicles.map((v) => ({
+      id: v.id,
+      available: v.available,
+      capacityUnits: v.capacityUnits,
+    }));
+
+    const inventoryOverrides = updatedWarehouses.flatMap((wh) =>
+      wh.items.map((item) => ({
+        facilityId: wh.id,
+        productId: item.id,
+        quantity: item.quantity,
+      }))
+    );
+
+    onChange({ vehicleOverrides, inventoryOverrides });
   };
 
+  // Add Warehouse
+  const addWarehouse = () => {
+    if (disabled) return;
+    const nextIndex = warehouses.length + 1;
+    const newWarehouse: WarehouseItem = {
+      id: `wh-${nextIndex}`,
+      name: `Gudang ${nextIndex}`,
+      items: [
+        { id: "prod-1", name: "Produk 1", quantity: 0 },
+        { id: "prod-2", name: "Produk 2", quantity: 0 },
+        { id: "prod-3", name: "Produk 3", quantity: 0 },
+      ],
+    };
+    const next = [...warehouses, newWarehouse];
+    setWarehouses(next);
+    emitChange(vehicles, next);
+  };
+
+  // Add Product to specific warehouse
+  const addProductToWarehouse = (warehouseId: string) => {
+    if (disabled) return;
+    const next = warehouses.map((wh) => {
+      if (wh.id !== warehouseId) return wh;
+      const nextProdIndex = wh.items.length + 1;
+      const newProduct: ProductItem = {
+        id: `prod-${nextProdIndex}`,
+        name: `Produk ${nextProdIndex}`,
+        quantity: 0,
+      };
+      return { ...wh, items: [...wh.items, newProduct] };
+    });
+    setWarehouses(next);
+    emitChange(vehicles, next);
+  };
+
+  // Inline warehouse name edit
+  const startEditWarehouse = (id: string, currentName: string) => {
+    if (disabled) return;
+    setEditingWarehouseId(id);
+    setEditingWarehouseName(currentName);
+  };
+
+  const saveWarehouseName = (id: string) => {
+    if (!editingWarehouseName.trim()) {
+      setEditingWarehouseId(null);
+      return;
+    }
+    const next = warehouses.map((wh) => (wh.id === id ? { ...wh, name: editingWarehouseName.trim() } : wh));
+    setWarehouses(next);
+    setEditingWarehouseId(null);
+    emitChange(vehicles, next);
+  };
+
+  // Update Inventory Quantity
   const updateInventory = (facilityId: string, productId: string, quantity: number) => {
-    const key = `${facilityId}:${productId}`;
-    const next = overrides.inventoryOverrides.filter((item) => `${item.facilityId}:${item.productId}` !== key);
-    onChange({ ...overrides, inventoryOverrides: [...next, { facilityId, productId, quantity: Math.max(0, quantity) }] });
+    const validQty = Math.max(0, isNaN(quantity) ? 0 : quantity);
+    const next = warehouses.map((wh) => {
+      if (wh.id !== facilityId) return wh;
+      return {
+        ...wh,
+        items: wh.items.map((item) => (item.id === productId ? { ...item, quantity: validQty } : item)),
+      };
+    });
+    setWarehouses(next);
+    emitChange(vehicles, next);
+  };
+
+  // Add Vehicle
+  const addVehicle = () => {
+    if (disabled) return;
+    const nextIndex = vehicles.length + 1;
+    const newVehicle: VehicleItem = {
+      id: `V-${String(nextIndex).padStart(2, "0")}`,
+      label: `Kendaraan ${nextIndex}`,
+      capacityUnits: 500,
+      available: true,
+    };
+    const next = [...vehicles, newVehicle];
+    setVehicles(next);
+    emitChange(next, warehouses);
+  };
+
+  // Inline vehicle name edit
+  const startEditVehicle = (id: string, currentLabel: string) => {
+    if (disabled) return;
+    setEditingVehicleId(id);
+    setEditingVehicleName(currentLabel);
+  };
+
+  const saveVehicleName = (id: string) => {
+    if (!editingVehicleName.trim()) {
+      setEditingVehicleId(null);
+      return;
+    }
+    const next = vehicles.map((v) => (v.id === id ? { ...v, label: editingVehicleName.trim() } : v));
+    setVehicles(next);
+    setEditingVehicleId(null);
+    emitChange(next, warehouses);
+  };
+
+  // Update Vehicle (capacity or availability)
+  const updateVehicle = (id: string, update: Partial<VehicleItem>) => {
+    const next = vehicles.map((v) => (v.id === id ? { ...v, ...update } : v));
+    setVehicles(next);
+    emitChange(next, warehouses);
   };
 
   return (
-    <div className="mx-auto grid w-full max-w-[1456px] items-start gap-12 xl:grid-cols-[minmax(0,766px)_minmax(0,629px)] xl:gap-[61px]">
+    <div className="mx-auto grid w-full max-w-[1456px] items-start gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-8">
+      {/* PERSEDIAAN GUDANG */}
       <section aria-labelledby="warehouse-title">
-        <h2 id="warehouse-title" className="mb-6 text-[24px] font-bold text-primary-dark md:text-[32px]">PERSEDIAAN GUDANG</h2>
-        <div className="grid gap-6 sm:grid-cols-2">
-          {warehouses.map((warehouse, warehouseIndex) => {
-            const items = scenario.inventory.filter((item) => item.facilityId === warehouse.id);
-            return (
-              <article key={warehouse.id} className="min-h-[235px] overflow-hidden rounded-[33px] bg-white shadow-[0_0_7px_rgb(0_0_0/25%)]">
-                <header
-                  className={`flex h-[73px] items-center gap-3 px-6 text-white ${warehouseHeaderColors[warehouseIndex % warehouseHeaderColors.length]}`}
+        <div className="mb-4 flex items-center justify-between">
+          <h2 id="warehouse-title" className="text-[20px] font-bold text-primary-dark md:text-[22px]">
+            PERSEDIAAN GUDANG
+          </h2>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={addWarehouse}
+            aria-label="Tambah gudang"
+            title="Tambah gudang baru"
+            className="grid h-9 w-9 place-items-center rounded-full bg-primary-dark text-white shadow-sm transition hover:brightness-110 active:scale-95 disabled:opacity-50"
+          >
+            <Plus className="h-5 w-5 text-white" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {warehouses.map((warehouse, warehouseIndex) => (
+            <article key={warehouse.id} className="overflow-hidden rounded-[22px] border border-outline/40 bg-white shadow-sm">
+              <header
+                className={`flex h-[48px] items-center justify-between px-4 text-white ${warehouseHeaderColors[warehouseIndex % warehouseHeaderColors.length]}`}
+              >
+                {editingWarehouseId === warehouse.id ? (
+                  <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="text"
+                      autoFocus
+                      value={editingWarehouseName}
+                      onChange={(e) => setEditingWarehouseName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveWarehouseName(warehouse.id);
+                        if (e.key === "Escape") setEditingWarehouseId(null);
+                      }}
+                      onBlur={() => saveWarehouseName(warehouse.id)}
+                      className="h-7 w-28 rounded bg-white/20 px-2 text-sm font-bold text-white placeholder:text-white/60 focus:bg-white/30 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => saveWarehouseName(warehouse.id)}
+                      aria-label="Simpan nama gudang"
+                      className="grid size-6 place-items-center rounded bg-white/20 hover:bg-white/30"
+                    >
+                      <Check className="size-3.5 text-white" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-[16px] font-bold md:text-[17px]">{warehouse.name}</h3>
+                    <button
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => startEditWarehouse(warehouse.id, warehouse.name)}
+                      aria-label={`Ubah nama ${warehouse.name}`}
+                      title="Ubah nama gudang"
+                      className="rounded p-0.5 opacity-75 transition hover:bg-white/20 hover:opacity-100 disabled:opacity-50"
+                    >
+                      <Pencil className="h-3.5 w-3.5 text-white" aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => addProductToWarehouse(warehouse.id)}
+                  aria-label={`Tambah produk ke ${warehouse.name}`}
+                  title="Tambah produk"
+                  className="grid size-6 place-items-center rounded-full bg-white/20 text-white transition hover:bg-white/35 active:scale-95 disabled:opacity-50"
                 >
-                  <h3 className="text-[22px] font-bold md:text-[25px]">{warehouse.name || `Gudang ${warehouseIndex + 1}`}</h3>
-                  <Pencil className="h-4 w-4 opacity-50" aria-hidden="true" />
-                </header>
-                <div className="space-y-3 p-5">
-                  {items.map((item) => {
-                    const key = `${item.facilityId}:${item.productId}`;
-                    const quantity = inventoryMap[key]?.quantity ?? item.quantity;
-                    return (
-                      <label key={key} className="grid grid-cols-[1fr_92px] items-center gap-3">
-                        <span className="min-w-0 text-[14px] font-semibold text-primary-dark">
-                          <span className="block truncate">{products[item.productId]?.name ?? item.productId}</span>
-                          <span className="text-[11px] font-medium text-muted">{item.unit}</span>
-                        </span>
-                        <input
-                          type="number"
-                          min={0}
-                          disabled={disabled}
-                          value={quantity}
-                          aria-label={`Persediaan ${products[item.productId]?.name ?? item.productId} di ${warehouse.name}`}
-                          onChange={(event) => updateInventory(item.facilityId, item.productId, Number(event.target.value))}
-                          className="h-10 w-full rounded-[12px] border border-outline bg-[#fafafa] px-3 text-right text-sm font-semibold text-primary-dark focus:border-primary"
-                        />
-                      </label>
-                    );
-                  })}
-                </div>
-              </article>
-            );
-          })}
+                  <Plus className="h-4 w-4 text-white" aria-hidden="true" />
+                </button>
+              </header>
+              <div className="space-y-2 p-3.5">
+                {warehouse.items.map((item) => (
+                  <label key={item.id} className="grid grid-cols-[1fr_72px] items-center gap-2">
+                    <span className="min-w-0 text-[13px] font-bold text-primary-dark">
+                      <span className="block truncate">{item.name}</span>
+                    </span>
+                    <input
+                      type="number"
+                      min={0}
+                      disabled={disabled}
+                      value={item.quantity}
+                      aria-label={`Persediaan ${item.name} di ${warehouse.name}`}
+                      onChange={(event) => updateInventory(warehouse.id, item.id, Number(event.target.value))}
+                      className="h-8 w-full rounded-[8px] border border-outline bg-[#fafafa] px-2 text-right text-[14px] font-bold text-primary-dark focus:border-primary"
+                    />
+                  </label>
+                ))}
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
+      {/* LIST KENDARAAN */}
       <section aria-labelledby="vehicle-title">
-        <div className="mb-1 flex h-[50px] items-center justify-between">
-          <h2 id="vehicle-title" className="text-[24px] font-bold text-primary-dark md:text-[32px]">LIST KENDARAAN</h2>
-          <button type="button" disabled title="Kendaraan mengikuti skenario aktif" aria-label="Tambah kendaraan" className="grid h-[50px] w-[50px] place-items-center rounded-full bg-primary opacity-100 shadow-sm disabled:cursor-not-allowed">
-            <Plus className="h-8 w-8 text-white" aria-hidden="true" />
+        <div className="mb-4 flex items-center justify-between">
+          <h2 id="vehicle-title" className="text-[20px] font-bold text-primary-dark md:text-[22px]">
+            LIST KENDARAAN
+          </h2>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={addVehicle}
+            aria-label="Tambah kendaraan"
+            title="Tambah kendaraan baru"
+            className="grid h-9 w-9 place-items-center rounded-full bg-primary-dark text-white shadow-sm transition hover:brightness-110 active:scale-95 disabled:opacity-50"
+          >
+            <Plus className="h-5 w-5 text-white" aria-hidden="true" />
           </button>
         </div>
         <div className="space-y-3">
-          {scenario.vehicles.map((vehicle, index) => {
-            const override = vehicleMap[vehicle.id];
-            const available = override?.available ?? vehicle.available;
-            const capacity = override?.capacityUnits ?? vehicle.capacityUnits;
-            return (
-              <article key={vehicle.id} className="grid min-h-[129px] grid-cols-[minmax(0,1fr)_auto] items-center gap-5 rounded-[33px] bg-primary px-7 py-5 text-white md:px-10">
-                <div className="min-w-0">
-                  <div className="mb-2 flex items-center gap-2">
-                    <h3 className="truncate text-[20px] font-semibold md:text-[21px]">{vehicle.label || `Kendaraan ${index + 1}`}</h3>
-                    <Pencil className="h-4 w-4 opacity-50" aria-hidden="true" />
+          {vehicles.map((vehicle) => (
+            <article key={vehicle.id} className="rounded-[22px] bg-[#345173] p-4 text-white shadow-sm md:p-5">
+              <div className="mb-2.5 flex items-center justify-between">
+                {editingVehicleId === vehicle.id ? (
+                  <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="text"
+                      autoFocus
+                      value={editingVehicleName}
+                      onChange={(e) => setEditingVehicleName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveVehicleName(vehicle.id);
+                        if (e.key === "Escape") setEditingVehicleId(null);
+                      }}
+                      onBlur={() => saveVehicleName(vehicle.id)}
+                      className="h-7 w-32 rounded bg-white/20 px-2 text-sm font-bold text-white placeholder:text-white/60 focus:bg-white/30 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => saveVehicleName(vehicle.id)}
+                      aria-label="Simpan nama kendaraan"
+                      className="grid size-6 place-items-center rounded bg-white/20 hover:bg-white/30"
+                    >
+                      <Check className="size-3.5 text-white" />
+                    </button>
                   </div>
-                  <input
-                    type="number"
-                    min={1}
-                    disabled={disabled || !available}
-                    value={capacity}
-                    aria-label={`Kapasitas kendaraan ${vehicle.label}`}
-                    onChange={(event) => updateVehicle(vehicle.id, { capacityUnits: Math.max(1, Number(event.target.value)) })}
-                    className="h-11 w-full max-w-[284px] rounded-[15px] border-0 bg-[#fafafa] px-5 text-[16px] text-black placeholder:text-black/45 disabled:opacity-55 md:text-[18px]"
-                  />
-                </div>
-                <div className="flex min-w-[118px] flex-col items-center gap-2">
-                  <span className="text-[17px] font-semibold md:text-[20px]">{available ? "Aktif" : "Non-Aktif"}</span>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <h3 className="truncate text-[15px] font-bold md:text-[16px]">{vehicle.label}</h3>
+                    <button
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => startEditVehicle(vehicle.id, vehicle.label)}
+                      aria-label={`Ubah nama ${vehicle.label}`}
+                      title="Ubah nama kendaraan"
+                      className="rounded p-0.5 opacity-75 transition hover:bg-white/20 hover:opacity-100 disabled:opacity-50"
+                    >
+                      <Pencil className="h-3.5 w-3.5 text-white" aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
                     role="switch"
-                    aria-checked={available}
+                    aria-checked={vehicle.available}
                     aria-label={`Status kendaraan ${vehicle.label}`}
                     disabled={disabled}
-                    onClick={() => updateVehicle(vehicle.id, { available: !available })}
-                    className={`relative h-8 w-[52px] rounded-full border-2 border-white transition ${available ? "bg-white/35" : "bg-primary-dark"}`}
+                    onClick={() => updateVehicle(vehicle.id, { available: !vehicle.available })}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${vehicle.available ? "bg-[#eba92d]" : "bg-white/30"}`}
                   >
-                    <span className={`absolute top-[3px] h-[22px] w-[22px] rounded-full bg-white shadow transition ${available ? "left-[25px]" : "left-[3px]"}`} />
+                    <span
+                      className={`pointer-events-none inline-block size-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${vehicle.available ? "translate-x-5" : "translate-x-0"}`}
+                    />
                   </button>
+                  <span className="text-[13px] font-bold md:text-[14px]">
+                    {vehicle.available ? "Aktif" : "Non-Aktif"}
+                  </span>
                 </div>
-              </article>
-            );
-          })}
+              </div>
+              <input
+                type="number"
+                min={1}
+                disabled={disabled || !vehicle.available}
+                value={vehicle.capacityUnits}
+                placeholder={`Kapasitas ${vehicle.label}`}
+                aria-label={`Kapasitas kendaraan ${vehicle.label}`}
+                onChange={(event) =>
+                  updateVehicle(vehicle.id, {
+                    capacityUnits: Math.max(1, isNaN(Number(event.target.value)) ? 1 : Number(event.target.value)),
+                  })
+                }
+                className="h-9 w-full rounded-[10px] border-0 bg-white px-4 text-[13px] font-medium text-black placeholder:text-gray-400 disabled:opacity-55 md:text-[14px]"
+              />
+            </article>
+          ))}
         </div>
       </section>
     </div>
