@@ -529,20 +529,26 @@ export function OperationalEditor({
                   </span>
                 </div>
               </div>
-              <input
-                type="number"
-                min={1}
-                disabled={disabled || !vehicle.available}
-                value={vehicle.capacityUnits}
-                placeholder={`Kapasitas ${vehicle.label}`}
-                aria-label={`Kapasitas kendaraan ${vehicle.label}`}
-                onChange={(event) =>
-                  updateVehicle(vehicle.id, {
-                    capacityUnits: Math.max(1, isNaN(Number(event.target.value)) ? 1 : Number(event.target.value)),
-                  })
-                }
-                className="h-9 w-full rounded-[10px] border-0 bg-white px-4 text-[13px] font-medium text-black placeholder:text-gray-400 disabled:opacity-55 md:text-[14px]"
-              />
+              <div className="flex items-center gap-2.5">
+                <label htmlFor={`cap-${vehicle.id}`} className="shrink-0 text-[13px] font-semibold text-white/90 md:text-[14px]">
+                  Kapasitas:
+                </label>
+                <input
+                  id={`cap-${vehicle.id}`}
+                  type="number"
+                  min={1}
+                  disabled={disabled || !vehicle.available}
+                  value={vehicle.capacityUnits}
+                  placeholder={`Kapasitas ${vehicle.label}`}
+                  aria-label={`Kapasitas kendaraan ${vehicle.label}`}
+                  onChange={(event) =>
+                    updateVehicle(vehicle.id, {
+                      capacityUnits: Math.max(1, isNaN(Number(event.target.value)) ? 1 : Number(event.target.value)),
+                    })
+                  }
+                  className="h-9 min-w-0 flex-1 rounded-[10px] border-0 bg-white px-4 text-[13px] font-medium text-black placeholder:text-gray-400 disabled:opacity-55 md:text-[14px]"
+                />
+              </div>
             </article>
           ))}
         </div>
