@@ -6,7 +6,7 @@ Attempt 1 used Sentinel-1 and failed with zero defensible positive road labels. 
 
 ## Attempt 1: Sentinel-1
 
-Earth Engine was initialized against Google Cloud project `resilichain-aic-2026`. Credentials remain outside the repository. The read-only acquisition audit queried `COPERNICUS/S1_GRD` over the Jakarta study bounds for four authoritative flood events.
+Earth Engine was initialized against Google Cloud project `ARUNA-aic-2026`. Credentials remain outside the repository. The read-only acquisition audit queried `COPERNICUS/S1_GRD` over the Jakarta study bounds for four authoritative flood events.
 
 ## Event and acquisition audit
 
@@ -38,9 +38,9 @@ Sensitivity analysis also tested three less restrictive pixel thresholds and thr
 ```powershell
 cd be
 pip install -e ".[remote-sensing]"
-python scripts/inspect_sentinel_availability.py --project resilichain-aic-2026 --write
-python scripts/build_road_flood_labels.py --project resilichain-aic-2026 --write
-python scripts/analyze_label_sensitivity.py --project resilichain-aic-2026 --write
+python scripts/inspect_sentinel_availability.py --project ARUNA-aic-2026 --write
+python scripts/build_road_flood_labels.py --project ARUNA-aic-2026 --write
+python scripts/analyze_label_sensitivity.py --project ARUNA-aic-2026 --write
 python scripts/run_scientific_feasibility_gate.py --write
 ```
 

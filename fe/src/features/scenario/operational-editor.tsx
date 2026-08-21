@@ -2,6 +2,7 @@
 
 import { Check, Pencil, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import type { BusinessImportResponse } from "@/domain/business-data";
 import type { Scenario, VehicleOverride } from "@/domain/scenario";
 import type { OperationalOverrides } from "./scenario-presets";
 
@@ -10,6 +11,7 @@ type Props = {
   overrides: OperationalOverrides;
   presetId?: string;
   custom?: boolean;
+  businessData?: BusinessImportResponse;
   disabled?: boolean;
   onChange: (overrides: OperationalOverrides) => void;
 };
@@ -71,6 +73,49 @@ function createPureTemplateWarehouses(presetId: string): WarehouseItem[] {
   });
 }
 
+function createWarehouseItems(
+  scenario: Scenario,
+  presetId: string,
+  businessData?: BusinessImportResponse
+): WarehouseItem[] {
+  if (businessData && businessData.products && businessData.products.length > 0) {
+    const invWarehouseIds = Array.from(
+      new Set(businessData.inventory?.map((inv) => inv.facilityId).filter(Boolean) ?? [])
+    );
+
+    const warehouseIds =
+      invWarehouseIds.length > 0
+        ? invWarehouseIds
+        : scenario.facilities.filter((f) => f.kind === "warehouse").map((w) => w.id);
+
+    const finalWarehouseIds = warehouseIds.length > 0 ? warehouseIds : ["wh-east"];
+
+    return finalWarehouseIds.map((whId, idx) => {
+      const facility = scenario.facilities.find((f) => f.id === whId);
+      const name = facility?.name ?? `Gudang ${idx + 1}`;
+
+      const items: ProductItem[] = businessData.products.map((prod) => {
+        const invRow = businessData.inventory?.find(
+          (inv) => inv.facilityId === whId && inv.productId === prod.id
+        );
+        return {
+          id: prod.id,
+          name: prod.name,
+          quantity: invRow ? invRow.quantity : 0,
+        };
+      });
+
+      return {
+        id: whId,
+        name,
+        items,
+      };
+    });
+  }
+
+  return createPureTemplateWarehouses(presetId);
+}
+
 function createPureTemplateVehicles(presetId: string): VehicleItem[] {
   return [
     {
@@ -99,28 +144,23 @@ export function OperationalEditor({
   overrides,
   presetId = "severe-disruption",
   custom = false,
+  businessData,
   disabled,
   onChange,
 }: Props) {
-  // Initial default warehouses matching pure 4-warehouse template
-  const [warehouses, setWarehouses] = useState<WarehouseItem[]>(() => createPureTemplateWarehouses(presetId));
+  const [warehouses, setWarehouses] = useState<WarehouseItem[]>(() =>
+    createWarehouseItems(scenario, presetId, businessData)
+  );
 
-  // Initial default vehicles matching pure 3-vehicle template
   const [vehicles, setVehicles] = useState<VehicleItem[]>(() => createPureTemplateVehicles(presetId));
 
-  // Inline editing state
+  // Inline editing state for warehouse, product, and vehicle
   const [editingWarehouseId, setEditingWarehouseId] = useState<string | null>(null);
   const [editingWarehouseName, setEditingWarehouseName] = useState("");
+  const [editingProduct, setEditingProduct] = useState<{ warehouseId: string; productId: string } | null>(null);
+  const [editingProductName, setEditingProductName] = useState("");
   const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
   const [editingVehicleName, setEditingVehicleName] = useState("");
-
-  // When presetId changes and we are NOT in custom mode, hard reset to pure template
-  useEffect(() => {
-    if (!custom) {
-      setWarehouses(createPureTemplateWarehouses(presetId));
-      setVehicles(createPureTemplateVehicles(presetId));
-    }
-  }, [presetId, custom]);
 
   const emitChange = (updatedVehicles: VehicleItem[], updatedWarehouses: WarehouseItem[]) => {
     const vehicleOverrides: VehicleOverride[] = updatedVehicles.map((v) => ({
@@ -140,18 +180,28 @@ export function OperationalEditor({
     onChange({ vehicleOverrides, inventoryOverrides });
   };
 
+  useEffect(() => {
+    if (!custom) {
+      const newWarehouses = createWarehouseItems(scenario, presetId, businessData);
+      const newVehicles = createPureTemplateVehicles(presetId);
+      setWarehouses(newWarehouses);
+      setVehicles(newVehicles);
+    }
+  }, [presetId, custom, businessData, scenario]);
+
   // Add Warehouse
   const addWarehouse = () => {
     if (disabled) return;
     const nextIndex = warehouses.length + 1;
+    const sampleProducts = warehouses[0]?.items ?? [
+      { id: "prod-1", name: "Produk 1", quantity: 0 },
+      { id: "prod-2", name: "Produk 2", quantity: 0 },
+      { id: "prod-3", name: "Produk 3", quantity: 0 },
+    ];
     const newWarehouse: WarehouseItem = {
       id: `wh-${nextIndex}`,
       name: `Gudang ${nextIndex}`,
-      items: [
-        { id: "prod-1", name: "Produk 1", quantity: 0 },
-        { id: "prod-2", name: "Produk 2", quantity: 0 },
-        { id: "prod-3", name: "Produk 3", quantity: 0 },
-      ],
+      items: sampleProducts.map((p) => ({ ...p, quantity: 0 })),
     };
     const next = [...warehouses, newWarehouse];
     setWarehouses(next);
@@ -183,13 +233,35 @@ export function OperationalEditor({
   };
 
   const saveWarehouseName = (id: string) => {
-    if (!editingWarehouseName.trim()) {
-      setEditingWarehouseId(null);
-      return;
-    }
-    const next = warehouses.map((wh) => (wh.id === id ? { ...wh, name: editingWarehouseName.trim() } : wh));
-    setWarehouses(next);
+    const trimmed = editingWarehouseName.trim();
     setEditingWarehouseId(null);
+    if (!trimmed) return;
+    const next = warehouses.map((wh) => (wh.id === id ? { ...wh, name: trimmed } : wh));
+    setWarehouses(next);
+    emitChange(vehicles, next);
+  };
+
+  // Inline product name edit
+  const startEditProduct = (warehouseId: string, productId: string, currentName: string) => {
+    if (disabled) return;
+    setEditingProduct({ warehouseId, productId });
+    setEditingProductName(currentName);
+  };
+
+  const saveProductName = (warehouseId: string, productId: string) => {
+    const trimmed = editingProductName.trim();
+    setEditingProduct(null);
+    if (!trimmed) return;
+    const next = warehouses.map((wh) => {
+      if (wh.id !== warehouseId) return wh;
+      return {
+        ...wh,
+        items: wh.items.map((item) =>
+          item.id === productId ? { ...item, name: trimmed } : item
+        ),
+      };
+    });
+    setWarehouses(next);
     emitChange(vehicles, next);
   };
 
@@ -230,13 +302,11 @@ export function OperationalEditor({
   };
 
   const saveVehicleName = (id: string) => {
-    if (!editingVehicleName.trim()) {
-      setEditingVehicleId(null);
-      return;
-    }
-    const next = vehicles.map((v) => (v.id === id ? { ...v, label: editingVehicleName.trim() } : v));
-    setVehicles(next);
+    const trimmed = editingVehicleName.trim();
     setEditingVehicleId(null);
+    if (!trimmed) return;
+    const next = vehicles.map((v) => (v.id === id ? { ...v, label: trimmed } : v));
+    setVehicles(next);
     emitChange(next, warehouses);
   };
 
@@ -323,10 +393,47 @@ export function OperationalEditor({
               </header>
               <div className="space-y-2 p-3.5">
                 {warehouse.items.map((item) => (
-                  <label key={item.id} className="grid grid-cols-[1fr_72px] items-center gap-2">
-                    <span className="min-w-0 text-[13px] font-bold text-primary-dark">
-                      <span className="block truncate">{item.name}</span>
-                    </span>
+                  <div key={item.id} className="grid grid-cols-[1fr_72px] items-center gap-2">
+                    {editingProduct?.warehouseId === warehouse.id && editingProduct?.productId === item.id ? (
+                      <div className="flex items-center gap-1 min-w-0" onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="text"
+                          autoFocus
+                          value={editingProductName}
+                          onChange={(e) => setEditingProductName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") saveProductName(warehouse.id, item.id);
+                            if (e.key === "Escape") setEditingProduct(null);
+                          }}
+                          onBlur={() => saveProductName(warehouse.id, item.id)}
+                          className="h-7 w-full min-w-0 rounded border border-primary/50 bg-white px-2 text-xs font-bold text-primary-dark focus:border-primary focus:outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => saveProductName(warehouse.id, item.id)}
+                          aria-label="Simpan nama produk"
+                          className="grid size-6 shrink-0 place-items-center rounded bg-primary text-white hover:bg-primary-dark"
+                        >
+                          <Check className="size-3 text-white" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="group/item flex items-center justify-between gap-1 min-w-0 pr-1">
+                        <span className="truncate text-[13px] font-bold text-primary-dark" title={item.name}>
+                          {item.name}
+                        </span>
+                        <button
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => startEditProduct(warehouse.id, item.id, item.name)}
+                          aria-label={`Ubah nama ${item.name} di ${warehouse.name}`}
+                          title="Ubah nama produk"
+                          className="shrink-0 rounded p-0.5 opacity-60 transition group-hover/item:opacity-100 hover:bg-surface-low focus:opacity-100 disabled:opacity-0"
+                        >
+                          <Pencil className="h-3 w-3 text-primary/80 hover:text-primary" aria-hidden="true" />
+                        </button>
+                      </div>
+                    )}
                     <input
                       type="number"
                       min={0}
@@ -336,7 +443,7 @@ export function OperationalEditor({
                       onChange={(event) => updateInventory(warehouse.id, item.id, Number(event.target.value))}
                       className="h-8 w-full rounded-[8px] border border-outline bg-[#fafafa] px-2 text-right text-[14px] font-bold text-primary-dark focus:border-primary"
                     />
-                  </label>
+                  </div>
                 ))}
               </div>
             </article>

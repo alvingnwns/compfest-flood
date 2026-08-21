@@ -1,7 +1,7 @@
 {
   "metadata": {
     "collection": "COPERNICUS/S1_GRD",
-    "project": "resilichain-aic-2026",
+    "project": "ARUNA-aic-2026",
     "inspectionMethod": "IW images intersecting the fixed pilot bbox; event window plus symmetric search buffer",
     "searchBufferDays": 6,
     "coverageDefinition": "image footprint intersection area divided by pilot bbox area"

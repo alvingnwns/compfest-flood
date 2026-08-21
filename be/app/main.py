@@ -33,7 +33,7 @@ async def lifespan(_: FastAPI):
 def create_app(settings: Settings | None = None) -> FastAPI:
     configured = settings or get_settings()
     application = FastAPI(
-        title="ResiliChain AI API",
+        title="ARUNA API",
         version="0.2.0",
         description=(
             "Offline-first historical flood-risk replay with simulated business inputs and connected computation."

@@ -10,7 +10,7 @@ import { ErrorState, LoadingState } from "@/components/ui/states";
 import { getRainfallScenario } from "@/features/scenario/scenario-presets";
 import { useCopilotConversation } from "./copilot-conversation-store";
 import { toRecentCopilotMessages } from "./copilot-session";
-import { useAskCopilot, useDisruptionAnalysis, useImpactComparison, useRecoveryPlan, useScenario, useSimulation } from "@/hooks/use-resilichain-data";
+import { useAskCopilot, useDisruptionAnalysis, useImpactComparison, useRecoveryPlan, useScenario, useSimulation } from "@/hooks/use-aruna-data";
 import { formatCompactIdr, formatPercent, formatRisk } from "@/lib/format";
 
 const initialQuestions = [
@@ -127,21 +127,21 @@ export function CopilotPage() {
   };
 
   if (!simulationId) return (
-    <AppShell title="ResiliChain Copilot">
+    <AppShell title="ARUNA Copilot">
       <div className="grid min-h-[calc(100vh-80px)] place-items-center p-6">
         <section className="rounded-lg border border-outline bg-white p-8 text-center shadow-sm">
           <ShieldCheck className="mx-auto mb-4 text-primary" size={36} />
           <h1 className="mb-2 text-xl font-semibold">Jalankan simulasi terlebih dahulu</h1>
-          <p className="mb-6 max-w-lg text-sm text-muted">Jalankan simulasi skenario sebelum membuka ResiliChain Copilot agar konteks operasional tersedia.</p>
+          <p className="mb-6 max-w-lg text-sm text-muted">Jalankan simulasi skenario sebelum membuka ARUNA Copilot agar konteks operasional tersedia.</p>
           <Link href="/scenario" className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white">Buka Skenario <ArrowRight size={17} /></Link>
         </section>
       </div>
     </AppShell>
   );
 
-  if (simulation.isLoading) return <AppShell title="ResiliChain Copilot"><LoadingState label="Memuat konteks simulasi..." /></AppShell>;
-  if (simulation.isError) return <AppShell title="ResiliChain Copilot"><ErrorState message={simulation.error.message} onRetry={() => void simulation.refetch()} /></AppShell>;
-  if (!conversation.hydrated) return <AppShell title="ResiliChain Copilot"><LoadingState label="Memulihkan percakapan..." /></AppShell>;
+  if (simulation.isLoading) return <AppShell title="ARUNA Copilot"><LoadingState label="Memuat konteks simulasi..." /></AppShell>;
+  if (simulation.isError) return <AppShell title="ARUNA Copilot"><ErrorState message={simulation.error.message} onRetry={() => void simulation.refetch()} /></AppShell>;
+  if (!conversation.hydrated) return <AppShell title="ARUNA Copilot"><LoadingState label="Memulihkan percakapan..." /></AppShell>;
 
   const dynamic = simulation.data?.analysisMode === "scenario-simulation" && simulation.data?.hazard !== undefined;
   const rainfall = dynamic ? getRainfallScenario(simulation.data?.hazard?.rainfallScenario) : undefined;
@@ -162,7 +162,7 @@ export function CopilotPage() {
   ];
 
   return (
-    <AppShell title="ResiliChain Copilot" actions={<ModelStatusBadge provider={activeProvider} />}>
+    <AppShell title="ARUNA Copilot" actions={<ModelStatusBadge provider={activeProvider} />}>
       <div className="copilot-pattern grid min-h-[calc(100vh-80px)] xl:h-[calc(100vh-80px)] xl:min-h-0 xl:grid-cols-[minmax(0,1fr)_370px] xl:overflow-hidden">
         <section className="relative flex min-h-[720px] flex-col overflow-hidden border-r border-outline xl:min-h-0">
           {messages.length > 0 && (
@@ -185,7 +185,7 @@ export function CopilotPage() {
                   <Bot className="size-7" />
                 </span>
                 <div className="rounded-[25px] bg-[#dedede] px-7 py-6 text-[16px] leading-relaxed text-black shadow-sm">
-                  <strong className="block text-primary">ResiliChain Copilot siap.</strong>
+                  <strong className="block text-primary">ARUNA Copilot siap.</strong>
                   Tanyakan dampak skenario, alasan pemilihan rute, pemasok terdampak, atau pesanan yang masih berisiko.
                 </div>
               </article>
@@ -202,9 +202,8 @@ export function CopilotPage() {
                   </span>
                 )}
                 <div
-                  className={`max-w-[72%] rounded-[25px] px-6 py-4 text-[15px] leading-relaxed shadow-sm ${
-                    message.role === "user" ? "bg-primary text-white" : "bg-[#dedede] text-black"
-                  }`}
+                  className={`max-w-[72%] rounded-[25px] px-6 py-4 text-[15px] leading-relaxed shadow-sm ${message.role === "user" ? "bg-primary text-white" : "bg-[#dedede] text-black"
+                    }`}
                 >
                   <p className="whitespace-pre-wrap break-words">{message.content}</p>
                 </div>
@@ -242,7 +241,7 @@ export function CopilotPage() {
               ))}
             </div>
             <form onSubmit={onSubmit} className="flex gap-3">
-              <label htmlFor="copilot-message" className="sr-only">Tanyakan ResiliChain Copilot</label>
+              <label htmlFor="copilot-message" className="sr-only">Tanyakan ARUNA Copilot</label>
               <input
                 id="copilot-message"
                 value={input}

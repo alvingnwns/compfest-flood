@@ -300,7 +300,7 @@ def test_qwen_reasoning_leak_is_rejected_before_api_response(client, monkeypatch
 
         def generate(self, _request, _context) -> str:
             return (
-                "Thinking Process: 1. Analyze the Request. Role: ResiliChain Copilot. "
+                "Thinking Process: 1. Analyze the Request. Role: ARUNA Copilot. "
                 "Constraints: Answer only from supplied evidence. Final answer: Route B was selected."
             )
 
@@ -313,7 +313,7 @@ def test_qwen_reasoning_leak_is_rejected_before_api_response(client, monkeypatch
     body = response.json()
     assert body["provider"] == "deterministic"
     assert body["fallbackReason"] == "openrouter_guardrail_reasoning_leak"
-    for forbidden in ("Thinking Process:", "Role: ResiliChain Copilot", "Constraints:", "Analyze the Request"):
+    for forbidden in ("Thinking Process:", "Role: ARUNA Copilot", "Constraints:", "Analyze the Request"):
         assert forbidden not in body["answer"]
 
 

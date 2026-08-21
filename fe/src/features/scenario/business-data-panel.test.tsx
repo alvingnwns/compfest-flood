@@ -19,6 +19,8 @@ const preview: BusinessImportResponse = {
     totalOrderValue: 2_000_000,
     currency: "IDR",
   },
+  products: [],
+  inventory: [],
   errors: [],
 };
 

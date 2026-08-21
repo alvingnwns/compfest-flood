@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { simulationQueryKey } from "./use-resilichain-data";
+import { simulationQueryKey } from "./use-aruna-data";
 
 describe("simulation query identity", () => {
   it("does not reuse results when the backend returns a different scenario identity", () => {

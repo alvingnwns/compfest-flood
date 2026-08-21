@@ -9,7 +9,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(`simulation=${simulationFixture.id}&condition=normal`),
 }));
 
-vi.mock("@/hooks/use-resilichain-data", () => ({
+vi.mock("@/hooks/use-aruna-data", () => ({
   useRecoveryPlan: () => ({
     data: recoveryFixture,
     isLoading: false,

@@ -4,7 +4,7 @@
 
 Phase F lets a user replace the built-in operational snapshot with products, IDR selling prices, orders, inventory, materials, and BOM relationships from one macro-free Excel workbook.
 
-**Custom Business Data replaces the demo operational snapshot, while this MVP phase continues to use ResiliChain's Jakarta demo logistics network.** Suppliers, factory, warehouses, stores, vehicles, coordinates, and March replay geometry therefore remain demo data.
+**Custom Business Data replaces the demo operational snapshot, while this MVP phase continues to use ARUNA's Jakarta demo logistics network.** Suppliers, factory, warehouses, stores, vehicles, coordinates, and March replay geometry therefore remain demo data.
 
 ## Flow
 
@@ -86,4 +86,4 @@ Copilot receives only the existing bounded, parsed simulation evidence plus `bus
 | Jakarta facilities, suppliers, factory, stores, warehouses, coordinates, vehicles | Demo |
 | March replay geometry | Demo/historical snapshot context |
 
-Safe product wording: **User-provided operational data running on the ResiliChain Jakarta demo logistics network.**
+Safe product wording: **User-provided operational data running on the ARUNA Jakarta demo logistics network.**

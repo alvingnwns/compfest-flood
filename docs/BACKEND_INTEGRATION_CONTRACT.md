@@ -1,4 +1,4 @@
-# ResiliChain Backend Integration Contract v1.0
+# ARUNA Backend Integration Contract v1.0
 
 Status: frozen for frontend integration. The Zod schemas in `fe/src/domain` are the executable source of truth; this document is the human-readable handoff.
 

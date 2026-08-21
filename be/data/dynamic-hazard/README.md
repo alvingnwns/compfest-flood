@@ -1,6 +1,6 @@
 # Jakarta Dynamic-Hazard Research Dataset
 
-This directory isolates the research/training data for ResiliChain V2 from `be/app/data`, which remains the
+This directory isolates the research/training data for ARUNA V2 from `be/app/data`, which remains the
 runtime data package for the Jakarta historical replay.
 
 ## Intended use

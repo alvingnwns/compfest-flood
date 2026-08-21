@@ -75,9 +75,9 @@ No event crosses split boundaries. Test regions are absent from both fitting and
 
 ```powershell
 cd be
-python scripts/discover_indonesia_flood_regions.py --project resilichain-aic-2026 --write
-python scripts/prepare_indonesia_region_roads.py --project resilichain-aic-2026
-python scripts/build_indonesia_flood_corridor_labels.py --project resilichain-aic-2026
+python scripts/discover_indonesia_flood_regions.py --project ARUNA-aic-2026 --write
+python scripts/prepare_indonesia_region_roads.py --project ARUNA-aic-2026
+python scripts/build_indonesia_flood_corridor_labels.py --project ARUNA-aic-2026
 python scripts/run_indonesia_flood_feasibility_gate.py --write
 python scripts/train_indonesia_historical_flood_model.py
 python scripts/evaluate_indonesia_historical_flood_model.py

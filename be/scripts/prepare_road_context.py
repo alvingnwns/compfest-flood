@@ -124,7 +124,7 @@ def prepare() -> None:
     print(f"Road class breakdown: {dict(sorted(highway_counts.items()))}")
 
     metadata = {
-        "description": "Surrounding OSM road network for display context — NOT the ResiliChain optimization graph",
+        "description": "Surrounding OSM road network for display context — NOT the ARUNA optimization graph",
         "purpose": (
             "display-only context layer; optimization graph remains"
             " app/data/roads/jakarta-2025-03-04-routing-graph.json"

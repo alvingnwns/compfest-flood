@@ -2,7 +2,7 @@
 
 Status: **FINAL REAL-HISTORICAL ML FEASIBILITY: FAIL**.
 
-This is the final real-historical-data fallback for the Jakarta MVP. It does not replace or weaken the earlier Sentinel-1 failure. Earth Engine was initialized with project `resilichain-aic-2026`, and the collection `GLOBAL_FLOOD_DB/MODIS_EVENTS/V1` was queried directly on 2026-08-12.
+This is the final real-historical-data fallback for the Jakarta MVP. It does not replace or weaken the earlier Sentinel-1 failure. Earth Engine was initialized with project `ARUNA-aic-2026`, and the collection `GLOBAL_FLOOD_DB/MODIS_EVENTS/V1` was queried directly on 2026-08-12.
 
 ## Source semantics
 
@@ -97,8 +97,8 @@ March 2025 remains a separate offline demo/replay event. It is not a Global Floo
 ```powershell
 cd be
 pip install -e ".[remote-sensing]"
-python scripts/inspect_global_flood_database.py --project resilichain-aic-2026 --write
-python scripts/build_global_flood_corridor_labels.py --project resilichain-aic-2026
+python scripts/inspect_global_flood_database.py --project ARUNA-aic-2026 --write
+python scripts/build_global_flood_corridor_labels.py --project ARUNA-aic-2026
 python scripts/run_global_flood_feasibility_gate.py --write
 ```
 

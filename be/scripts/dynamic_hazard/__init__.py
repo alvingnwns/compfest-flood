@@ -1,1 +1,1 @@
-"""Offline experiment infrastructure for the ResiliChain temporal-hazard study."""
+"""Offline experiment infrastructure for the ARUNA temporal-hazard study."""

@@ -6,7 +6,7 @@
     "urbanClass": "ESA WorldCover class 50 (built-up)",
     "urbanContextTemporalCaveat": "The 2020 built-up layer is used only for deterministic logistics-relevance screening, not as a model feature or event-time urban reconstruction.",
     "retrievedAt": "2026-08-12",
-    "googleCloudProject": "resilichain-aic-2026",
+    "googleCloudProject": "ARUNA-aic-2026",
     "countryFilter": "cc == IDN",
     "qualityClearFraction": 0.75,
     "minimumFloodAreaSquareKm": 1.0,

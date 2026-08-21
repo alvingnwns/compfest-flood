@@ -17,7 +17,7 @@ import type { CommerceAction, LogisticsAction, ManufacturingAction } from "@/dom
 import type { Simulation } from "@/domain/scenario";
 import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
 import { getRainfallScenario } from "@/features/scenario/scenario-presets";
-import { useRecoveryPlan, useSimulation } from "@/hooks/use-resilichain-data";
+import { useRecoveryPlan, useSimulation } from "@/hooks/use-aruna-data";
 import { formatAction, formatMinutes } from "@/lib/format";
 
 type RecoveryView = "production" | "routes" | "commerce";
@@ -188,11 +188,10 @@ function ProductionView({ actions }: { actions: ManufacturingAction[] }) {
             return (
               <article
                 key={action.id}
-                className={`flex min-h-[150px] items-center justify-between gap-4 rounded-[20px] border px-7 py-5 ${
-                  negative
+                className={`flex min-h-[150px] items-center justify-between gap-4 rounded-[20px] border px-7 py-5 ${negative
                     ? "border-[#bc0000] bg-[#f3cfcf] text-[#5a0000]"
                     : "border-[#84b7ab] bg-[#d5eee8] text-[#005a45]"
-                }`}
+                  }`}
               >
                 <div>
                   <h3 className="mb-3 text-[21px] font-bold">{action.productName}</h3>

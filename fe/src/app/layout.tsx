@@ -12,7 +12,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "ResiliChain AI",
+  title: "ARUNA",
   description: "Sistem pendukung keputusan pemulihan rantai pasok berbasis risiko banjir",
 };
 

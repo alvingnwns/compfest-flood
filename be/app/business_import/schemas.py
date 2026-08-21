@@ -93,4 +93,6 @@ class BusinessImportResponse(ApiModel):
     business_data_source: Literal["custom"] = "custom"
     expires_at: datetime
     summary: BusinessSnapshotSummary
+    products: list[Product] = Field(default_factory=list)
+    inventory: list[Inventory] = Field(default_factory=list)
     errors: list[ImportValidationIssue] = Field(default_factory=list)

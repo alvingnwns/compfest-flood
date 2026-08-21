@@ -1,6 +1,6 @@
 """Map context API — serves display-only OSM road context GeoJSON.
 
-The road context layer is intentionally separate from the ResiliChain
+The road context layer is intentionally separate from the ARUNA
 optimization graph. Serving it through this endpoint makes the distinction
 explicit: the frontend uses it for visualization only, never for routing.
 """
@@ -20,7 +20,7 @@ router = APIRouter(prefix="/api/map", tags=["map"])
 def road_context() -> dict[str, Any]:
     """Return the surrounding Jakarta OSM road context as display-only GeoJSON.
 
-    This is a separate dataset from the 1,413-segment ResiliChain optimization
+    This is a separate dataset from the 1,413-segment ARUNA optimization
     graph. It includes motorway, trunk, primary, secondary, tertiary, and
     residential roads across the pilot area, providing visual context that
     makes the analyzed subset visible as a subset of a larger real road network.

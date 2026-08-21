@@ -1,1 +1,1 @@
-"""ResiliChain AI backend package."""
+"""ARUNA backend package."""

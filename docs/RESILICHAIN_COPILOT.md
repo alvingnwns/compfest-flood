@@ -1,10 +1,10 @@
-# ResiliChain Copilot
+# ARUNA Copilot
 
 ## Purpose
 
-ResiliChain Copilot is a grounded conversational explanation layer for the current ResiliChain simulation. It answers operational questions about already-computed disruption, routing, recovery, and KPI results.
+ARUNA Copilot is a grounded conversational explanation layer for the current ARUNA simulation. It answers operational questions about already-computed disruption, routing, recovery, and KPI results.
 
-ResiliChain Copilot explains and interrogates already-computed simulation results. It does not perform route optimization or replace OR-Tools decisions.
+ARUNA Copilot explains and interrogates already-computed simulation results. It does not perform route optimization or replace OR-Tools decisions.
 
 ## Architecture
 
@@ -104,7 +104,7 @@ Gemini and OpenRouter timeout, quota exhaustion, model unavailability, malformed
 
 ## Offline behavior
 
-Historical Replay, Dynamic Hazard, NetworkX, OR-Tools, and KPI computation remain local and independent of both remote providers. When remote providers are unavailable, Copilot uses deterministic simulation explanations. No key is required for core ResiliChain.
+Historical Replay, Dynamic Hazard, NetworkX, OR-Tools, and KPI computation remain local and independent of both remote providers. When remote providers are unavailable, Copilot uses deterministic simulation explanations. No key is required for core ARUNA.
 
 ## Security
 

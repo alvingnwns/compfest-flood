@@ -77,7 +77,7 @@ def parse_xlsx(contents: bytes) -> tuple[dict[str, list[tuple[int, dict[str, Any
                 ImportValidationIssue(
                     sheet=name,
                     code="UNEXPECTED_SHEET",
-                    message=f"Sheet '{name}' is not supported. Use the ResiliChain template.",
+                    message=f"Sheet '{name}' is not supported. Use the ARUNA template.",
                 )
             )
     for name in REQUIRED_SHEETS:

@@ -4,7 +4,7 @@
     "catalogUrl": "https://developers.google.com/earth-engine/datasets/catalog/GLOBAL_FLOOD_DB_MODIS_EVENTS_V1",
     "provider": "Global Flood Database; Dartmouth Flood Observatory event catalogue; Tellman et al.",
     "retrievedAt": "2026-08-12",
-    "googleCloudProject": "resilichain-aic-2026",
+    "googleCloudProject": "ARUNA-aic-2026",
     "collectionEventCount": 913,
     "collectionCoverageStart": "2000-02-17",
     "collectionCoverageEnd": "2018-12-10",

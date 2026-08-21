@@ -126,7 +126,7 @@ export function DisruptionMap({
           });
         }
 
-        // ── Layer 3: ResiliChain analyzed road segments with ML risk colors ──
+        // ── Layer 3: ARUNA analyzed road segments with ML risk colors ──
         map.addSource("roads-risk", {
           type: "geojson",
           data: {
@@ -339,7 +339,7 @@ function MapLegend({ dynamic, hasBaseline, hasCandidate }: { dynamic: boolean; h
       <div className="space-y-1.5">
         <LegendRow color="#b0b8b5" label="Jalan OSM (konteks)" dashed={false} thin />
         <div className="space-y-1">
-          <div className="eyebrow text-[9px]">Jaringan Dianalisis ResiliChain</div>
+          <div className="eyebrow text-[9px]">Jaringan Dianalisis ARUNA</div>
           {(["critical", "high", "medium", "low"] as const).map((risk) => (
             <LegendRow
               key={risk}

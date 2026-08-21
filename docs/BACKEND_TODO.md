@@ -1,4 +1,4 @@
-# ResiliChain AI Backend Status
+# ARUNA Backend Status
 
 The stabilization phase connects the existing real algorithms without claiming real-world data validity. The source of truth for HTTP behavior remains [`BACKEND_INTEGRATION_CONTRACT.md`](./BACKEND_INTEGRATION_CONTRACT.md).
 

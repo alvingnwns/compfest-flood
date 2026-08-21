@@ -7,7 +7,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { ErrorState, LoadingState } from "@/components/ui/states";
 import type { BusinessImportResponse } from "@/domain/business-data";
 import type { AnalysisMode, RainfallScenario, RunSimulationRequest } from "@/domain/scenario";
-import { useImportBusinessData, useRunSimulation, useScenario, useSimulation } from "@/hooks/use-resilichain-data";
+import { useImportBusinessData, useRunSimulation, useScenario, useSimulation } from "@/hooks/use-aruna-data";
 import { ApiError } from "@/lib/api-client";
 import { AnalysisModePanel } from "./analysis-mode-panel";
 import { BusinessDataPanel } from "./business-data-panel";
@@ -96,6 +96,13 @@ export function ScenarioPage() {
 
   const handleBusinessModeChange = (mode: "demo" | "custom") => {
     setBusinessMode(mode);
+    if (mode === "demo") {
+      setBusinessSnapshotId("");
+      setBusinessPreview(undefined);
+      setIsCustomMode(false);
+      const activePreset = OPERATIONAL_PRESETS.find((p) => p.id === opPresetId) ?? OPERATIONAL_PRESETS[0];
+      setOverrides(activePreset.overrides);
+    }
     clearPreviousResult();
   };
 
@@ -104,15 +111,20 @@ export function ScenarioPage() {
     setBusinessSnapshotId("");
     clearPreviousResult();
     try {
-      setBusinessPreview(await businessImport.mutateAsync(file));
+      const preview = await businessImport.mutateAsync(file);
+      setBusinessPreview(preview);
+      setBusinessSnapshotId(preview.businessSnapshotId);
+      setIsCustomMode(false);
     } catch {
       setBusinessPreview(undefined);
+      setBusinessSnapshotId("");
     }
   };
 
   const handleBusinessConfirm = () => {
     if (!businessPreview) return;
     setBusinessSnapshotId(businessPreview.businessSnapshotId);
+    setIsCustomMode(false);
     clearPreviousResult();
   };
 
@@ -213,6 +225,7 @@ export function ScenarioPage() {
               overrides={overrides}
               presetId={opPresetId}
               custom={isCustomMode}
+              businessData={businessMode === "custom" ? businessPreview : undefined}
               disabled={busy}
               onChange={handleApplyDrawerOverrides}
             />

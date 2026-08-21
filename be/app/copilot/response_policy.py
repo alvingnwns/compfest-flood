@@ -148,7 +148,7 @@ _NO_ROUTE_SELECTED_RE = re.compile(
 _REASONING_LEAK_PATTERNS = (
     re.compile(r"(?im)^\s*thinking process\s*:"),
     re.compile(r"(?im)^\s*(?:system prompt|internal reasoning|user question|response policy)\s*:"),
-    re.compile(r"(?im)^\s*role\s*:\s*resilichain copilot\b"),
+    re.compile(r"(?im)^\s*role\s*:\s*ARUNA copilot\b"),
     re.compile(r"(?im)^\s*(?:audience|constraints)\s*:\s*"),
     re.compile(r"(?im)^\s*step\s*1\s*[:.)-]?\s*analy[sz]e the request\b"),
     re.compile(r"(?i)\banaly[sz]e the request\b"),

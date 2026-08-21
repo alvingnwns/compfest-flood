@@ -1,6 +1,6 @@
-# ResiliChain AI
+# ARUNA
 
-ResiliChain AI is a flood-aware supply-chain recovery decision-support MVP with a Next.js frontend and FastAPI backend. The shared API contract is documented in [`docs/BACKEND_INTEGRATION_CONTRACT.md`](docs/BACKEND_INTEGRATION_CONTRACT.md).
+ARUNA is a flood-aware supply-chain recovery decision-support MVP with a Next.js frontend and FastAPI backend. The shared API contract is documented in [`docs/BACKEND_INTEGRATION_CONTRACT.md`](docs/BACKEND_INTEGRATION_CONTRACT.md).
 
 ## Custom business data
 
@@ -12,7 +12,7 @@ The Scenario page defaults to the built-in demo company snapshot. To use a custo
 4. Upload the `.xlsx`, review the validation preview and total order value, then select **Gunakan Data**.
 5. Run the normal simulation, recovery, Impact, and Copilot flow.
 
-Custom operational data uses the same NetworkX, OR-Tools, and KPI path as demo mode. It continues to use ResiliChain's Jakarta demo facilities, vehicles, coordinates, and logistics network. Snapshots are process-local, expire after two hours, and must be uploaded again after backend restart. See [`docs/CUSTOM_BUSINESS_DATA.md`](docs/CUSTOM_BUSINESS_DATA.md).
+Custom operational data uses the same NetworkX, OR-Tools, and KPI path as demo mode. It continues to use ARUNA's Jakarta demo facilities, vehicles, coordinates, and logistics network. Snapshots are process-local, expire after two hours, and must be uploaded again after backend restart. See [`docs/CUSTOM_BUSINESS_DATA.md`](docs/CUSTOM_BUSINESS_DATA.md).
 
 ## What is real and what is synthetic
 

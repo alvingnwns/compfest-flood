@@ -1,5 +1,5 @@
 /**
- * Curated product scenario & operational presets for the ResiliChain demo.
+ * Curated product scenario & operational presets for the ARUNA demo.
  *
  * Architecture notes:
  * - Hazard Scenarios and Operational Conditions are strictly separated.
@@ -58,7 +58,7 @@ export const HAZARD_SCENARIOS: HazardScenario[] = [
     eventType: "Banjir Perkotaan",
     mode: "Pemutaran Ulang Historis",
     description:
-      "Pemutaran ulang skenario banjir perkotaan Jakarta 4 Maret 2025. Estimasi paparan koridor jalan dihasilkan oleh model historis ResiliChain pada jaringan jalan OpenStreetMap.",
+      "Pemutaran ulang skenario banjir perkotaan Jakarta 4 Maret 2025. Estimasi paparan koridor jalan dihasilkan oleh model historis ARUNA pada jaringan jalan OpenStreetMap.",
   },
 ];
 

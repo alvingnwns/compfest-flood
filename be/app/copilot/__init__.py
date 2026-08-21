@@ -1,1 +1,1 @@
-"""Grounded explanation layer for completed ResiliChain simulations."""
+"""Grounded explanation layer for completed ARUNA simulations."""

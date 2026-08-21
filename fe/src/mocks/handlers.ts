@@ -24,6 +24,14 @@ const businessImportFixture = {
     totalOrderValue: 9_280_000,
     currency: "IDR" as const,
   },
+  products: [
+    { id: "P001", name: "Frozen Chicken", unit: "unit" },
+    { id: "P002", name: "Fish Fillet", unit: "unit" },
+  ],
+  inventory: [
+    { facilityId: "wh-west", productId: "P001", quantity: 40, unit: "unit" },
+    { facilityId: "wh-east", productId: "P002", quantity: 25, unit: "unit" },
+  ],
   errors: [],
 };
 

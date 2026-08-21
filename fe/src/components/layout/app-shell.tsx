@@ -1,6 +1,7 @@
 "use client";
 
 import { ChartNoAxesCombined, ChevronLeft, ChevronRight, LayoutDashboard, Map, MessageCircleMore, RefreshCcw, Settings2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -12,7 +13,7 @@ const items: Array<{ href: string; label: string; icon: LucideIcon }> = [
   { href: "/disruption", label: "Peta Gangguan", icon: Map },
   { href: "/recovery", label: "Rencana Pemulihan", icon: RefreshCcw },
   { href: "/impact", label: "Analisis Dampak", icon: ChartNoAxesCombined },
-  { href: "/copilot", label: "ResiliChain Copilot", icon: MessageCircleMore },
+  { href: "/copilot", label: "ARUNA Copilot", icon: MessageCircleMore },
 ];
 
 export function AppShell({ children, title, actions }: { children: React.ReactNode; title?: string; actions?: React.ReactNode }) {
@@ -32,10 +33,19 @@ export function AppShell({ children, title, actions }: { children: React.ReactNo
       >
         {/* Header — contains logo and collapse toggle */}
         <div className={`flex h-20 shrink-0 items-center bg-primary-dark ${collapsed ? "justify-between px-3 gap-1.5" : "px-3 gap-2"}`}>
-          <div className="h-[36px] w-[36px] shrink-0 rounded-[10px] bg-secondary-soft" aria-hidden="true" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+            <Image
+              src="/logo-aruna.png"
+              alt="ARUNA Logo"
+              width={48}
+              height={28}
+              priority
+              className="h-8 w-auto object-contain drop-shadow-sm"
+            />
+          </div>
           {!collapsed && (
-            <div className="ml-1 flex-1 whitespace-nowrap text-[18px] font-semibold text-white [text-shadow:0_0_8px_rgb(0_0_0/25%)]">
-              ResiliChain AI
+            <div className="ml-1 flex-1 whitespace-nowrap text-[20px] font-bold tracking-wide text-white [text-shadow:0_0_8px_rgb(0_0_0/25%)]">
+              ARUNA
             </div>
           )}
           {/* Collapse toggle button */}

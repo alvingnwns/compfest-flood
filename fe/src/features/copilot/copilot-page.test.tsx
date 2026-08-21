@@ -15,7 +15,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(mocks.simulationId ? `simulation=${mocks.simulationId}` : ""),
 }));
 
-vi.mock("@/hooks/use-resilichain-data", () => ({
+vi.mock("@/hooks/use-aruna-data", () => ({
   useSimulation: () => ({ data: mocks.simulationId ? simulationFixture : undefined, isLoading: false, isError: false, refetch: vi.fn() }),
   useScenario: () => ({ data: scenarioFixture }),
   useDisruptionAnalysis: () => ({ data: disruptionFixture }),
@@ -78,7 +78,7 @@ describe("Copilot page", () => {
     const user = userEvent.setup();
     renderPage();
 
-    const input = await screen.findByRole("textbox", { name: /Tanyakan ResiliChain Copilot/i });
+    const input = await screen.findByRole("textbox", { name: /Tanyakan ARUNA Copilot/i });
     await user.type(input, "jelaskan tentang rencana pemulihannya");
     await user.click(screen.getByRole("button", { name: /Kirim|Send/i }));
     await screen.findByText("Rencana pemulihan mencakup tindakan operasional yang telah dihitung.");

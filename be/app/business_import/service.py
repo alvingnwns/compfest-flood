@@ -59,6 +59,8 @@ def import_business_workbook(filename: str, content_type: str | None, contents: 
         business_snapshot_id=snapshot.id,
         expires_at=snapshot.expires_at,
         summary=snapshot.summary,
+        products=snapshot.products,
+        inventory=snapshot.inventory,
     )
 
 

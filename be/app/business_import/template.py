@@ -76,14 +76,14 @@ def create_business_template() -> bytes:
     instructions.column_dimensions["B"].width = 90
     instructions.append(
         [
-            "ResiliChain Business Data",
+            "ARUNA Business Data",
             "Replace the green example rows, keep the headers unchanged, and upload as .xlsx.",
         ]
     )
     instructions.append(
         [
             "Network scope",
-            "Custom operational data runs on the current ResiliChain Jakarta demo logistics network.",
+            "Custom operational data runs on the current ARUNA Jakarta demo logistics network.",
         ]
     )
     instructions.append(["Priority", "normal, high, critical"])

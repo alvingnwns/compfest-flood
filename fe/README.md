@@ -1,6 +1,6 @@
-# ResiliChain AI
+# ARUNA
 
-Frontend for the ResiliChain flood-aware supply-chain recovery MVP. The application replays the Jakarta flood scenario from 04 March 2025 for Nusantara Foods and connects disruption risk to coordinated manufacturing, logistics, and commerce recommendations.
+Frontend for the ARUNA flood-aware supply-chain recovery MVP. The application replays the Jakarta flood scenario from 04 March 2025 for Nusantara Foods and connects disruption risk to coordinated manufacturing, logistics, and commerce recommendations.
 
 ## Architecture
 

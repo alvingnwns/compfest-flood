@@ -9,7 +9,7 @@ import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
 import type { ImpactMetric } from "@/domain/impact";
 import type { Simulation } from "@/domain/scenario";
 import { getRainfallScenario } from "@/features/scenario/scenario-presets";
-import { useImpactComparison, useSimulation } from "@/hooks/use-resilichain-data";
+import { useImpactComparison, useSimulation } from "@/hooks/use-aruna-data";
 import { formatCompactIdr, formatMinutes, formatPercent } from "@/lib/format";
 import { exportService } from "@/services/export-service";
 
@@ -79,28 +79,25 @@ function MetricCard({ metric }: { metric: ImpactMetric }) {
           <div className="min-w-0">
             <p className="text-[13px] font-medium text-[#5a5a5a] print:text-[11px]">Kondisi Awal</p>
             <span
-              className={`mt-2 inline-flex items-center justify-center rounded-[14px] bg-[#d9d9d9] px-3 py-1 font-bold text-[#5a5a5a] print:mt-1 print:px-2.5 print:py-0.5 print:rounded-[8px] ${
-                isCurrency ? "text-[18px] leading-tight print:text-[14px]" : "text-[25px] print:text-[18px]"
-              }`}
+              className={`mt-2 inline-flex items-center justify-center rounded-[14px] bg-[#d9d9d9] px-3 py-1 font-bold text-[#5a5a5a] print:mt-1 print:px-2.5 print:py-0.5 print:rounded-[8px] ${isCurrency ? "text-[18px] leading-tight print:text-[14px]" : "text-[25px] print:text-[18px]"
+                }`}
             >
               {formatMetricValue(metric, metric.baseline)}
             </span>
           </div>
           <div className="min-w-0">
-            <p className="text-[16px] font-bold text-[#005a45] print:text-[12px]">ResiliChain</p>
+            <p className="text-[16px] font-bold text-[#005a45] print:text-[12px]">ARUNA</p>
             <span
-              className={`mt-2 inline-flex items-center justify-center rounded-[16px] bg-[#005a45] px-3.5 py-1 font-bold text-[#00f0b8] print:mt-1 print:px-2.5 print:py-0.5 print:rounded-[8px] ${
-                isCurrency ? "text-[21px] leading-tight print:text-[15px]" : "text-[31px] print:text-[20px]"
-              }`}
+              className={`mt-2 inline-flex items-center justify-center rounded-[16px] bg-[#005a45] px-3.5 py-1 font-bold text-[#00f0b8] print:mt-1 print:px-2.5 print:py-0.5 print:rounded-[8px] ${isCurrency ? "text-[21px] leading-tight print:text-[15px]" : "text-[31px] print:text-[20px]"
+                }`}
             >
               {formatMetricValue(metric, metric.recovery)}
             </span>
           </div>
         </div>
         <span
-          className={`mt-3 w-max max-w-full rounded-[7px] px-2.5 py-1 text-[11px] font-bold print:mt-2 print:text-[10px] print:py-0.5 ${
-            delta.better ? "bg-success/25 text-[#005a45]" : "bg-amber-100 text-amber-800"
-          }`}
+          className={`mt-3 w-max max-w-full rounded-[7px] px-2.5 py-1 text-[11px] font-bold print:mt-2 print:text-[10px] print:py-0.5 ${delta.better ? "bg-success/25 text-[#005a45]" : "bg-amber-100 text-amber-800"
+            }`}
         >
           {delta.label}
         </span>
@@ -134,7 +131,7 @@ export function ImpactPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-[18px] font-bold tracking-wide text-primary-dark">LAPORAN ANALISIS DAMPAK PEMULIHAN</h1>
-              <p className="text-[11px] font-medium text-[#5a5a5a]">ResiliChain AI — Sistem Mitigasi &amp; Pemulihan Rantai Pasok</p>
+              <p className="text-[11px] font-medium text-[#5a5a5a]">ARUNA — Sistem Mitigasi &amp; Pemulihan Rantai Pasok</p>
             </div>
             <div className="text-right text-[11px] text-[#5a5a5a] space-y-0.5">
               <div><strong>Skenario:</strong> {scenarioLabel}</div>
@@ -168,13 +165,12 @@ export function ImpactPage() {
                       {query.data.metrics.map((metric) => (
                         <div
                           key={metric.key}
-                          className={`print-break-avoid ${
-                            metric.key === "average-delay"
+                          className={`print-break-avoid ${metric.key === "average-delay"
                               ? "lg:col-span-5 print:col-span-1"
                               : metric.key === "sales-exposure-risk"
                                 ? "lg:col-span-7 print:col-span-1"
                                 : "lg:col-span-4 print:col-span-1"
-                          }`}
+                            }`}
                         >
                           <MetricCard metric={metric} />
                         </div>

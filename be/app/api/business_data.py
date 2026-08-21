@@ -43,4 +43,6 @@ def get_business_data_summary(snapshot_id: str) -> BusinessImportResponse:
         business_snapshot_id=snapshot.id,
         expires_at=snapshot.expires_at,
         summary=snapshot.summary,
+        products=snapshot.products,
+        inventory=snapshot.inventory,
     )

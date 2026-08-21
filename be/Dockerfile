@@ -9,10 +9,10 @@ COPY pyproject.toml ./
 COPY app ./app
 
 RUN pip install --no-cache-dir . \
-    && useradd --create-home --uid 10001 resilichain \
-    && chown -R resilichain:resilichain /app
+    && useradd --create-home --uid 10001 ARUNA \
+    && chown -R ARUNA:ARUNA /app
 
-USER resilichain
+USER ARUNA
 
 EXPOSE 8000
 

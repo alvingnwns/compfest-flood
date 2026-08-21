@@ -15,7 +15,7 @@ export type CopilotThread = {
 
 export const emptyCopilotThread = (): CopilotThread => ({ messages: [], suggestedQuestions: [] });
 
-export const copilotStorageKey = (simulationId: string) => `resilichain:copilot:${simulationId}`;
+export const copilotStorageKey = (simulationId: string) => `ARUNA:copilot:${simulationId}`;
 
 export function readCopilotThread(simulationId: string, nextId: () => number): CopilotThread {
   if (typeof window === "undefined") return emptyCopilotThread();

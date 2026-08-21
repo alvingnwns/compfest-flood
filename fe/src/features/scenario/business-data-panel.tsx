@@ -74,9 +74,8 @@ export function BusinessDataPanel({
             onModeChange("custom");
             inputRef.current?.click();
           }}
-          className={`inline-flex h-10 items-center gap-2 rounded-[10px] bg-primary px-4 text-[13px] font-bold text-white transition hover:bg-primary-dark hover:ring-[2px] hover:ring-primary hover:ring-offset-2 focus-visible:ring-[2px] focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:hover:ring-0 ${
-            mode === "custom" ? "ring-[2px] ring-primary ring-offset-2 shadow-sm" : ""
-          }`}
+          className={`inline-flex h-10 items-center gap-2 rounded-[10px] bg-primary px-4 text-[13px] font-bold text-white transition hover:bg-primary-dark hover:ring-[2px] hover:ring-primary hover:ring-offset-2 focus-visible:ring-[2px] focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:hover:ring-0 ${mode === "custom" ? "ring-[2px] ring-primary ring-offset-2 shadow-sm" : ""
+            }`}
         >
           <Upload className="h-4 w-4" /> {pending ? "Memvalidasi..." : "Upload Business Data"}
         </button>
@@ -88,9 +87,8 @@ export function BusinessDataPanel({
         type="button"
         disabled={disabled}
         onClick={() => onModeChange("demo")}
-        className={`inline-flex h-10 items-center gap-2 rounded-[10px] border border-[#856019] bg-gradient-to-br from-[#eba92d] to-[#856019] px-4 text-[13px] font-bold text-white transition hover:brightness-105 hover:ring-[2px] hover:ring-[#eba92d] hover:ring-offset-2 focus-visible:ring-[2px] focus-visible:ring-[#eba92d] focus-visible:ring-offset-2 disabled:opacity-50 disabled:hover:ring-0 ${
-          mode === "demo" ? "ring-[2px] ring-[#eba92d] ring-offset-2 shadow-sm" : ""
-        }`}
+        className={`inline-flex h-10 items-center gap-2 rounded-[10px] border border-[#856019] bg-gradient-to-br from-[#eba92d] to-[#856019] px-4 text-[13px] font-bold text-white transition hover:brightness-105 hover:ring-[2px] hover:ring-[#eba92d] hover:ring-offset-2 focus-visible:ring-[2px] focus-visible:ring-[#eba92d] focus-visible:ring-offset-2 disabled:opacity-50 disabled:hover:ring-0 ${mode === "demo" ? "ring-[2px] ring-[#eba92d] ring-offset-2 shadow-sm" : ""
+          }`}
       >
         <BarChart3 className="h-4 w-4" /> Gunakan Demo Data Bisnis
       </button>
@@ -107,7 +105,7 @@ export function BusinessDataPanel({
       )}
 
       {mode === "custom" && !preview && !error && (
-        <p className="mt-4 text-xs text-muted">Data operasional pengguna berjalan pada jaringan logistik demo Jakarta ResiliChain.</p>
+        <p className="mt-4 text-xs text-muted">Data operasional pengguna berjalan pada jaringan logistik demo Jakarta ARUNA.</p>
       )}
 
       {mode === "custom" && preview && (

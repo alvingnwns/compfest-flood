@@ -7,7 +7,7 @@
 > Aku cek struktur dan berkas penting di folder `fe` dulu—terutama konfigurasi serta halaman/komponen utamanya.
 </details>
 
-Bisa. Folder `fe` berisi frontend Next.js bernama **ResiliChain AI**—MVP untuk membantu keputusan pemulihan rantai pasok saat banjir Jakarta.
+Bisa. Folder `fe` berisi frontend Next.js bernama **ARUNA**—MVP untuk membantu keputusan pemulihan rantai pasok saat banjir Jakarta.
 
 Yang terlihat:
 
@@ -40,7 +40,7 @@ Untuk menjalankan: masuk ke `fe`, lalu `npm run dev`; buka `http://localhost:300
 
 > Apakah kamu tau kita sedang mengerjakan project apa disini
 
-Ya. Kita sedang mengerjakan **ResiliChain AI**, frontend MVP untuk decision support pemulihan rantai pasok ketika terjadi banjir.
+Ya. Kita sedang mengerjakan **ARUNA**, frontend MVP untuk decision support pemulihan rantai pasok ketika terjadi banjir.
 
 Skenario utamanya adalah banjir Jakarta 4 Maret 2025 pada perusahaan fiktif Nusantara Foods. Aplikasi menampilkan:
 

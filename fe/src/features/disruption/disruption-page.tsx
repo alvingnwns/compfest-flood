@@ -10,7 +10,7 @@ import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
 import type { DisruptionAnalysis, RoadRisk } from "@/domain/disruption";
 import type { Simulation } from "@/domain/scenario";
 import { getRainfallScenario } from "@/features/scenario/scenario-presets";
-import { useDisruptionAnalysis, useGenerateRecovery, useSimulation } from "@/hooks/use-resilichain-data";
+import { useDisruptionAnalysis, useGenerateRecovery, useSimulation } from "@/hooks/use-aruna-data";
 import { formatCompactIdr, formatPercent, formatRisk } from "@/lib/format";
 import { DisruptionMap } from "./disruption-map";
 
@@ -86,9 +86,8 @@ function ImpactPanel({
               {label}
             </h3>
             <div
-              className={`flex items-center justify-center font-bold ${
-                isCurrency ? "text-[20px] leading-tight" : "text-[32px] leading-none"
-              } ${danger ? "text-[#bc0000]" : "text-black"}`}
+              className={`flex items-center justify-center font-bold ${isCurrency ? "text-[20px] leading-tight" : "text-[32px] leading-none"
+                } ${danger ? "text-[#bc0000]" : "text-black"}`}
             >
               {value}
             </div>

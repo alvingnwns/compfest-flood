@@ -32,7 +32,7 @@ def get_routing_graph() -> dict[str, Any]:
 def get_road_context() -> dict[str, Any]:
     """Load the surrounding display-only OSM road context layer.
 
-    This dataset is separate from the ResiliChain optimization graph.
+    This dataset is separate from the ARUNA optimization graph.
     It is NEVER used by NetworkX routing — display purposes only.
     """
     return _load_json(DATA_DIR / "roads" / "jakarta-road-context.geojson")

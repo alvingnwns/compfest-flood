@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { inventorySchema, productSchema } from "./scenario";
 
 export const importValidationIssueSchema = z.object({
   sheet: z.string(),
@@ -24,8 +25,11 @@ export const businessImportResponseSchema = z.object({
   businessDataSource: z.literal("custom"),
   expiresAt: z.iso.datetime({ offset: true }),
   summary: businessSnapshotSummarySchema,
+  products: z.array(productSchema).optional().default([]),
+  inventory: z.array(inventorySchema).optional().default([]),
   errors: z.array(importValidationIssueSchema),
 });
 
 export type BusinessImportResponse = z.infer<typeof businessImportResponseSchema>;
 export type ImportValidationIssue = z.infer<typeof importValidationIssueSchema>;
+

@@ -1,4 +1,4 @@
-# ResiliChain AI Backend
+# ARUNA Backend
 
 FastAPI backend for an offline-first synthetic Jakarta flood replay. The HTTP contract is frozen in [`../docs/BACKEND_INTEGRATION_CONTRACT.md`](../docs/BACKEND_INTEGRATION_CONTRACT.md).
 
@@ -22,8 +22,8 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 Check `http://localhost:8000/health`. Docker uses the same `pyproject.toml` source:
 
 ```powershell
-docker build -t resilichain-backend .
-docker run --rm -p 8000:8000 resilichain-backend
+docker build -t ARUNA-backend .
+docker run --rm -p 8000:8000 ARUNA-backend
 ```
 
 ## Active computation
