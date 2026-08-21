@@ -96,16 +96,15 @@ def generate_recovery_plan(
         constrained_materials = ", ".join(item.material_id for item in product.bom)
         if change != 0:
             what = f"Sesuaikan produksi {product.name} dari {before} menjadi {after} {product.unit}."
-            why = (
-                f"Ketersediaan bahan baku dan kebutuhan BOM ({constrained_materials}) membatasi kapasitas produksi."
-            )
+            why = f"Ketersediaan bahan baku dan kebutuhan BOM ({constrained_materials}) membatasi kapasitas produksi."
             expected_impact = (
                 "Penyesuaian produksi menyediakan persediaan yang dapat dialokasikan untuk pemenuhan pesanan."
             )
         else:
             what = f"Pertahankan produksi {product.name} sebesar {after} {product.unit}."
             why = (
-                f"Alokasi kapasitas pabrik untuk {product.name} dipertahankan guna memenuhi kebutuhan pesanan dan ketersediaan bahan ({constrained_materials})."
+                f"Alokasi kapasitas pabrik untuk {product.name} dipertahankan guna memenuhi kebutuhan "
+                f"pesanan dan ketersediaan bahan ({constrained_materials})."
             )
             expected_impact = (
                 f"Menjaga ketersediaan {after} {product.unit} persediaan untuk pemenuhan pesanan prioritas."

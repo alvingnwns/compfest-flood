@@ -11,6 +11,8 @@ class KpiMetric(ApiModel):
     recovery: float
     total: float | None = None
     currency: str | None = None
+    baseline_observation_count: int | None = None
+    recovery_observation_count: int | None = None
 
 
 class ActionCounts(ApiModel):
@@ -21,5 +23,7 @@ class ActionCounts(ApiModel):
 
 class ImpactComparison(ApiModel):
     simulation_id: str
+    recovery_status: Literal["ready", "partial", "no-feasible-plan"]
+    business_data_source: Literal["demo", "custom"]
     metrics: list[KpiMetric]
     action_counts: ActionCounts

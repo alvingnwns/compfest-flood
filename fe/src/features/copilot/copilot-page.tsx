@@ -6,12 +6,12 @@ import { useSearchParams } from "next/navigation";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
-import { ErrorState, LoadingState } from "@/components/ui/states";
+import { ErrorState, FullPageState, LoadingState } from "@/components/ui/states";
 import { getRainfallScenario } from "@/features/scenario/scenario-presets";
 import { useCopilotConversation } from "./copilot-conversation-store";
 import { toRecentCopilotMessages } from "./copilot-session";
 import { useAskCopilot, useDisruptionAnalysis, useImpactComparison, useRecoveryPlan, useScenario, useSimulation } from "@/hooks/use-aruna-data";
-import { formatCompactIdr, formatPercent, formatRisk } from "@/lib/format";
+import { formatCompactIdr, formatRisk } from "@/lib/format";
 
 const initialQuestions = [
   "Apa dampaknya kalau kondisi ini memburuk?",
@@ -128,14 +128,14 @@ export function CopilotPage() {
 
   if (!simulationId) return (
     <AppShell title="ARUNA Copilot">
-      <div className="grid min-h-[calc(100vh-80px)] place-items-center p-6">
-        <section className="rounded-lg border border-outline bg-white p-8 text-center shadow-sm">
+      <FullPageState>
+        <section className="card mx-auto w-full max-w-lg p-8 text-center">
           <ShieldCheck className="mx-auto mb-4 text-primary" size={36} />
           <h1 className="mb-2 text-xl font-semibold">Jalankan simulasi terlebih dahulu</h1>
           <p className="mb-6 max-w-lg text-sm text-muted">Jalankan simulasi skenario sebelum membuka ARUNA Copilot agar konteks operasional tersedia.</p>
           <Link href="/scenario" className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white">Buka Skenario <ArrowRight size={17} /></Link>
         </section>
-      </div>
+      </FullPageState>
     </AppShell>
   );
 

@@ -656,3 +656,6 @@ Invoke-RestMethod http://localhost:8000/api/simulations/<simulationId>
 Kirim hasil test-nya; setelah itu aku tandai Fase 2 selesai dan berikan commit message-nya.
 
 > 11 passed in 0.35s
+# ARCHIVED / HISTORICAL IMPLEMENTATION NOTE
+
+This session transcript records an early prototype and is not current architecture documentation. For the active runtime, use [`../README.md`](../README.md), [`../be/README.md`](../be/README.md), and [`BACKEND_INTEGRATION_CONTRACT.md`](BACKEND_INTEGRATION_CONTRACT.md).

@@ -69,7 +69,15 @@ def create_recovery_plan(simulation_id: str, request: RecoveryRequest | None = N
         request.constraints if request else None,
     )
     simulation_repository.save_recovery(simulation_id, fingerprint, recovery)
-    simulation_repository.save_impact(simulation_id, calculate_kpi(simulation_id, scenario, recovery))
+    simulation_repository.save_impact(
+        simulation_id,
+        calculate_kpi(
+            simulation_id,
+            scenario,
+            recovery,
+            business_data_source=simulation.business_data_source,
+        ),
+    )
     return recovery
 
 

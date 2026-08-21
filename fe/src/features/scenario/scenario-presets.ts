@@ -114,6 +114,8 @@ export const OPERATIONAL_PRESETS: OperationalPreset[] = [
   },
 ];
 
+export const DEFAULT_OPERATIONAL_PRESET = OPERATIONAL_PRESETS[0];
+
 export function getOperationalPreset(id: string): OperationalPreset {
-  return OPERATIONAL_PRESETS.find((p) => p.id === id) ?? OPERATIONAL_PRESETS[0];
+  return OPERATIONAL_PRESETS.find((p) => p.id === id) ?? DEFAULT_OPERATIONAL_PRESET;
 }

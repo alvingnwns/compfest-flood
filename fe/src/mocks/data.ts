@@ -103,11 +103,13 @@ export const recoveryFixture: RecoveryPlan = {
 
 export const impactFixture: ImpactComparison = {
   simulationId: simulationFixture.id,
+  recoveryStatus: "partial",
+  businessDataSource: "demo",
   metrics: [
     { key: "orders-fulfilled", baseline: 13, recovery: 18, total: 20 },
     { key: "on-time-delivery", baseline: 0.55, recovery: 0.85 },
     { key: "failed-orders", baseline: 5, recovery: 1 },
-    { key: "average-delay", baseline: 128, recovery: 42 },
+    { key: "average-delay", baseline: 128, recovery: 42, baselineObservationCount: 15, recoveryObservationCount: 19 },
     { key: "sales-exposure-risk", baseline: 8_200_000, recovery: 2_100_000, currency: "IDR" },
   ],
   actionCounts: { manufacturing: 2, logistics: 4, commerce: 3 },

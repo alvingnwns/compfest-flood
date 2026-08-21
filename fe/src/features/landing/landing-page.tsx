@@ -6,6 +6,11 @@ import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 const SLIDE_DURATION_MS = 5500;
+export const LANDING_NAVBAR_SOLID_Y = 48;
+
+export function shouldUseSolidLandingNavbar(scrollY: number): boolean {
+  return scrollY >= LANDING_NAVBAR_SOLID_Y;
+}
 
 const slides = [
   {
@@ -95,7 +100,7 @@ export function LandingPage() {
   }, [activeSlide, isPaused, move]);
 
   useEffect(() => {
-    const updateNavbar = () => setIsNavbarSolid(window.scrollY > 56);
+    const updateNavbar = () => setIsNavbarSolid(shouldUseSolidLandingNavbar(window.scrollY));
     updateNavbar();
     window.addEventListener("scroll", updateNavbar, { passive: true });
     return () => window.removeEventListener("scroll", updateNavbar);
@@ -105,8 +110,9 @@ export function LandingPage() {
     <main className="overflow-x-hidden bg-primary text-white">
       <nav
         aria-label="Navigasi landing page"
+        data-scroll-state={isNavbarSolid ? "solid" : "transparent"}
         className={`fixed inset-x-0 top-0 z-50 flex h-[90px] w-full items-center transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ${isNavbarSolid
-          ? "border-b border-white/10 bg-primary/95 shadow-[0_8px_24px_rgb(41_64_91/18%)] backdrop-blur-md"
+          ? "border-b border-white/15 bg-primary-dark/95 shadow-[0_10px_30px_rgb(0_0_0/30%)] backdrop-blur-xl"
           : "border-b border-transparent bg-transparent shadow-none"
           }`}
       >
@@ -269,7 +275,7 @@ export function LandingPage() {
             Solusi Cerdas untuk Bisnis
           </h2>
           <p className="mt-3 max-w-[1050px] text-[15px] leading-relaxed md:text-[19px]">
-            Dari prediksi banjir hingga rute alternatif, ARUNA membantu bisnis menghadapi gangguan dengan lebih siap.
+            Dari analisis paparan risiko banjir pada koridor jalan hingga rute alternatif, ARUNA membantu bisnis menghadapi gangguan dengan lebih siap.
           </p>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
             {features.map(([title, description], index) => (

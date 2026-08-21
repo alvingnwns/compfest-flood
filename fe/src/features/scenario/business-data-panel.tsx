@@ -6,15 +6,16 @@ import { importValidationIssueSchema, type BusinessImportResponse } from "@/doma
 import { ApiError } from "@/lib/api-client";
 import { formatIdr } from "@/lib/format";
 import { businessDataService } from "@/services/business-data-service";
+import type { BusinessDataMode } from "./scenario-flow";
 
 type Props = {
-  mode: "demo" | "custom";
+  mode?: BusinessDataMode;
   preview?: BusinessImportResponse;
   activeSnapshotId?: string;
   pending: boolean;
   error?: Error | null;
   disabled?: boolean;
-  onModeChange: (mode: "demo" | "custom") => void;
+  onModeChange: (mode: BusinessDataMode) => void;
   onUpload: (file: File) => void;
   onConfirm: () => void;
 };
@@ -60,8 +61,8 @@ export function BusinessDataPanel({
       </fieldset>
 
       <h2 id="business-data-title" className="text-[20px] font-bold text-primary-dark md:text-[24px]">SNAPSHOT BISNIS</h2>
-      <p className="mt-1 text-[14px] font-medium text-primary-dark md:text-[16px]">Unggah snapshot operasional bisnis Anda</p>
-      <p className="sr-only">Business Data: {mode === "custom" && activeSnapshotId ? "Custom Upload" : "Demo"}</p>
+      <p className="mt-1 text-[14px] font-medium text-primary-dark md:text-[16px]">Pilih data demo atau unggah snapshot operasional bisnis Anda</p>
+      <p className="sr-only">Business Data: {mode === undefined ? "Belum dipilih" : mode === "custom" && activeSnapshotId ? "Custom Upload" : mode === "custom" ? "Menunggu Upload" : "Demo"}</p>
 
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
         <a href={businessDataService.templateUrl} download className="inline-flex h-10 items-center gap-2 rounded-[10px] border border-primary/50 bg-white px-4 text-[13px] font-bold text-primary transition hover:bg-surface-low hover:ring-[2px] hover:ring-primary hover:ring-offset-2 focus-visible:ring-[2px] focus-visible:ring-primary focus-visible:ring-offset-2">

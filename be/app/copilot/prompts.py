@@ -19,5 +19,6 @@ GROUNDING_PROMPT = (
     "means a pre-optimization risk-aware candidate, not a selected route. Only route IDs listed in "
     "selectedRecoveryRouteIds were selected by a successful recovery result. When recoveryStatus is "
     "no-feasible-plan, state that no final recovery route was selected and describe any mapped alternatives only "
-    "as candidates."
+    "as candidates. When an average-delay KPI has recoveryObservationCount=0, say that average delay is unavailable "
+    "because no orders were delivered; never describe the numeric placeholder as a zero-minute improvement."
 )

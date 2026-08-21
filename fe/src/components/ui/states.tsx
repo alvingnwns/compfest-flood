@@ -1,5 +1,15 @@
 ﻿import { AlertTriangle, Inbox, RefreshCw } from "lucide-react";
 
+import type { ReactNode } from "react";
+
+export function FullPageState({ children }: { children: ReactNode }) {
+  return (
+    <div className="impact-pattern grid min-h-[calc(100vh-80px)] place-items-center p-4 md:p-6">
+      {children}
+    </div>
+  );
+}
+
 export function LoadingState({ label = "Memuat data simulasi…" }: { label?: string }) {
   return <div className="grid min-h-[360px] place-items-center"><div className="text-center"><div className="mx-auto mb-3 h-7 w-7 animate-spin rounded-full border-2 border-outline border-t-primary" /><p className="text-sm text-muted">{label}</p></div></div>;
 }
@@ -9,5 +19,5 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
 }
 
 export function EmptyState({ title, message }: { title: string; message: string }) {
-  return <div className="card mx-auto my-12 max-w-lg p-8 text-center"><Inbox className="mx-auto mb-3 text-muted" /><h2 className="section-title mb-1">{title}</h2><p className="text-sm text-muted">{message}</p></div>;
+  return <div className="card mx-auto w-full max-w-lg p-8 text-center"><Inbox className="mx-auto mb-3 text-muted" /><h2 className="section-title mb-1">{title}</h2><p className="text-sm text-muted">{message}</p></div>;
 }

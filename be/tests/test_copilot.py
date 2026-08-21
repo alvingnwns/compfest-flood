@@ -72,6 +72,18 @@ def test_missing_key_uses_grounded_numerical_fallback(client) -> None:
     assert f"{metric['recovery']:,.0f}" in body["answer"]
 
 
+def test_zero_sales_exposure_delta_uses_neutral_wording(client) -> None:
+    simulation_id = _no_feasible_recovery(client)
+    response = client.post(
+        f"/api/simulations/{simulation_id}/copilot",
+        json={"message": "Bagaimana perubahan paparan penjualan?"},
+    )
+    assert response.status_code == 200
+    answer = response.json()["answer"].casefold()
+    assert "tidak berubah" in answer
+    assert "berkurang sebesar rp0" not in answer
+
+
 def test_backend_env_file_is_resolved_independently_of_working_directory() -> None:
     assert Settings.model_config["env_file"] == BACKEND_ENV_FILE
     assert BACKEND_ENV_FILE.name == ".env"

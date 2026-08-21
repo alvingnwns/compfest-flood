@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 
@@ -80,6 +82,11 @@ def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
     ]
     assert impact["metrics"][1]["baseline"] <= 1
     assert impact["metrics"][1]["recovery"] <= 1
+    assert impact["recoveryStatus"] == recovery["status"]
+    assert impact["businessDataSource"] == "demo"
+    average_delay = next(metric for metric in impact["metrics"] if metric["key"] == "average-delay")
+    assert average_delay["baselineObservationCount"] > 0
+    assert average_delay["recoveryObservationCount"] > 0
 
 
 def test_structured_errors_and_validation(client: TestClient, simulation_id: str) -> None:
@@ -94,6 +101,10 @@ def test_structured_errors_and_validation(client: TestClient, simulation_id: str
     malformed = client.post("/api/simulations", content="{", headers={"content-type": "application/json"})
     assert malformed.status_code == 400
     assert malformed.json()["code"] == "invalid_request"
+    malformed_without_type = client.post("/api/simulations", content=b"{")
+    assert 400 <= malformed_without_type.status_code < 500
+    assert malformed_without_type.json()["code"] in {"invalid_request", "validation_error"}
+    assert "<binary input omitted>" in str(malformed_without_type.json()["details"])
     invalid = client.post(
         f"/api/simulations/{simulation_id}/recovery",
         json={"constraints": {"maxAdditionalDelayMinutes": -1}},
@@ -147,3 +158,13 @@ def test_no_feasible_api_shape_matches_recovery_result_contract(
     assert payload["commerceActions"] == []
     assert payload["possibleNextActions"]
     assert payload["error"]["code"] == "no_feasible_plan"
+    impact = client.get(f"/api/simulations/{simulation_id}/impact").json()
+    assert impact["recoveryStatus"] == "no-feasible-plan"
+    average_delay = next(metric for metric in impact["metrics"] if metric["key"] == "average-delay")
+    assert average_delay["recoveryObservationCount"] == 0
+
+
+def test_compose_uses_supported_engine_mode() -> None:
+    compose = (Path(__file__).resolve().parents[2] / "compose.yaml").read_text(encoding="utf-8")
+    assert "ENGINE_MODE: connected" in compose
+    assert "ENGINE_MODE: stub" not in compose

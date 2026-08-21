@@ -39,3 +39,6 @@ Risk probabilities are not flood-certainty claims, and evaluation metrics do not
 - [ ] Full multi-stop vehicle-routing optimization.
 
 Final MVP recommendation: freeze the transparent synthetic ML baseline, retain the real OSM/NetworkX/CP-SAT pipeline, and harden the demo. Both approved real-historical label attempts failed their scientific gates, so no historical model replacement is permitted.
+# ARCHIVED / HISTORICAL IMPLEMENTATION NOTE
+
+This checklist describes an earlier synthetic prototype and is retained for audit history. Current implementation truth is in [`../be/README.md`](../be/README.md) and [`BACKEND_INTEGRATION_CONTRACT.md`](BACKEND_INTEGRATION_CONTRACT.md).

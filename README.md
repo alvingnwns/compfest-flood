@@ -7,12 +7,14 @@ ARUNA is a flood-aware supply-chain recovery decision-support MVP with a Next.js
 The Scenario page defaults to the built-in demo company snapshot. To use a custom business snapshot:
 
 1. Select **Custom Business Data**.
-2. Download `ResiliChain_Business_Data_Template.xlsx`.
+2. Download `ARUNA_Business_Data_Template.xlsx`.
 3. Replace the example rows with products, numeric IDR prices, orders, inventory, supplier-specific materials, and BOM relationships.
 4. Upload the `.xlsx`, review the validation preview and total order value, then select **Gunakan Data**.
 5. Run the normal simulation, recovery, Impact, and Copilot flow.
 
 Custom operational data uses the same NetworkX, OR-Tools, and KPI path as demo mode. It continues to use ARUNA's Jakarta demo facilities, vehicles, coordinates, and logistics network. Snapshots are process-local, expire after two hours, and must be uploaded again after backend restart. See [`docs/CUSTOM_BUSINESS_DATA.md`](docs/CUSTOM_BUSINESS_DATA.md).
+
+The MVP has no API authentication or tenancy boundary. Snapshot IDs identify process-local data but are not authorization credentials. ARUNA explicitly optimizes supplier-to-factory and warehouse-to-store road legs; the current factory-to-warehouse transfer remains an aggregate planning abstraction.
 
 ## What is real and what is synthetic
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -14,6 +15,7 @@ APP_DIR = Path(__file__).resolve().parents[1]
 MODEL_PATH = APP_DIR / "models" / "flood_risk_model.joblib"
 JAKARTA_FEATURES_PATH = APP_DIR / "data" / "indonesia-flood-ml" / "jakarta-inference-features.csv"
 EXPECTED_TRAINING_DATA = "real-historical-global-flood-database-indonesia"
+HISTORICAL_MODEL_SHA256 = "6a087f31a8a80d77bce64bedb74b04c88e0c8269b4cc767bb3cc3984e199a78d"
 
 
 class RiskResult(BaseModel):
@@ -27,10 +29,29 @@ class RiskResult(BaseModel):
 def _load_model() -> dict[str, Any]:
     if not MODEL_PATH.exists():
         raise ApiError(500, "model_missing", "Artefak model risiko banjir historis tidak ditemukan.")
+    verify_historical_model_artifact()
     artifact = joblib.load(MODEL_PATH)
     if artifact.get("trainingData") != EXPECTED_TRAINING_DATA or "pipeline" not in artifact:
         raise ApiError(500, "model_provenance_invalid", "Provenance model risiko banjir historis tidak valid.")
     return artifact
+
+
+def verify_historical_model_artifact(
+    path: Path = MODEL_PATH,
+    expected_sha256: str = HISTORICAL_MODEL_SHA256,
+) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as artifact_file:
+        for chunk in iter(lambda: artifact_file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    actual = digest.hexdigest()
+    if actual != expected_sha256:
+        raise ApiError(
+            500,
+            "model_integrity_invalid",
+            "Integritas artefak model risiko banjir historis tidak valid.",
+        )
+    return actual
 
 
 @lru_cache(maxsize=1)

@@ -8,11 +8,28 @@ function download(content: string, mimeType: string, filename: string) {
   const anchor = document.createElement("a"); anchor.href = url; anchor.download = filename; anchor.click(); URL.revokeObjectURL(url);
 }
 
+export function impactCsv(data: ImpactComparison): string {
+  const rows: Array<Array<string | number>> = [
+    ["ID Simulasi", data.simulationId],
+    ["Sumber Data Bisnis", data.businessDataSource],
+    ["Status Pemulihan", data.recoveryStatus],
+    [],
+    ["Kunci Metrik", "Metrik", "Kondisi Awal", "Hasil Optimizer", "Satuan"],
+    ...data.metrics.map((metric) => [
+      metric.key,
+      metricLabels[metric.key],
+      metric.baseline,
+      metric.recovery,
+      metricUnits[metric.key],
+    ]),
+  ];
+  return rows.map((row) => row.join(",")).join("\n");
+}
+
 export const exportService = {
   json(data: ImpactComparison) { download(JSON.stringify(data, null, 2), "application/json", `${data.simulationId}-impact.json`); },
   csv(data: ImpactComparison) {
-    const rows = [["Kunci Metrik", "Metrik", "Kondisi Awal", "Pemulihan", "Satuan"], ...data.metrics.map((metric) => [metric.key, metricLabels[metric.key], metric.baseline, metric.recovery, metricUnits[metric.key]])];
-    download(rows.map((row) => row.join(",")).join("\n"), "text/csv", `${data.simulationId}-impact.csv`);
+    download(impactCsv(data), "text/csv", `${data.simulationId}-impact.csv`);
   },
   print() { window.print(); },
 };

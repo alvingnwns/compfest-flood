@@ -148,6 +148,8 @@ def build_copilot_context(simulation_id: str) -> CopilotContext:
                     recovery=metric.recovery,
                     total=metric.total,
                     currency=metric.currency,
+                    baseline_observation_count=metric.baseline_observation_count,
+                    recovery_observation_count=metric.recovery_observation_count,
                 )
                 for metric in impact.metrics
             ]

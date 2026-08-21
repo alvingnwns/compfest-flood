@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
+import { EmptyState, ErrorState, FullPageState, LoadingState } from "@/components/ui/states";
 import type { CommerceAction, LogisticsAction, ManufacturingAction } from "@/domain/recovery";
 import type { Simulation } from "@/domain/scenario";
 import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
@@ -289,13 +289,20 @@ export function RecoveryPage() {
 
   const readyPlan = plan.data && (plan.data.status === "ready" || plan.data.status === "partial") ? plan.data : undefined;
 
+  if (!simulationId) {
+    return (
+      <AppShell title="Rencana Pemulihan">
+        <FullPageState>
+          <EmptyState title="Belum ada simulasi yang dipilih" message="Buat rencana pemulihan dari analisis gangguan terlebih dahulu." />
+        </FullPageState>
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell title="Rencana Pemulihan">
       <div className="impact-pattern min-h-[calc(100vh-80px)] p-4 md:min-h-[calc(100vh-80px)] md:p-6 xl:h-[calc(100vh-80px)] xl:overflow-hidden xl:px-8 xl:py-6">
-        {!simulationId && (
-          <EmptyState title="Belum ada simulasi yang dipilih" message="Buat rencana pemulihan dari analisis gangguan terlebih dahulu." />
-        )}
-        {simulationId && (plan.isLoading || simulation.isLoading) && <LoadingState label="Memuat rencana pemulihan terkoordinasi..." />}
+        {(plan.isLoading || simulation.isLoading) && <LoadingState label="Memuat rencana pemulihan terkoordinasi..." />}
         {plan.isError && <ErrorState message={plan.error.message} onRetry={() => void plan.refetch()} />}
         {(plan.data?.status === "queued" || plan.data?.status === "processing") && <LoadingState label="Menyusun rencana pemulihan terkoordinasi..." />}
         {plan.data?.status === "failed" && <ErrorState message={plan.data.error.message} onRetry={() => void plan.refetch()} />}

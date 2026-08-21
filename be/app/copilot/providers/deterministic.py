@@ -194,12 +194,23 @@ class DeterministicCopilotProvider:
         reduction = metric.baseline - metric.recovery
         baseline = _format_currency(metric.baseline, metric.currency)
         recovery = _format_currency(metric.recovery, metric.currency)
-        reduced = _format_currency(reduction, metric.currency)
+        if reduction == 0:
+            if language == "id":
+                return f"Paparan penjualan tidak berubah, tetap {recovery} setelah analisis pemulihan."
+            return f"Sales exposure is unchanged at {recovery} after recovery analysis."
+        change = _format_currency(abs(reduction), metric.currency)
+        if reduction < 0:
+            if language == "id":
+                return (
+                    f"Paparan penjualan meningkat sebesar {change}, dari {baseline} menjadi {recovery} "
+                    "setelah analisis pemulihan."
+                )
+            return f"Sales exposure increases by {change}, from {baseline} to {recovery} after recovery analysis."
         if language == "id":
             return (
-                f"Paparan penjualan berkurang sebesar {reduced}, dari {baseline} menjadi {recovery} setelah pemulihan."
+                f"Paparan penjualan berkurang sebesar {change}, dari {baseline} menjadi {recovery} setelah pemulihan."
             )
-        return f"Sales exposure decreases by {reduced}, from {baseline} to {recovery} after recovery."
+        return f"Sales exposure decreases by {change}, from {baseline} to {recovery} after recovery."
 
     def _route_answer(self, context: CopilotContext, language: str, *, detailed: bool = False) -> str:
         route = _selected_recovery_route(context)

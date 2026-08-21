@@ -42,7 +42,7 @@ async def api_error_handler(_: Request, exc: ApiError) -> JSONResponse:
 
 
 async def validation_error_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
-    errors = exc.errors()
+    errors = [_json_safe(error) for error in exc.errors()]
     syntactic_error_types = {"json_invalid", "missing"}
     status_code = 400 if any(error["type"] in syntactic_error_types for error in errors) else 422
     code = "invalid_request" if status_code == 400 else "validation_error"
@@ -51,6 +51,18 @@ async def validation_error_handler(_: Request, exc: RequestValidationError) -> J
         status_code=status_code,
         content=error_body(code, message, details={"errors": errors}),
     )
+
+
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, bytes):
+        return "<binary input omitted>"
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_json_safe(item) for item in value]
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    return str(value)
 
 
 async def http_error_handler(_: Request, exc: StarletteHTTPException) -> JSONResponse:

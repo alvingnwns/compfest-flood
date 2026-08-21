@@ -18,7 +18,7 @@ def download_business_template() -> StreamingResponse:
     return StreamingResponse(
         BytesIO(create_business_template()),
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": 'attachment; filename="ResiliChain_Business_Data_Template.xlsx"'},
+        headers={"Content-Disposition": 'attachment; filename="ARUNA_Business_Data_Template.xlsx"'},
     )
 
 

@@ -23,7 +23,7 @@ Upload only validates and creates a preview. The Scenario page requires an expli
 
 ## Template
 
-Download `ResiliChain_Business_Data_Template.xlsx` from `GET /api/business-data/template` or the Scenario page.
+Download `ARUNA_Business_Data_Template.xlsx` from `GET /api/business-data/template` or the Scenario page.
 
 | Sheet | Required columns | Limit |
 | --- | --- | ---: |

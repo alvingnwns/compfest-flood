@@ -67,6 +67,8 @@ class KpiContext(ApiModel):
     recovery: float
     total: float | None = None
     currency: str | None = None
+    baseline_observation_count: int | None = None
+    recovery_observation_count: int | None = None
 
 
 class CopilotContext(ApiModel):

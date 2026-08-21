@@ -37,7 +37,7 @@ The Copilot layer runs after the computational pipeline. It cannot change route 
 }
 ```
 
-Only the six most recent messages are accepted. Conversation history is supplied by the frontend and is not persisted.
+Only the six most recent messages are sent to each backend request. The frontend keeps bounded, per-simulation conversation state in browser `sessionStorage` for the current tab session; the backend does not persist it.
 
 The response identifies whether Gemini, Qwen, or the deterministic provider answered, always marks the response as grounded, and may include a safe fallback-reason code.
 
@@ -123,7 +123,7 @@ Dynamic Hazard wording must use **relative hazard**, **relative road risk**, **w
 ## Limitations
 
 - Answers are limited to the current process-local simulation.
-- Conversation history is bounded and not persisted.
+- Conversation history is bounded and persisted only per simulation in browser `sessionStorage`; it is not a backend database record.
 - Gemini and Qwen are optional enrichment; deterministic grounded answers remain available without either provider.
 - Copilot does not have web search, live weather, database, write, routing, optimization, or tool-execution authority.
 - Operator review remains required before acting on any simulation result.

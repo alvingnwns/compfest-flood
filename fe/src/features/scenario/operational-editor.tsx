@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Pencil, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { BusinessImportResponse } from "@/domain/business-data";
 import type { Scenario, VehicleOverride } from "@/domain/scenario";
 import type { OperationalOverrides } from "./scenario-presets";
@@ -139,11 +139,9 @@ function createPureTemplateVehicles(presetId: string): VehicleItem[] {
   ];
 }
 
-export function OperationalEditor({
+function OperationalEditorState({
   scenario,
-  overrides,
-  presetId = "severe-disruption",
-  custom = false,
+  presetId = "normal",
   businessData,
   disabled,
   onChange,
@@ -179,15 +177,6 @@ export function OperationalEditor({
 
     onChange({ vehicleOverrides, inventoryOverrides });
   };
-
-  useEffect(() => {
-    if (!custom) {
-      const newWarehouses = createWarehouseItems(scenario, presetId, businessData);
-      const newVehicles = createPureTemplateVehicles(presetId);
-      setWarehouses(newWarehouses);
-      setVehicles(newVehicles);
-    }
-  }, [presetId, custom, businessData, scenario]);
 
   // Add Warehouse
   const addWarehouse = () => {
@@ -554,5 +543,15 @@ export function OperationalEditor({
         </div>
       </section>
     </div>
+  );
+}
+
+export function OperationalEditor(props: Props) {
+  const dataKey = props.businessData?.businessSnapshotId ?? "demo";
+  return (
+    <OperationalEditorState
+      key={`${props.presetId ?? "normal"}:${dataKey}:${props.custom ?? false}`}
+      {...props}
+    />
   );
 }

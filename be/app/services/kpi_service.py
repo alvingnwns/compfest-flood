@@ -5,11 +5,19 @@ from app.schemas.recovery import OrderOutcome, RecoveryResult
 from app.schemas.scenario import Scenario
 
 
-def calculate_kpi(simulation_id: str, scenario: Scenario, recovery: RecoveryResult) -> ImpactComparison:
+def calculate_kpi(
+    simulation_id: str,
+    scenario: Scenario,
+    recovery: RecoveryResult,
+    *,
+    business_data_source: str = "demo",
+) -> ImpactComparison:
     baseline = _metrics(scenario, recovery.baseline_order_outcomes)
     recovered = _metrics(scenario, recovery.recovery_order_outcomes)
     return ImpactComparison(
         simulation_id=simulation_id,
+        recovery_status=recovery.status,
+        business_data_source=business_data_source,
         metrics=[
             KpiMetric(
                 key="orders-fulfilled",
@@ -19,7 +27,13 @@ def calculate_kpi(simulation_id: str, scenario: Scenario, recovery: RecoveryResu
             ),
             KpiMetric(key="on-time-delivery", baseline=baseline["on_time"], recovery=recovered["on_time"]),
             KpiMetric(key="failed-orders", baseline=baseline["failed"], recovery=recovered["failed"]),
-            KpiMetric(key="average-delay", baseline=baseline["average_delay"], recovery=recovered["average_delay"]),
+            KpiMetric(
+                key="average-delay",
+                baseline=baseline["average_delay"],
+                recovery=recovered["average_delay"],
+                baseline_observation_count=baseline["delivered"],
+                recovery_observation_count=recovered["delivered"],
+            ),
             KpiMetric(
                 key="sales-exposure-risk",
                 baseline=baseline["sales_exposure"],
@@ -57,5 +71,6 @@ def _metrics(scenario: Scenario, outcomes: list[OrderOutcome]) -> dict[str, floa
         "failed": failed,
         "on_time": on_time / len(scenario.orders) if scenario.orders else 0,
         "average_delay": round(sum(delays) / len(delays), 1) if delays else 0,
+        "delivered": len(delays),
         "sales_exposure": sales_exposure,
     }

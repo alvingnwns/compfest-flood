@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
+import { EmptyState, ErrorState, FullPageState, LoadingState } from "@/components/ui/states";
 import type { DisruptionAnalysis, RoadRisk } from "@/domain/disruption";
 import type { Simulation } from "@/domain/scenario";
 import { getRainfallScenario } from "@/features/scenario/scenario-presets";
@@ -228,10 +228,19 @@ export function DisruptionPage() {
     </div>
   ) : null;
 
+  if (!simulationId) {
+    return (
+      <AppShell title="Peta Gangguan">
+        <FullPageState>
+          <EmptyState title="Belum ada simulasi yang dipilih" message="Jalankan analisis skenario sebelum membuka analisis gangguan." />
+        </FullPageState>
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell title="Peta Gangguan">
-      {!simulationId && <EmptyState title="Belum ada simulasi yang dipilih" message="Jalankan analisis skenario sebelum membuka analisis gangguan." />}
-      {simulationId && query.isLoading && <LoadingState label="Memetakan risiko gangguan banjir..." />}
+      {query.isLoading && <LoadingState label="Memetakan risiko gangguan banjir..." />}
       {query.isError && <ErrorState message={query.error.message} onRetry={() => void query.refetch()} />}
       {query.data && (
         <div className="relative flex min-h-[calc(100vh-80px)] bg-surface-low xl:h-[calc(100vh-80px)] xl:min-h-0 xl:overflow-hidden">

@@ -1,14 +1,12 @@
 # ARUNA Backend
 
-FastAPI backend for an offline-first synthetic Jakarta flood replay. The HTTP contract is frozen in [`../docs/BACKEND_INTEGRATION_CONTRACT.md`](../docs/BACKEND_INTEGRATION_CONTRACT.md).
-
-The computation pipeline is connected: Logistic Regression probabilities affect NetworkX route costs and supplier availability; those results feed OR-Tools production, inventory, warehouse, vehicle, substitution, and order-allocation decisions; recovery outputs drive all five KPIs. The runtime road graph is derived from OpenStreetMap; ML training labels, the flood snapshot, and company scenario remain synthetic.
+FastAPI backend for ARUNA's offline-capable flood-exposure and supply-chain recovery decision-support MVP. The HTTP boundary is documented in [the integration contract](../docs/BACKEND_INTEGRATION_CONTRACT.md).
 
 ## Setup
 
-Python 3.11 or newer is supported. `pyproject.toml` is the authoritative dependency manifest; `requirements.txt` is a compatibility list with matching ranges.
+Python 3.11 or newer is supported. pyproject.toml is authoritative.
 
-```powershell
+~~~powershell
 cd be
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
@@ -17,33 +15,30 @@ python -m pytest
 python -m ruff check .
 python -m ruff format --check .
 uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
+~~~
 
-Check `http://localhost:8000/health`. Docker uses the same `pyproject.toml` source:
-
-```powershell
-docker build -t ARUNA-backend .
-docker run --rm -p 8000:8000 ARUNA-backend
-```
+Docker installs from the same manifest. The supported engine setting is ENGINE_MODE=connected.
 
 ## Active computation
 
-- Flood inference: cached Joblib Logistic Regression artifact and raw `predict_proba` values.
-- Routing: cached compact OpenStreetMap-derived NetworkX graph; baseline minimizes estimated travel time and recovery adds configurable risk penalties.
-- Supplier availability: route risk reduces each supplier material's expected quantity using the documented policy in `Settings`.
-- Recovery: CP-SAT integer quantities enforce BOM/material supply, factory capacity, inventory, explicit substitution, warehouse and vehicle assignment, vehicle capacity/availability, route feasibility, order demand, deadlines, and optional maximum additional delay.
-- Objective: maximize priority-weighted fulfillment while penalizing unfulfilled quantity, delay, transport cost, substitution, and route risk. Weights live in `app/core/config.py`.
-- Lifecycle: synchronous and honest. A completed response is returned after computation; schema states remain compatible with future asynchronous execution.
-- Idempotency: identical simulation and recovery requests reuse process-local artifacts. This resets on process restart because the MVP has no persistent store.
+- Historical Replay loads the committed, SHA-256-verified Joblib Random Forest trained from historical Global Flood Database road-corridor labels across Indonesian regions.
+- Dynamic Hazard is a historical-derived Q1-Q4 what-if transformation. It is not live weather or a calibrated future flood forecast.
+- Routing loads a compact local OpenStreetMap-derived graph. NetworkX computes normal travel-time baselines and risk-aware candidates.
+- A candidate route is not a selected recovery route. Selection is established only by a successful ready or partial optimizer result that references it; no-feasible-plan selects none.
+- OR-Tools CP-SAT coordinates manufacturing quantities, material/BOM feasibility, inventory, warehouse allocation, downstream vehicle/route assignment, substitution, deadlines, and order fulfillment.
+- Custom Business Data replaces products, prices, orders, inventory, materials, and BOM while retaining the demo Jakarta network.
+- Impact KPIs are computed from baseline and optimizer outcomes. ARUNA Copilot explains only this grounded evidence through Gemini, then Qwen, then a deterministic local fallback.
 
 ## KPI formulas
 
-- Orders Fulfilled = count of orders whose allocated quantity equals requested quantity (the response also supplies the total-order denominator).
-- On-Time Delivery = fully fulfilled orders arriving within their deadline / total orders.
-- Failed Orders = orders with zero allocated quantity.
-- Average Delay = mean `max(0, route ETA - deadline)` across delivered orders, in minutes.
-- Sales Exposure Risk = sum of `unfulfilled quantity × product unitPrice`, in raw IDR.
+- Orders Fulfilled: fully allocated orders / total orders.
+- On-Time Delivery: fully fulfilled on-time orders / total orders.
+- Failed Orders: orders with zero allocated quantity.
+- Average Delay: mean max(0, ETA - deadline) across delivered orders. The API also exposes observation counts so clients can show N/A when none were delivered.
+- Sales Exposure Risk: sum of unfulfilled quantity × unit price in raw IDR.
 
-## Scope and limitations
+## Modeling and MVP boundaries
 
-Vehicle capacity is modeled as aggregate planning capacity per vehicle, not a full vehicle-routing problem. State is process-local. There is no authentication, database, queue, or runtime external data ingestion. Do not describe this version as historical flood AI: the road geometry is OSM-derived and algorithms execute for real, but the runtime flood model and business inputs remain synthetic. Sentinel-1 and Global Flood Database processing both produced zero canonical positive labels, so both scientific gates failed and historical training was prohibited.
+ARUNA coordinates production, warehouse allocation, downstream distribution, and order fulfillment. Supplier-to-factory and warehouse-to-store road legs are explicitly routed; the current MVP abstracts factory-to-warehouse transfer and does not claim that every physical transport leg is road/vehicle optimized. Vehicle capacity is aggregate planning capacity, not a vehicle-routing problem.
+
+Simulation, recovery, idempotency, custom snapshots, and Copilot backend context are process-local. There is no database, API authentication, tenancy, queue, live weather ingestion, or operational execution authority. Snapshot IDs are identifiers, not authorization. The March 2025 geometry and business network are transparent demo inputs, and Jakarta is a deployment/demo pilot rather than a labeled validation region.

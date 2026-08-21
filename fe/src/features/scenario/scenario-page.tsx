@@ -14,6 +14,13 @@ import { BusinessDataPanel } from "./business-data-panel";
 import { OperationalConditionPanel } from "./operational-condition-panel";
 import { OperationalEditor } from "./operational-editor";
 import {
+  type BusinessDataMode,
+  showsEnvironmentalCondition,
+  showsOperationalFlow,
+  showsWeatherSimulation,
+} from "./scenario-flow";
+import {
+  DEFAULT_OPERATIONAL_PRESET,
   OPERATIONAL_PRESETS,
   type OperationalOverrides,
   type OperationalPreset,
@@ -37,16 +44,16 @@ export function ScenarioPage() {
 
   const [analysisMode, setAnalysisMode] = useState<AnalysisMode>("scenario-simulation");
   const [rainfallScenario, setRainfallScenario] = useState<RainfallScenario>("Q1");
-  const [opPresetId, setOpPresetId] = useState("severe-disruption");
-  const [overrides, setOverrides] = useState<OperationalOverrides>(OPERATIONAL_PRESETS[3].overrides);
+  const [opPresetId, setOpPresetId] = useState(DEFAULT_OPERATIONAL_PRESET.id);
+  const [overrides, setOverrides] = useState<OperationalOverrides>(DEFAULT_OPERATIONAL_PRESET.overrides);
   const [isCustomMode, setIsCustomMode] = useState(false);
-  const [businessMode, setBusinessMode] = useState<"demo" | "custom">("demo");
+  const [businessMode, setBusinessMode] = useState<BusinessDataMode>();
   const [businessPreview, setBusinessPreview] = useState<BusinessImportResponse>();
   const [businessSnapshotId, setBusinessSnapshotId] = useState("");
   const [step, setStep] = useState(-1);
 
   const busy = step >= 0 || run.isPending;
-  const businessReady = businessMode === "demo" || Boolean(businessSnapshotId);
+  const businessReady = businessMode === "demo" || (businessMode === "custom" && Boolean(businessSnapshotId));
   const simulationReady = businessReady && (analysisMode === "historical-replay" || rainfallScenario !== undefined);
 
   const clearPreviousResult = () => {
@@ -79,8 +86,8 @@ export function ScenarioPage() {
   };
 
   const handleResetToNormal = () => {
-    setOpPresetId("normal");
-    setOverrides(OPERATIONAL_PRESETS[0].overrides);
+    setOpPresetId(DEFAULT_OPERATIONAL_PRESET.id);
+    setOverrides(DEFAULT_OPERATIONAL_PRESET.overrides);
     setIsCustomMode(false);
     clearPreviousResult();
   };
@@ -88,14 +95,16 @@ export function ScenarioPage() {
   const handleResetToDefault = () => {
     setAnalysisMode("scenario-simulation");
     setRainfallScenario("Q1");
-    setBusinessMode("demo");
+    setBusinessMode(undefined);
     setBusinessPreview(undefined);
     setBusinessSnapshotId("");
     handleResetToNormal();
   };
 
-  const handleBusinessModeChange = (mode: "demo" | "custom") => {
+  const handleBusinessModeChange = (mode: BusinessDataMode) => {
     setBusinessMode(mode);
+    setAnalysisMode("scenario-simulation");
+    setRainfallScenario("Q1");
     if (mode === "demo") {
       setBusinessSnapshotId("");
       setBusinessPreview(undefined);
@@ -202,7 +211,11 @@ export function ScenarioPage() {
         </>
       }
     >
-      <div className="scenario-pattern relative min-h-[calc(100vh-80px)] px-4 py-8 md:px-8 md:py-10">
+      <div
+        className={`scenario-pattern relative min-h-[calc(100vh-80px)] px-4 py-8 md:px-8 md:py-10 ${
+          scenario.data && businessMode === undefined ? "grid place-items-center" : ""
+        }`}
+      >
         {scenario.isLoading && <LoadingState label="Memuat skenario Jakarta…" />}
         {scenario.isError && <ErrorState message={scenario.error.message} onRetry={() => void scenario.refetch()} />}
         {scenario.data && (
@@ -218,17 +231,26 @@ export function ScenarioPage() {
               onUpload={(file) => void handleBusinessUpload(file)}
               onConfirm={handleBusinessConfirm}
             />
-            <AnalysisModePanel analysisMode={analysisMode} rainfallScenario={rainfallScenario} disabled={busy} onModeChange={handleModeChange} onRainfallChange={handleRainfallChange} />
-            <OperationalConditionPanel scenario={scenario.data} selectedPresetId={opPresetId} overrides={overrides} custom={isCustomMode} disabled={busy} onSelect={handleOpPresetSelect} onReset={handleResetToNormal} />
-            <OperationalEditor
-              scenario={scenario.data}
-              overrides={overrides}
-              presetId={opPresetId}
-              custom={isCustomMode}
-              businessData={businessMode === "custom" ? businessPreview : undefined}
-              disabled={busy}
-              onChange={handleApplyDrawerOverrides}
-            />
+            {showsOperationalFlow(businessMode) && (
+              <>
+                {showsWeatherSimulation(businessMode) && (
+                  <AnalysisModePanel analysisMode={analysisMode} rainfallScenario={rainfallScenario} disabled={busy} onModeChange={handleModeChange} onRainfallChange={handleRainfallChange} />
+                )}
+                {showsEnvironmentalCondition(businessMode) && (
+                  <OperationalConditionPanel scenario={scenario.data} selectedPresetId={opPresetId} overrides={overrides} custom={isCustomMode} disabled={busy} onSelect={handleOpPresetSelect} onReset={handleResetToNormal} />
+                )}
+                <OperationalEditor
+                  key={`${opPresetId}:${businessSnapshotId}`}
+                  scenario={scenario.data}
+                  overrides={overrides}
+                  presetId={opPresetId}
+                  custom={isCustomMode}
+                  businessData={businessMode === "custom" ? businessPreview : undefined}
+                  disabled={busy}
+                  onChange={handleApplyDrawerOverrides}
+                />
+              </>
+            )}
           </div>
         )}
 

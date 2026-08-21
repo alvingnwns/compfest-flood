@@ -44,7 +44,7 @@ def _scenario_from_snapshot(snapshot):
 def test_template_download_and_valid_import_preview(client: TestClient) -> None:
     template = client.get("/api/business-data/template")
     assert template.status_code == 200
-    assert "ResiliChain_Business_Data_Template.xlsx" in template.headers["content-disposition"]
+    assert "ARUNA_Business_Data_Template.xlsx" in template.headers["content-disposition"]
     workbook = load_workbook(BytesIO(template.content), data_only=False)
     assert workbook.sheetnames == ["Instructions", "Products", "Orders", "Inventory", "Materials", "BOM"]
     assert not any(cell.data_type == "f" for sheet in workbook.worksheets for row in sheet.iter_rows() for cell in row)
@@ -87,6 +87,16 @@ def test_custom_snapshot_runs_through_existing_simulation(client: TestClient) ->
     effective = simulation_repository.get_effective_scenario(created.json()["id"])
     assert {product.id for product in effective.products} == {"P001", "P002"}
     assert {order.id for order in effective.orders} == {"ORDER-001", "ORDER-002"}
+    simulation_id = created.json()["id"]
+    recovery = client.post(f"/api/simulations/{simulation_id}/recovery", json={})
+    assert recovery.status_code == 201
+    assert recovery.json()["status"] in {"ready", "partial"}
+    impact = client.get(f"/api/simulations/{simulation_id}/impact")
+    assert impact.status_code == 200
+    assert impact.json()["simulationId"] == simulation_id
+    assert impact.json()["businessDataSource"] == "custom"
+    assert impact.json()["recoveryStatus"] == recovery.json()["status"]
+    assert len(impact.json()["metrics"]) == 5
 
 
 def test_structured_validation_errors_and_demo_safety(client: TestClient) -> None:

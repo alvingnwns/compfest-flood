@@ -71,6 +71,11 @@ Every non-2xx response must use:
 | POST | `/api/simulations/{simulationId}/recovery` | Generate Recovery Plan | mutation, no cache key |
 | GET | `/api/simulations/{simulationId}/recovery` | Recovery Plan | query `['recovery', simulationId]`, polls while pending |
 | GET | `/api/simulations/{simulationId}/impact` | Impact Analysis | query `['impact', simulationId]` |
+| GET | `/api/business-data/template` | Custom data template | direct download |
+| POST | `/api/business-data/import` | Custom data validation/import | mutation |
+| GET | `/api/business-data/{snapshotId}` | Custom data snapshot preview | query |
+| GET | `/api/map/road-context` | Local map road context | query |
+| POST | `/api/simulations/{simulationId}/copilot` | ARUNA Copilot | mutation |
 
 Default query policy is one retry, 30-second stale time, and no refetch on window focus.
 
@@ -282,18 +287,20 @@ Response `200`:
 ```json
 {
   "simulationId": "sim-jakarta-20250304",
+  "recoveryStatus": "partial",
+  "businessDataSource": "demo",
   "metrics": [
     { "key": "orders-fulfilled", "baseline": 13, "recovery": 18, "total": 20 },
     { "key": "on-time-delivery", "baseline": 0.55, "recovery": 0.85 },
     { "key": "failed-orders", "baseline": 5, "recovery": 1 },
-    { "key": "average-delay", "baseline": 128, "recovery": 42 },
+    { "key": "average-delay", "baseline": 128, "recovery": 42, "baselineObservationCount": 15, "recoveryObservationCount": 19 },
     { "key": "sales-exposure-risk", "baseline": 8200000, "recovery": 2100000, "currency": "IDR" }
   ],
   "actionCounts": { "manufacturing": 2, "logistics": 4, "commerce": 3 }
 }
 ```
 
-All five metric keys are required once and are semantic identifiers, not UI labels. Relevant statuses: `200`, `404`, `409` (recovery not complete), `500`.
+All five metric keys are required once and are semantic identifiers, not UI labels. `recoveryStatus` is the actual optimizer result and must drive feasible/partial/no-feasible presentation; clients must not infer it from KPI values. Average-delay observation counts let clients render `N/A` when no orders were delivered. Relevant statuses: `200`, `404`, `409` (recovery not complete), `500`.
 
 ## Domain Structure and Referential Rules
 
@@ -312,7 +319,7 @@ Rendering, interaction, loading/error/empty states, selected map segment/tabs/mo
 
 ### Backend-Owned Responsibilities
 
-Authentication/authorization when introduced, orchestration, persistence, entity normalization, endpoint semantics, simulation lifecycle, affected entities, supply-chain impact, sales exposure, KPI values, version metadata, and consistent failure envelopes.
+Orchestration, process-local state, entity normalization, endpoint semantics, simulation lifecycle, affected entities, supply-chain impact, sales exposure, KPI values, version metadata, and consistent failure envelopes. The current MVP has no API authentication or tenancy.
 
 ### AI-Owned Responsibilities
 
@@ -320,7 +327,7 @@ Flood disruption probability, risk model output, contributing risk factors, and 
 
 ### Optimizer-Owned Responsibilities
 
-Recoverability and coordinated manufacturing, logistics, and commerce decisions, including all what/why/expected-impact explanations and optimizer version. The frontend never reconstructs OR-Tools decisions.
+Recoverability and coordinated manufacturing, logistics, and commerce decisions, including all what/why/expected-impact explanations and optimizer version. The frontend never reconstructs OR-Tools decisions. Supplier-to-factory and warehouse-to-store road legs are explicit; factory-to-warehouse transfer is an aggregate MVP abstraction rather than a separately routed vehicle leg.
 
 ### Routing-Owned Responsibilities
 
@@ -328,7 +335,7 @@ Baseline/recovery route geometry, distance, ETA, flood exposure probability/cate
 
 ## Switching from Mock to Real Backend
 
-1. Implement these seven endpoints in FastAPI, preserving paths, camelCase JSON, states, status codes, and error envelopes.
+1. Use the implemented FastAPI endpoints summarized above, preserving paths, camelCase JSON, states, status codes, and error envelopes.
 2. Validate response examples against the Zod schemas or generate equivalent Pydantic models.
 3. Configure FastAPI CORS for `http://localhost:3000` in development and the exact deployed frontend origin in production.
 4. Run FastAPI on `http://localhost:8000`.
@@ -344,7 +351,7 @@ This is v1.0. Additive optional fields are compatible. Removing/renaming fields,
 
 ## Known Integration Risks
 
-- There is no authentication contract yet; introduce it as a separate cross-cutting contract before production.
+- There is no authentication or tenancy contract. Process-local snapshot IDs are identifiers, not authorization; introduce security as a separate cross-cutting contract before production.
 - v1 uses polling with a fixed one-second interval and has no cancellation endpoint, progress percentage, pagination, or WebSocket events.
 - The scenario selector currently targets one historical Jakarta resource; future scenario discovery should be an additive endpoint, not a breaking replacement.
-- Network/runtime failures can be retried by the UI, but backend idempotency for repeated POST requests should be implemented before production (for example using an idempotency key in a future compatible extension).
+- Simulation, recovery, custom snapshot, and idempotency state is process-local and resets on backend restart. This is an explicit controlled-MVP limitation.

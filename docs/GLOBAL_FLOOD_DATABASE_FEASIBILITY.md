@@ -103,3 +103,6 @@ python scripts/run_global_flood_feasibility_gate.py --write
 ```
 
 The gate command intentionally exits with code 2 for `FAIL`. Runtime uses no Earth Engine, Overpass, or other external service.
+# ARCHIVED / HISTORICAL IMPLEMENTATION NOTE
+
+This document is a point-in-time Jakarta-only feasibility result. It does not describe the later multi-region Indonesia dataset or active Random Forest runtime. See [`INDONESIA_HISTORICAL_FLOOD_DATASET.md`](INDONESIA_HISTORICAL_FLOOD_DATASET.md) and [`FLOOD_RISK_MODEL_REPORT.md`](FLOOD_RISK_MODEL_REPORT.md).
