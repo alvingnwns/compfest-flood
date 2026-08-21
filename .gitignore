@@ -27,6 +27,7 @@ env/
 htmlcov/
 
 # Environment and secrets
+be/env
 .env
 .env.*
 !.env.example

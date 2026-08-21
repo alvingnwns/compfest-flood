@@ -158,15 +158,15 @@ def build_copilot_context(simulation_id: str) -> CopilotContext:
 
 
 def suggested_questions(context: CopilotContext) -> list[str]:
-    questions = ["Which supplier is most affected?", "What is the biggest bottleneck?"]
+    questions = ["Supplier mana yang paling terdampak?", "Di mana hambatan operasional terbesar?"]
     if context.selected_recovery_route_ids:
-        questions.append("Why was this route chosen?")
+        questions.append("Kenapa rute ini dipilih?")
     elif any(route.route_type == "recovery" for route in context.routes):
-        questions.append("What are the risk-aware candidate routes?")
+        questions.append("Apa saja rute alternatif yang aman?")
     if context.recovery_actions:
-        questions.extend(["Why was this recovery plan selected?", "What trade-offs does this plan make?"])
+        questions.extend(["Mengapa rencana pemulihan ini dipilih?", "Apa penyesuaian dari rencana ini?"])
     if context.impacted_orders:
-        questions.append("Which orders remain at risk?")
+        questions.append("Pesanan mana yang masih beresiko?")
     if any(metric.key == "sales-exposure-risk" for metric in context.kpis):
-        questions.append("How did the recovery plan change sales exposure?")
+        questions.append("Bagaimana rencana pemulihan menurunkan risiko penjualan?")
     return questions[:6]

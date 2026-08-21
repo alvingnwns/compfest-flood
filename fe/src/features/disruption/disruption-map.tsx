@@ -28,6 +28,7 @@ export function DisruptionMap({
   onClearSelection,
   popupContent,
   showChrome = true,
+  onMapReady,
 }: {
   data: DisruptionAnalysis;
   selectedRoadId?: string;
@@ -36,6 +37,7 @@ export function DisruptionMap({
   onClearSelection: () => void;
   popupContent?: React.ReactNode;
   showChrome?: boolean;
+  onMapReady?: (map: MapLibreMap) => void;
 }) {
   const dynamic = data.roads.some((road) => road.dynamicRoadRiskScore !== undefined);
   const container = useRef<HTMLDivElement>(null);
@@ -61,6 +63,7 @@ export function DisruptionMap({
         attributionControl: false,
       });
       mapRef.current = map;
+      onMapReady?.(map);
 
       // Automatically fit initial camera view to the exact geographic extent of the rendered road network
       const bounds = new maplibregl.LngLatBounds();
@@ -77,7 +80,6 @@ export function DisruptionMap({
         map.fitBounds(bounds, { padding: 36, maxZoom: 13.2, duration: 0 });
       }
 
-      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
       map.addControl(
         new maplibregl.AttributionControl({
           compact: true,

@@ -44,21 +44,25 @@ function RecoveryContext({
 
   return (
     <section className="overflow-hidden rounded-[22px] bg-white shadow-[0_0_15px_rgb(0_0_0/18%)]" aria-label="Konteks rencana pemulihan">
-      <div className="bg-primary px-5 py-3 text-center text-[20px] font-bold text-white">Rencana Pemulihan</div>
-      <div className="grid grid-cols-2 gap-5 px-7 py-5">
+      <div className="flex h-[58px] items-center justify-center bg-primary px-5 text-center text-[19px] font-bold text-white">
+        Rencana Pemulihan
+      </div>
+      <div className="grid grid-cols-2 gap-5 px-7 py-5 text-[12px]">
         <div>
-          <div className="mb-2 flex items-center gap-2 text-[12px] font-bold text-[#979797]">
-            KONDISI LINGKUNGAN <CloudRain size={15} className="text-primary" />
+          <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wide text-[#979797]">
+            <span>KONDISI LINGKUNGAN</span>
+            <CloudRain className="size-[18px] shrink-0 text-primary" />
           </div>
-          <div className="text-[13px] font-semibold text-black">{rainfall ?? "Pola Hujan"}</div>
+          <div className="text-[14px] font-bold text-black">{rainfall ?? "Pola Hujan"}</div>
           <div className="mt-1 text-[12px] leading-tight text-[#5a5a5a]">{simulationLabel}</div>
         </div>
         <div>
-          <div className="mb-2 flex items-center gap-2 text-[12px] font-bold text-[#979797]">
-            KONDISI OPERASIONAL <Factory size={14} className="text-primary" />
+          <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wide text-[#979797]">
+            <span>KONDISI OPERASIONAL</span>
+            <Factory className="size-[18px] shrink-0 text-primary" />
           </div>
-          <div className="text-[13px] font-semibold text-black">{operationalConditionLabel(operationalCondition)}</div>
-          <div className="mt-1 flex items-center gap-1 text-[12px] text-[#5a5a5a]"><MapPin size={12} /> Jakarta</div>
+          <div className="text-[14px] font-bold text-black">{operationalConditionLabel(operationalCondition)}</div>
+          <div className="mt-1 flex items-center gap-1.5 text-[12px] text-[#5a5a5a]"><MapPin className="size-3.5 shrink-0 text-primary" /> Jakarta</div>
         </div>
       </div>
     </section>
@@ -158,6 +162,22 @@ function ReasoningCards({ action }: { action?: { what: string; why: string; expe
 }
 
 function ProductionView({ actions }: { actions: ManufacturingAction[] }) {
+  if (actions.length === 0) {
+    return (
+      <div>
+        <h2 className="mb-7 text-center text-[26px] font-bold tracking-[3px] text-primary">PENYESUAIAN PRODUKSI</h2>
+        <div className="rounded-[42px] bg-white p-8 shadow-sm text-center">
+          <div className="mx-auto max-w-md py-4">
+            <p className="text-[17px] font-bold text-primary">Jadwal Produksi Optimal Terjaga</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-[#5a5a5a]">
+              Tidak diperlukan perubahan kuantitas produksi pabrik. Alokasi produksi saat ini telah optimal untuk mendukung pemenuhan pesanan dan pengalihan rute logistik.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h2 className="mb-7 text-center text-[26px] font-bold tracking-[3px] text-primary">PENYESUAIAN PRODUKSI</h2>
@@ -166,7 +186,14 @@ function ProductionView({ actions }: { actions: ManufacturingAction[] }) {
           {actions.map((action) => {
             const negative = action.changeQuantity < 0;
             return (
-              <article key={action.id} className={`flex min-h-[150px] items-center justify-between gap-4 rounded-[20px] border px-7 py-5 ${negative ? "border-[#bc0000] bg-[#f3cfcf] text-[#5a0000]" : "border-[#84b7ab] bg-[#d5eee8] text-[#005a45]"}`}>
+              <article
+                key={action.id}
+                className={`flex min-h-[150px] items-center justify-between gap-4 rounded-[20px] border px-7 py-5 ${
+                  negative
+                    ? "border-[#bc0000] bg-[#f3cfcf] text-[#5a0000]"
+                    : "border-[#84b7ab] bg-[#d5eee8] text-[#005a45]"
+                }`}
+              >
                 <div>
                   <h3 className="mb-3 text-[21px] font-bold">{action.productName}</h3>
                   <div className="flex gap-2 text-center text-white">
@@ -181,7 +208,9 @@ function ProductionView({ actions }: { actions: ManufacturingAction[] }) {
                   </div>
                 </div>
                 <div className="text-center">
-                  <strong className="block text-[48px] leading-none">{action.changeQuantity > 0 ? "+" : ""}{action.changeQuantity}</strong>
+                  <strong className="block text-[48px] leading-none">
+                    {action.changeQuantity > 0 ? `+${action.changeQuantity}` : action.changeQuantity}
+                  </strong>
                   <span className="text-[21px] font-bold">Unit</span>
                 </div>
               </article>
@@ -220,8 +249,7 @@ function RoutesView({ actions }: { actions: LogisticsAction[] }) {
                   <td className="px-4 py-4 text-center text-[18px]">{formatMinutes(action.recoveryEtaMinutes)}</td>
                   <td className="px-4 py-4 text-center text-[14px]">{action.vehicleId}</td>
                   <td className="px-4 py-4 text-center">
-                    <span className="mb-1 inline-block rounded-full bg-[#a9eadb] px-3 py-1 text-[12px] font-semibold text-[#006c53]">{formatAction(action.action)}</span>
-                    <div><span className="inline-block rounded-full bg-[#a9eadb] px-3 py-1 text-[12px] font-semibold text-[#006c53]">UBAH RUTE</span></div>
+                    <span className="inline-block rounded-full bg-[#a9eadb] px-3.5 py-1 text-[12px] font-semibold text-[#006c53]">{formatAction(action.action)}</span>
                   </td>
                 </tr>
               ))}
@@ -279,7 +307,7 @@ export function RecoveryPage() {
           </div>
         )}
         {simulation.data && readyPlan && (
-          <div className="mx-auto grid max-w-[1475px] gap-7 xl:h-full xl:grid-cols-[325px_minmax(0,1fr)] xl:gap-[52px]">
+          <div className="mx-auto grid max-w-[1480px] gap-7 xl:h-full xl:grid-cols-[325px_minmax(0,1fr)] xl:gap-[36px]">
             <aside className="xl:min-h-0">
               <RecoveryContext simulation={simulation.data} operationalCondition={operationalCondition} />
               <RecoveryTabs active={activeView} onChange={setActiveView} />
@@ -297,9 +325,35 @@ export function RecoveryPage() {
                 {activeView === "routes" && <RoutesView actions={readyPlan.logisticsActions} />}
                 {activeView === "commerce" && <CommerceView actions={readyPlan.commerceActions} />}
                 <div className="mt-10 flex justify-center pb-3">
-                  <Link href={`/impact?simulation=${simulationId}&condition=${encodeURIComponent(operationalCondition)}`} className="inline-flex min-h-[72px] items-center gap-4 rounded-[32px] bg-[#eba92d] px-9 text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d89a22] active:scale-[.98]">
-                    <RotateCcw size={29} /> BANDINGKAN DENGAN KONDISI AWAL <ArrowRight size={22} />
-                  </Link>
+                  {activeView === "production" && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveView("routes")}
+                      className="inline-flex min-h-[72px] w-full max-w-[620px] items-center justify-center gap-4 rounded-[32px] bg-[#eba92d] px-9 text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d89a22] active:scale-[.98]"
+                    >
+                      <span>LIHAT PENGALIHAN RUTE LOGISTIK</span>
+                      <ArrowRight size={26} strokeWidth={2.5} />
+                    </button>
+                  )}
+                  {activeView === "routes" && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveView("commerce")}
+                      className="inline-flex min-h-[72px] w-full max-w-[620px] items-center justify-center gap-4 rounded-[32px] bg-[#eba92d] px-9 text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d89a22] active:scale-[.98]"
+                    >
+                      <span>LIHAT ALOKASI PERDAGANGAN</span>
+                      <ArrowRight size={26} strokeWidth={2.5} />
+                    </button>
+                  )}
+                  {activeView === "commerce" && (
+                    <Link
+                      href={`/impact?simulation=${simulationId}&condition=${encodeURIComponent(operationalCondition)}`}
+                      className="inline-flex min-h-[72px] w-full max-w-[620px] items-center justify-center gap-4 rounded-[32px] bg-[#eba92d] px-9 text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d89a22] active:scale-[.98]"
+                    >
+                      <RotateCcw size={28} strokeWidth={2.5} />
+                      <span>BANDINGKAN DENGAN KONDISI AWAL</span>
+                    </Link>
+                  )}
                 </div>
               </div>
             </section>

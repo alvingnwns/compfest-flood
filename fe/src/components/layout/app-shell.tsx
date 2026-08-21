@@ -21,7 +21,7 @@ export function AppShell({ children, title, actions }: { children: React.ReactNo
   const simulation = params.get("simulation");
   const [collapsed, setCollapsed] = useState(false);
 
-  const sidebarW = collapsed ? "72px" : "260px";
+  const sidebarW = collapsed ? "88px" : "260px";
 
   return (
     <div className="min-h-screen bg-background text-ink">
@@ -30,20 +30,20 @@ export function AppShell({ children, title, actions }: { children: React.ReactNo
         className="fixed inset-y-0 left-0 z-50 hidden flex-col bg-primary md:flex overflow-hidden transition-all duration-300"
         style={{ width: sidebarW }}
       >
-        {/* Header — flat, no curve, contains collapse toggle */}
-        <div className="flex h-20 shrink-0 items-center bg-primary-dark px-3 gap-2">
-          <div className="h-[38px] w-[38px] shrink-0 rounded-[10px] bg-secondary-soft" aria-hidden="true" />
+        {/* Header — contains logo and collapse toggle */}
+        <div className={`flex h-20 shrink-0 items-center bg-primary-dark ${collapsed ? "justify-between px-3 gap-1.5" : "px-3 gap-2"}`}>
+          <div className="h-[36px] w-[36px] shrink-0 rounded-[10px] bg-secondary-soft" aria-hidden="true" />
           {!collapsed && (
             <div className="ml-1 flex-1 whitespace-nowrap text-[18px] font-semibold text-white [text-shadow:0_0_8px_rgb(0_0_0/25%)]">
               ResiliChain AI
             </div>
           )}
-          {/* Collapse toggle button — top, icon only */}
+          {/* Collapse toggle button */}
           <button
             type="button"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Buka sidebar" : "Tutup sidebar"}
-            className="grid size-8 shrink-0 place-items-center rounded-[8px] text-white/70 transition hover:bg-white/15 hover:text-white"
+            className="grid size-8 shrink-0 place-items-center rounded-[8px] text-white/80 transition hover:bg-white/15 hover:text-white"
           >
             {collapsed ? <ChevronRight className="size-5" /> : <ChevronLeft className="size-5" />}
           </button>
@@ -53,14 +53,18 @@ export function AppShell({ children, title, actions }: { children: React.ReactNo
         <nav aria-label="Navigasi utama" className="mt-8 flex-1 space-y-2 px-3 overflow-hidden">
           {items.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
-            const target = simulation && href !== "/scenario" && href !== "/overview" ? `${href}?simulation=${simulation}` : href;
+            const condition = params.get("condition");
+            const target =
+              simulation && href !== "/scenario" && href !== "/overview"
+                ? `${href}?simulation=${simulation}${condition ? `&condition=${encodeURIComponent(condition)}` : ""}`
+                : href;
             return (
               <Link
                 key={href}
                 href={target}
                 aria-current={active ? "page" : undefined}
                 title={collapsed ? label : undefined}
-                className={`flex h-11 w-full items-center gap-3 rounded-[12px] px-3.5 text-[15px] font-semibold transition duration-200 active:scale-[.98] ${active ? "bg-primary-dark text-[#ffc558]" : "text-white hover:bg-primary-dark/55"}`}
+                className={`flex h-11 w-full items-center ${collapsed ? "justify-center px-0" : "gap-3 px-3.5"} rounded-[12px] text-[15px] font-semibold transition duration-200 active:scale-[.98] ${active ? "bg-primary-dark text-[#ffc558]" : "text-white hover:bg-primary-dark/55"}`}
               >
                 <Icon className="h-5 w-5 shrink-0" strokeWidth={2.1} aria-hidden="true" />
                 {!collapsed && <span className="whitespace-nowrap">{label}</span>}

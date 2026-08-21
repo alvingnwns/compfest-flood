@@ -60,6 +60,9 @@ describe("BusinessDataPanel", () => {
     rerender(<BusinessDataPanel mode="custom" preview={preview} activeSnapshotId="business-test" pending={false} onModeChange={vi.fn()} onUpload={vi.fn()} onConfirm={onConfirm} />);
     expect(screen.getByText("Business Data: Custom Upload")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Data Aktif" })).toBeDisabled();
+
+    rerender(<BusinessDataPanel mode="demo" preview={preview} activeSnapshotId="business-test" pending={false} onModeChange={vi.fn()} onUpload={vi.fn()} onConfirm={onConfirm} />);
+    expect(screen.queryByText("Data tervalidasi")).not.toBeInTheDocument();
   });
 
   it("shows structured workbook validation details", () => {

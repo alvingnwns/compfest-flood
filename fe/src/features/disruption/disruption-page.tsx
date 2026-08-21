@@ -1,8 +1,9 @@
 "use client";
 
-import { AlertTriangle, Building2, ChevronLeft, CloudRain, MapPin, Waves, X } from "lucide-react";
+import type { Map as MapLibreMap } from "maplibre-gl";
+import { AlertTriangle, ChevronLeft, ChevronRight, CloudRain, Factory, MapPin, Minus, Plus, Waves, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
@@ -19,39 +20,52 @@ function ScenarioStatus({ simulation, condition }: { simulation: Simulation; con
   const dynamic = simulation.analysisMode === "scenario-simulation" && simulation.hazard !== undefined;
   const rainfall = dynamic ? getRainfallScenario(simulation.hazard?.rainfallScenario) : undefined;
   return (
-    <section aria-label="Status skenario" className="overflow-hidden rounded-[18px] bg-white shadow-[0_0_10px_rgb(0_0_0/25%)]">
-      {/* Header — flat top, no curve */}
-      <div className="flex h-[56px] items-center justify-center bg-primary-dark">
-        <span className="text-[17px] font-bold text-white">Peta Gangguan</span>
+    <section aria-label="Status skenario" className="overflow-hidden rounded-[22px] bg-white shadow-[0_0_15px_rgb(0_0_0/18%)]">
+      <div className="flex h-[58px] items-center justify-center bg-primary px-5 text-center text-[19px] font-bold text-white">
+        Peta Gangguan
       </div>
-      <dl className="grid grid-cols-2 gap-4 px-6 py-4 text-[12px]">
+      <div className="grid grid-cols-2 gap-5 px-7 py-5 text-[12px]">
         <div>
-          <dt className="mb-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#979797]">
-            Kondisi Lingkungan <CloudRain className="size-3.5 text-primary" />
-          </dt>
-          <dd className="text-[13px] font-semibold text-black">{dynamic ? rainfall?.label : "04 Mar 2025"}</dd>
-          <dd className="mt-0.5 text-[11px] leading-tight text-[#5a5a5a]">{dynamic ? "Simulasi Kondisi" : "Simulasi Banjir Jakarta"}</dd>
+          <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wide text-[#979797]">
+            <span>KONDISI LINGKUNGAN</span>
+            <CloudRain className="size-[18px] shrink-0 text-primary" />
+          </div>
+          <div className="text-[14px] font-bold text-black">{dynamic ? rainfall?.label : "04 Mar 2025"}</div>
+          <div className="mt-1 text-[12px] leading-tight text-[#5a5a5a]">{dynamic ? "Simulasi Kondisi" : "Simulasi Banjir Jakarta"}</div>
         </div>
         <div>
-          <dt className="mb-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#979797]">
-            Kondisi Operasional <Building2 className="size-3.5 text-primary" />
-          </dt>
-          <dd className="text-[13px] font-semibold text-black">{operationalConditionLabel(condition)}</dd>
-          <dd className="mt-0.5 flex items-center gap-1 text-[11px] text-[#5a5a5a]">
-            <MapPin className="size-3 text-primary" /> Jakarta
-          </dd>
+          <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wide text-[#979797]">
+            <span>KONDISI OPERASIONAL</span>
+            <Factory className="size-[18px] shrink-0 text-primary" />
+          </div>
+          <div className="text-[14px] font-bold text-black">{operationalConditionLabel(condition)}</div>
+          <div className="mt-1 flex items-center gap-1.5 text-[12px] text-[#5a5a5a]">
+            <MapPin className="size-3.5 shrink-0 text-primary" /> Jakarta
+          </div>
         </div>
-      </dl>
+      </div>
     </section>
   );
 }
 
-function ImpactPanel({ data, pending, onPlan, onShowIssues }: { data: DisruptionAnalysis; pending: boolean; onPlan: () => void; onShowIssues: () => void }) {
+function ImpactPanel({
+  data,
+  pending,
+  issuesOpen,
+  onPlan,
+  onToggleIssues,
+}: {
+  data: DisruptionAnalysis;
+  pending: boolean;
+  issuesOpen: boolean;
+  onPlan: () => void;
+  onToggleIssues: () => void;
+}) {
   const metrics = [
-    ["SEGMEN JALAN BERESIKO", data.impact.roadSegmentsAtRisk, true],
-    ["PEMASOK TERDAMPAK", data.impact.impactedSupplierIds.length, true],
-    ["PESANAN BERESIKO", data.impact.impactedOrderIds.length, true],
-    ["PENJUALAN TERDAMPAK", formatCompactIdr(data.impact.salesExposure.amount), false],
+    { label: "SEGMEN JALAN BERESIKO", value: data.impact.roadSegmentsAtRisk, danger: true, isCurrency: false },
+    { label: "PEMASOK TERDAMPAK", value: data.impact.impactedSupplierIds.length, danger: true, isCurrency: false },
+    { label: "PESANAN BERESIKO", value: data.impact.impactedOrderIds.length, danger: true, isCurrency: false },
+    { label: "PENJUALAN TERDAMPAK", value: formatCompactIdr(data.impact.salesExposure.amount), danger: false, isCurrency: true },
   ] as const;
 
   return (
@@ -63,26 +77,39 @@ function ImpactPanel({ data, pending, onPlan, onShowIssues }: { data: Disruption
 
       {/* Metrics grid */}
       <div className="mt-4 grid shrink-0 grid-cols-2 gap-2.5">
-        {metrics.map(([label, value, danger]) => (
+        {metrics.map(({ label, value, danger, isCurrency }) => (
           <article
             key={label}
-            className="flex h-[115px] min-w-0 flex-col items-center justify-center rounded-[26px] bg-white px-3 text-center shadow-[0_6px_18px_rgb(0_0_0/20%)]"
+            className="flex h-[126px] min-w-0 flex-col items-center justify-between rounded-[24px] bg-white px-3 py-3 text-center shadow-[0_6px_18px_rgb(0_0_0/20%)]"
           >
-            <h3 className="min-h-[28px] text-[9px] font-semibold leading-[11px] text-[#4a4a4a]">{label}</h3>
-            <div className={`mt-1 max-w-full text-[32px] font-semibold leading-none ${danger ? "text-[#bc0000]" : "text-black"}`}>{value}</div>
-            <p className="mt-1.5 text-[9px] font-semibold text-[#979797]">TERESTIMASI</p>
+            <h3 className="flex min-h-[28px] items-center justify-center text-[10px] font-bold leading-[13px] text-[#4a4a4a]">
+              {label}
+            </h3>
+            <div
+              className={`flex items-center justify-center font-bold ${
+                isCurrency ? "text-[20px] leading-tight" : "text-[32px] leading-none"
+              } ${danger ? "text-[#bc0000]" : "text-black"}`}
+            >
+              {value}
+            </div>
+            <p className="text-[10px] font-semibold tracking-wider text-[#979797]">TERESTIMASI</p>
           </article>
         ))}
       </div>
 
-      {/* Lihat Masalah Prioritas button */}
+      {/* Lihat Masalah Prioritas button — acts as toggle */}
       <button
         type="button"
-        onClick={onShowIssues}
-        className="mt-4 flex items-center justify-between rounded-[20px] bg-white px-4 py-3.5 shadow-[0_4px_14px_rgb(0_0_0/18%)] transition hover:bg-primary-soft/40"
+        onClick={onToggleIssues}
+        aria-expanded={issuesOpen}
+        className="mt-4 flex w-full items-center justify-between rounded-[20px] bg-white px-4 py-3.5 shadow-[0_4px_14px_rgb(0_0_0/18%)] transition hover:bg-primary-soft/40 active:scale-[.99]"
       >
         <div className="flex items-center gap-2.5">
-          <ChevronLeft className="size-5 text-primary-dark" />
+          {issuesOpen ? (
+            <ChevronRight className="size-5 shrink-0 text-primary-dark" />
+          ) : (
+            <ChevronLeft className="size-5 shrink-0 text-primary-dark" />
+          )}
           <span className="text-[13px] font-bold text-primary-dark">LIHAT MASALAH PRIORITAS</span>
         </div>
       </button>
@@ -153,6 +180,7 @@ export function DisruptionPage() {
   const query = useDisruptionAnalysis(simulationId), simulation = useSimulation(simulationId), generate = useGenerateRecovery(), router = useRouter();
   const [selected, setSelected] = useState<{ road: RoadRisk; coords: [number, number] } | null>(null);
   const [issuesSidebarOpen, setIssuesSidebarOpen] = useState(false);
+  const mapRef = useRef<MapLibreMap | null>(null);
   const selectRoad = useCallback((road: RoadRisk, coords: [number, number]) => setSelected({ road, coords }), []);
   const clearSelection = useCallback(() => setSelected(null), []);
   useEffect(() => {
@@ -218,25 +246,51 @@ export function DisruptionPage() {
                 onClearSelection={clearSelection}
                 popupContent={popup}
                 showChrome={false}
+                onMapReady={(map) => {
+                  mapRef.current = map;
+                }}
               />
             </section>
 
             {/* Overlay UI layer */}
             <div className="pointer-events-none relative z-10 flex h-full flex-col gap-5 p-4 xl:block xl:p-0">
-              {/* Left card: ScenarioStatus */}
+              {/* Left card: ScenarioStatus + Zoom Controls */}
               {simulation.data && (
-                <div className="pointer-events-auto w-full max-w-[280px] xl:absolute xl:left-[clamp(24px,3vw,48px)] xl:top-6">
+                <div className="pointer-events-auto w-full max-w-[325px] xl:absolute xl:left-8 xl:top-6">
                   <ScenarioStatus simulation={simulation.data} condition={condition} />
+
+                  {/* Map Zoom Controls — cleanly situated under condition card near sidebar */}
+                  <div className="mt-3 flex items-center gap-1.5 rounded-[16px] border border-outline/30 bg-white p-1.5 shadow-[0_4px_14px_rgb(0_0_0/16%)] w-fit">
+                    <button
+                      type="button"
+                      onClick={() => mapRef.current?.zoomIn()}
+                      aria-label="Perbesar peta"
+                      title="Perbesar peta"
+                      className="grid size-9 place-items-center rounded-[12px] bg-surface-low text-primary font-bold transition hover:bg-primary hover:text-white active:scale-95"
+                    >
+                      <Plus className="size-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => mapRef.current?.zoomOut()}
+                      aria-label="Perkecil peta"
+                      title="Perkecil peta"
+                      className="grid size-9 place-items-center rounded-[12px] bg-surface-low text-primary font-bold transition hover:bg-primary hover:text-white active:scale-95"
+                    >
+                      <Minus className="size-5" />
+                    </button>
+                  </div>
                 </div>
               )}
 
               {/* Right panel: ImpactPanel */}
-              <div className="pointer-events-auto ml-auto w-full max-w-[295px] xl:absolute xl:bottom-6 xl:right-[clamp(24px,3vw,48px)] xl:top-6">
+              <div className="pointer-events-auto ml-auto w-full max-w-[295px] xl:absolute xl:bottom-6 xl:right-8 xl:top-6">
                 <ImpactPanel
                   data={query.data}
                   pending={generate.isPending}
+                  issuesOpen={issuesSidebarOpen}
                   onPlan={createPlan}
-                  onShowIssues={() => setIssuesSidebarOpen(true)}
+                  onToggleIssues={() => setIssuesSidebarOpen((v) => !v)}
                 />
                 {generate.isError && (
                   <p role="alert" className="mt-2 rounded bg-white p-2 text-[11px] text-danger">

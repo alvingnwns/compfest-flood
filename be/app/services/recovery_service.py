@@ -90,9 +90,27 @@ def generate_recovery_plan(
     for product in scenario.products:
         before = baseline.production.get(product.id, 0)
         after = recovery.production.get(product.id, 0)
-        if before == after:
+        change = after - before
+        if before == 0 and after == 0:
             continue
         constrained_materials = ", ".join(item.material_id for item in product.bom)
+        if change != 0:
+            what = f"Sesuaikan produksi {product.name} dari {before} menjadi {after} {product.unit}."
+            why = (
+                f"Ketersediaan bahan baku dan kebutuhan BOM ({constrained_materials}) membatasi kapasitas produksi."
+            )
+            expected_impact = (
+                "Penyesuaian produksi menyediakan persediaan yang dapat dialokasikan untuk pemenuhan pesanan."
+            )
+        else:
+            what = f"Pertahankan produksi {product.name} sebesar {after} {product.unit}."
+            why = (
+                f"Alokasi kapasitas pabrik untuk {product.name} dipertahankan guna memenuhi kebutuhan pesanan dan ketersediaan bahan ({constrained_materials})."
+            )
+            expected_impact = (
+                f"Menjaga ketersediaan {after} {product.unit} persediaan untuk pemenuhan pesanan prioritas."
+            )
+
         manufacturing.append(
             ManufacturingAction(
                 id=f"mfg-{product.id}",
@@ -100,14 +118,10 @@ def generate_recovery_plan(
                 product_name=product.name,
                 baseline_quantity=before,
                 recovery_quantity=after,
-                change_quantity=after - before,
-                what=f"Sesuaikan produksi {product.name} dari {before} menjadi {after} {product.unit}.",
-                why=(
-                    f"Ketersediaan bahan baku dan kebutuhan BOM ({constrained_materials}) membatasi kapasitas produksi."
-                ),
-                expected_impact=(
-                    "Penyesuaian produksi menyediakan persediaan yang dapat dialokasikan untuk pemenuhan pesanan."
-                ),
+                change_quantity=change,
+                what=what,
+                why=why,
+                expected_impact=expected_impact,
             )
         )
 

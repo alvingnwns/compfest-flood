@@ -35,8 +35,8 @@ describe("Copilot page", () => {
 
   it("requires a current simulation instead of hallucinating context", () => {
     renderPage();
-    expect(screen.getByText("Run a simulation first")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open Scenario/ })).toHaveAttribute("href", "/scenario");
+    expect(screen.getByText("Jalankan simulasi terlebih dahulu")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Buka Skenario/i })).toHaveAttribute("href", "/scenario");
   });
 
   it("sends a suggested question and renders a grounded provider answer", async () => {
@@ -50,13 +50,13 @@ describe("Copilot page", () => {
     const user = userEvent.setup();
     renderPage();
 
-    expect(await screen.findByText("Current Simulation Context")).toBeInTheDocument();
+    expect(await screen.findByText("Konteks Simulasi Saat Ini")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Kenapa rute ini dipilih?" }));
 
     const answer = await screen.findByText("The route follows the recorded optimizer rationale.");
     expect(answer).toBeInTheDocument();
     expect(answer).toHaveClass("whitespace-pre-wrap", "break-words");
-    expect(screen.getByText("Gemini - grounded")).toBeInTheDocument();
+    expect(screen.getByText(/Gemini AI Aktif \(Grounded\)/i)).toBeInTheDocument();
     expect(mocks.mutateAsync).toHaveBeenCalledWith(expect.objectContaining({ id: simulationFixture.id }));
   });
 
@@ -78,13 +78,13 @@ describe("Copilot page", () => {
     const user = userEvent.setup();
     renderPage();
 
-    const input = await screen.findByRole("textbox", { name: "Ask ResiliChain Copilot" });
+    const input = await screen.findByRole("textbox", { name: /Tanyakan ResiliChain Copilot/i });
     await user.type(input, "jelaskan tentang rencana pemulihannya");
-    await user.click(screen.getByRole("button", { name: "Send" }));
+    await user.click(screen.getByRole("button", { name: /Kirim|Send/i }));
     await screen.findByText("Rencana pemulihan mencakup tindakan operasional yang telah dihitung.");
 
     await user.type(input, "iya jelaskan per detailnya");
-    await user.click(screen.getByRole("button", { name: "Send" }));
+    await user.click(screen.getByRole("button", { name: /Kirim|Send/i }));
     await screen.findByText("Rinciannya tetap membahas rencana pemulihan.");
 
     expect(mocks.mutateAsync).toHaveBeenNthCalledWith(2, {

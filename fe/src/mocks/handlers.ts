@@ -1,4 +1,4 @@
-﻿import { delay, http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { recoveryGenerationRequestSchema } from "@/domain/recovery";
 import { copilotRequestSchema } from "@/domain/copilot";
 import type { DisruptionAnalysis } from "@/domain/disruption";
@@ -137,7 +137,7 @@ export const handlers = [
       answer: `Berdasarkan simulasi saat ini: ${body.data.message} Jawaban ini hanya menjelaskan hasil yang sudah dihitung.`,
       provider: "deterministic",
       grounded: true,
-      suggestedQuestions: ["Why was this route chosen?", "Which orders remain at risk?"],
+      suggestedQuestions: ["Kenapa rute ini dipilih?", "Pesanan mana yang masih beresiko?"],
       fallbackReason: "mock_mode",
     });
   }),
