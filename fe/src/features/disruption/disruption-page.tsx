@@ -13,6 +13,7 @@ import { getRainfallScenario } from "@/features/scenario/scenario-presets";
 import { useDisruptionAnalysis, useGenerateRecovery, useSimulation } from "@/hooks/use-aruna-data";
 import { formatCompactIdr, formatPercent, formatRisk } from "@/lib/format";
 import { DisruptionMap } from "./disruption-map";
+import { RecoveryLoadingOverlay } from "./recovery-loading-overlay";
 
 const severityClass = { critical: "bg-danger/10 text-danger", high: "bg-[#c68000]/15 text-[#c68000]", medium: "bg-amber-100 text-amber-700", low: "bg-primary/10 text-primary" };
 
@@ -233,7 +234,7 @@ export function DisruptionPage() {
       {simulationId && query.isLoading && <LoadingState label="Memetakan risiko gangguan banjir..." />}
       {query.isError && <ErrorState message={query.error.message} onRetry={() => void query.refetch()} />}
       {query.data && (
-        <div className="flex min-h-[calc(100vh-80px)] bg-surface-low xl:h-[calc(100vh-80px)] xl:min-h-0 xl:overflow-hidden">
+        <div className="relative flex min-h-[calc(100vh-80px)] bg-surface-low xl:h-[calc(100vh-80px)] xl:min-h-0 xl:overflow-hidden">
           {/* Map area — shrinks when right sidebar opens */}
           <div className="relative min-h-[620px] flex-1 overflow-hidden">
             <section className="absolute inset-0 overflow-hidden" aria-label="Peta risiko gangguan">
@@ -306,6 +307,8 @@ export function DisruptionPage() {
             open={issuesSidebarOpen}
             onClose={() => setIssuesSidebarOpen(false)}
           />
+
+          {generate.isPending && <RecoveryLoadingOverlay />}
         </div>
       )}
     </AppShell>
