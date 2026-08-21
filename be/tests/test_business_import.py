@@ -91,6 +91,13 @@ def test_custom_snapshot_runs_through_existing_simulation(client: TestClient) ->
     recovery = client.post(f"/api/simulations/{simulation_id}/recovery", json={})
     assert recovery.status_code == 201
     assert recovery.json()["status"] in {"ready", "partial"}
+    unchanged = next(
+        action
+        for action in recovery.json()["manufacturingActions"]
+        if action["baselineQuantity"] == action["recoveryQuantity"]
+    )
+    assert unchanged["what"].startswith("Pertahankan produksi")
+    assert all(word not in unchanged["what"] for word in ("Naikkan", "Kurangi", "Sesuaikan"))
     impact = client.get(f"/api/simulations/{simulation_id}/impact")
     assert impact.status_code == 200
     assert impact.json()["simulationId"] == simulation_id

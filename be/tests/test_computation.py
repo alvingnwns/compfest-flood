@@ -1,8 +1,10 @@
+import pytest
+
 from app.repositories.scenario_repository import get_historical_jakarta
 from app.repositories.simulation_repository import simulation_repository
-from app.schemas.recovery import RecoveryConstraints
+from app.schemas.recovery import OrderOutcome, RecoveryConstraints
 from app.schemas.simulation import InventoryOverride, RunSimulationRequest, VehicleOverride
-from app.services.recovery_service import generate_recovery_plan
+from app.services.recovery_service import _logistics_action_type, generate_recovery_plan
 from app.services.routing_service import calculate_routes
 from app.services.simulation_service import _apply_overrides
 
@@ -48,9 +50,74 @@ def test_business_outputs_are_computed_and_referentially_valid(simulation_id: st
     assert {action.recovery_route_id for action in plan.logistics_actions or []} <= route_ids
     baseline_routes = {route.id: route for route in disruption.routes if route.type == "baseline"}
     for action in plan.logistics_actions or []:
+        if action.action == "allocate":
+            assert action.original_warehouse_id is None
+            assert action.baseline_route_id is None
+            assert action.baseline_eta_minutes is None
+            assert action.baseline_flood_exposure is None
+            continue
+        assert action.baseline_route_id is not None
         baseline_route = baseline_routes[action.baseline_route_id]
         assert action.baseline_eta_minutes == baseline_route.eta_minutes
         assert action.baseline_flood_exposure == baseline_route.flood_exposure
+
+
+def test_logistics_action_decision_matrix_uses_real_allocation_state_and_route_ids() -> None:
+    def outcome(
+        *,
+        allocated: int,
+        warehouse_id: str | None,
+        route_id: str | None,
+        eta_minutes: int | None = 16,
+    ) -> OrderOutcome:
+        return OrderOutcome(
+            order_id="ORD-MATRIX",
+            requested_quantity=10,
+            allocated_quantity=allocated,
+            allocated_value=float(allocated),
+            warehouse_id=warehouse_id,
+            vehicle_id="V-01" if allocated else None,
+            route_id=route_id,
+            eta_minutes=eta_minutes if allocated else None,
+            deadline_minutes=30,
+            delay_minutes=0,
+            flood_exposure="low" if allocated else None,
+        )
+
+    baseline = outcome(allocated=10, warehouse_id="wh-west", route_id="route-baseline-west")
+    same_assignment = outcome(allocated=10, warehouse_id="wh-west", route_id="route-baseline-west")
+    equal_eta_reroute = outcome(allocated=10, warehouse_id="wh-west", route_id="route-recovery-west")
+    warehouse_only = outcome(allocated=10, warehouse_id="wh-east", route_id="route-baseline-west")
+    warehouse_and_route = outcome(allocated=10, warehouse_id="wh-east", route_id="route-recovery-east")
+    unallocated = outcome(allocated=0, warehouse_id=None, route_id=None, eta_minutes=None)
+
+    assert _logistics_action_type(baseline, same_assignment) is None
+    assert _logistics_action_type(baseline, equal_eta_reroute) == "reroute"
+    assert baseline.eta_minutes == equal_eta_reroute.eta_minutes
+    assert _logistics_action_type(baseline, warehouse_only) == "reallocate"
+    assert _logistics_action_type(baseline, warehouse_and_route) == "reallocate-reroute"
+    assert _logistics_action_type(unallocated, equal_eta_reroute) == "allocate"
+
+
+def test_new_allocation_does_not_expose_nominal_baseline_as_actual(simulation_id: str) -> None:
+    scenario = get_historical_jakarta()
+    disruption = simulation_repository.get_disruption(simulation_id)
+    plan = generate_recovery_plan(simulation_id, scenario, disruption, RecoveryConstraints())
+
+    action = next(item for item in plan.logistics_actions or [] if item.order_id == "ORD-012")
+    before = next(item for item in plan.baseline_order_outcomes if item.order_id == "ORD-012")
+    after = next(item for item in plan.recovery_order_outcomes if item.order_id == "ORD-012")
+
+    assert before.allocated_quantity == 0
+    assert before.warehouse_id is None and before.route_id is None and before.vehicle_id is None
+    assert after.allocated_quantity > 0
+    assert action.action == "allocate"
+    assert action.action not in {"reallocate", "reallocate-reroute"}
+    assert action.original_warehouse_id is None
+    assert action.original_warehouse_name is None
+    assert action.baseline_route_id is None
+    assert action.baseline_eta_minutes is None
+    assert action.baseline_flood_exposure is None
 
 
 def test_maximum_additional_delay_changes_feasibility(simulation_id: str) -> None:
@@ -217,8 +284,6 @@ def test_vehicle_override_creates_distinct_simulation(client) -> None:
 
 def test_road_context_endpoint_returns_geojson(client) -> None:
     """The road context endpoint must return GeoJSON with display-only features."""
-    import pytest
-
     pytest.importorskip("app.repositories.geospatial_repository")
     from pathlib import Path
 
@@ -289,3 +354,90 @@ def test_critical_stock_preset_causes_computed_solver_shift(client) -> None:
     # Verify real computed production shift: Product A production increases from 320 to 450
     assert prod_crit["prod-a"] > prod_norm["prod-a"]
     assert prod_crit["prod-b"] < prod_norm["prod-b"]
+
+
+def test_default_manufacturing_explanation_uses_plan_level_evidence(simulation_id: str) -> None:
+    scenario = get_historical_jakarta().model_copy(deep=True)
+    plan = generate_recovery_plan(
+        simulation_id,
+        scenario,
+        simulation_repository.get_disruption(simulation_id),
+        RecoveryConstraints(),
+    )
+    quantities = {
+        action.product_id: (action.baseline_quantity, action.recovery_quantity)
+        for action in plan.manufacturing_actions or []
+    }
+
+    assert quantities == {"prod-a": (240, 320), "prod-b": (260, 180)}
+    assert plan.manufacturing_explanation is not None
+    reason = plan.manufacturing_explanation.reason
+    assert "Produk A" in reason and "Produk B" in reason
+    assert "kapasitas pabrik 500 unit" in reason
+    assert "bahan baku" not in reason.lower()
+    assert "BOM" not in reason
+    assert plan.manufacturing_explanation.expected_impact.endswith("18/20 menjadi 20/20.")
+    assert next(action for action in plan.manufacturing_actions or [] if action.product_id == "prod-a").what == (
+        "Naikkan produksi Produk A dari 240 menjadi 320 unit."
+    )
+    assert next(action for action in plan.manufacturing_actions or [] if action.product_id == "prod-b").what == (
+        "Kurangi produksi Produk B dari 260 menjadi 180 unit."
+    )
+
+
+def test_material_binding_is_named_only_when_consumption_reaches_availability(simulation_id: str) -> None:
+    scenario = get_historical_jakarta().model_copy(deep=True)
+    next(material for material in scenario.materials if material.id == "mat-a").available_quantity = 250
+    plan = generate_recovery_plan(
+        simulation_id,
+        scenario,
+        simulation_repository.get_disruption(simulation_id),
+        RecoveryConstraints(),
+    )
+    action = next(action for action in plan.manufacturing_actions or [] if action.product_id == "prod-a")
+
+    assert action.recovery_quantity == 250
+    assert plan.manufacturing_explanation is not None
+    assert "bahan baku berdasarkan komposisi produk" in plan.manufacturing_explanation.reason.lower()
+    assert "batas ketersediaan Bahan Utama A" in plan.manufacturing_explanation.reason
+
+
+def test_bom_binding_is_grounded_in_computed_material_consumption(simulation_id: str) -> None:
+    scenario = get_historical_jakarta().model_copy(deep=True)
+    product = next(product for product in scenario.products if product.id == "prod-a")
+    next(item for item in product.bom if item.material_id == "mat-a").quantity_per_unit = 2.0
+    plan = generate_recovery_plan(
+        simulation_id,
+        scenario,
+        simulation_repository.get_disruption(simulation_id),
+        RecoveryConstraints(),
+    )
+    action = next(action for action in plan.manufacturing_actions or [] if action.product_id == "prod-a")
+
+    assert action.recovery_quantity == 300
+    assert action.recovery_quantity * 2 == 600
+    assert plan.manufacturing_explanation is not None
+    assert "komposisi produk" in plan.manufacturing_explanation.reason
+    assert "batas ketersediaan Bahan Utama A" in plan.manufacturing_explanation.reason
+
+
+def test_inventory_increase_does_not_retain_false_material_limitation(simulation_id: str) -> None:
+    scenario = get_historical_jakarta().model_copy(deep=True)
+    inventory = next(
+        item for item in scenario.inventory if item.facility_id == "wh-west" and item.product_id == "prod-a"
+    )
+    inventory.quantity = 610
+    plan = generate_recovery_plan(
+        simulation_id,
+        scenario,
+        simulation_repository.get_disruption(simulation_id),
+        RecoveryConstraints(),
+    )
+    action = next(action for action in plan.manufacturing_actions or [] if action.product_id == "prod-a")
+
+    assert (action.baseline_quantity, action.recovery_quantity) == (20, 20)
+    assert action.what == "Pertahankan produksi Produk A sebesar 20 unit."
+    assert plan.manufacturing_explanation is not None
+    assert "inventory" in plan.manufacturing_explanation.reason
+    assert "mencapai batas ketersediaan" not in plan.manufacturing_explanation.reason
+    assert "BOM" not in plan.manufacturing_explanation.reason

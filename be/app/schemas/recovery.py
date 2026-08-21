@@ -39,20 +39,28 @@ class ManufacturingAction(RecoveryAction):
     change_quantity: int
 
 
+class ManufacturingPlanExplanation(ApiModel):
+    reason: str
+    expected_impact: str
+
+
+LogisticsActionType = Literal["allocate", "reallocate-reroute", "reroute", "reallocate"]
+
+
 class LogisticsAction(RecoveryAction):
     order_id: str
-    original_warehouse_id: str
-    original_warehouse_name: str
+    original_warehouse_id: str | None = None
+    original_warehouse_name: str | None = None
     recovery_warehouse_id: str
     recovery_warehouse_name: str
     vehicle_id: str
-    baseline_route_id: str
+    baseline_route_id: str | None = None
     recovery_route_id: str
-    baseline_eta_minutes: int
+    baseline_eta_minutes: int | None = None
     recovery_eta_minutes: int
-    baseline_flood_exposure: RiskLevel
+    baseline_flood_exposure: RiskLevel | None = None
     recovery_flood_exposure: RiskLevel
-    action: Literal["reallocate-reroute", "reroute", "reallocate"]
+    action: LogisticsActionType
 
 
 class CommerceAllocation(ApiModel):
@@ -99,6 +107,7 @@ class RecoveryResult(ApiModel):
     completed_at: datetime | None = None
     summary: RecoverySummary | None = None
     manufacturing_actions: list[ManufacturingAction] | None = None
+    manufacturing_explanation: ManufacturingPlanExplanation | None = None
     logistics_actions: list[LogisticsAction] | None = None
     commerce_actions: list[CommerceAction] | None = None
     possible_next_actions: list[str] | None = None

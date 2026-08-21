@@ -262,6 +262,10 @@ Response `200` (complete example):
     "why": "Supplier A availability is projected to be delayed.",
     "expectedImpact": "Preserves shared capacity for priority orders."
   }],
+  "manufacturingExplanation": {
+    "reason": "Plan-level explanation grounded in active capacity/material evidence and all manufacturing actions.",
+    "expectedImpact": "Plan-level fulfillment impact computed from baseline and recovery order outcomes."
+  },
   "logisticsActions": [{
     "id": "log-1", "orderId": "ORD-008", "originalWarehouseId": "wh-east", "originalWarehouseName": "Warehouse East", "recoveryWarehouseId": "wh-west", "recoveryWarehouseName": "Warehouse West", "vehicleId": "V-02",
     "baselineRouteId": "route-baseline", "recoveryRouteId": "route-recovery", "baselineEtaMinutes": 27, "recoveryEtaMinutes": 35, "baselineFloodExposure": "high", "recoveryFloodExposure": "low", "action": "reallocate-reroute",
@@ -275,6 +279,13 @@ Response `200` (complete example):
   "possibleNextActions": ["Delay selected non-critical orders"]
 }
 ```
+
+Logistics action semantics are based on actual allocation outcomes. `reroute` means an allocated order kept its
+warehouse but changed route, `reallocate` means its warehouse changed, and `reallocate-reroute` means both changed.
+`allocate` means an order with no baseline allocation received a recovery warehouse, route, and vehicle. For
+`allocate`, `originalWarehouseId`, `originalWarehouseName`, `baselineRouteId`, `baselineEtaMinutes`, and
+`baselineFloodExposure` are omitted (or `null` for consumers that preserve nullable fields); preferred warehouses
+and nominal routes must not be presented as actual baseline assignments.
 
 For `queued`/`processing`, only `id`, `simulationId`, `createdAt`, and `status` are required. For `failed`, include `error`. Relevant statuses: `200`, `404`, `500`.
 

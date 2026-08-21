@@ -13,7 +13,9 @@ from app.schemas.recovery import (
     CommerceAction,
     CommerceAllocation,
     LogisticsAction,
+    LogisticsActionType,
     ManufacturingAction,
+    ManufacturingPlanExplanation,
     OrderOutcome,
     ProductionOutcome,
     RecoveryConstraints,
@@ -32,6 +34,22 @@ class ComputedPlan:
     production: dict[str, int]
     outcomes: list[OrderOutcome]
     allocations: dict[str, list[tuple[str, int]]]
+
+
+def _logistics_action_type(before: OrderOutcome, after: OrderOutcome) -> LogisticsActionType | None:
+    has_recovery_allocation = after.allocated_quantity > 0
+    if not has_recovery_allocation:
+        return None
+    had_baseline_allocation = before.allocated_quantity > 0
+    if not had_baseline_allocation:
+        return "allocate"
+    warehouse_changed = before.warehouse_id != after.warehouse_id
+    route_changed = before.route_id != after.route_id
+    if not warehouse_changed and not route_changed:
+        return None
+    if warehouse_changed and route_changed:
+        return "reallocate-reroute"
+    return "reallocate" if warehouse_changed else "reroute"
 
 
 def generate_recovery_plan(
@@ -57,6 +75,10 @@ def generate_recovery_plan(
                 total_orders=len(scenario.orders),
             ),
             manufacturing_actions=[],
+            manufacturing_explanation=ManufacturingPlanExplanation(
+                reason="Kendala operasional saat ini belum memungkinkan rencana produksi yang layak.",
+                expected_impact="Belum ada kuantitas produksi pemulihan yang dapat direkomendasikan.",
+            ),
             logistics_actions=[],
             commerce_actions=[],
             possible_next_actions=[
@@ -77,11 +99,6 @@ def generate_recovery_plan(
 
     baseline_by_order = {outcome.order_id: outcome for outcome in baseline.outcomes}
     recovery_by_order = {outcome.order_id: outcome for outcome in recovery.outcomes}
-    baseline_routes = {
-        (route.origin_facility_id, route.destination_facility_id): route
-        for route in disruption.routes
-        if route.type == "baseline"
-    }
     products = {product.id: product for product in scenario.products}
     stores = {facility.id: facility for facility in scenario.facilities if facility.kind == "store"}
     warehouses = {facility.id: facility for facility in scenario.facilities if facility.kind == "warehouse"}
@@ -93,22 +110,20 @@ def generate_recovery_plan(
         change = after - before
         if before == 0 and after == 0:
             continue
-        constrained_materials = ", ".join(item.material_id for item in product.bom)
-        if change != 0:
-            what = f"Sesuaikan produksi {product.name} dari {before} menjadi {after} {product.unit}."
-            why = f"Ketersediaan bahan baku dan kebutuhan BOM ({constrained_materials}) membatasi kapasitas produksi."
+        if change > 0:
+            what = f"Naikkan produksi {product.name} dari {before} menjadi {after} {product.unit}."
+            why = "Perubahan ini merupakan bagian dari penyeimbangan mix produksi pada rencana pemulihan."
+            expected_impact = f"Produksi {product.name} bertambah {change} {product.unit} berdasarkan hasil optimasi."
+        elif change < 0:
+            what = f"Kurangi produksi {product.name} dari {before} menjadi {after} {product.unit}."
+            why = "Perubahan ini merupakan bagian dari penyeimbangan mix produksi pada rencana pemulihan."
             expected_impact = (
-                "Penyesuaian produksi menyediakan persediaan yang dapat dialokasikan untuk pemenuhan pesanan."
+                f"Produksi {product.name} berkurang {abs(change)} {product.unit} berdasarkan hasil optimasi."
             )
         else:
             what = f"Pertahankan produksi {product.name} sebesar {after} {product.unit}."
-            why = (
-                f"Alokasi kapasitas pabrik untuk {product.name} dipertahankan guna memenuhi kebutuhan "
-                f"pesanan dan ketersediaan bahan ({constrained_materials})."
-            )
-            expected_impact = (
-                f"Menjaga ketersediaan {after} {product.unit} persediaan untuk pemenuhan pesanan prioritas."
-            )
+            why = f"Hasil optimasi mempertahankan kuantitas produksi {product.name} pada skenario ini."
+            expected_impact = f"Kuantitas produksi {product.name} tetap {after} {product.unit}."
 
         manufacturing.append(
             ManufacturingAction(
@@ -129,42 +144,38 @@ def generate_recovery_plan(
     for order in scenario.orders:
         before = baseline_by_order.get(order.id)
         after = recovery_by_order.get(order.id)
-        baseline_route = baseline_routes.get((order.preferred_warehouse_id, order.store_id))
         if not before or not after or not after.warehouse_id or not after.route_id or not after.vehicle_id:
             continue
-        warehouse_changed = before.warehouse_id != after.warehouse_id
-        route_changed = before.route_id != after.route_id
-        if not warehouse_changed and not route_changed:
+        action = _logistics_action_type(before, after)
+        if action is None:
             continue
         if before.flood_exposure and after.flood_exposure:
             risks_mitigated += int(RISK_RANK[after.flood_exposure] < RISK_RANK[before.flood_exposure])
-        action = (
-            "reallocate-reroute"
-            if warehouse_changed and route_changed
-            else "reallocate"
-            if warehouse_changed
-            else "reroute"
+        had_baseline_allocation = before.allocated_quantity > 0
+        original_warehouse_id = before.warehouse_id if had_baseline_allocation else None
+        original_warehouse_name = warehouses[original_warehouse_id].name if original_warehouse_id else None
+        what = (
+            f"Alokasikan {order.id} ke {warehouses[after.warehouse_id].name} dengan kendaraan {after.vehicle_id}."
+            if action == "allocate"
+            else f"Gunakan {warehouses[after.warehouse_id].name} dan kendaraan {after.vehicle_id} untuk {order.id}."
         )
         logistics.append(
             LogisticsAction(
                 id=f"log-{order.id}",
                 order_id=order.id,
-                original_warehouse_id=before.warehouse_id or order.preferred_warehouse_id,
-                original_warehouse_name=warehouses[before.warehouse_id or order.preferred_warehouse_id].name,
+                original_warehouse_id=original_warehouse_id,
+                original_warehouse_name=original_warehouse_name,
                 recovery_warehouse_id=after.warehouse_id,
                 recovery_warehouse_name=warehouses[after.warehouse_id].name,
                 vehicle_id=after.vehicle_id,
-                baseline_route_id=before.route_id or (baseline_route.id if baseline_route else after.route_id),
+                baseline_route_id=before.route_id if had_baseline_allocation else None,
                 recovery_route_id=after.route_id,
-                baseline_eta_minutes=before.eta_minutes or (baseline_route.eta_minutes if baseline_route else 0),
+                baseline_eta_minutes=before.eta_minutes if had_baseline_allocation else None,
                 recovery_eta_minutes=after.eta_minutes or 0,
-                baseline_flood_exposure=before.flood_exposure
-                or (baseline_route.flood_exposure if baseline_route else "low"),
+                baseline_flood_exposure=before.flood_exposure if had_baseline_allocation else None,
                 recovery_flood_exposure=after.flood_exposure or "low",
                 action=action,
-                what=(
-                    f"Gunakan {warehouses[after.warehouse_id].name} dan kendaraan {after.vehicle_id} untuk {order.id}."
-                ),
+                what=what,
                 why="Alokasi CP-SAT memilih rute dan kendaraan yang layak dalam batas kapasitas dan keterlambatan.",
                 expected_impact=(
                     f"Waktu tempuh {after.eta_minutes} menit dengan tingkat paparan banjir {after.flood_exposure}."
@@ -221,6 +232,13 @@ def generate_recovery_plan(
 
     recoverable = sum(outcome.allocated_quantity == outcome.requested_quantity for outcome in recovery.outcomes)
     changed_commerce = sum(action.action not in {"fulfill", "prioritize"} for action in commerce)
+    manufacturing_explanation = _manufacturing_plan_explanation(
+        scenario,
+        disruption,
+        baseline,
+        recovery,
+        manufacturing,
+    )
     return RecoveryResult(
         id=f"plan-{uuid.uuid4().hex[:8]}",
         simulation_id=simulation_id,
@@ -234,6 +252,7 @@ def generate_recovery_plan(
             total_orders=len(scenario.orders),
         ),
         manufacturing_actions=manufacturing,
+        manufacturing_explanation=manufacturing_explanation,
         logistics_actions=logistics,
         commerce_actions=commerce,
         possible_next_actions=["Restore disrupted inbound material capacity.", "Review delayed non-critical orders."],
@@ -246,6 +265,86 @@ def generate_recovery_plan(
 
 def _production_outcomes(production: dict[str, int]) -> list[ProductionOutcome]:
     return [ProductionOutcome(product_id=product_id, quantity=quantity) for product_id, quantity in production.items()]
+
+
+def _manufacturing_plan_explanation(
+    scenario: Scenario,
+    disruption: DisruptionAnalysis,
+    baseline: ComputedPlan,
+    recovery: ComputedPlan,
+    actions: list[ManufacturingAction],
+) -> ManufacturingPlanExplanation:
+    factory_capacity = sum(
+        facility.production_capacity_units or 0 for facility in scenario.facilities if facility.kind == "factory"
+    )
+    material_available = _material_availability(scenario, disruption, baseline=False)
+    binding_materials = []
+    for material in scenario.materials:
+        consumption = sum(
+            recovery.production.get(product.id, 0) * bom.quantity_per_unit
+            for product in scenario.products
+            for bom in product.bom
+            if bom.material_id == material.id
+        )
+        if consumption > 0 and round(consumption * BOM_SCALE) == round(material_available[material.id] * BOM_SCALE):
+            binding_materials.append(material.name)
+
+    increased = [action.product_name for action in actions if action.change_quantity > 0]
+    decreased = [action.product_name for action in actions if action.change_quantity < 0]
+    recovery_total = sum(recovery.production.values())
+    if binding_materials:
+        names = ", ".join(binding_materials)
+        reason = (
+            "Kebutuhan bahan baku berdasarkan komposisi produk mencapai batas ketersediaan "
+            f"{names}, sehingga ARUNA menyesuaikan mix produksi pada skenario ini."
+        )
+    elif recovery_total == factory_capacity and increased and decreased:
+        reason = (
+            f"ARUNA mengalihkan kapasitas produksi dari {', '.join(decreased)} ke {', '.join(increased)} "
+            "agar mix produksi lebih sesuai dengan kebutuhan pemenuhan pesanan, dengan tetap berada dalam "
+            f"kapasitas pabrik {factory_capacity} unit."
+        )
+    elif recovery_total == factory_capacity:
+        reason = (
+            "ARUNA menyeimbangkan mix produksi berdasarkan kebutuhan pesanan dan kondisi operasional, "
+            f"dengan tetap berada dalam kapasitas pabrik {factory_capacity} unit."
+        )
+    elif not increased and not decreased:
+        reason = "Hasil optimasi mempertahankan seluruh kuantitas produksi pada skenario ini."
+    else:
+        reason = (
+            "ARUNA menyeimbangkan mix produksi berdasarkan kebutuhan pesanan, kapasitas pabrik, inventory, "
+            "material, dan ketersediaan distribusi pada skenario ini."
+        )
+
+    total_orders = len(scenario.orders)
+    baseline_fulfilled = sum(outcome.allocated_quantity == outcome.requested_quantity for outcome in baseline.outcomes)
+    recovery_fulfilled = sum(outcome.allocated_quantity == outcome.requested_quantity for outcome in recovery.outcomes)
+    requested_units = sum(order.quantity for order in scenario.orders)
+    baseline_allocated = sum(outcome.allocated_quantity for outcome in baseline.outcomes)
+    recovery_allocated = sum(outcome.allocated_quantity for outcome in recovery.outcomes)
+    unfulfilled_units = requested_units - recovery_allocated
+    if recovery_fulfilled > baseline_fulfilled:
+        impact = (
+            "Rencana pemulihan meningkatkan pemenuhan pesanan dari "
+            f"{baseline_fulfilled}/{total_orders} menjadi {recovery_fulfilled}/{total_orders}."
+        )
+    elif recovery_allocated > baseline_allocated:
+        impact = (
+            f"Rencana pemulihan meningkatkan alokasi pesanan dari {baseline_allocated}/{requested_units} "
+            f"menjadi {recovery_allocated}/{requested_units} unit."
+        )
+    elif unfulfilled_units > 0:
+        impact = (
+            f"Rencana pemulihan mengalokasikan {recovery_allocated}/{requested_units} unit pesanan; "
+            f"{unfulfilled_units} unit masih belum terpenuhi."
+        )
+    else:
+        impact = (
+            f"Rencana pemulihan memenuhi {recovery_fulfilled}/{total_orders} pesanan dengan alokasi "
+            f"{recovery_allocated} unit."
+        )
+    return ManufacturingPlanExplanation(reason=reason, expected_impact=impact)
 
 
 def _solve_plan(

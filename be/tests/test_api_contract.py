@@ -52,6 +52,7 @@ def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
     assert generated.status_code == 201
     recovery = generated.json()
     assert recovery["status"] in {"ready", "partial"}
+    assert set(recovery["manufacturingExplanation"]) == {"reason", "expectedImpact"}
     assert len(recovery["commerceActions"]) == len(scenario["orders"])
     assert {action["action"] for action in recovery["commerceActions"]} <= {
         "fulfill",
@@ -62,14 +63,23 @@ def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
         "split-substitute",
     }
     required_logistics = {
-        "baselineRouteId",
         "recoveryRouteId",
-        "baselineEtaMinutes",
         "recoveryEtaMinutes",
-        "baselineFloodExposure",
         "recoveryFloodExposure",
     }
     assert all(required_logistics <= action.keys() for action in recovery["logisticsActions"])
+    for action in recovery["logisticsActions"]:
+        baseline_fields = {
+            "originalWarehouseId",
+            "originalWarehouseName",
+            "baselineRouteId",
+            "baselineEtaMinutes",
+            "baselineFloodExposure",
+        }
+        if action["action"] == "allocate":
+            assert baseline_fields.isdisjoint(action)
+        else:
+            assert baseline_fields <= action.keys()
     assert client.get(f"/api/simulations/{simulation_id}/recovery").json() == recovery
 
     impact = client.get(f"/api/simulations/{simulation_id}/impact").json()
@@ -87,6 +97,20 @@ def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
     average_delay = next(metric for metric in impact["metrics"] if metric["key"] == "average-delay")
     assert average_delay["baselineObservationCount"] > 0
     assert average_delay["recoveryObservationCount"] > 0
+
+
+def test_new_allocation_api_does_not_masquerade_as_reallocation(client: TestClient) -> None:
+    simulation = client.post("/api/simulations", json={"scenarioId": "scenario-jakarta-20250304"}).json()
+    recovery = client.post(f"/api/simulations/{simulation['id']}/recovery", json={}).json()
+    action = next(item for item in recovery["logisticsActions"] if item["orderId"] == "ORD-012")
+
+    assert action["action"] == "allocate"
+    assert action["recoveryWarehouseId"] == "wh-west"
+    assert action["recoveryRouteId"] == "route-recovery-wh-west-store-b"
+    assert action["vehicleId"] == "V-03"
+    assert action["recoveryEtaMinutes"] == 16
+    for field in ("originalWarehouseId", "originalWarehouseName", "baselineRouteId", "baselineEtaMinutes"):
+        assert field not in action
 
 
 def test_structured_errors_and_validation(client: TestClient, simulation_id: str) -> None:

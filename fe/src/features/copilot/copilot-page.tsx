@@ -148,6 +148,9 @@ export function CopilotPage() {
   const scenarioTitle = dynamic ? `${rainfall?.label ?? "Pola Hujan"} (Simulasi Kondisi)` : (scenario.data?.name ?? "Banjir Jakarta — 04 Mar 2025");
   const businessDataSourceLabel = simulation.data?.businessDataSource === "custom" ? "Unggahan Sendiri (Kustom)" : "Data Standar Demo";
   const conditionLabel = operationalConditionLabel(condition);
+  const logisticsAssignmentLabel = logisticsAction
+    ? `${logisticsAction.originalWarehouseName ?? "Belum teralokasi"} → ${logisticsAction.recoveryWarehouseName}`
+    : "Sesuai rencana pemulihan";
 
   const contextItems = [
     ["Skenario", scenarioTitle],
@@ -155,7 +158,7 @@ export function CopilotPage() {
     ["Kondisi Operasional", conditionLabel],
     ["Resiko jalan keseluruhan", overallRisk ? formatRisk(overallRisk) : "Sedang"],
     ["Pihak terdampak", disruption.data ? `${disruption.data.impact.impactedSupplierIds.length} pemasok dan ${disruption.data.impact.impactedWarehouseIds.length} gudang` : "Memuat..."],
-    ["Rute pemulihan", logisticsAction ? `${logisticsAction.originalWarehouseName} - ${logisticsAction.recoveryWarehouseName}` : "Sesuai rencana pemulihan"],
+    ["Rute pemulihan", logisticsAssignmentLabel],
     ["Pesanan terpenuhi", fulfilledMetric ? `${fulfilledMetric.recovery}/${fulfilledMetric.total}` : recoveryData ? `${recoveryData.summary.recoverableOrders}/${recoveryData.summary.totalOrders}` : "Memuat..."],
     ["Pesanan gagal", failedMetric ? `${failedMetric.recovery} pesanan` : recoveryData ? `${recoveryData.summary.totalOrders - recoveryData.summary.recoverableOrders} pesanan` : "0 pesanan"],
     ["Penjualan terdampak", salesMetric ? formatCompactIdr(salesMetric.recovery) : disruption.data ? formatCompactIdr(disruption.data.impact.salesExposure.amount) : "Rp 0"],

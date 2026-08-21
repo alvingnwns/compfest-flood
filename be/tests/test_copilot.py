@@ -53,6 +53,16 @@ def test_unknown_simulation_is_explicit(client) -> None:
     assert response.json()["code"] == "simulation_not_found"
 
 
+def test_copilot_context_describes_new_allocation_without_reallocation_claim(client) -> None:
+    simulation_id = _completed_recovery(client)
+    context = build_copilot_context(simulation_id)
+    action = next(item for item in context.recovery_actions if item.entity_id == "ORD-012")
+
+    assert action.category == "logistics"
+    assert "Alokasikan ORD-012 ke Gudang Barat" in action.what
+    assert "alih" not in action.what.casefold()
+
+
 def test_missing_key_uses_grounded_numerical_fallback(client) -> None:
     simulation_id = _completed_recovery(client)
     impact = client.get(f"/api/simulations/{simulation_id}/impact").json()

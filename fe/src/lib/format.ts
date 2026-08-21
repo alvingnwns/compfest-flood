@@ -14,4 +14,4 @@ export const formatDate = (value: string) => date.format(new Date(`${value}T00:0
 export const formatRisk = (value: RiskLevel) => ({ low: "Rendah", medium: "Sedang", high: "Tinggi", critical: "Kritis" })[value];
 export const formatDataMode = (value: string) => ({ historical_snapshot: "Rekaman historis", live: "Langsung", hybrid: "Hibrida" } as Record<string, string>)[value] ?? value;
 export const formatHistoricalStatus = (value: string) => ({ available: "Tersedia", offline_snapshot: "Rekaman luring", unavailable: "Tidak tersedia" } as Record<string, string>)[value] ?? value;
-export const formatAction = (value: string) => ({ reallocate: "Alihkan", reroute: "Ubah rute", "reallocate-reroute": "Alihkan + ubah rute", substitute: "Substitusi", "split-substitute": "Bagi + substitusi" } as Record<string, string>)[value] ?? value;
+export const formatAction = (value: string) => ({ allocate: "Alokasikan pesanan", reallocate: "Alihkan gudang", reroute: "Ubah rute", "reallocate-reroute": "Alihkan + ubah rute", substitute: "Substitusi", "split-substitute": "Bagi + substitusi" } as Record<string, string>)[value] ?? value;

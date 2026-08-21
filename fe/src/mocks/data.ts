@@ -89,9 +89,13 @@ export const recoveryFixture: RecoveryPlan = {
   id: "plan-jakarta-001", simulationId: simulationFixture.id, status: "partial", createdAt: "2026-08-09T10:16:00.000Z", completedAt: "2026-08-09T10:16:03.000Z",
   summary: { risksMitigated: 6, operationalChanges: 9, recoverableOrders: 18, totalOrders: 20 },
   manufacturingActions: [
-    { id: "mfg-a", productId: "prod-a", productName: "Produk A", baselineQuantity: 1000, recoveryQuantity: 650, changeQuantity: -350, what: "Kurangi produksi Produk A dan cadangkan material yang terbatas.", why: "Ketersediaan Pemasok A diproyeksikan terlambat akibat segmen jalan masuk berisiko tinggi.", expectedImpact: "Menjaga kapasitas bersama sekaligus melindungi pesanan Produk A prioritas." },
-    { id: "mfg-b", productId: "prod-b", productName: "Produk B", baselineQuantity: 500, recoveryQuantity: 750, changeQuantity: 250, what: "Alihkan kapasitas yang tersedia ke Produk B.", why: "Produk B mengandalkan material Pemasok B yang tidak terdampak dan kemasan yang tersedia.", expectedImpact: "Memproyeksikan pengurangan paparan penjualan sebesar Rp 1,2 juta melalui substitusi yang diizinkan." },
+    { id: "mfg-a", productId: "prod-a", productName: "Produk A", baselineQuantity: 1000, recoveryQuantity: 650, changeQuantity: -350, what: "Kurangi produksi Produk A dari 1000 menjadi 650 unit.", why: "Perubahan ini merupakan bagian dari penyeimbangan mix produksi.", expectedImpact: "Produksi Produk A berkurang 350 unit." },
+    { id: "mfg-b", productId: "prod-b", productName: "Produk B", baselineQuantity: 500, recoveryQuantity: 750, changeQuantity: 250, what: "Naikkan produksi Produk B dari 500 menjadi 750 unit.", why: "Perubahan ini merupakan bagian dari penyeimbangan mix produksi.", expectedImpact: "Produksi Produk B bertambah 250 unit." },
   ],
+  manufacturingExplanation: {
+    reason: "ARUNA mengalihkan kapasitas produksi dari Produk A ke Produk B berdasarkan kebutuhan pesanan dan kondisi operasional.",
+    expectedImpact: "Rencana pemulihan meningkatkan pemenuhan pesanan dari 13/20 menjadi 18/20.",
+  },
   logisticsActions: [
     { id: "log-1", orderId: "ORD-008", originalWarehouseId: "wh-east", originalWarehouseName: "Gudang Timur", recoveryWarehouseId: "wh-west", recoveryWarehouseName: "Gudang Barat", vehicleId: "V-02", baselineRouteId: "route-baseline", recoveryRouteId: "route-recovery", baselineEtaMinutes: 27, recoveryEtaMinutes: 35, baselineFloodExposure: "high", recoveryFloodExposure: "low", action: "reallocate-reroute", what: "Alihkan ORD-008 ke Gudang Barat dan Kendaraan V-02, lalu gunakan rute pemulihan.", why: "Koridor normal Gudang Timur memiliki perkiraan risiko gangguan sebesar 82%.", expectedImpact: "Mengurangi paparan banjir sambil menjaga kelangsungan pengiriman dengan perkiraan tambahan waktu tempuh 8 menit." },
   ],
