@@ -2,6 +2,35 @@
 
 ARUNA is a flood-aware supply-chain recovery decision-support MVP with a Next.js frontend and FastAPI backend. The shared API contract is documented in [`docs/BACKEND_INTEGRATION_CONTRACT.md`](docs/BACKEND_INTEGRATION_CONTRACT.md).
 
+## Quick Start with Docker
+
+Prerequisites: Docker Desktop or Docker Engine with Docker Compose.
+
+```powershell
+git clone <repository-url>
+cd <repository>
+docker compose up --build
+```
+
+No environment file or API key is required for the core application. After both services start, open:
+
+- Frontend: `http://localhost:3000`
+- Scenario workflow: `http://localhost:3000/scenario`
+- Backend API: `http://localhost:8000`
+- Backend health: `http://localhost:8000/health`
+
+Stop the application with:
+
+```powershell
+docker compose down
+```
+
+### Environment variables
+
+Core Docker defaults require no configuration. The frontend is built in API mode with the browser-visible backend URL `http://localhost:8000`; overrides may be supplied through the shell or a root `.env` file using `NEXT_PUBLIC_DATA_SOURCE` and `NEXT_PUBLIC_API_BASE_URL`.
+
+`GEMINI_API_KEY` and `OPENROUTER_API_KEY` are optional Copilot provider keys. With neither key configured, ARUNA boots normally and Copilot uses its grounded deterministic fallback. Never commit real keys or local `.env` files.
+
 ## Custom business data
 
 The Scenario page defaults to the built-in demo company snapshot. To use a custom business snapshot:
@@ -22,7 +51,7 @@ The FastAPI API, Random Forest inference with `predict_proba`, NetworkX risk-awa
 
 Phase D status: both Jakarta-only scientific attempts remain documented failures. Objective multi-region Indonesia discovery produced a feasible historical corridor-exposure dataset, and the selected model now runs offline over Jakarta as the deployment/demo pilot. Jakarta is not a labeled validation region; unseen-region recall is limited and Jakarta contains two unseen road categories. See [`docs/INDONESIA_HISTORICAL_FLOOD_DATASET.md`](docs/INDONESIA_HISTORICAL_FLOOD_DATASET.md), [`docs/FLOOD_RISK_MODEL_REPORT.md`](docs/FLOOD_RISK_MODEL_REPORT.md), and [`docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md`](docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md).
 
-## Run locally
+## Manual development
 
 Backend:
 
