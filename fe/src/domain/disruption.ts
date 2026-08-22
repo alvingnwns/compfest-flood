@@ -32,5 +32,6 @@ export const disruptionAnalysisSchema = z.object({
 export type RiskFactor = z.infer<typeof riskFactorSchema>;
 export type RoadRisk = z.infer<typeof roadRiskSchema>;
 export type Route = z.infer<typeof routeSchema>;
+export type PrioritizedIssue = z.infer<typeof prioritizedIssueSchema>;
 export type OperationalImpact = z.infer<typeof operationalImpactSchema>;
 export type DisruptionAnalysis = z.infer<typeof disruptionAnalysisSchema>;

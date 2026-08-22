@@ -53,12 +53,14 @@ export function ImpactPanel({
   data,
   pending,
   issuesOpen,
+  selectedIssueId,
   onPlan,
   onToggleIssues,
 }: {
   data: DisruptionAnalysis;
   pending: boolean;
   issuesOpen: boolean;
+  selectedIssueId?: string | null;
   onPlan: () => void;
   onToggleIssues: () => void;
 }) {
@@ -103,8 +105,9 @@ export function ImpactPanel({
               {label}
             </h3>
             <div
-              className={`flex items-center justify-center font-bold ${isCurrency ? "text-[20px] leading-tight" : "text-[32px] leading-none"
-                } ${danger ? "text-[#bc0000]" : "text-black"}`}
+              className={`flex items-center justify-center font-bold ${
+                isCurrency ? "text-[20px] leading-tight" : "text-[32px] leading-none"
+              } ${danger ? "text-[#bc0000]" : "text-black"}`}
             >
               {value}
             </div>
@@ -128,6 +131,11 @@ export function ImpactPanel({
           )}
           <span className="text-[13px] font-bold text-primary-dark">LIHAT MASALAH PRIORITAS</span>
         </div>
+        {selectedIssueId && (
+          <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold text-white">
+            1 Aktif
+          </span>
+        )}
       </button>
 
       {/* Rencanakan Pemulihan */}
@@ -143,15 +151,29 @@ export function ImpactPanel({
   );
 }
 
-function IssuesSidebar({ data, open, onClose }: { data: DisruptionAnalysis; open: boolean; onClose: () => void }) {
+function IssuesSidebar({
+  data,
+  open,
+  selectedIssueId,
+  onSelectIssue,
+  onClose,
+}: {
+  data: DisruptionAnalysis;
+  open: boolean;
+  selectedIssueId: string | null;
+  onSelectIssue: (issueId: string | null) => void;
+  onClose: () => void;
+}) {
   return (
     <aside
-      className={`flex shrink-0 flex-col bg-white shadow-[-4px_0_20px_rgb(0_0_0/18%)] transition-all duration-300 overflow-hidden ${open ? "w-[300px]" : "w-0"}`}
+      className={`flex shrink-0 flex-col bg-white shadow-[-4px_0_20px_rgb(0_0_0/18%)] transition-all duration-300 overflow-hidden ${
+        open ? "w-[320px]" : "w-0"
+      }`}
       aria-label="Masalah prioritas"
       aria-hidden={!open}
     >
       {/* Inner wrapper — keeps content visible at full width while container animates */}
-      <div className="flex h-full w-[300px] flex-col">
+      <div className="flex h-full w-[320px] flex-col">
         {/* Header — flat, no border-radius */}
         <div className="flex h-[56px] shrink-0 items-center justify-between bg-primary-dark px-4">
           <h3 className="text-[14px] font-bold text-white">MASALAH PRIORITAS</h3>
@@ -164,27 +186,70 @@ function IssuesSidebar({ data, open, onClose }: { data: DisruptionAnalysis; open
             <X className="size-4" />
           </button>
         </div>
+
+        {/* Focus indicator / reset header */}
+        {selectedIssueId && (
+          <div className="flex items-center justify-between border-b border-primary/20 bg-primary/10 px-4 py-2 text-[11px] font-medium text-primary-dark">
+            <span>Fokus rute aktif di peta</span>
+            <button
+              type="button"
+              onClick={() => onSelectIssue(null)}
+              className="font-bold underline hover:text-black"
+              aria-label="Hapus fokus rute"
+            >
+              Tampilkan semua
+            </button>
+          </div>
+        )}
+
         {/* Issues list */}
         <div className="flex-1 overflow-y-auto">
           {data.impact.issues.length === 0 && (
             <p className="p-6 text-center text-[12px] text-[#979797]">Tidak ada masalah prioritas.</p>
           )}
-          {data.impact.issues.map((issue) => (
-            <article key={issue.id} className="flex min-h-[90px] gap-2.5 border-b border-[#e0e0e0] px-4 py-4 last:border-0">
-              <AlertTriangle
-                className={`mt-0.5 size-[16px] shrink-0 ${issue.severity === "critical" ? "text-danger" : "text-[#c68000]"}`}
-              />
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className={`rounded-[4px] px-1.5 py-0.5 text-[9px] font-semibold uppercase ${severityClass[issue.severity]}`}>
-                    {formatRisk(issue.severity)}
-                  </span>
-                  <strong className="truncate text-[11px] text-black">{issue.subject}</strong>
+          {data.impact.issues.map((issue) => {
+            const isSelected = selectedIssueId === issue.id;
+            return (
+              <button
+                key={issue.id}
+                type="button"
+                onClick={() => onSelectIssue(isSelected ? null : issue.id)}
+                aria-pressed={isSelected}
+                aria-label={`Fokuskan masalah: ${issue.subject}`}
+                className={`flex w-full min-h-[90px] gap-2.5 border-b border-[#e0e0e0] px-4 py-4 text-left transition last:border-0 ${
+                  isSelected
+                    ? "bg-primary/10 ring-2 ring-inset ring-primary/40"
+                    : "hover:bg-black/[0.02]"
+                }`}
+              >
+                <AlertTriangle
+                  className={`mt-0.5 size-[16px] shrink-0 ${
+                    issue.severity === "critical" ? "text-danger" : "text-[#c68000]"
+                  }`}
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span
+                      className={`rounded-[4px] px-1.5 py-0.5 text-[9px] font-semibold uppercase ${
+                        severityClass[issue.severity]
+                      }`}
+                    >
+                      {formatRisk(issue.severity)}
+                    </span>
+                    <strong className="truncate text-[11px] text-black">{issue.subject}</strong>
+                  </div>
+                  <p className="mt-1 line-clamp-3 text-[10px] leading-[13px] text-[#5a5a5a]">
+                    {issue.description}
+                  </p>
+                  {isSelected && (
+                    <span className="mt-2 inline-flex items-center rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold text-white">
+                      Sedang Difokuskan
+                    </span>
+                  )}
                 </div>
-                <p className="mt-1 line-clamp-3 text-[10px] leading-[13px] text-[#5a5a5a]">{issue.description}</p>
-              </div>
-            </article>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </div>
     </aside>
@@ -192,29 +257,51 @@ function IssuesSidebar({ data, open, onClose }: { data: DisruptionAnalysis; open
 }
 
 export function DisruptionPage() {
-  const params = useSearchParams(), simulationId = params.get("simulation") ?? "", condition = params.get("condition") ?? "normal";
-  const query = useDisruptionAnalysis(simulationId), simulation = useSimulation(simulationId), generate = useGenerateRecovery(), router = useRouter();
+  const params = useSearchParams(),
+    simulationId = params.get("simulation") ?? "",
+    condition = params.get("condition") ?? "normal";
+  const query = useDisruptionAnalysis(simulationId),
+    simulation = useSimulation(simulationId),
+    generate = useGenerateRecovery(),
+    router = useRouter();
   const [selected, setSelected] = useState<{ road: RoadRisk; coords: [number, number] } | null>(null);
+  const [selectedIssueId, setSelectedIssueId] = useState<string | null>(null);
   const [issuesSidebarOpen, setIssuesSidebarOpen] = useState(false);
   const mapRef = useRef<MapLibreMap | null>(null);
   const selectRoad = useCallback((road: RoadRisk, coords: [number, number]) => setSelected({ road, coords }), []);
   const clearSelection = useCallback(() => setSelected(null), []);
+
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         clearSelection();
+        setSelectedIssueId(null);
         setIssuesSidebarOpen(false);
       }
     };
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
   }, [clearSelection]);
-  const facilities = useMemo(() => new Map(query.data?.facilities.map((item) => [item.id, item.name])), [query.data]);
+
+  const facilities = useMemo(
+    () => new Map(query.data?.facilities.map((item) => [item.id, item.name])),
+    [query.data]
+  );
   const createPlan = () =>
-    generate.mutate({ id: simulationId }, { onSuccess: () => router.push(`/recovery?simulation=${simulationId}&condition=${encodeURIComponent(condition)}`) });
+    generate.mutate(
+      { id: simulationId },
+      {
+        onSuccess: () =>
+          router.push(`/recovery?simulation=${simulationId}&condition=${encodeURIComponent(condition)}`),
+      }
+    );
 
   const popup = selected ? (
-    <div role="dialog" aria-label={`Detail risiko ${selected.road.roadName}`} className="w-[min(320px,90vw)] rounded-lg border border-outline bg-white p-4 shadow-xl">
+    <div
+      role="dialog"
+      aria-label={`Detail risiko ${selected.road.roadName}`}
+      className="w-[min(320px,90vw)] rounded-lg border border-outline bg-white p-4 shadow-xl"
+    >
       <div className="flex justify-between gap-3">
         <div>
           <h2 className="text-[13px] font-semibold">{selected.road.roadName || "Jalan tanpa nama"}</h2>
@@ -234,7 +321,10 @@ export function DisruptionPage() {
       <dl className="space-y-1.5 text-[11px]">
         <div className="flex justify-between">
           <dt className="text-muted">Skor risiko</dt>
-          <dd className="font-semibold">{selected.road.dynamicRoadRiskScore?.toFixed(2) ?? formatPercent(selected.road.riskProbability)}</dd>
+          <dd className="font-semibold">
+            {selected.road.dynamicRoadRiskScore?.toFixed(2) ??
+              formatPercent(selected.road.riskProbability)}
+          </dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-muted">Perkiraan keterlambatan</dt>
@@ -248,7 +338,10 @@ export function DisruptionPage() {
     return (
       <AppShell title="Peta Gangguan">
         <FullPageState>
-          <EmptyState title="Belum ada simulasi yang dipilih" message="Jalankan analisis skenario sebelum membuka analisis gangguan." />
+          <EmptyState
+            title="Belum ada simulasi yang dipilih"
+            message="Jalankan analisis skenario sebelum membuka analisis gangguan."
+          />
         </FullPageState>
       </AppShell>
     );
@@ -257,7 +350,9 @@ export function DisruptionPage() {
   return (
     <AppShell title="Peta Gangguan">
       {query.isLoading && <LoadingState label="Memetakan risiko gangguan banjir..." />}
-      {query.isError && <ErrorState message={query.error.message} onRetry={() => void query.refetch()} />}
+      {query.isError && (
+        <ErrorState message={query.error.message} onRetry={() => void query.refetch()} />
+      )}
       {query.data && (
         <div className="relative flex min-h-[calc(100vh-80px)] bg-surface-low xl:h-[calc(100vh-80px)] xl:min-h-0 xl:overflow-hidden">
           {/* Map area — shrinks when right sidebar opens */}
@@ -267,6 +362,7 @@ export function DisruptionPage() {
                 data={query.data}
                 selectedRoadId={selected?.road.segmentId}
                 selectedCoords={selected?.coords}
+                selectedIssueId={selectedIssueId}
                 onSelectRoad={selectRoad}
                 onClearSelection={clearSelection}
                 popupContent={popup}
@@ -314,6 +410,7 @@ export function DisruptionPage() {
                   data={query.data}
                   pending={generate.isPending}
                   issuesOpen={issuesSidebarOpen}
+                  selectedIssueId={selectedIssueId}
                   onPlan={createPlan}
                   onToggleIssues={() => setIssuesSidebarOpen((v) => !v)}
                 />
@@ -330,6 +427,8 @@ export function DisruptionPage() {
           <IssuesSidebar
             data={query.data}
             open={issuesSidebarOpen}
+            selectedIssueId={selectedIssueId}
+            onSelectIssue={setSelectedIssueId}
             onClose={() => setIssuesSidebarOpen(false)}
           />
 

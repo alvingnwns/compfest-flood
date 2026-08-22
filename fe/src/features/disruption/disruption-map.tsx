@@ -1,14 +1,17 @@
 "use client";
 
 import type { Map as MapLibreMap, MapLayerMouseEvent, Popup as MapLibrePopup } from "maplibre-gl";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { DisruptionAnalysis, RoadRisk } from "@/domain/disruption";
 import { publicEnv } from "@/config/public-env";
 import {
+  BASELINE_ROUTE_COLOR,
+  BASELINE_ROUTE_DASHARRAY,
   BASELINE_ROUTE_LABEL,
+  CANDIDATE_ROUTE_CASING_COLOR,
   CANDIDATE_ROUTE_COLOR,
-  CANDIDATE_ROUTE_DASHARRAY,
-  RISK_AWARE_CANDIDATE_LABEL,
+  findMatchingRoutesForIssue,
+  RISK_AWARE_CANDIDATE_ID_LABEL,
 } from "./route-semantics";
 
 const ROAD_CONTEXT_URL = `${publicEnv.NEXT_PUBLIC_API_BASE_URL}/api/map/road-context`;
@@ -24,6 +27,7 @@ export function DisruptionMap({
   data,
   selectedRoadId,
   selectedCoords,
+  selectedIssueId,
   onSelectRoad,
   onClearSelection,
   popupContent,
@@ -33,6 +37,7 @@ export function DisruptionMap({
   data: DisruptionAnalysis;
   selectedRoadId?: string;
   selectedCoords?: [number, number];
+  selectedIssueId?: string | null;
   onSelectRoad: (road: RoadRisk, coords: [number, number]) => void;
   onClearSelection: () => void;
   popupContent?: React.ReactNode;
@@ -44,6 +49,31 @@ export function DisruptionMap({
   const mapRef = useRef<MapLibreMap | null>(null);
   const popupRef = useRef<MapLibrePopup | null>(null);
   const popupPortalRef = useRef<HTMLDivElement>(null);
+
+  // Compute active focused routes based on issue selection
+  const activeBaselineRoutes = useMemo(() => {
+    const selectedIssue = selectedIssueId
+      ? data.impact.issues.find((issue) => issue.id === selectedIssueId)
+      : null;
+    const matchedRoutes = selectedIssue
+      ? findMatchingRoutesForIssue(selectedIssue, data.routes, data.facilities)
+      : null;
+    return matchedRoutes
+      ? data.routes.filter((r) => r.type === "baseline" && matchedRoutes.baselineRouteIds.includes(r.id))
+      : [];
+  }, [data.facilities, data.impact.issues, data.routes, selectedIssueId]);
+
+  const activeCandidateRoutes = useMemo(() => {
+    const selectedIssue = selectedIssueId
+      ? data.impact.issues.find((issue) => issue.id === selectedIssueId)
+      : null;
+    const matchedRoutes = selectedIssue
+      ? findMatchingRoutesForIssue(selectedIssue, data.routes, data.facilities)
+      : null;
+    return matchedRoutes
+      ? data.routes.filter((r) => r.type === "recovery" && matchedRoutes.candidateRouteIds.includes(r.id))
+      : [];
+  }, [data.facilities, data.impact.issues, data.routes, selectedIssueId]);
 
   useEffect(() => {
     let disposed = false;
@@ -151,43 +181,101 @@ export function DisruptionMap({
           type: "line",
           source: "roads-risk",
           paint: {
-            "line-color": ["match", ["get", "risk"], "high", "#ba1a1a", "critical", "#93000a", "medium", "#c45f00", "#00685f"],
-            "line-width": ["case", ["==", ["get", "segmentId"], selectedRoadId ?? ""], 7, 3.5],
-            "line-opacity": 0.9,
+            "line-color": [
+              "match",
+              ["get", "risk"],
+              "high",
+              "#ba1a1a",
+              "critical",
+              "#93000a",
+              "medium",
+              "#c45f00",
+              "#00685f",
+            ],
+            "line-width": ["case", ["==", ["get", "segmentId"], selectedRoadId ?? ""], 6.5, 2.2],
+            "line-opacity": selectedIssueId ? 0.35 : 0.6,
+          },
+          layout: {
+            "line-cap": "round",
+            "line-join": "round",
           },
         });
 
-        // ── Layer 4: Baseline route ──
-        // ── Layer 5: Recovery route ──
-        for (const routeType of ["baseline", "recovery"] as const) {
-          const routes = data.routes.filter((route) => route.type === routeType);
-          if (routes.length === 0) continue;
-          const id = `route-${routeType}`;
-          map.addSource(id, {
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: routes.map((route) => ({
-                type: "Feature" as const,
-                properties: { id: route.id },
-                geometry: route.geometry,
-              })),
-            },
-          });
-          map.addLayer({
-            id,
-            type: "line",
-            source: id,
-            paint: {
-              "line-color": routeType === "baseline" ? "#ba1a1a" : CANDIDATE_ROUTE_COLOR,
-              "line-width": routeType === "baseline" ? 3 : 4,
-              "line-opacity": routeType === "baseline" ? 0.6 : 0.85,
-              "line-dasharray": routeType === "baseline" ? [2, 2] : CANDIDATE_ROUTE_DASHARRAY,
-            },
-          });
-        }
+        // ── Layer 4: Selected Baseline route (Dashed red with -2px offset) ──
+        map.addSource("route-baseline", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: activeBaselineRoutes.map((route) => ({
+              type: "Feature" as const,
+              properties: { id: route.id },
+              geometry: route.geometry,
+            })),
+          },
+        });
+        map.addLayer({
+          id: "route-baseline",
+          type: "line",
+          source: "route-baseline",
+          paint: {
+            "line-color": BASELINE_ROUTE_COLOR,
+            "line-width": 3,
+            "line-opacity": 0.9,
+            "line-dasharray": BASELINE_ROUTE_DASHARRAY,
+            "line-offset": -2,
+          },
+          layout: {
+            "line-cap": "round",
+            "line-join": "round",
+          },
+        });
 
-        // ── Layer 6: Facilities ──
+        // ── Layer 5: Selected Candidate route Halo/Casing (White with +2px offset) ──
+        map.addSource("route-recovery", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: activeCandidateRoutes.map((route) => ({
+              type: "Feature" as const,
+              properties: { id: route.id },
+              geometry: route.geometry,
+            })),
+          },
+        });
+        map.addLayer({
+          id: "route-recovery-casing",
+          type: "line",
+          source: "route-recovery",
+          paint: {
+            "line-color": CANDIDATE_ROUTE_CASING_COLOR,
+            "line-width": 7,
+            "line-opacity": 0.9,
+            "line-offset": 2,
+          },
+          layout: {
+            "line-cap": "round",
+            "line-join": "round",
+          },
+        });
+
+        // ── Layer 6: Selected Candidate route (Solid purple with +2px offset) ──
+        map.addLayer({
+          id: "route-recovery",
+          type: "line",
+          source: "route-recovery",
+          paint: {
+            "line-color": CANDIDATE_ROUTE_COLOR,
+            "line-width": 4.5,
+            "line-opacity": 0.95,
+            "line-offset": 2,
+          },
+          layout: {
+            "line-cap": "round",
+            "line-join": "round",
+          },
+        });
+
+        // ── Layer 7: Facilities ──
         map.addSource("facilities", {
           type: "geojson",
           data: {
@@ -205,7 +293,17 @@ export function DisruptionMap({
           source: "facilities",
           paint: {
             "circle-radius": ["match", ["get", "kind"], "factory", 9, "warehouse", 8, 6],
-            "circle-color": ["match", ["get", "kind"], "supplier", "#565e74", "factory", "#00685f", "warehouse", "#4d5d73", "#ffffff"],
+            "circle-color": [
+              "match",
+              ["get", "kind"],
+              "supplier",
+              "#565e74",
+              "factory",
+              "#00685f",
+              "warehouse",
+              "#4d5d73",
+              "#ffffff",
+            ],
             "circle-stroke-color": "#ffffff",
             "circle-stroke-width": 2.5,
           },
@@ -231,8 +329,12 @@ export function DisruptionMap({
             onClearSelection();
           }
         });
-        map.on("mouseenter", "roads-risk", () => { map.getCanvas().style.cursor = "pointer"; });
-        map.on("mouseleave", "roads-risk", () => { map.getCanvas().style.cursor = ""; });
+        map.on("mouseenter", "roads-risk", () => {
+          map.getCanvas().style.cursor = "pointer";
+        });
+        map.on("mouseleave", "roads-risk", () => {
+          map.getCanvas().style.cursor = "";
+        });
       });
 
       const resizeObserver = new ResizeObserver(() => {
@@ -254,7 +356,7 @@ export function DisruptionMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, onClearSelection, onSelectRoad]);
 
-  // Dynamically update highlight stroke width when selection changes without re-creating the map
+  // Dynamically update highlight stroke width when road selection changes without re-creating the map
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -264,8 +366,8 @@ export function DisruptionMap({
         map.setPaintProperty("roads-risk", "line-width", [
           "case",
           ["==", ["get", "segmentId"], selectedRoadId ?? ""],
-          7,
-          3.5,
+          6.5,
+          2.2,
         ]);
       }
     };
@@ -276,6 +378,52 @@ export function DisruptionMap({
       map.once("styledata", updateHighlight);
     }
   }, [selectedRoadId]);
+
+  // Dynamically update road opacity and route data when issue focus changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const updateFocus = () => {
+      if (map.getLayer("roads-risk")) {
+        map.setPaintProperty("roads-risk", "line-opacity", selectedIssueId ? 0.35 : 0.6);
+      }
+
+      const baselineSource = map.getSource("route-baseline") as
+        | { setData: (data: unknown) => void }
+        | undefined;
+      if (baselineSource) {
+        baselineSource.setData({
+          type: "FeatureCollection",
+          features: activeBaselineRoutes.map((route) => ({
+            type: "Feature" as const,
+            properties: { id: route.id },
+            geometry: route.geometry,
+          })),
+        });
+      }
+
+      const candidateSource = map.getSource("route-recovery") as
+        | { setData: (data: unknown) => void }
+        | undefined;
+      if (candidateSource) {
+        candidateSource.setData({
+          type: "FeatureCollection",
+          features: activeCandidateRoutes.map((route) => ({
+            type: "Feature" as const,
+            properties: { id: route.id },
+            geometry: route.geometry,
+          })),
+        });
+      }
+    };
+
+    if (map.isStyleLoaded()) {
+      updateFocus();
+    } else {
+      map.once("styledata", updateFocus);
+    }
+  }, [activeBaselineRoutes, activeCandidateRoutes, selectedIssueId]);
 
   // Dynamically manage MapLibre Popup anchored at selectedCoords with directional pointer arrow
   useEffect(() => {
@@ -332,7 +480,15 @@ export function DisruptionMap({
   );
 }
 
-function MapLegend({ dynamic, hasBaseline, hasCandidate }: { dynamic: boolean; hasBaseline: boolean; hasCandidate: boolean }) {
+export function MapLegend({
+  dynamic,
+  hasBaseline,
+  hasCandidate,
+}: {
+  dynamic: boolean;
+  hasBaseline: boolean;
+  hasCandidate: boolean;
+}) {
   return (
     <div className="absolute bottom-8 left-3 z-10 rounded-lg border border-outline bg-surface/95 p-3 text-[10px] shadow-lg backdrop-blur-sm">
       <div className="eyebrow mb-2">Legenda Peta</div>
@@ -349,8 +505,15 @@ function MapLegend({ dynamic, hasBaseline, hasCandidate }: { dynamic: boolean; h
             />
           ))}
         </div>
-        {hasBaseline && <LegendRow color="#ba1a1a" label={BASELINE_ROUTE_LABEL} dashed />}
-        {hasCandidate && <LegendRow color={CANDIDATE_ROUTE_COLOR} label={RISK_AWARE_CANDIDATE_LABEL} dashed thick />}
+        {hasBaseline && <LegendRow color={BASELINE_ROUTE_COLOR} label={BASELINE_ROUTE_LABEL} dashed />}
+        {hasCandidate && (
+          <LegendRow
+            color={CANDIDATE_ROUTE_COLOR}
+            label={RISK_AWARE_CANDIDATE_ID_LABEL}
+            dashed={false}
+            thick
+          />
+        )}
         {!dynamic && <LegendRow color="#ba1a1a22" label="Zona Gangguan Historis" fill />}
       </div>
       <div className="mt-2 border-t border-outline pt-1.5 text-muted">
@@ -360,10 +523,20 @@ function MapLegend({ dynamic, hasBaseline, hasCandidate }: { dynamic: boolean; h
   );
 }
 
-function LegendRow({
-  color, label, dashed = false, thin = false, thick = false, fill = false,
+export function LegendRow({
+  color,
+  label,
+  dashed = false,
+  thin = false,
+  thick = false,
+  fill = false,
 }: {
-  color: string; label: string; dashed?: boolean; thin?: boolean; thick?: boolean; fill?: boolean;
+  color: string;
+  label: string;
+  dashed?: boolean;
+  thin?: boolean;
+  thick?: boolean;
+  fill?: boolean;
 }) {
   return (
     <div className="flex items-center gap-2">
@@ -372,10 +545,14 @@ function LegendRow({
       ) : (
         <svg width={24} height={8} aria-hidden>
           <line
-            x1={0} y1={4} x2={24} y2={4}
+            x1={0}
+            y1={4}
+            x2={24}
+            y2={4}
             stroke={color}
-            strokeWidth={thin ? 1 : thick ? 3 : 2}
+            strokeWidth={thin ? 1 : thick ? 3.5 : 2}
             strokeDasharray={dashed ? "3,2" : undefined}
+            strokeLinecap="round"
           />
         </svg>
       )}
