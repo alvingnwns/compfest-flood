@@ -1,8 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { recoveryFixture, simulationFixture } from "@/mocks/data";
 import { ProductionView, RecoveryPage } from "./recovery-page";
+
+const recoveryMocks = vi.hoisted(() => ({ plan: undefined as unknown }));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/recovery",
@@ -11,7 +13,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/hooks/use-aruna-data", () => ({
   useRecoveryPlan: () => ({
-    data: recoveryFixture,
+    data: recoveryMocks.plan,
     isLoading: false,
     isError: false,
     error: undefined,
@@ -27,6 +29,10 @@ vi.mock("@/hooks/use-aruna-data", () => ({
 }));
 
 describe("Recovery page", () => {
+  beforeEach(() => {
+    recoveryMocks.plan = recoveryFixture;
+  });
+
   it("switches among the three recovery views", async () => {
     const user = userEvent.setup();
     render(<RecoveryPage />);
@@ -38,9 +44,35 @@ describe("Recovery page", () => {
     expect(screen.getByRole("heading", { name: "PENGALIHAN RUTE LOGISTIK" })).toBeInTheDocument();
     expect(screen.getByText("V-02")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("tab", { name: "Alokasi Perdagangan" }));
-    expect(screen.getByRole("heading", { name: "ALOKASI PERDAGANGAN" })).toBeInTheDocument();
+    await user.click(screen.getByRole("tab", { name: "Alokasi Pesanan" }));
+    expect(screen.getByRole("heading", { name: "ALOKASI PESANAN" })).toBeInTheDocument();
     expect(screen.getByText("ORD-014")).toBeInTheDocument();
+  });
+
+  it("does not present successful order allocations for a no-feasible plan", () => {
+    recoveryMocks.plan = {
+      id: "plan-no-feasible",
+      simulationId: simulationFixture.id,
+      status: "no-feasible-plan",
+      createdAt: "2026-08-09T10:16:00.000Z",
+      completedAt: "2026-08-09T10:16:03.000Z",
+      summary: { risksMitigated: 0, operationalChanges: 0, recoverableOrders: 0, totalOrders: 20 },
+      manufacturingActions: [],
+      manufacturingExplanation: {
+        reason: "Tidak ada rencana produksi yang layak.",
+        expectedImpact: "Belum ada pesanan yang dapat dipulihkan.",
+      },
+      logisticsActions: [],
+      commerceActions: [],
+      possibleNextActions: ["Tinjau kendala"],
+      error: { code: "no_feasible_plan", message: "Tidak ada rencana yang layak.", retryable: false },
+    };
+
+    render(<RecoveryPage />);
+
+    expect(screen.getByRole("heading", { name: "Tidak Ada Rencana Pemulihan yang Sepenuhnya Layak" })).toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: "Alokasi Pesanan" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Penuhi penuh|Penuhi sebagian/)).not.toBeInTheDocument();
   });
 
   it("shows every changed-product suggestion with one grounded plan explanation", () => {

@@ -76,6 +76,7 @@ class CommerceAction(RecoveryAction):
     requested_product_id: str
     requested_product_name: str
     requested_quantity: int
+    priority: Literal["normal", "high", "critical"]
     action: Literal["fulfill", "split", "delay", "substitute", "prioritize", "split-substitute"]
     allocations: list[CommerceAllocation]
 

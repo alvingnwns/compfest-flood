@@ -62,6 +62,24 @@ def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
         "prioritize",
         "split-substitute",
     }
+    assert {action["priority"] for action in recovery["commerceActions"]} <= {"normal", "high", "critical"}
+    allocated_totals = [
+        sum(allocation["quantity"] for allocation in action["allocations"]) for action in recovery["commerceActions"]
+    ]
+    fully_fulfilled = sum(
+        allocated == action["requestedQuantity"]
+        for action, allocated in zip(recovery["commerceActions"], allocated_totals, strict=True)
+    )
+    partially_fulfilled = sum(
+        0 < allocated < action["requestedQuantity"]
+        for action, allocated in zip(recovery["commerceActions"], allocated_totals, strict=True)
+    )
+    unfulfilled = sum(allocated == 0 for allocated in allocated_totals)
+    assert recovery["summary"]["recoverableOrders"] == fully_fulfilled
+    assert recovery["summary"]["totalOrders"] == fully_fulfilled + partially_fulfilled + unfulfilled
+    critical = next(action for action in recovery["commerceActions"] if action["orderId"] == "ORD-008")
+    assert critical["priority"] == "critical"
+    assert sum(allocation["quantity"] for allocation in critical["allocations"]) == critical["requestedQuantity"]
     required_logistics = {
         "recoveryRouteId",
         "recoveryEtaMinutes",

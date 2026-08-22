@@ -13,6 +13,7 @@ export const logisticsActionSchema = recommendationSchema.extend({
 });
 export const commerceActionSchema = recommendationSchema.extend({
   id: z.string(), orderId: z.string(), storeId: z.string(), storeName: z.string(), requestedProductId: z.string(), requestedProductName: z.string(), requestedQuantity: z.number().positive(),
+  priority: z.enum(["normal", "high", "critical"]),
   action: z.enum(["fulfill", "split", "delay", "substitute", "prioritize", "split-substitute"]),
   allocations: z.array(z.object({ productId: z.string(), productName: z.string(), quantity: z.number().nonnegative() })),
 });

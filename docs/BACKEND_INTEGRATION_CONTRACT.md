@@ -272,13 +272,18 @@ Response `200` (complete example):
     "what": "Reallocate and reroute ORD-008.", "why": "The baseline corridor has high disruption risk.", "expectedImpact": "Reduces exposure with an eight-minute ETA increase."
   }],
   "commerceActions": [{
-    "id": "com-1", "orderId": "ORD-014", "storeId": "store-c", "storeName": "Store C", "requestedProductId": "prod-a", "requestedProductName": "Product A", "requestedQuantity": 100, "action": "split-substitute",
+    "id": "com-1", "orderId": "ORD-014", "storeId": "store-c", "storeName": "Store C", "requestedProductId": "prod-a", "requestedProductName": "Product A", "requestedQuantity": 100, "priority": "critical", "action": "split-substitute",
     "allocations": [{ "productId": "prod-a", "productName": "Product A", "quantity": 65 }, { "productId": "prod-b", "productName": "Product B", "quantity": 35 }],
     "what": "Split the order and substitute 35 units.", "why": "Product A is constrained.", "expectedImpact": "Maximizes fulfillment."
   }],
   "possibleNextActions": ["Delay selected non-critical orders"]
 }
 ```
+
+`priority` is the order's input priority (`normal`, `high`, or `critical`), not a separate optimizer action. Consumers
+must determine full, partial, or zero fulfillment from the sum of `allocations[].quantity` compared with
+`requestedQuantity`. The legacy `prioritize` action is emitted for a fully fulfilled critical-priority order; it must
+not be presented as evidence that the optimizer created an additional prioritization step.
 
 Logistics action semantics are based on actual allocation outcomes. `reroute` means an allocated order kept its
 warehouse but changed route, `reallocate` means its warehouse changed, and `reallocate-reroute` means both changed.

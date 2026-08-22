@@ -11,14 +11,14 @@ import type { Simulation } from "@/domain/scenario";
 import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
 import { getRainfallScenario } from "@/features/scenario/scenario-presets";
 import { useRecoveryPlan, useSimulation } from "@/hooks/use-aruna-data";
-import { formatAction, formatMinutes } from "@/lib/format";
+import { formatMinutes } from "@/lib/format";
 
 type RecoveryView = "production" | "routes" | "commerce";
 
 const recoveryViews: Array<{ id: RecoveryView; label: string }> = [
   { id: "production", label: "Penyesuaian Produksi" },
   { id: "routes", label: "Pengalihan Rute" },
-  { id: "commerce", label: "Alokasi Perdagangan" },
+  { id: "commerce", label: "Alokasi Pesanan" },
 ];
 
 function RecoveryContext({ simulation, operationalCondition }: { simulation: Simulation; operationalCondition: string }) {
@@ -258,22 +258,63 @@ export function RoutesView({ actions, destinations }: { actions: LogisticsAction
   );
 }
 
-function CommerceView({ actions }: { actions: CommerceAction[] }) {
+const commercePriorityLabels: Record<CommerceAction["priority"], string> = {
+  normal: "Normal",
+  high: "Tinggi",
+  critical: "Kritis",
+};
+
+export function getCommerceOutcome(action: CommerceAction) {
+  const allocatedQuantity = action.allocations.reduce((total, allocation) => total + allocation.quantity, 0);
+  const substituteProducts = action.allocations.filter((allocation) => allocation.productId !== action.requestedProductId);
+  const hasSubstitute = substituteProducts.length > 0;
+  const label = allocatedQuantity === 0
+    ? "Tidak dapat dipenuhi"
+    : allocatedQuantity < action.requestedQuantity
+      ? "Penuhi sebagian"
+      : hasSubstitute
+        ? "Substitusi"
+        : "Penuhi penuh";
+  const tone = allocatedQuantity === 0
+    ? "bg-[#f3cfcf] text-[#8a1717]"
+    : allocatedQuantity < action.requestedQuantity
+      ? "bg-[#fff0c9] text-[#7a5200]"
+      : "bg-[#a9eadb] text-[#006c53]";
+
+  return { allocatedQuantity, hasSubstitute, label, substituteProducts, tone };
+}
+
+export function CommerceView({ actions }: { actions: CommerceAction[] }) {
   return (
     <div>
-      <h2 className="mb-7 text-center text-[26px] font-bold tracking-[3px] text-primary">ALOKASI PERDAGANGAN</h2>
+      <h2 className="mb-7 text-center text-[26px] font-bold tracking-[3px] text-primary">ALOKASI PESANAN</h2>
       <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-        {actions.map((action) => (
-          <article key={action.id} className="min-h-[154px] rounded-[34px] bg-white px-7 py-6 shadow-sm">
-            <h3 className="mb-3 text-[24px] font-bold text-black">{action.orderId}</h3>
-            <p className="text-[14px] text-[#5a5a5a]">Rekomendasi: {formatAction(action.action)}</p>
-            {action.allocations.map((allocation) => (
-              <p key={allocation.productId} className="text-[14px] text-[#5a5a5a]">
-                {allocation.quantity} {allocation.productName}
-              </p>
-            ))}
-          </article>
-        ))}
+        {actions.map((action) => {
+          const outcome = getCommerceOutcome(action);
+          return (
+            <article key={action.id} className="min-h-[190px] min-w-0 rounded-[34px] bg-white px-7 py-6 shadow-sm">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="break-words text-[22px] font-bold leading-tight text-black">{action.orderId}</h3>
+                  <p className="mt-1 break-words text-[14px] font-medium text-[#5a5a5a]">{action.storeName}</p>
+                </div>
+                <span className={`inline-flex max-w-full items-center rounded-full px-3 py-1 text-[12px] font-semibold leading-tight ${outcome.tone}`}>
+                  {outcome.label}
+                </span>
+              </div>
+              <div className="mt-5 border-t border-[#d7d7d7] pt-4">
+                <p className="break-words text-[14px] font-semibold text-primary">{action.requestedProductName}</p>
+                <p className="mt-1 text-[19px] font-bold text-black">{outcome.allocatedQuantity} / {action.requestedQuantity} unit</p>
+                {outcome.hasSubstitute && (
+                  <p className="mt-2 break-words text-[12px] text-[#5a5a5a]">
+                    Substitusi: {action.requestedProductName} &rarr; {outcome.substituteProducts.map((product) => product.productName).join(" + ")}
+                  </p>
+                )}
+                <p className="mt-2 text-[12px] text-[#6b7280]">Prioritas pesanan: {commercePriorityLabels[action.priority]}</p>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </div>
   );
@@ -335,7 +376,7 @@ export function RecoveryPage() {
                   )}
                   {activeView === "routes" && (
                     <button type="button" onClick={() => setActiveView("commerce")} className="inline-flex min-h-[72px] w-full max-w-[620px] items-center justify-center gap-4 rounded-[32px] bg-[#eba92d] px-9 text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d89a22] active:scale-[.98]">
-                      <span>LIHAT ALOKASI PERDAGANGAN</span>
+                      <span>LIHAT ALOKASI PESANAN</span>
                       <ArrowRight size={26} strokeWidth={2.5} />
                     </button>
                   )}

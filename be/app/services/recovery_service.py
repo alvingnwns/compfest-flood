@@ -209,6 +209,7 @@ def generate_recovery_plan(
                 requested_product_id=order.product_id,
                 requested_product_name=products[order.product_id].name,
                 requested_quantity=order.quantity,
+                priority=order.priority,
                 action=action,
                 allocations=[
                     CommerceAllocation(

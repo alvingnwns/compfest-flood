@@ -91,6 +91,19 @@ def test_custom_snapshot_runs_through_existing_simulation(client: TestClient) ->
     recovery = client.post(f"/api/simulations/{simulation_id}/recovery", json={})
     assert recovery.status_code == 201
     assert recovery.json()["status"] in {"ready", "partial"}
+    commerce = {
+        action["orderId"]: {
+            "product": action["requestedProductName"],
+            "requested": action["requestedQuantity"],
+            "allocated": sum(item["quantity"] for item in action["allocations"]),
+            "priority": action["priority"],
+        }
+        for action in recovery.json()["commerceActions"]
+    }
+    assert commerce == {
+        "ORDER-001": {"product": "Frozen Chicken", "requested": 100, "allocated": 100, "priority": "high"},
+        "ORDER-002": {"product": "Fish Fillet", "requested": 60, "allocated": 60, "priority": "normal"},
+    }
     unchanged = next(
         action
         for action in recovery.json()["manufacturingActions"]
