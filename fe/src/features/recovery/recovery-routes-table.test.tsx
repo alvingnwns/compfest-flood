@@ -168,4 +168,15 @@ describe("Recovery logistics table semantics", () => {
       within(allocationRow).queryByText("Alihkan + ubah rute"),
     ).not.toBeInTheDocument();
   });
+
+  it("renders an optimizer-selected custom vehicle ID without predefined lookup", () => {
+    render(
+      <RoutesView
+        actions={[{ ...actions[0], id: "log-custom-vehicle", vehicleId: "V-04" }]}
+        destinations={destinations}
+      />
+    );
+
+    expect(screen.getByText("V-04")).toBeInTheDocument();
+  });
 });

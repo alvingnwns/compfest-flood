@@ -324,6 +324,158 @@ def test_operational_overrides_propagate_to_recovery(client) -> None:
     assert "V-03" not in vehicles_b
 
 
+def test_custom_vehicle_is_authoritative_effective_capacity_and_changes_fingerprint(client) -> None:
+    base_payload = {
+        "scenarioId": "scenario-jakarta-20250304",
+        "vehicleOverrides": [
+            {"id": "V-01", "available": False},
+            {"id": "V-02", "available": False},
+            {"id": "V-03", "available": False},
+        ],
+    }
+    without_custom = client.post("/api/simulations", json=base_payload)
+    assert without_custom.status_code == 201
+    without_id = without_custom.json()["id"]
+    without_plan = client.post(f"/api/simulations/{without_id}/recovery", json={})
+    assert without_plan.status_code == 201
+    assert without_plan.json()["status"] == "no-feasible-plan"
+
+    with_custom_payload = {
+        **base_payload,
+        "customVehicles": [
+            {
+                "id": "V-04",
+                "label": "Armada Darurat",
+                "capacityUnits": 5_000,
+                "available": True,
+            }
+        ],
+    }
+    with_custom = client.post("/api/simulations", json=with_custom_payload)
+    assert with_custom.status_code == 201
+    with_id = with_custom.json()["id"]
+    assert with_id != without_id
+
+    effective = simulation_repository.get_effective_scenario(with_id)
+    assert effective is not None
+    assert len(effective.vehicles) == 4
+    assert sum(vehicle.capacity_units for vehicle in effective.vehicles if vehicle.available) == 5_000
+    assert next(vehicle for vehicle in effective.vehicles if vehicle.id == "V-04").label == "Armada Darurat"
+
+    with_plan = client.post(f"/api/simulations/{with_id}/recovery", json={})
+    assert with_plan.status_code == 201
+    assert with_plan.json()["status"] in {"ready", "partial"}
+    assert {action["vehicleId"] for action in with_plan.json()["logisticsActions"]} == {"V-04"}
+
+    changed_capacity = client.post(
+        "/api/simulations",
+        json={
+            **base_payload,
+            "customVehicles": [
+                {
+                    "id": "V-04",
+                    "label": "Armada Darurat",
+                    "capacityUnits": 4_999,
+                    "available": True,
+                }
+            ],
+        },
+    )
+    assert changed_capacity.status_code == 201
+    assert changed_capacity.json()["id"] != with_id
+
+
+def test_inactive_custom_vehicle_provides_no_optimizer_capacity(client) -> None:
+    response = client.post(
+        "/api/simulations",
+        json={
+            "scenarioId": "scenario-jakarta-20250304",
+            "vehicleOverrides": [
+                {"id": "V-01", "available": False},
+                {"id": "V-02", "available": False},
+                {"id": "V-03", "available": False},
+            ],
+            "customVehicles": [
+                {
+                    "id": "V-04",
+                    "label": "Armada Nonaktif",
+                    "capacityUnits": 5_000,
+                    "available": False,
+                }
+            ],
+        },
+    )
+    assert response.status_code == 201
+    simulation_id = response.json()["id"]
+    effective = simulation_repository.get_effective_scenario(simulation_id)
+    assert effective is not None
+    assert sum(vehicle.capacity_units for vehicle in effective.vehicles if vehicle.available) == 0
+
+    plan = client.post(f"/api/simulations/{simulation_id}/recovery", json={})
+    assert plan.status_code == 201
+    assert plan.json()["status"] == "no-feasible-plan"
+    assert plan.json()["logisticsActions"] == []
+
+
+def test_custom_vehicle_duplicate_and_invalid_capacity_are_rejected(client) -> None:
+    duplicate = client.post(
+        "/api/simulations",
+        json={
+            "scenarioId": "scenario-jakarta-20250304",
+            "customVehicles": [
+                {
+                    "id": "V-01",
+                    "label": "Duplikat",
+                    "capacityUnits": 500,
+                    "available": True,
+                }
+            ],
+        },
+    )
+    assert duplicate.status_code == 422
+    assert duplicate.json()["code"] == "DUPLICATE_VEHICLE_ID"
+    assert duplicate.json()["details"] == {"vehicleId": "V-01"}
+
+    invalid = client.post(
+        "/api/simulations",
+        json={
+            "scenarioId": "scenario-jakarta-20250304",
+            "customVehicles": [
+                {
+                    "id": "V-04",
+                    "label": "Kapasitas Salah",
+                    "capacityUnits": 0,
+                    "available": True,
+                }
+            ],
+        },
+    )
+    assert invalid.status_code == 422
+    assert invalid.json()["code"] == "validation_error"
+
+
+def test_existing_fleet_overrides_remain_authoritative(client) -> None:
+    response = client.post(
+        "/api/simulations",
+        json={
+            "scenarioId": "scenario-jakarta-20250304",
+            "vehicleOverrides": [
+                {"id": "V-01", "capacityUnits": 321},
+                {"id": "V-02", "available": False},
+                {"id": "V-03", "capacityUnits": 451, "available": True},
+            ],
+        },
+    )
+    assert response.status_code == 201
+    effective = simulation_repository.get_effective_scenario(response.json()["id"])
+    assert effective is not None
+    vehicles = {vehicle.id: vehicle for vehicle in effective.vehicles}
+    assert vehicles["V-01"].capacity_units == 321
+    assert vehicles["V-02"].available is False
+    assert vehicles["V-03"].capacity_units == 451
+    assert vehicles["V-03"].available is True
+
+
 def test_critical_stock_preset_causes_computed_solver_shift(client) -> None:
     """Critical stock preset overriding both warehouses causes real computed production and allocation shifts."""
     resp_norm = client.post("/api/simulations", json={"scenarioId": "scenario-jakarta-20250304"})

@@ -160,6 +160,10 @@ export function ScenarioPage() {
       const operationalOverrides = {
         businessSnapshotId: businessMode === "custom" ? businessSnapshotId : undefined,
         vehicleOverrides: overrides.vehicleOverrides.length > 0 ? overrides.vehicleOverrides : undefined,
+        customVehicles:
+          overrides.customVehicles && overrides.customVehicles.length > 0
+            ? overrides.customVehicles
+            : undefined,
         inventoryOverrides: overrides.inventoryOverrides.length > 0 ? overrides.inventoryOverrides : undefined,
       };
       const request: RunSimulationRequest = analysisMode === "scenario-simulation" && rainfallScenario !== undefined ? {

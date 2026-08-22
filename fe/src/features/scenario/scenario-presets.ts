@@ -7,7 +7,7 @@
  * - Operational Condition: Business state presets (vehicle availability, capacity, inventory).
  */
 
-import type { InventoryOverride, RainfallScenario, VehicleOverride } from "@/domain/scenario";
+import type { CustomVehicle, InventoryOverride, RainfallScenario, VehicleOverride } from "@/domain/scenario";
 
 export type HazardScenario = {
   id: string;
@@ -21,6 +21,7 @@ export type HazardScenario = {
 
 export type OperationalOverrides = {
   vehicleOverrides: VehicleOverride[];
+  customVehicles?: CustomVehicle[];
   inventoryOverrides: InventoryOverride[];
 };
 

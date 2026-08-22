@@ -16,6 +16,12 @@ export const vehicleOverrideSchema = z.object({
   available: z.boolean().optional(),
   capacityUnits: z.number().int().positive().optional(),
 });
+export const customVehicleSchema = z.object({
+  id: z.string().trim().min(1).max(64),
+  label: z.string().trim().min(1).max(120),
+  capacityUnits: z.number().int().positive().max(1_000_000),
+  available: z.boolean(),
+});
 export const inventoryOverrideSchema = z.object({
   facilityId: z.string(),
   productId: z.string(),
@@ -28,6 +34,7 @@ const runSimulationRequestBaseSchema = z.object({
   scenarioId: z.string().min(1),
   businessSnapshotId: z.string().min(1).optional(),
   vehicleOverrides: z.array(vehicleOverrideSchema).optional(),
+  customVehicles: z.array(customVehicleSchema).optional(),
   inventoryOverrides: z.array(inventoryOverrideSchema).optional(),
 });
 export const runSimulationRequestSchema = z.union([
@@ -110,6 +117,7 @@ export type Inventory = z.infer<typeof inventorySchema>;
 export type Order = z.infer<typeof orderSchema>;
 export type Simulation = z.infer<typeof simulationSchema>;
 export type VehicleOverride = z.infer<typeof vehicleOverrideSchema>;
+export type CustomVehicle = z.infer<typeof customVehicleSchema>;
 export type InventoryOverride = z.infer<typeof inventoryOverrideSchema>;
 export type RunSimulationRequest = z.infer<typeof runSimulationRequestSchema>;
 export type AnalysisMode = z.infer<typeof analysisModeSchema>;

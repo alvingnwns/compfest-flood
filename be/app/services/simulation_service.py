@@ -32,8 +32,29 @@ SCENARIO_SIMULATION = "scenario-simulation"
 
 def _apply_overrides(scenario: Scenario, request: RunSimulationRequest) -> Scenario:
     """Return a deep copy of scenario with operational overrides applied."""
-    if not request.vehicle_overrides and not request.inventory_overrides:
+    if not request.vehicle_overrides and not request.custom_vehicles and not request.inventory_overrides:
         return scenario
+
+    base_vehicle_ids = {vehicle.id for vehicle in scenario.vehicles}
+    custom_vehicle_ids: set[str] = set()
+    for custom in request.custom_vehicles:
+        if custom.id in base_vehicle_ids or custom.id in custom_vehicle_ids:
+            raise ApiError(
+                422,
+                "DUPLICATE_VEHICLE_ID",
+                "ID kendaraan harus unik.",
+                details={"vehicleId": custom.id},
+            )
+        custom_vehicle_ids.add(custom.id)
+
+    unknown_override_ids = sorted({ov.id for ov in request.vehicle_overrides} - base_vehicle_ids)
+    if unknown_override_ids:
+        raise ApiError(
+            422,
+            "UNKNOWN_VEHICLE_OVERRIDE",
+            "Override hanya dapat diterapkan pada kendaraan utama.",
+            details={"vehicleIds": unknown_override_ids},
+        )
 
     vehicle_map = {ov.id: ov for ov in request.vehicle_overrides}
     new_vehicles: list[Vehicle] = []
@@ -54,6 +75,16 @@ def _apply_overrides(scenario: Scenario, request: RunSimulationRequest) -> Scena
                     }
                 )
             )
+
+    new_vehicles.extend(
+        Vehicle(
+            id=custom.id,
+            label=custom.label,
+            capacity_units=custom.capacity_units,
+            available=custom.available,
+        )
+        for custom in request.custom_vehicles
+    )
 
     inventory_index = {(ov.facility_id, ov.product_id): ov.quantity for ov in request.inventory_overrides}
     new_inventory: list[Inventory] = []
@@ -76,6 +107,9 @@ def _override_fingerprint(request: RunSimulationRequest) -> str:
             "rainfallScenario": request.rainfall_scenario,
             "businessSnapshotId": request.business_snapshot_id,
             "vehicleOverrides": [ov.model_dump(mode="json") for ov in request.vehicle_overrides],
+            "customVehicles": [
+                vehicle.model_dump(mode="json") for vehicle in sorted(request.custom_vehicles, key=lambda item: item.id)
+            ],
             "inventoryOverrides": [ov.model_dump(mode="json") for ov in request.inventory_overrides],
         },
         sort_keys=True,
@@ -121,11 +155,6 @@ def create_simulation(request: RunSimulationRequest) -> Simulation:
         temporal = predict_temporal_hazard(rainfall.representative_sequence)
         hazard_index = relative_hazard_index(rainfall, temporal.temporal_hazard_score)
 
-    override_key = _override_fingerprint(request)
-    existing = simulation_repository.get_for_scenario(request.scenario_id, override_key)
-    if existing is not None:
-        return existing
-
     scenario = demo_scenario
     business_source = "demo"
     if request.business_snapshot_id:
@@ -139,6 +168,11 @@ def create_simulation(request: RunSimulationRequest) -> Simulation:
         )
         business_source = "custom"
     effective_scenario = _apply_overrides(scenario, request)
+
+    override_key = _override_fingerprint(request)
+    existing = simulation_repository.get_for_scenario(request.scenario_id, override_key)
+    if existing is not None:
+        return existing
 
     simulation = Simulation(
         id=simulation_repository.next_id(request.scenario_id),

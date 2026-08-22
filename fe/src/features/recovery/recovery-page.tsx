@@ -64,16 +64,28 @@ function RecoveryTabs({ active, onChange }: { active: RecoveryView; onChange: (v
   );
 }
 
-function RecoverySummary({ status, risks, changes, recoverable, total }: { status: "ready" | "partial"; risks: number; changes: number; recoverable: number; total: number }) {
+export function RecoverySummary({
+  status,
+  logisticsAdjustments,
+  adjustedProducts,
+  recoverable,
+  total,
+}: {
+  status: "ready" | "partial";
+  logisticsAdjustments: number;
+  adjustedProducts: number;
+  recoverable: number;
+  total: number;
+}) {
   const metrics = [
     {
       label: "STATUS",
       value: status === "partial" ? "Rencana Parsial" : "Rencana Siap",
       icon: true,
     },
-    { label: "RISIKO\nDITANGANI", value: String(risks) },
-    { label: "PERUBAHAN\nOPERASIONAL", value: String(changes) },
-    { label: "PEMULIHAN\nPESANAN", value: `${recoverable}/${total}` },
+    { label: "PENYESUAIAN\nLOGISTIK", value: String(logisticsAdjustments) },
+    { label: "PESANAN\nPULIH PENUH", value: `${recoverable}/${total}` },
+    { label: "PRODUK\nDISESUAIKAN", value: String(adjustedProducts) },
   ];
 
   return (
@@ -293,12 +305,12 @@ export function CommerceView({ actions }: { actions: CommerceAction[] }) {
           const outcome = getCommerceOutcome(action);
           return (
             <article key={action.id} className="min-h-[190px] min-w-0 rounded-[34px] bg-white px-7 py-6 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
                 <div className="min-w-0">
                   <h3 className="break-words text-[22px] font-bold leading-tight text-black">{action.orderId}</h3>
                   <p className="mt-1 break-words text-[14px] font-medium text-[#5a5a5a]">{action.storeName}</p>
                 </div>
-                <span className={`inline-flex max-w-full items-center rounded-full px-3 py-1 text-[12px] font-semibold leading-tight ${outcome.tone}`}>
+                <span className={`inline-flex max-w-full items-center justify-center whitespace-nowrap rounded-full px-3 py-1 text-[12px] font-semibold leading-tight ${outcome.tone}`}>
                   {outcome.label}
                 </span>
               </div>
@@ -362,7 +374,13 @@ export function RecoveryPage() {
               <RecoveryTabs active={activeView} onChange={setActiveView} />
             </aside>
             <section className="flex min-w-0 flex-col overflow-hidden rounded-t-[58px] bg-[#dce9f3]/80 shadow-[0_0_15px_rgb(0_0_0/18%)] xl:min-h-0">
-              <RecoverySummary status={readyPlan.status === "partial" ? "partial" : "ready"} risks={readyPlan.summary.risksMitigated} changes={readyPlan.summary.operationalChanges} recoverable={readyPlan.summary.recoverableOrders} total={readyPlan.summary.totalOrders} />
+              <RecoverySummary
+                status={readyPlan.status === "partial" ? "partial" : "ready"}
+                logisticsAdjustments={readyPlan.logisticsActions.length}
+                adjustedProducts={readyPlan.manufacturingActions.filter((action) => action.changeQuantity !== 0).length}
+                recoverable={readyPlan.summary.recoverableOrders}
+                total={readyPlan.summary.totalOrders}
+              />
               <div className="min-h-0 flex-1 overflow-y-auto px-6 py-8 md:px-12">
                 {activeView === "production" && <ProductionView actions={readyPlan.manufacturingActions} explanation={readyPlan.manufacturingExplanation} />}
                 {activeView === "routes" && <RoutesView actions={readyPlan.logisticsActions} destinations={readyPlan.commerceActions} />}

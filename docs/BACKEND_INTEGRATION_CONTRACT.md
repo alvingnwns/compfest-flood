@@ -124,8 +124,32 @@ Purpose: request flood-risk and supply-chain impact analysis for a scenario. Con
 Request JSON:
 
 ```json
-{ "scenarioId": "scenario-jakarta-20250304" }
+{
+  "scenarioId": "scenario-jakarta-20250304",
+  "vehicleOverrides": [
+    { "id": "V-02", "capacityUnits": 650, "available": true }
+  ],
+  "customVehicles": [
+    {
+      "id": "V-04",
+      "label": "Kendaraan 04",
+      "capacityUnits": 500,
+      "available": true
+    }
+  ],
+  "inventoryOverrides": [
+    { "facilityId": "wh-west", "productId": "prod-a", "quantity": 275 }
+  ]
+}
 ```
+
+`vehicleOverrides` only changes predefined fleet entries. `customVehicles`
+creates run-scoped vehicles that are validated, included in the simulation
+fingerprint, and appended to the effective fleet consumed by recovery
+optimization. IDs must be unique across predefined and custom vehicles;
+capacity must be a positive integer no greater than 1,000,000. Warehouse
+creation remains outside the MVP contract; only inventory at predefined
+facilities can be overridden. Workbook business imports do not create vehicles.
 
 Response `201` (an implementation may initially return `queued` and later advance through `processing`):
 
@@ -169,6 +193,13 @@ Relevant statuses: `200`, `404`, `500`.
 Purpose: return backend/AI-owned road risk, route geometry, entity impact, and operational exposure. Consumer: Disruption Map. Path param: `simulationId`. Query params/body: none. Schema: `disruptionAnalysisSchema` in `fe/src/domain/disruption.ts`.
 
 Route semantics are stage-specific. A disruption route with `type: "baseline"` is the normal NetworkX shortest path. The legacy `type: "recovery"` value means a risk-aware, pre-optimization NetworkX candidate; it is not proof of optimizer selection. A final selected recovery route exists only when its route ID is referenced by a successful (`ready` or `partial`) recovery outcome or logistics action. A `no-feasible-plan` result has no selected recovery route even when disruption candidates remain available for analysis.
+
+Disruption business-impact semantics:
+
+- `roadSegmentsAtRisk` counts only analyzed road segments in the `high` or `critical` routing bands.
+- An order is at risk when its requested product depends on a supplier whose supplier-to-factory baseline route is High/Critical, or when that order's own preferred-warehouse-to-store baseline route is High/Critical. Unrelated routes sharing a warehouse or store do not propagate risk to the order.
+- `salesExposure` is the gross requested value of those directly exposed orders (`quantity * unitPrice`). It is presented as **Nilai Pesanan Berisiko**, not actual lost sales, and is distinct from the residual unfulfilled sales-exposure KPI on the Impact page.
+- Priority issues are route-derived and sorted stably from Critical to High to Medium to Low.
 
 Response `200`:
 

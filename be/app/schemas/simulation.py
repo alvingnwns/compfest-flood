@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from app.schemas.common import ApiModel, ErrorResponse
 
@@ -14,6 +14,23 @@ class VehicleOverride(ApiModel):
     id: str
     available: bool | None = None
     capacity_units: int | None = Field(default=None, gt=0)
+
+
+class CustomVehicle(ApiModel):
+    """A vehicle created for one simulation run."""
+
+    id: str = Field(min_length=1, max_length=64)
+    label: str = Field(min_length=1, max_length=120)
+    capacity_units: int = Field(gt=0, le=1_000_000)
+    available: bool = Field(default=True, strict=True)
+
+    @field_validator("id", "label")
+    @classmethod
+    def reject_blank_text(cls, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise ValueError("must not be blank")
+        return value
 
 
 class InventoryOverride(ApiModel):
@@ -31,6 +48,7 @@ class RunSimulationRequest(ApiModel):
     rainfall_scenario: str | None = None
     business_snapshot_id: str | None = None
     vehicle_overrides: list[VehicleOverride] = Field(default_factory=list)
+    custom_vehicles: list[CustomVehicle] = Field(default_factory=list)
     inventory_overrides: list[InventoryOverride] = Field(default_factory=list)
 
 

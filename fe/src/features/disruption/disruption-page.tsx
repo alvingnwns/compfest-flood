@@ -49,7 +49,7 @@ function ScenarioStatus({ simulation, condition }: { simulation: Simulation; con
   );
 }
 
-function ImpactPanel({
+export function ImpactPanel({
   data,
   pending,
   issuesOpen,
@@ -63,10 +63,22 @@ function ImpactPanel({
   onToggleIssues: () => void;
 }) {
   const metrics = [
-    { label: "SEGMEN JALAN BERESIKO", value: data.impact.roadSegmentsAtRisk, danger: true, isCurrency: false },
-    { label: "PEMASOK TERDAMPAK", value: data.impact.impactedSupplierIds.length, danger: true, isCurrency: false },
-    { label: "PESANAN BERESIKO", value: data.impact.impactedOrderIds.length, danger: true, isCurrency: false },
-    { label: "PENJUALAN TERDAMPAK", value: formatCompactIdr(data.impact.salesExposure.amount), danger: false, isCurrency: true },
+    { label: "SEGMEN RISIKO TINGGI/KRITIS", value: data.impact.roadSegmentsAtRisk, danger: true, isCurrency: false },
+    { label: "PEMASOK DENGAN RUTE BERISIKO", value: data.impact.impactedSupplierIds.length, danger: true, isCurrency: false },
+    {
+      label: "PESANAN TERPAPAR RISIKO",
+      value: data.impact.impactedOrderIds.length,
+      danger: true,
+      isCurrency: false,
+      help: "Pesanan dengan rute atau dependensi pasok yang memiliki paparan tinggi/kritis. Tidak berarti pesanan pasti gagal.",
+    },
+    {
+      label: "NILAI PESANAN BERISIKO",
+      value: formatCompactIdr(data.impact.salesExposure.amount),
+      danger: false,
+      isCurrency: true,
+      help: "Total nilai pesanan yang terkait langsung dengan rute atau pasokan berisiko tinggi/kritis. Bukan nilai kerugian aktual.",
+    },
   ] as const;
 
   return (
@@ -75,12 +87,16 @@ function ImpactPanel({
       <h2 className="flex h-[80px] items-center justify-center rounded-[42px] bg-[linear-gradient(176deg,#5889c1_-20%,#29405b_87%)] text-[18px] font-semibold text-white shadow-[0_0_10px_rgb(0_0_0/25%)]">
         Dampak Operasional
       </h2>
+      <p className="mt-2 px-2 text-center text-[10px] leading-[13px] text-[#5a5a5a]">
+        Paparan risiko sebelum pemulihan berdasarkan rute baseline dan nilai pesanan terkait.
+      </p>
 
       {/* Metrics grid */}
-      <div className="mt-4 grid shrink-0 grid-cols-2 gap-2.5">
-        {metrics.map(({ label, value, danger, isCurrency }) => (
+      <div className="mt-3 grid shrink-0 grid-cols-2 gap-2.5">
+        {metrics.map(({ label, value, danger, isCurrency, ...metric }) => (
           <article
             key={label}
+            title={"help" in metric ? metric.help : undefined}
             className="flex h-[126px] min-w-0 flex-col items-center justify-between rounded-[24px] bg-white px-3 py-3 text-center shadow-[0_6px_18px_rgb(0_0_0/20%)]"
           >
             <h3 className="flex min-h-[28px] items-center justify-center text-[10px] font-bold leading-[13px] text-[#4a4a4a]">

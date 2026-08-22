@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { BusinessImportResponse } from "@/domain/business-data";
@@ -31,126 +31,126 @@ const sampleCustomBusinessData: BusinessImportResponse = {
   errors: [],
 };
 
+const emptyOverrides = { vehicleOverrides: [], customVehicles: [], inventoryOverrides: [] };
+
 describe("OperationalEditor", () => {
-  it("renders pure template by default", () => {
-    const onChange = vi.fn();
+  it("shows only authoritative warehouses with read-only identities", () => {
     render(
       <OperationalEditor
         scenario={scenarioFixture}
         overrides={OPERATIONAL_PRESETS[0].overrides}
         presetId="normal"
         custom={false}
-        onChange={onChange}
+        onChange={vi.fn()}
       />
     );
 
-    expect(screen.getByText("PERSEDIAAN GUDANG")).toBeInTheDocument();
-    expect(screen.getByText("LIST KENDARAAN")).toBeInTheDocument();
-    expect(screen.getByText("Gudang 1")).toBeInTheDocument();
-    expect(screen.getByText("Gudang 2")).toBeInTheDocument();
+    expect(screen.getByText("Gudang Timur")).toBeInTheDocument();
+    expect(screen.getByText("Gudang Barat")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Tambah gudang/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Ubah nama Gudang/i })).not.toBeInTheDocument();
+    expect(screen.queryByText("Gudang 3")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Tambah kendaraan" })).toBeInTheDocument();
   });
 
-  it("auto-populates custom product names, warehouse inventories from uploaded business data with only active warehouses", () => {
+  it("keeps inventory editing connected to inventory overrides", async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     render(
       <OperationalEditor
         scenario={scenarioFixture}
-        overrides={{ vehicleOverrides: [], inventoryOverrides: [] }}
+        overrides={emptyOverrides}
+        presetId="normal"
+        custom={false}
+        onChange={onChange}
+      />
+    );
+
+    const inventory = screen.getByLabelText("Persediaan Produk A di Gudang Barat");
+    await user.clear(inventory);
+    await user.type(inventory, "275");
+
+    const latest = onChange.mock.calls.at(-1)?.[0];
+    expect(latest.inventoryOverrides).toContainEqual({
+      facilityId: "wh-west",
+      productId: "prod-a",
+      quantity: 275,
+    });
+  });
+
+  it("uses uploaded products while preserving predefined warehouse identities", () => {
+    render(
+      <OperationalEditor
+        scenario={scenarioFixture}
+        overrides={emptyOverrides}
         presetId="normal"
         custom={false}
         businessData={sampleCustomBusinessData}
-        onChange={onChange}
+        onChange={vi.fn()}
       />
     );
 
     expect(screen.getAllByText("Ayam Beku").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Ikan Fillet").length).toBeGreaterThan(0);
     expect(screen.getByLabelText("Persediaan Ayam Beku di Gudang Barat")).toHaveValue(150);
     expect(screen.getByLabelText("Persediaan Ikan Fillet di Gudang Timur")).toHaveValue(220);
-
-    // Verify it only renders the 2 warehouses from business data, not padded with Gudang 3 and Gudang 4
-    expect(screen.queryByText("Gudang 3")).not.toBeInTheDocument();
-    expect(screen.queryByText("Gudang 4")).not.toBeInTheDocument();
+    expect(screen.getByText("Gudang Barat")).toBeInTheDocument();
+    expect(screen.getByText("Gudang Timur")).toBeInTheDocument();
   });
 
-  it("restores demo warehouses and default quantities when businessData is cleared", () => {
-    const onChange = vi.fn();
-    const { rerender } = render(
-      <OperationalEditor
-        scenario={scenarioFixture}
-        overrides={{ vehicleOverrides: [], inventoryOverrides: [] }}
-        presetId="normal"
-        custom={false}
-        businessData={sampleCustomBusinessData}
-        onChange={onChange}
-      />
-    );
-
-    expect(screen.queryByText("Gudang 3")).not.toBeInTheDocument();
-
-    // Rerender as demo data (businessData cleared to undefined)
-    rerender(
-      <OperationalEditor
-        scenario={scenarioFixture}
-        overrides={{ vehicleOverrides: [], inventoryOverrides: [] }}
-        presetId="normal"
-        custom={false}
-        businessData={undefined}
-        onChange={onChange}
-      />
-    );
-
-    expect(screen.getByText("Gudang 1")).toBeInTheDocument();
-    expect(screen.getByText("Gudang 2")).toBeInTheDocument();
-    expect(screen.getByText("Gudang 3")).toBeInTheDocument();
-    expect(screen.getByText("Gudang 4")).toBeInTheDocument();
-  });
-
-  it("allows inline editing of product name in a warehouse", async () => {
+  it("adds, edits, deactivates, and removes a real custom vehicle payload", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(
       <OperationalEditor
         scenario={scenarioFixture}
-        overrides={{ vehicleOverrides: [], inventoryOverrides: [] }}
+        overrides={emptyOverrides}
         presetId="normal"
         custom={false}
         onChange={onChange}
       />
     );
 
-    const editProdBtn = screen.getByRole("button", { name: "Ubah nama Produk 1 di Gudang 1" });
-    await user.click(editProdBtn);
+    await user.click(screen.getByRole("button", { name: "Tambah kendaraan" }));
+    expect(screen.getByText("V-04")).toBeInTheDocument();
+    expect(onChange.mock.calls.at(-1)?.[0].customVehicles).toContainEqual({
+      id: "V-04",
+      label: "Kendaraan 04",
+      capacityUnits: 500,
+      available: true,
+    });
 
-    const input = screen.getByDisplayValue("Produk 1");
-    await user.clear(input);
-    await user.type(input, "Daging Sapi Premium{Enter}");
+    const capacity = screen.getByLabelText("Kapasitas kendaraan V-04");
+    fireEvent.change(capacity, { target: { value: "900" } });
+    const name = screen.getByLabelText("Nama kendaraan V-04");
+    await user.clear(name);
+    await user.type(name, "Armada Darurat");
+    await user.click(screen.getByRole("switch", { name: "Status kendaraan V-04" }));
 
-    expect(screen.getByText("Daging Sapi Premium")).toBeInTheDocument();
-    expect(onChange).toHaveBeenCalled();
+    expect(onChange.mock.calls.at(-1)?.[0].customVehicles).toContainEqual({
+      id: "V-04",
+      label: "Armada Darurat",
+      capacityUnits: 900,
+      available: false,
+    });
+
+    await user.click(screen.getByRole("button", { name: "Hapus kendaraan V-04" }));
+    expect(screen.queryByText("V-04")).not.toBeInTheDocument();
+    expect(onChange.mock.calls.at(-1)?.[0].customVehicles).toEqual([]);
   });
 
-  it("allows inline editing of warehouse name", async () => {
-    const user = userEvent.setup();
-    const onChange = vi.fn();
+  it("keeps predefined vehicle identity read-only and non-deletable", () => {
     render(
       <OperationalEditor
         scenario={scenarioFixture}
-        overrides={{ vehicleOverrides: [], inventoryOverrides: [] }}
+        overrides={emptyOverrides}
         presetId="normal"
         custom={false}
-        onChange={onChange}
+        onChange={vi.fn()}
       />
     );
 
-    const editWhBtn = screen.getByRole("button", { name: "Ubah nama Gudang 1" });
-    await user.click(editWhBtn);
-
-    const input = screen.getByDisplayValue("Gudang 1");
-    await user.clear(input);
-    await user.type(input, "Gudang Sentral Cikarang{Enter}");
-
-    expect(screen.getByText("Gudang Sentral Cikarang")).toBeInTheDocument();
-    expect(onChange).toHaveBeenCalled();
+    expect(screen.getByText("Truk Boks 01")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Nama kendaraan V-01")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Hapus kendaraan V-01" })).not.toBeInTheDocument();
   });
 });

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
 import { EmptyState, ErrorState, FullPageState, LoadingState } from "@/components/ui/states";
-import type { ImpactMetric } from "@/domain/impact";
+import type { ImpactComparison, ImpactMetric } from "@/domain/impact";
 import type { Simulation } from "@/domain/scenario";
 import { getRainfallScenario } from "@/features/scenario/scenario-presets";
 import { useImpactComparison, useSimulation } from "@/hooks/use-aruna-data";
@@ -48,7 +48,7 @@ function ScenarioStatus({ simulation, condition }: { simulation: Simulation; con
   );
 }
 
-function MetricCard({ metric, recoveryStatus }: { metric: ImpactMetric; recoveryStatus: "ready" | "partial" | "no-feasible-plan" }) {
+export function MetricCard({ metric, recoveryStatus }: { metric: ImpactMetric; recoveryStatus: "ready" | "partial" | "no-feasible-plan" }) {
   const Icon = metricIcons[metric.key], delta = impactMetricDelta(metric), max = Math.max(metric.baseline, metric.recovery, 1);
   const isCurrency = metric.key === "sales-exposure-risk";
   const recoveryLabel = impactStatusPresentation(recoveryStatus).recoveryLabel;
@@ -103,6 +103,62 @@ function MetricCard({ metric, recoveryStatus }: { metric: ImpactMetric; recovery
   );
 }
 
+export function ImpactSummary({ impact }: { impact: ImpactComparison }) {
+  const fulfilled = impact.metrics.find((metric) => metric.key === "orders-fulfilled");
+  const failed = impact.metrics.find((metric) => metric.key === "failed-orders");
+  const totalOrders = fulfilled?.key === "orders-fulfilled" ? fulfilled.total : impact.actionCounts.commerce;
+  const fullyRecovered = fulfilled?.recovery ?? 0;
+  const failedOrders = failed?.recovery ?? 0;
+  const partialOrders = Math.max(0, totalOrders - fullyRecovered - failedOrders);
+  const copy = impactStatusPresentation(impact.recoveryStatus);
+
+  return (
+    <section
+      aria-label={copy.summaryTitle}
+      className="overflow-hidden rounded-[32px] bg-white shadow-[0_5px_14px_rgb(41_64_91/15%)] print:rounded-[16px] print:border print:border-outline/40 print:shadow-none"
+    >
+      <h2 className="flex min-h-[78px] items-center justify-between bg-primary px-7 text-[17px] font-bold uppercase text-white print:min-h-[42px] print:px-4 print:py-2 print:text-[13px]">
+        {copy.summaryTitle} <Warehouse className="size-7 print:size-5" />
+      </h2>
+      <div className="space-y-3 p-6 print:space-y-2 print:p-3.5">
+        {[
+          ["Produk dalam Rencana", impact.actionCounts.manufacturing, Factory],
+          ["Penyesuaian Logistik", impact.actionCounts.logistics, Truck],
+          ["Pesanan Dianalisis", totalOrders, ShoppingBag],
+        ].map(([label, count, Icon]) => {
+          const ItemIcon = Icon as typeof Factory;
+          return (
+            <div
+              key={String(label)}
+              className="flex items-center justify-between border-b border-outline/60 pb-3 print:pb-1.5"
+            >
+              <span className="flex items-center gap-3 text-sm font-semibold print:text-xs">
+                <ItemIcon className="size-5 text-primary print:size-4" />
+                {String(label)}
+              </span>
+              <strong className="rounded-lg bg-primary-soft px-3 py-1 text-sm text-primary print:px-2 print:py-0.5 print:text-xs">
+                {String(count)}
+              </strong>
+            </div>
+          );
+        })}
+        <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+          {[
+            ["Pulih Penuh", `${fullyRecovered}/${totalOrders}`],
+            ["Parsial", partialOrders],
+            ["Tidak Terpenuhi", failedOrders],
+          ].map(([label, value]) => (
+            <div key={String(label)} className="rounded-xl bg-surface-low px-2 py-2">
+              <strong className="block text-sm text-primary">{String(value)}</strong>
+              <span className="text-[10px] font-semibold leading-tight text-muted">{String(label)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ImpactPage() {
   const params = useSearchParams(), simulationId = params.get("simulation") ?? "", condition = params.get("condition") ?? "normal";
   const query = useImpactComparison(simulationId), simulation = useSimulation(simulationId);
@@ -115,6 +171,17 @@ export function ImpactPage() {
   const noFeasible = recoveryStatus === "no-feasible-plan";
   const partial = recoveryStatus === "partial";
   const statusCopy = impactStatusPresentation(recoveryStatus ?? "ready");
+  const exportContext = {
+    scenario: {
+      id: simulation.data?.scenarioId ?? "-",
+      label: scenarioLabel,
+      analysisMode: simulation.data?.analysisMode ?? "unknown",
+      operationalCondition: operationalConditionLabel(condition),
+      ...(simulation.data?.hazard?.rainfallScenario
+        ? { rainfallScenario: simulation.data.hazard.rainfallScenario }
+        : {}),
+    },
+  };
 
   if (!simulationId) {
     return (
@@ -188,34 +255,7 @@ export function ImpactPage() {
                       ))}
                     </div>
                     <div className="mt-6 grid gap-5 lg:grid-cols-[.85fr_1.15fr] print:mt-3.5 print:grid-cols-2 print:gap-3 print-break-avoid">
-                      <section className="overflow-hidden rounded-[32px] bg-white shadow-[0_5px_14px_rgb(41_64_91/15%)] print:rounded-[16px] print:border print:border-outline/40 print:shadow-none">
-                        <h2 className="flex min-h-[78px] items-center justify-between bg-primary px-7 text-[17px] font-bold uppercase text-white print:min-h-[42px] print:px-4 print:py-2 print:text-[13px]">
-                          {statusCopy.summaryTitle} <Warehouse className="size-7 print:size-5" />
-                        </h2>
-                        <div className="space-y-3 p-6 print:p-3.5 print:space-y-2">
-                          {[
-                            ["Produksi", query.data.actionCounts.manufacturing, Factory],
-                            ["Logistik", query.data.actionCounts.logistics, Truck],
-                            ["Perdagangan", query.data.actionCounts.commerce, ShoppingBag],
-                          ].map(([label, count, Icon]) => {
-                            const ItemIcon = Icon as typeof Factory;
-                            return (
-                              <div
-                                key={String(label)}
-                                className="flex items-center justify-between border-b border-outline/60 pb-3 last:border-0 print:pb-1.5"
-                              >
-                                <span className="flex items-center gap-3 text-sm font-semibold print:text-xs">
-                                  <ItemIcon className="size-5 text-primary print:size-4" />
-                                  {String(label)}
-                                </span>
-                                <strong className="rounded-lg bg-primary-soft px-3 py-1 text-sm text-primary print:text-xs print:px-2 print:py-0.5">
-                                  {String(count)}
-                                </strong>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </section>
+                      <ImpactSummary impact={query.data} />
                       <section className="overflow-hidden rounded-[32px] bg-white shadow-[0_5px_14px_rgb(41_64_91/15%)] print:rounded-[16px] print:border print:border-outline/40 print:shadow-none">
                         <h2 className="flex min-h-[78px] items-center justify-between bg-primary px-7 text-[17px] font-bold uppercase text-white print:min-h-[42px] print:px-4 print:py-2 print:text-[13px]">
                           Alur Pelaksanaan <Route className="size-7 print:size-5" />
@@ -280,7 +320,7 @@ export function ImpactPage() {
                         className="block w-full px-4 py-2 text-left hover:bg-surface-low"
                         onClick={() => {
                           setMenu(false);
-                          exportService.csv(query.data);
+                          exportService.csv(query.data, exportContext);
                         }}
                       >
                         Data CSV
@@ -289,7 +329,7 @@ export function ImpactPage() {
                         className="block w-full px-4 py-2 text-left hover:bg-surface-low"
                         onClick={() => {
                           setMenu(false);
-                          exportService.json(query.data);
+                          exportService.json(query.data, exportContext);
                         }}
                       >
                         Ekspor JSON

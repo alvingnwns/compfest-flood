@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { recoveryFixture, simulationFixture } from "@/mocks/data";
-import { ProductionView, RecoveryPage } from "./recovery-page";
+import { ProductionView, RecoveryPage, RecoverySummary } from "./recovery-page";
 
 const recoveryMocks = vi.hoisted(() => ({ plan: undefined as unknown }));
 
@@ -47,6 +47,27 @@ describe("Recovery page", () => {
     await user.click(screen.getByRole("tab", { name: "Alokasi Pesanan" }));
     expect(screen.getByRole("heading", { name: "ALOKASI PESANAN" })).toBeInTheDocument();
     expect(screen.getByText("ORD-014")).toBeInTheDocument();
+  });
+
+  it("uses distinct computed units in the recovery summary", () => {
+    render(
+      <RecoverySummary
+        status="ready"
+        logisticsAdjustments={13}
+        adjustedProducts={2}
+        recoverable={20}
+        total={20}
+      />,
+    );
+
+    expect(screen.getByText(/PENYESUAIAN\s+LOGISTIK/)).toBeInTheDocument();
+    expect(screen.getByText("13")).toBeInTheDocument();
+    expect(screen.getByText(/PESANAN\s+PULIH PENUH/)).toBeInTheDocument();
+    expect(screen.getByText("20/20")).toBeInTheDocument();
+    expect(screen.getByText(/PRODUK\s+DISESUAIKAN/)).toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument();
+    expect(screen.queryByText(/RISIKO\s+DITANGANI/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/PERUBAHAN\s+OPERASIONAL/)).not.toBeInTheDocument();
   });
 
   it("does not present successful order allocations for a no-feasible plan", () => {
