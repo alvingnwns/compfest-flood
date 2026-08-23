@@ -10,6 +10,7 @@ from typing import Any
 
 import networkx as nx
 import osmnx as ox
+from osm_directionality import routing_edge_record
 from shapely.geometry import LineString, mapping
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -170,6 +171,7 @@ def prepare(*, retrieved_at: str, alternatives: int) -> None:
         osm_ids = _plain(data.get("osmid"))
         if not isinstance(osm_ids, list):
             osm_ids = [osm_ids]
+        normalized_oneway = bool(data.get("oneway", False))
         properties = {
             "segmentId": segment_id,
             "roadName": _first(data.get("name"), "Unnamed OSM road"),
@@ -183,7 +185,7 @@ def prepare(*, retrieved_at: str, alternatives: int) -> None:
             "highway": highway,
             "name": _plain(data.get("name")),
             "maxspeed": _plain(data.get("maxspeed")),
-            "oneway": bool(data.get("oneway", False)),
+            "oneway": normalized_oneway,
             "source": "OpenStreetMap",
         }
         features.append(
@@ -193,7 +195,14 @@ def prepare(*, retrieved_at: str, alternatives: int) -> None:
                 "geometry": {"type": "LineString", "coordinates": coordinates},
             }
         )
-        edges.append({"fromNode": str(source), "toNode": str(target), "segmentId": segment_id})
+        edges.append(
+            routing_edge_record(
+                source=source,
+                target=target,
+                segment_id=segment_id,
+                oneway=normalized_oneway,
+            )
+        )
 
     metadata = {
         "source": "OpenStreetMap contributors",
@@ -207,7 +216,7 @@ def prepare(*, retrieved_at: str, alternatives: int) -> None:
         "fullGraph": {"nodes": graph.number_of_nodes(), "directedEdges": graph.number_of_edges()},
         "processedGraph": {
             "nodes": len(nodes),
-            "directedEdges": len(edges),
+            "directedEdges": sum(2 if edge["bidirectional"] else 1 for edge in edges),
             "uniqueSegments": len(features),
             "roadCategories": dict(sorted(categories.items())),
         },

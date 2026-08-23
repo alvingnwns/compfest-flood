@@ -26,12 +26,13 @@ python scripts/prepare_osm_network.py --retrieved-at YYYY-MM-DD --alternatives 4
 The query returned 64,053 nodes and 145,385 directed edges. Four shortest travel-time alternatives were evaluated for each supplier→factory and warehouse→store pair. Their union produces the compact runtime snapshot:
 
 - 1,383 nodes
-- 1,413 directed/unique processed segments
+- 1,413 unique physical corridor segment records: 1,278 normalized one-way and 135 normalized bidirectional
+- 1,548 legal directed traversal arcs at runtime: one arc per one-way segment and reciprocal arcs per bidirectional segment
 - 26 motorway, 20 motorway_link, 792 primary, 19 primary_link, 126 secondary, 2 secondary_link, 95 tertiary, 247 trunk, 13 trunk_link, 53 residential, and 20 service segments
 - Routing graph: `be/app/data/roads/jakarta-2025-03-04-routing-graph.json` (about 216 KB)
 - GeoJSON: `be/app/data/roads/jakarta-2025-03-04-road-features.geojson` (about 716 KB)
 
-Every segment has a stable processed ID `osm-{u}-{v}-{key}` and retains `osmWayIds`, `u`, `v`, `key`, `highway`, `name`, `maxspeed`, and `oneway` where available. GeoJSON coordinates remain `[longitude, latitude]`.
+Every physical segment has a stable processed ID `osm-{u}-{v}-{key}` and retains `osmWayIds`, `u`, `v`, `key`, `highway`, `name`, `maxspeed`, and normalized OSMnx `oneway` semantics. The compact routing edge records persist `bidirectional`; runtime adds the reciprocal traversal only when that value is true. Both directions reuse the same physical segment ID, risk score, risk band, geometry, and travel-time basis, so road-risk and map feature counts remain 1,413. GeoJSON coordinates remain `[longitude, latitude]`.
 
 ## Facility snapping
 

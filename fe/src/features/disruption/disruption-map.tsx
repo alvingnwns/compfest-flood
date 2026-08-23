@@ -77,6 +77,8 @@ export function DisruptionMap({
 
   useEffect(() => {
     let disposed = false;
+    let resizeObserver: ResizeObserver | null = null;
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
     void import("maplibre-gl").then((maplibregl) => {
       maplibregl.setWorkerUrl("/maplibre-gl-worker.mjs");
       if (!container.current || disposed) return;
@@ -337,19 +339,20 @@ export function DisruptionMap({
         });
       });
 
-      const resizeObserver = new ResizeObserver(() => {
-        if (mapRef.current) mapRef.current.resize();
+      resizeObserver = new ResizeObserver(() => {
+        if (resizeTimer !== null) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          mapRef.current?.resize();
+          mapRef.current?.triggerRepaint();
+          resizeTimer = null;
+        }, 80);
       });
       resizeObserver.observe(container.current);
-      return () => {
-        disposed = true;
-        resizeObserver.disconnect();
-        mapRef.current?.remove();
-        mapRef.current = null;
-      };
     });
     return () => {
       disposed = true;
+      resizeObserver?.disconnect();
+      if (resizeTimer !== null) clearTimeout(resizeTimer);
       mapRef.current?.remove();
       mapRef.current = null;
     };
@@ -458,10 +461,10 @@ export function DisruptionMap({
   }, [selectedRoadId, selectedCoords, popupContent]);
 
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 bg-[#e8efef]">
       <div
         ref={container}
-        className="h-full w-full"
+        className="h-full w-full bg-[#e8efef]"
         aria-label={dynamic ? "Peta skor risiko relatif jalan Jakarta" : "Peta kerentanan historis jalan Jakarta"}
       />
       {/* Hidden Portal Container for MapLibre Popup */}

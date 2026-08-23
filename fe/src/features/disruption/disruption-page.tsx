@@ -151,7 +151,7 @@ export function ImpactPanel({
   );
 }
 
-function IssuesSidebar({
+export function IssuesSidebar({
   data,
   open,
   selectedIssueId,
@@ -166,7 +166,7 @@ function IssuesSidebar({
 }) {
   return (
     <aside
-      className={`flex shrink-0 flex-col bg-white shadow-[-4px_0_20px_rgb(0_0_0/18%)] transition-all duration-300 overflow-hidden ${
+      className={`flex shrink-0 flex-col overflow-hidden bg-white shadow-[-4px_0_20px_rgb(0_0_0/18%)] transition-all duration-300 ${
         open ? "w-[320px]" : "w-0"
       }`}
       aria-label="Masalah prioritas"
@@ -175,8 +175,13 @@ function IssuesSidebar({
       {/* Inner wrapper — keeps content visible at full width while container animates */}
       <div className="flex h-full w-[320px] flex-col">
         {/* Header — flat, no border-radius */}
-        <div className="flex h-[56px] shrink-0 items-center justify-between bg-primary-dark px-4">
-          <h3 className="text-[14px] font-bold text-white">MASALAH PRIORITAS</h3>
+        <div className="flex min-h-[72px] shrink-0 items-center justify-between gap-3 bg-primary-dark px-4 py-3">
+          <div>
+            <h3 className="text-[14px] font-bold text-white">MASALAH PRIORITAS</h3>
+            <p className="mt-0.5 text-[10px] leading-tight text-white/75">
+              Pilih masalah untuk menyorot rute di peta.
+            </p>
+          </div>
           <button
             type="button"
             onClick={onClose}
@@ -216,7 +221,7 @@ function IssuesSidebar({
                 onClick={() => onSelectIssue(isSelected ? null : issue.id)}
                 aria-pressed={isSelected}
                 aria-label={`Fokuskan masalah: ${issue.subject}`}
-                className={`flex w-full min-h-[90px] gap-2.5 border-b border-[#e0e0e0] px-4 py-4 text-left transition last:border-0 ${
+                className={`group flex min-h-[112px] w-full cursor-pointer gap-2.5 border-b border-[#e0e0e0] px-4 py-4 text-left transition last:border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${
                   isSelected
                     ? "bg-primary/10 ring-2 ring-inset ring-primary/40"
                     : "hover:bg-black/[0.02]"
@@ -241,11 +246,15 @@ function IssuesSidebar({
                   <p className="mt-1 line-clamp-3 text-[10px] leading-[13px] text-[#5a5a5a]">
                     {issue.description}
                   </p>
-                  {isSelected && (
-                    <span className="mt-2 inline-flex items-center rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold text-white">
-                      Sedang Difokuskan
-                    </span>
-                  )}
+                  <span
+                    className={`mt-2 inline-flex items-center gap-1 text-[10px] font-bold transition ${
+                      isSelected ? "text-primary-dark" : "text-primary group-hover:translate-x-0.5"
+                    }`}
+                  >
+                    <MapPin className="size-3" />
+                    {isSelected ? "Sedang disorot" : "Sorot di peta"}
+                    {!isSelected && <ChevronRight className="size-3" />}
+                  </span>
                 </div>
               </button>
             );
@@ -270,6 +279,13 @@ export function DisruptionPage() {
   const mapRef = useRef<MapLibreMap | null>(null);
   const selectRoad = useCallback((road: RoadRisk, coords: [number, number]) => setSelected({ road, coords }), []);
   const clearSelection = useCallback(() => setSelected(null), []);
+  const selectIssue = useCallback((issueId: string | null) => {
+    setSelectedIssueId(issueId);
+    if (issueId) {
+      setSelected(null);
+      setIssuesSidebarOpen(false);
+    }
+  }, []);
 
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -286,6 +302,10 @@ export function DisruptionPage() {
   const facilities = useMemo(
     () => new Map(query.data?.facilities.map((item) => [item.id, item.name])),
     [query.data]
+  );
+  const selectedIssue = useMemo(
+    () => query.data?.impact.issues.find((issue) => issue.id === selectedIssueId),
+    [query.data, selectedIssueId],
   );
   const createPlan = () =>
     generate.mutate(
@@ -420,6 +440,28 @@ export function DisruptionPage() {
                   </p>
                 )}
               </div>
+
+              {selectedIssue && (
+                <div
+                  role="status"
+                  className="pointer-events-auto mx-auto flex max-w-[min(440px,calc(100vw-2rem))] items-center gap-3 rounded-2xl border border-primary/20 bg-white px-4 py-3 shadow-[0_6px_20px_rgb(0_0_0/20%)] xl:absolute xl:bottom-6 xl:left-1/2 xl:-translate-x-1/2"
+                >
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                    <MapPin className="size-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[9px] font-bold uppercase tracking-wide text-primary">Rute disorot di peta</p>
+                    <p className="truncate text-[11px] font-semibold text-black">{selectedIssue.subject}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => selectIssue(null)}
+                    className="shrink-0 rounded-lg px-2 py-1 text-[10px] font-bold text-primary-dark transition hover:bg-primary/10"
+                  >
+                    Hapus sorotan
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -428,7 +470,7 @@ export function DisruptionPage() {
             data={query.data}
             open={issuesSidebarOpen}
             selectedIssueId={selectedIssueId}
-            onSelectIssue={setSelectedIssueId}
+            onSelectIssue={selectIssue}
             onClose={() => setIssuesSidebarOpen(false)}
           />
 

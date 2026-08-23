@@ -1,8 +1,9 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { disruptionFixture } from "@/mocks/data";
 import { MapLegend } from "./disruption-map";
-import { ImpactPanel } from "./disruption-page";
+import { ImpactPanel, IssuesSidebar } from "./disruption-page";
 
 describe("Disruption impact metric semantics", () => {
   it("uses threshold-specific and exposed-order-value labels", () => {
@@ -62,5 +63,43 @@ describe("Disruption Map Legend semantics", () => {
     expect(screen.getByText("Tinggi")).toBeInTheDocument();
     expect(screen.getByText("Sedang")).toBeInTheDocument();
     expect(screen.getByText("Rendah")).toBeInTheDocument();
+  });
+});
+describe("Priority issues interaction", () => {
+  it("makes route highlighting discoverable and selects an issue", async () => {
+    const user = userEvent.setup();
+    const onSelectIssue = vi.fn();
+    render(
+      <IssuesSidebar
+        data={disruptionFixture}
+        open
+        selectedIssueId={null}
+        onSelectIssue={onSelectIssue}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("Pilih masalah untuk menyorot rute di peta.")).toBeInTheDocument();
+    expect(screen.getAllByText("Sorot di peta")).toHaveLength(disruptionFixture.impact.issues.length);
+
+    await user.click(screen.getAllByText("Sorot di peta")[0]);
+    expect(onSelectIssue).toHaveBeenCalledWith(disruptionFixture.impact.issues[0].id);
+  });
+
+  it("keeps the original in-flow width transition", () => {
+    const props = {
+      data: disruptionFixture,
+      selectedIssueId: null,
+      onSelectIssue: vi.fn(),
+      onClose: vi.fn(),
+    };
+    const { rerender } = render(<IssuesSidebar {...props} open={false} />);
+    const sidebar = screen.getByLabelText("Masalah prioritas");
+
+    expect(sidebar).toHaveClass("flex", "shrink-0", "transition-all", "w-0");
+    expect(sidebar).not.toHaveClass("absolute");
+
+    rerender(<IssuesSidebar {...props} open />);
+    expect(sidebar).toHaveClass("w-[320px]");
   });
 });
