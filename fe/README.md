@@ -1,90 +1,58 @@
-# ResiliChain AI
+# ARUNA Frontend
 
-Frontend-only MVP for flood-aware supply-chain recovery decision support. The application replays the Jakarta flood scenario from 04 March 2025 for Nusantara Foods and connects disruption risk to coordinated manufacturing, logistics, and commerce recommendations.
+Next.js frontend for ARUNA's flood-aware supply-chain recovery decision-support MVP. Connected FastAPI mode is the default; explicit MSW mock mode exists only for isolated UI development and tests.
 
 ## Architecture
 
-The UI never imports business fixtures. Pages use TanStack Query hooks, which call services through a shared HTTP client. Responses are validated with Zod before entering the UI. In mock mode, MSW intercepts the same HTTP requests a future backend will implement.
-
-```text
+~~~text
 Pages and feature views
-  → TanStack Query hooks
-  → scenario/analysis services
-  → shared HTTP client
-  → MSW mock API or future FastAPI
-  → Zod response validation
-```
+  -> TanStack Query hooks
+  -> typed services and shared HTTP client
+  -> FastAPI (default) or explicit MSW mock mode
+  -> Zod response validation
+~~~
 
-Domain contracts are split across scenario/network, disruption/routes, recovery actions, and impact comparison modules. Simulation identity is preserved in the URL.
+Simulation identity and operational condition are preserved in route search parameters. The workflow pages are:
 
-## Requirements
+- /scenario
+- /disruption?simulation={id}
+- /recovery?simulation={id}
+- /impact?simulation={id}
+- /copilot?simulation={id}
 
-- Node.js 22.22+ or 24.15+ recommended
-- npm 11+
+The UI consumes scenario/simulation lifecycle, disruption and route candidates, recovery, Impact, Custom Business Data, map context, and grounded Copilot endpoints. Impact exports support print/PDF, CSV, and JSON.
 
 ## Development
 
-```bash
+~~~powershell
 npm install
-copy .env.example .env.local
 npm run dev
-```
+~~~
 
-Open `http://localhost:3000/scenario`.
-
-## Environment variables
+Open http://localhost:3000/scenario. When variables are absent, API mode targets http://localhost:8000.
 
 | Variable | Values | Purpose |
 | --- | --- | --- |
-| `NEXT_PUBLIC_DATA_SOURCE` | `mock` or `api` | Selects the data source once, centrally |
-| `NEXT_PUBLIC_API_BASE_URL` | URL or blank | Base URL for the future API |
+| NEXT_PUBLIC_DATA_SOURCE | api or mock | Connected backend or explicit isolated mock |
+| NEXT_PUBLIC_API_BASE_URL | absolute URL | FastAPI base URL |
 
-Mock mode is the default when the variables are absent.
+## Runtime semantics
 
-## Routes
-
-- `/scenario`
-- `/disruption?simulation=sim-jakarta-20250304`
-- `/recovery?simulation=sim-jakarta-20250304`
-- `/impact?simulation=sim-jakarta-20250304`
-
-## Mock API contracts
-
-- `GET /api/scenarios/historical-jakarta`
-- `POST /api/simulations`
-- `GET /api/simulations/{id}`
-- `GET /api/simulations/{id}/disruption`
-- `POST /api/simulations/{id}/recovery`
-- `GET /api/simulations/{id}/recovery`
-- `GET /api/simulations/{id}/impact`
-
-Fixtures are deterministic contract examples in `src/mocks`; they are not component content.
-
-## Map architecture
-
-MapLibre renders an offline-capable neutral map canvas. Facilities, historical flood extent, risk segments, baseline route, and recovery route are separate GeoJSON sources/layers. Route geometry and road selection originate from the disruption API response.
-
-## Stitch design source
-
-Google Stitch project `12457697121782366283` is the development-time visual source. The selected MVP-ready screens are Scenario `24f9c4d54b684451bba47d017718f9e1`, Disruption `30616f9303a743d2b0dfebff384d2e57`, Recovery `f17a86282f054d46bd9550906cfa47a0`, and Impact `9cdea2498381485f90c5da94ad978fa4`. Stitch is never a runtime dependency.
+- Historical risk is estimated road-corridor flood exposure from the backend Random Forest, not certain closure.
+- Dynamic Hazard is a historical-derived what-if simulation, not live weather or a calibrated forecast.
+- Map recovery routes are pre-optimization NetworkX candidates until a ready or partial recovery result selects one.
+- Recovery decisions and KPIs come from the backend CP-SAT/computation pipeline; React does not recreate them.
+- Copilot is grounded in the current simulation. Per-simulation conversation UI state is bounded and stored in browser sessionStorage; backend computations remain process-local.
 
 ## Quality commands
 
-```bash
+~~~powershell
 npm run lint
 npm run typecheck
 npm test
 npm run build
-```
+~~~
 
-## Switching to FastAPI
+## MVP boundaries
 
-1. Set `NEXT_PUBLIC_DATA_SOURCE=api`.
-2. Set `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000` (or the deployed API URL).
-3. Implement the endpoints above with responses matching the Zod contracts in `src/domain`.
-4. Keep CORS configured for the frontend origin.
-5. Restart the Next.js process. No page or visual component changes are required.
-
-## Frontend-only limitations
-
-Risk scores, routing, recovery recommendations, and impact figures are simulated. No ML model, optimizer, live BMKG feed, persistence, or operational execution system exists in this frontend. Operators remain the final decision makers.
+The frontend is decision support, not an execution system. It has no live weather feed. The platform has no API authentication or tenancy; snapshot IDs are not authorization. ARUNA coordinates production, warehouse allocation, downstream distribution, and fulfillment while the current backend abstracts factory-to-warehouse transfer.

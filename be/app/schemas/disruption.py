@@ -2,20 +2,25 @@ from typing import Literal
 
 from pydantic import Field
 
-from app.schemas.common import APIModel, LineGeometry, Money, PolygonalGeometry, RiskLevel
+from app.schemas.common import ApiModel, LineGeometry, Money, PolygonalGeometry, RiskLevel
 from app.schemas.scenario import Facility
 
 
-class RiskFactor(APIModel):
+class RiskFactor(ApiModel):
     id: str
     label: str
 
 
-class RoadRisk(APIModel):
+class RoadRisk(ApiModel):
     segment_id: str
     road_name: str
+    highway_class: str | None = None
+    osm_way_ids: list[str] = Field(default_factory=list)
     geometry: LineGeometry
     risk_probability: float = Field(ge=0, le=1)
+    dynamic_road_risk_score: float | None = Field(default=None, ge=0, le=1)
+    dynamic_risk_score_semantics: str | None = None
+    routing_band_basis: str | None = None
     risk_level: RiskLevel
     estimated_delay_minutes: float = Field(ge=0)
     risk_factors: list[RiskFactor]
@@ -24,7 +29,7 @@ class RoadRisk(APIModel):
     affected_order_ids: list[str]
 
 
-class Route(APIModel):
+class Route(ApiModel):
     id: str
     type: Literal["baseline", "recovery"]
     origin_facility_id: str
@@ -37,14 +42,14 @@ class Route(APIModel):
     affected_road_segment_ids: list[str]
 
 
-class PrioritizedIssue(APIModel):
+class PrioritizedIssue(ApiModel):
     id: str
     severity: RiskLevel
     subject: str
     description: str
 
 
-class OperationalImpact(APIModel):
+class OperationalImpact(ApiModel):
     impacted_supplier_ids: list[str]
     impacted_warehouse_ids: list[str]
     impacted_order_ids: list[str]
@@ -53,7 +58,7 @@ class OperationalImpact(APIModel):
     issues: list[PrioritizedIssue]
 
 
-class DisruptionAnalysis(APIModel):
+class DisruptionAnalysis(ApiModel):
     simulation_id: str
     facilities: list[Facility]
     roads: list[RoadRisk]

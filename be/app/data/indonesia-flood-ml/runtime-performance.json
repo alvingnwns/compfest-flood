@@ -1,0 +1,15 @@
+{
+  "startupSeconds": 1.3175182999693789,
+  "healthSeconds": 0.0036658000317402184,
+  "simulationSeconds": 0.24387849995400757,
+  "recoverySeconds": 2.8636812000186183,
+  "impactSeconds": 0.0012507999781519175,
+  "fullFlowSeconds": 4.429994599951897,
+  "health": 200,
+  "simulation": 201,
+  "recovery": 201,
+  "impact": 200,
+  "modelVersion": "indonesia-road-corridor-flood-exposure-v1",
+  "jakartaRoads": 1413,
+  "offlineExternalCalls": 0
+}

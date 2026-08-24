@@ -1,61 +1,29 @@
-from typing import Annotated, Literal
+from __future__ import annotations
 
-from pydantic import Field, model_validator
+from typing import Literal
 
-from app.schemas.common import APIModel
-
-
-class OrdersFulfilledMetric(APIModel):
-    key: Literal["orders-fulfilled"]
-    baseline: int = Field(ge=0)
-    recovery: int = Field(ge=0)
-    total: int = Field(gt=0)
+from app.schemas.common import ApiModel
 
 
-class OnTimeDeliveryMetric(APIModel):
-    key: Literal["on-time-delivery"]
-    baseline: float = Field(ge=0, le=1)
-    recovery: float = Field(ge=0, le=1)
+class KpiMetric(ApiModel):
+    key: Literal["orders-fulfilled", "on-time-delivery", "failed-orders", "average-delay", "sales-exposure-risk"]
+    baseline: float
+    recovery: float
+    total: float | None = None
+    currency: str | None = None
+    baseline_observation_count: int | None = None
+    recovery_observation_count: int | None = None
 
 
-class FailedOrdersMetric(APIModel):
-    key: Literal["failed-orders"]
-    baseline: int = Field(ge=0)
-    recovery: int = Field(ge=0)
+class ActionCounts(ApiModel):
+    manufacturing: int
+    logistics: int
+    commerce: int
 
 
-class AverageDelayMetric(APIModel):
-    key: Literal["average-delay"]
-    baseline: float = Field(ge=0)
-    recovery: float = Field(ge=0)
-
-
-class SalesExposureMetric(APIModel):
-    key: Literal["sales-exposure-risk"]
-    baseline: float = Field(ge=0)
-    recovery: float = Field(ge=0)
-    currency: Literal["IDR"] = "IDR"
-
-
-ImpactMetric = Annotated[
-    OrdersFulfilledMetric | OnTimeDeliveryMetric | FailedOrdersMetric | AverageDelayMetric | SalesExposureMetric,
-    Field(discriminator="key"),
-]
-
-
-class ActionCounts(APIModel):
-    manufacturing: int = Field(ge=0)
-    logistics: int = Field(ge=0)
-    commerce: int = Field(ge=0)
-
-
-class ImpactComparison(APIModel):
+class ImpactComparison(ApiModel):
     simulation_id: str
-    metrics: list[ImpactMetric] = Field(min_length=5, max_length=5)
+    recovery_status: Literal["ready", "partial", "no-feasible-plan"]
+    business_data_source: Literal["demo", "custom"]
+    metrics: list[KpiMetric]
     action_counts: ActionCounts
-
-    @model_validator(mode="after")
-    def require_unique_metric_keys(self) -> "ImpactComparison":
-        if len({metric.key for metric in self.metrics}) != len(self.metrics):
-            raise ValueError("Impact metric keys must be unique")
-        return self

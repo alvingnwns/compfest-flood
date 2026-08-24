@@ -1,0 +1,872 @@
+{
+  "metadata": {
+    "collectionId": "GLOBAL_FLOOD_DB/MODIS_EVENTS/V1",
+    "effectiveSourceResolutionMeters": 250,
+    "aggregationScaleMeters": 100,
+    "aggregationScaleWarning": "The 100 m integration grid approximates corridor-area overlap; it does not improve the Global Flood Database's effective ~250 m observational support or create road-surface truth. A limited 30 m comparison is reported separately.",
+    "minimumValidObservationFraction": 0.8,
+    "maximumPermanentWaterFraction": 0.2,
+    "negativeExposureEpsilon": 0.001
+  },
+  "configurations": [
+    {
+      "name": "canonical",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.75,
+      "positiveFraction": 0.05,
+      "positive": 2219,
+      "negative": 26911,
+      "unknown": 2401,
+      "positiveRateAmongUsable": 0.076176,
+      "changedFromCanonical": 0,
+      "byEvent": {
+        "DFO_2106_From_20021215_to_20021220": {
+          "negative": 788,
+          "unknown": 160,
+          "positive": 4
+        },
+        "DFO_2148_From_20030130_to_20030209": {
+          "negative": 947,
+          "unknown": 118,
+          "positive": 102
+        },
+        "DFO_2158_From_20030216_to_20030217": {
+          "positive": 125,
+          "negative": 921,
+          "unknown": 55
+        },
+        "DFO_2222_From_20030503_to_20030506": {
+          "negative": 828,
+          "unknown": 64,
+          "positive": 38
+        },
+        "DFO_2403_From_20031210_to_20040123": {
+          "negative": 179,
+          "unknown": 61,
+          "positive": 16
+        },
+        "DFO_2437_From_20040217_to_20040225": {
+          "negative": 1011,
+          "unknown": 97,
+          "positive": 59
+        },
+        "DFO_2612_From_20050111_to_20050210": {
+          "unknown": 41,
+          "positive": 173,
+          "negative": 121
+        },
+        "DFO_2627_From_20050219_to_20050225": {
+          "negative": 3006,
+          "positive": 74,
+          "unknown": 21
+        },
+        "DFO_2779_From_20060108_to_20060112": {
+          "negative": 960,
+          "unknown": 103,
+          "positive": 104
+        },
+        "DFO_2789_From_20060126_to_20060214": {
+          "negative": 895,
+          "unknown": 120,
+          "positive": 152
+        },
+        "DFO_2890_From_20060619_to_20060623": {
+          "negative": 1649,
+          "unknown": 110,
+          "positive": 5
+        },
+        "DFO_2896_From_20060625_to_20060629": {
+          "negative": 281,
+          "unknown": 36,
+          "positive": 14
+        },
+        "DFO_3065_From_20070501_to_20070525": {
+          "negative": 195,
+          "positive": 44,
+          "unknown": 26
+        },
+        "DFO_3103_From_20070616_to_20070620": {
+          "negative": 179,
+          "unknown": 67,
+          "positive": 10
+        },
+        "DFO_3141_From_20070725_to_20070802": {
+          "negative": 187,
+          "unknown": 55,
+          "positive": 14
+        },
+        "DFO_3249_From_20071225_to_20080103": {
+          "negative": 1085,
+          "unknown": 70,
+          "positive": 12
+        },
+        "DFO_3251_From_20080102_to_20080106": {
+          "unknown": 40,
+          "negative": 993,
+          "positive": 62
+        },
+        "DFO_3271_From_20080214_to_20080314": {
+          "negative": 947,
+          "unknown": 120,
+          "positive": 100
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "negative": 910,
+          "positive": 155,
+          "unknown": 102
+        },
+        "DFO_3425_From_20081226_to_20081228": {
+          "negative": 794,
+          "unknown": 156,
+          "positive": 2
+        },
+        "DFO_3465_From_20090324_to_20090420": {
+          "negative": 785,
+          "unknown": 160,
+          "positive": 7
+        },
+        "DFO_3640_From_20100416_to_20100502": {
+          "negative": 151,
+          "positive": 84,
+          "unknown": 30
+        },
+        "DFO_3878_From_20111127_to_20111130": {
+          "negative": 679,
+          "unknown": 18,
+          "positive": 56
+        },
+        "DFO_3888_From_20111218_to_20120104": {
+          "unknown": 83,
+          "negative": 761,
+          "positive": 251
+        },
+        "DFO_3895_From_20120127_to_20120129": {
+          "unknown": 44,
+          "positive": 96,
+          "negative": 955
+        },
+        "DFO_3899_From_20120212_to_20120214": {
+          "negative": 1623,
+          "unknown": 40,
+          "positive": 58
+        },
+        "DFO_3902_From_20120220_to_20120227": {
+          "negative": 995,
+          "positive": 77,
+          "unknown": 95
+        },
+        "DFO_4020_From_20130113_to_20130122": {
+          "unknown": 21,
+          "negative": 1068,
+          "positive": 6
+        },
+        "DFO_4222_From_20150205_to_20150209": {
+          "negative": 205,
+          "unknown": 51
+        },
+        "DFO_4231_From_20150315_to_20150323": {
+          "positive": 131,
+          "unknown": 67,
+          "negative": 903
+        },
+        "DFO_4330_From_20160118_to_20160310": {
+          "positive": 85,
+          "negative": 955,
+          "unknown": 61
+        },
+        "DFO_4364_From_20160617_to_20160624": {
+          "negative": 955,
+          "unknown": 109,
+          "positive": 103
+        }
+      }
+    },
+    {
+      "name": "lower-quality-cutoff",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.5,
+      "positiveFraction": 0.05,
+      "positive": 2219,
+      "negative": 26917,
+      "unknown": 2395,
+      "positiveRateAmongUsable": 0.07616,
+      "changedFromCanonical": 6,
+      "byEvent": {
+        "DFO_2106_From_20021215_to_20021220": {
+          "negative": 788,
+          "unknown": 160,
+          "positive": 4
+        },
+        "DFO_2148_From_20030130_to_20030209": {
+          "negative": 947,
+          "unknown": 118,
+          "positive": 102
+        },
+        "DFO_2158_From_20030216_to_20030217": {
+          "positive": 125,
+          "negative": 921,
+          "unknown": 55
+        },
+        "DFO_2222_From_20030503_to_20030506": {
+          "negative": 828,
+          "unknown": 64,
+          "positive": 38
+        },
+        "DFO_2403_From_20031210_to_20040123": {
+          "negative": 179,
+          "unknown": 61,
+          "positive": 16
+        },
+        "DFO_2437_From_20040217_to_20040225": {
+          "negative": 1011,
+          "unknown": 97,
+          "positive": 59
+        },
+        "DFO_2612_From_20050111_to_20050210": {
+          "unknown": 41,
+          "positive": 173,
+          "negative": 121
+        },
+        "DFO_2627_From_20050219_to_20050225": {
+          "negative": 3006,
+          "positive": 74,
+          "unknown": 21
+        },
+        "DFO_2779_From_20060108_to_20060112": {
+          "negative": 960,
+          "unknown": 103,
+          "positive": 104
+        },
+        "DFO_2789_From_20060126_to_20060214": {
+          "negative": 895,
+          "unknown": 120,
+          "positive": 152
+        },
+        "DFO_2890_From_20060619_to_20060623": {
+          "negative": 1649,
+          "unknown": 110,
+          "positive": 5
+        },
+        "DFO_2896_From_20060625_to_20060629": {
+          "negative": 281,
+          "unknown": 36,
+          "positive": 14
+        },
+        "DFO_3065_From_20070501_to_20070525": {
+          "negative": 195,
+          "positive": 44,
+          "unknown": 26
+        },
+        "DFO_3103_From_20070616_to_20070620": {
+          "negative": 179,
+          "unknown": 67,
+          "positive": 10
+        },
+        "DFO_3141_From_20070725_to_20070802": {
+          "negative": 187,
+          "unknown": 55,
+          "positive": 14
+        },
+        "DFO_3249_From_20071225_to_20080103": {
+          "negative": 1085,
+          "unknown": 70,
+          "positive": 12
+        },
+        "DFO_3251_From_20080102_to_20080106": {
+          "unknown": 40,
+          "negative": 993,
+          "positive": 62
+        },
+        "DFO_3271_From_20080214_to_20080314": {
+          "negative": 947,
+          "unknown": 120,
+          "positive": 100
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "negative": 910,
+          "positive": 155,
+          "unknown": 102
+        },
+        "DFO_3425_From_20081226_to_20081228": {
+          "negative": 794,
+          "unknown": 156,
+          "positive": 2
+        },
+        "DFO_3465_From_20090324_to_20090420": {
+          "negative": 785,
+          "unknown": 160,
+          "positive": 7
+        },
+        "DFO_3640_From_20100416_to_20100502": {
+          "negative": 151,
+          "positive": 84,
+          "unknown": 30
+        },
+        "DFO_3878_From_20111127_to_20111130": {
+          "negative": 679,
+          "unknown": 18,
+          "positive": 56
+        },
+        "DFO_3888_From_20111218_to_20120104": {
+          "unknown": 83,
+          "negative": 761,
+          "positive": 251
+        },
+        "DFO_3895_From_20120127_to_20120129": {
+          "unknown": 44,
+          "positive": 96,
+          "negative": 955
+        },
+        "DFO_3899_From_20120212_to_20120214": {
+          "negative": 1623,
+          "unknown": 40,
+          "positive": 58
+        },
+        "DFO_3902_From_20120220_to_20120227": {
+          "negative": 995,
+          "positive": 77,
+          "unknown": 95
+        },
+        "DFO_4020_From_20130113_to_20130122": {
+          "unknown": 21,
+          "negative": 1068,
+          "positive": 6
+        },
+        "DFO_4222_From_20150205_to_20150209": {
+          "negative": 205,
+          "unknown": 51
+        },
+        "DFO_4231_From_20150315_to_20150323": {
+          "positive": 131,
+          "unknown": 61,
+          "negative": 909
+        },
+        "DFO_4330_From_20160118_to_20160310": {
+          "positive": 85,
+          "negative": 955,
+          "unknown": 61
+        },
+        "DFO_4364_From_20160617_to_20160624": {
+          "negative": 955,
+          "unknown": 109,
+          "positive": 103
+        }
+      }
+    },
+    {
+      "name": "higher-quality-cutoff",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.9,
+      "positiveFraction": 0.05,
+      "positive": 2110,
+      "negative": 25742,
+      "unknown": 3679,
+      "positiveRateAmongUsable": 0.075758,
+      "changedFromCanonical": 1278,
+      "byEvent": {
+        "DFO_2106_From_20021215_to_20021220": {
+          "negative": 774,
+          "unknown": 174,
+          "positive": 4
+        },
+        "DFO_2148_From_20030130_to_20030209": {
+          "negative": 876,
+          "unknown": 193,
+          "positive": 98
+        },
+        "DFO_2158_From_20030216_to_20030217": {
+          "unknown": 418,
+          "positive": 58,
+          "negative": 625
+        },
+        "DFO_2222_From_20030503_to_20030506": {
+          "negative": 828,
+          "unknown": 64,
+          "positive": 38
+        },
+        "DFO_2403_From_20031210_to_20040123": {
+          "negative": 177,
+          "unknown": 63,
+          "positive": 16
+        },
+        "DFO_2437_From_20040217_to_20040225": {
+          "negative": 992,
+          "unknown": 118,
+          "positive": 57
+        },
+        "DFO_2612_From_20050111_to_20050210": {
+          "unknown": 41,
+          "positive": 173,
+          "negative": 121
+        },
+        "DFO_2627_From_20050219_to_20050225": {
+          "negative": 2752,
+          "positive": 72,
+          "unknown": 277
+        },
+        "DFO_2779_From_20060108_to_20060112": {
+          "negative": 912,
+          "unknown": 151,
+          "positive": 104
+        },
+        "DFO_2789_From_20060126_to_20060214": {
+          "negative": 895,
+          "unknown": 120,
+          "positive": 152
+        },
+        "DFO_2890_From_20060619_to_20060623": {
+          "negative": 1595,
+          "unknown": 164,
+          "positive": 5
+        },
+        "DFO_2896_From_20060625_to_20060629": {
+          "negative": 234,
+          "unknown": 85,
+          "positive": 12
+        },
+        "DFO_3065_From_20070501_to_20070525": {
+          "negative": 195,
+          "positive": 44,
+          "unknown": 26
+        },
+        "DFO_3103_From_20070616_to_20070620": {
+          "negative": 175,
+          "unknown": 75,
+          "positive": 6
+        },
+        "DFO_3141_From_20070725_to_20070802": {
+          "negative": 187,
+          "unknown": 55,
+          "positive": 14
+        },
+        "DFO_3249_From_20071225_to_20080103": {
+          "negative": 1085,
+          "unknown": 70,
+          "positive": 12
+        },
+        "DFO_3251_From_20080102_to_20080106": {
+          "unknown": 58,
+          "negative": 989,
+          "positive": 48
+        },
+        "DFO_3271_From_20080214_to_20080314": {
+          "negative": 947,
+          "unknown": 120,
+          "positive": 100
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "negative": 904,
+          "unknown": 108,
+          "positive": 155
+        },
+        "DFO_3425_From_20081226_to_20081228": {
+          "negative": 780,
+          "unknown": 170,
+          "positive": 2
+        },
+        "DFO_3465_From_20090324_to_20090420": {
+          "negative": 785,
+          "unknown": 162,
+          "positive": 5
+        },
+        "DFO_3640_From_20100416_to_20100502": {
+          "negative": 151,
+          "positive": 82,
+          "unknown": 32
+        },
+        "DFO_3878_From_20111127_to_20111130": {
+          "negative": 679,
+          "unknown": 18,
+          "positive": 56
+        },
+        "DFO_3888_From_20111218_to_20120104": {
+          "unknown": 83,
+          "negative": 761,
+          "positive": 251
+        },
+        "DFO_3895_From_20120127_to_20120129": {
+          "unknown": 44,
+          "positive": 96,
+          "negative": 955
+        },
+        "DFO_3899_From_20120212_to_20120214": {
+          "negative": 1590,
+          "unknown": 79,
+          "positive": 52
+        },
+        "DFO_3902_From_20120220_to_20120227": {
+          "negative": 995,
+          "positive": 77,
+          "unknown": 95
+        },
+        "DFO_4020_From_20130113_to_20130122": {
+          "unknown": 70,
+          "negative": 1019,
+          "positive": 6
+        },
+        "DFO_4222_From_20150205_to_20150209": {
+          "negative": 180,
+          "unknown": 76
+        },
+        "DFO_4231_From_20150315_to_20150323": {
+          "positive": 129,
+          "unknown": 246,
+          "negative": 726
+        },
+        "DFO_4330_From_20160118_to_20160310": {
+          "positive": 85,
+          "negative": 930,
+          "unknown": 86
+        },
+        "DFO_4364_From_20160617_to_20160624": {
+          "negative": 928,
+          "unknown": 138,
+          "positive": 101
+        }
+      }
+    },
+    {
+      "name": "lower-exposure-threshold",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.75,
+      "positiveFraction": 0.02,
+      "positive": 2563,
+      "negative": 26911,
+      "unknown": 2057,
+      "positiveRateAmongUsable": 0.086958,
+      "changedFromCanonical": 344,
+      "byEvent": {
+        "DFO_2106_From_20021215_to_20021220": {
+          "negative": 788,
+          "unknown": 158,
+          "positive": 6
+        },
+        "DFO_2148_From_20030130_to_20030209": {
+          "negative": 947,
+          "positive": 123,
+          "unknown": 97
+        },
+        "DFO_2158_From_20030216_to_20030217": {
+          "positive": 136,
+          "negative": 921,
+          "unknown": 44
+        },
+        "DFO_2222_From_20030503_to_20030506": {
+          "negative": 828,
+          "unknown": 55,
+          "positive": 47
+        },
+        "DFO_2403_From_20031210_to_20040123": {
+          "negative": 179,
+          "unknown": 59,
+          "positive": 18
+        },
+        "DFO_2437_From_20040217_to_20040225": {
+          "negative": 1011,
+          "unknown": 82,
+          "positive": 74
+        },
+        "DFO_2612_From_20050111_to_20050210": {
+          "positive": 184,
+          "negative": 121,
+          "unknown": 30
+        },
+        "DFO_2627_From_20050219_to_20050225": {
+          "negative": 3006,
+          "positive": 78,
+          "unknown": 17
+        },
+        "DFO_2779_From_20060108_to_20060112": {
+          "negative": 960,
+          "unknown": 88,
+          "positive": 119
+        },
+        "DFO_2789_From_20060126_to_20060214": {
+          "negative": 895,
+          "unknown": 96,
+          "positive": 176
+        },
+        "DFO_2890_From_20060619_to_20060623": {
+          "negative": 1649,
+          "unknown": 108,
+          "positive": 7
+        },
+        "DFO_2896_From_20060625_to_20060629": {
+          "negative": 281,
+          "unknown": 32,
+          "positive": 18
+        },
+        "DFO_3065_From_20070501_to_20070525": {
+          "negative": 195,
+          "positive": 56,
+          "unknown": 14
+        },
+        "DFO_3103_From_20070616_to_20070620": {
+          "negative": 179,
+          "unknown": 59,
+          "positive": 18
+        },
+        "DFO_3141_From_20070725_to_20070802": {
+          "negative": 187,
+          "unknown": 51,
+          "positive": 18
+        },
+        "DFO_3249_From_20071225_to_20080103": {
+          "negative": 1085,
+          "positive": 14,
+          "unknown": 68
+        },
+        "DFO_3251_From_20080102_to_20080106": {
+          "unknown": 28,
+          "negative": 993,
+          "positive": 74
+        },
+        "DFO_3271_From_20080214_to_20080314": {
+          "negative": 947,
+          "unknown": 97,
+          "positive": 123
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "negative": 910,
+          "positive": 169,
+          "unknown": 88
+        },
+        "DFO_3425_From_20081226_to_20081228": {
+          "negative": 794,
+          "unknown": 156,
+          "positive": 2
+        },
+        "DFO_3465_From_20090324_to_20090420": {
+          "negative": 785,
+          "unknown": 156,
+          "positive": 11
+        },
+        "DFO_3640_From_20100416_to_20100502": {
+          "negative": 151,
+          "positive": 90,
+          "unknown": 24
+        },
+        "DFO_3878_From_20111127_to_20111130": {
+          "negative": 679,
+          "positive": 70,
+          "unknown": 4
+        },
+        "DFO_3888_From_20111218_to_20120104": {
+          "unknown": 49,
+          "negative": 761,
+          "positive": 285
+        },
+        "DFO_3895_From_20120127_to_20120129": {
+          "unknown": 29,
+          "positive": 111,
+          "negative": 955
+        },
+        "DFO_3899_From_20120212_to_20120214": {
+          "negative": 1623,
+          "unknown": 36,
+          "positive": 62
+        },
+        "DFO_3902_From_20120220_to_20120227": {
+          "negative": 995,
+          "positive": 88,
+          "unknown": 84
+        },
+        "DFO_4020_From_20130113_to_20130122": {
+          "unknown": 17,
+          "negative": 1068,
+          "positive": 10
+        },
+        "DFO_4222_From_20150205_to_20150209": {
+          "negative": 205,
+          "unknown": 51
+        },
+        "DFO_4231_From_20150315_to_20150323": {
+          "positive": 151,
+          "unknown": 47,
+          "negative": 903
+        },
+        "DFO_4330_From_20160118_to_20160310": {
+          "positive": 100,
+          "negative": 955,
+          "unknown": 46
+        },
+        "DFO_4364_From_20160617_to_20160624": {
+          "negative": 955,
+          "unknown": 87,
+          "positive": 125
+        }
+      }
+    },
+    {
+      "name": "higher-exposure-threshold",
+      "bufferRadiusMeters": 250,
+      "minimumClearFraction": 0.75,
+      "positiveFraction": 0.1,
+      "positive": 1824,
+      "negative": 26911,
+      "unknown": 2796,
+      "positiveRateAmongUsable": 0.063477,
+      "changedFromCanonical": 395,
+      "byEvent": {
+        "DFO_2106_From_20021215_to_20021220": {
+          "negative": 788,
+          "unknown": 160,
+          "positive": 4
+        },
+        "DFO_2148_From_20030130_to_20030209": {
+          "negative": 947,
+          "unknown": 140,
+          "positive": 80
+        },
+        "DFO_2158_From_20030216_to_20030217": {
+          "positive": 115,
+          "negative": 921,
+          "unknown": 65
+        },
+        "DFO_2222_From_20030503_to_20030506": {
+          "negative": 828,
+          "unknown": 70,
+          "positive": 32
+        },
+        "DFO_2403_From_20031210_to_20040123": {
+          "negative": 179,
+          "unknown": 67,
+          "positive": 10
+        },
+        "DFO_2437_From_20040217_to_20040225": {
+          "negative": 1011,
+          "unknown": 109,
+          "positive": 47
+        },
+        "DFO_2612_From_20050111_to_20050210": {
+          "unknown": 52,
+          "positive": 162,
+          "negative": 121
+        },
+        "DFO_2627_From_20050219_to_20050225": {
+          "negative": 3006,
+          "positive": 70,
+          "unknown": 25
+        },
+        "DFO_2779_From_20060108_to_20060112": {
+          "negative": 960,
+          "unknown": 119,
+          "positive": 88
+        },
+        "DFO_2789_From_20060126_to_20060214": {
+          "negative": 895,
+          "unknown": 157,
+          "positive": 115
+        },
+        "DFO_2890_From_20060619_to_20060623": {
+          "negative": 1649,
+          "unknown": 110,
+          "positive": 5
+        },
+        "DFO_2896_From_20060625_to_20060629": {
+          "negative": 281,
+          "unknown": 40,
+          "positive": 10
+        },
+        "DFO_3065_From_20070501_to_20070525": {
+          "negative": 195,
+          "positive": 26,
+          "unknown": 44
+        },
+        "DFO_3103_From_20070616_to_20070620": {
+          "negative": 179,
+          "unknown": 67,
+          "positive": 10
+        },
+        "DFO_3141_From_20070725_to_20070802": {
+          "negative": 187,
+          "unknown": 59,
+          "positive": 10
+        },
+        "DFO_3249_From_20071225_to_20080103": {
+          "negative": 1085,
+          "unknown": 70,
+          "positive": 12
+        },
+        "DFO_3251_From_20080102_to_20080106": {
+          "unknown": 53,
+          "negative": 993,
+          "positive": 49
+        },
+        "DFO_3271_From_20080214_to_20080314": {
+          "negative": 947,
+          "unknown": 150,
+          "positive": 70
+        },
+        "DFO_3280_From_20080301_to_20080403": {
+          "negative": 910,
+          "unknown": 136,
+          "positive": 121
+        },
+        "DFO_3425_From_20081226_to_20081228": {
+          "negative": 794,
+          "unknown": 156,
+          "positive": 2
+        },
+        "DFO_3465_From_20090324_to_20090420": {
+          "negative": 785,
+          "unknown": 162,
+          "positive": 5
+        },
+        "DFO_3640_From_20100416_to_20100502": {
+          "negative": 151,
+          "positive": 74,
+          "unknown": 40
+        },
+        "DFO_3878_From_20111127_to_20111130": {
+          "negative": 679,
+          "unknown": 32,
+          "positive": 42
+        },
+        "DFO_3888_From_20111218_to_20120104": {
+          "unknown": 128,
+          "negative": 761,
+          "positive": 206
+        },
+        "DFO_3895_From_20120127_to_20120129": {
+          "unknown": 60,
+          "positive": 80,
+          "negative": 955
+        },
+        "DFO_3899_From_20120212_to_20120214": {
+          "negative": 1623,
+          "unknown": 56,
+          "positive": 42
+        },
+        "DFO_3902_From_20120220_to_20120227": {
+          "negative": 995,
+          "positive": 70,
+          "unknown": 102
+        },
+        "DFO_4020_From_20130113_to_20130122": {
+          "unknown": 27,
+          "negative": 1068
+        },
+        "DFO_4222_From_20150205_to_20150209": {
+          "negative": 205,
+          "unknown": 51
+        },
+        "DFO_4231_From_20150315_to_20150323": {
+          "positive": 113,
+          "unknown": 85,
+          "negative": 903
+        },
+        "DFO_4330_From_20160118_to_20160310": {
+          "positive": 78,
+          "negative": 955,
+          "unknown": 68
+        },
+        "DFO_4364_From_20160617_to_20160624": {
+          "negative": 955,
+          "unknown": 136,
+          "positive": 76
+        }
+      }
+    }
+  ]
+}

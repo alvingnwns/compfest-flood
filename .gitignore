@@ -26,7 +26,8 @@ env/
 .coverage
 htmlcov/
 
-# Environment and secrets
+# Environment and secret
+be/env
 .env
 .env.*
 !.env.example
@@ -37,3 +38,9 @@ htmlcov/
 .idea/
 .DS_Store
 Thumbs.db
+.worktrees/
+be/cache/
+*.log
+
+# Local source archive for Dynamic Hazard research data
+be/data/dynamic-hazard/raw/Dataset_FloodRisk_Jakarta.zip

@@ -4,8 +4,8 @@ from typing import Any
 
 from fastapi import Request
 from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 
 class ApiError(Exception):
@@ -42,29 +42,41 @@ async def api_error_handler(_: Request, exc: ApiError) -> JSONResponse:
 
 
 async def validation_error_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
-    errors = exc.errors()
+    errors = [_json_safe(error) for error in exc.errors()]
     syntactic_error_types = {"json_invalid", "missing"}
     status_code = 400 if any(error["type"] in syntactic_error_types for error in errors) else 422
     code = "invalid_request" if status_code == 400 else "validation_error"
-    message = "Request syntax is invalid." if status_code == 400 else "The request is semantically invalid."
+    message = "Sintaks permintaan tidak valid." if status_code == 400 else "Isi permintaan tidak valid."
     return JSONResponse(
         status_code=status_code,
         content=error_body(code, message, details={"errors": errors}),
     )
 
 
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, bytes):
+        return "<binary input omitted>"
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_json_safe(item) for item in value]
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    return str(value)
+
+
 async def http_error_handler(_: Request, exc: StarletteHTTPException) -> JSONResponse:
     if exc.status_code == 404:
-        return JSONResponse(status_code=404, content=error_body("not_found", "Resource not found."))
+        return JSONResponse(status_code=404, content=error_body("not_found", "Sumber daya tidak ditemukan."))
 
     return JSONResponse(
         status_code=exc.status_code,
-        content=error_body("http_error", "The request could not be completed."),
+        content=error_body("http_error", "Permintaan tidak dapat diselesaikan."),
     )
 
 
 async def unhandled_error_handler(_: Request, __: Exception) -> JSONResponse:
     return JSONResponse(
         status_code=500,
-        content=error_body("internal_error", "An unexpected server error occurred.", retryable=True),
+        content=error_body("internal_error", "Terjadi kesalahan server yang tidak terduga.", retryable=True),
     )

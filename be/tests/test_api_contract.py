@@ -1,0 +1,212 @@
+from pathlib import Path
+
+from fastapi.testclient import TestClient
+
+
+def test_startup_health_and_cors(client: TestClient) -> None:
+    assert client.get("/health").json() == {"status": "ok", "engineMode": "connected"}
+    response = client.options(
+        "/api/simulations",
+        headers={
+            "Origin": "http://localhost:3000",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+        },
+    )
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:3000"
+
+
+def test_complete_seven_endpoint_contract_flow(client: TestClient) -> None:
+    scenario_response = client.get("/api/scenarios/historical-jakarta")
+    assert scenario_response.status_code == 200
+    scenario = scenario_response.json()
+    assert scenario["mode"] == "historical-replay"
+    assert scenario["dataSources"]["historicalStatus"] == "offline_snapshot"
+
+    created = client.post("/api/simulations", json={"scenarioId": scenario["id"]})
+    assert created.status_code == 201
+    simulation = created.json()
+    assert simulation["status"] == "completed"
+    assert simulation["modelVersion"] == "indonesia-road-corridor-flood-exposure-v1"
+    provenance = simulation["modelProvenance"]
+    assert provenance["trainingData"] == "real-historical-global-flood-database-indonesia"
+    assert provenance["algorithm"] == "RandomForestClassifier"
+    assert provenance["trainingEvents"] == 32 and provenance["trainingRegions"] == 13
+    assert provenance["jakartaValidationStatus"] == "not_validated"
+    assert simulation["optimizerVersion"] == "cp-sat-connected-v2"
+    simulation_id = simulation["id"]
+    assert client.get(f"/api/simulations/{simulation_id}").json() == simulation
+
+    disruption = client.get(f"/api/simulations/{simulation_id}/disruption").json()
+    assert disruption["simulationId"] == simulation_id
+    assert len(disruption["roads"]) > 1_000
+    assert {route["type"] for route in disruption["routes"]} <= {"baseline", "recovery"}
+    assert "baseline" in {route["type"] for route in disruption["routes"]}
+    assert all(0 <= road["riskProbability"] <= 1 for road in disruption["roads"])
+
+    generated = client.post(
+        f"/api/simulations/{simulation_id}/recovery",
+        json={"constraints": {"allowSubstitution": True, "maxAdditionalDelayMinutes": 30}},
+    )
+    assert generated.status_code == 201
+    recovery = generated.json()
+    assert recovery["status"] in {"ready", "partial"}
+    assert set(recovery["manufacturingExplanation"]) == {"reason", "expectedImpact"}
+    assert len(recovery["commerceActions"]) == len(scenario["orders"])
+    assert {action["action"] for action in recovery["commerceActions"]} <= {
+        "fulfill",
+        "split",
+        "delay",
+        "substitute",
+        "prioritize",
+        "split-substitute",
+    }
+    assert {action["priority"] for action in recovery["commerceActions"]} <= {"normal", "high", "critical"}
+    allocated_totals = [
+        sum(allocation["quantity"] for allocation in action["allocations"]) for action in recovery["commerceActions"]
+    ]
+    fully_fulfilled = sum(
+        allocated == action["requestedQuantity"]
+        for action, allocated in zip(recovery["commerceActions"], allocated_totals, strict=True)
+    )
+    partially_fulfilled = sum(
+        0 < allocated < action["requestedQuantity"]
+        for action, allocated in zip(recovery["commerceActions"], allocated_totals, strict=True)
+    )
+    unfulfilled = sum(allocated == 0 for allocated in allocated_totals)
+    assert recovery["summary"]["recoverableOrders"] == fully_fulfilled
+    assert recovery["summary"]["totalOrders"] == fully_fulfilled + partially_fulfilled + unfulfilled
+    critical = next(action for action in recovery["commerceActions"] if action["orderId"] == "ORD-008")
+    assert critical["priority"] == "critical"
+    assert sum(allocation["quantity"] for allocation in critical["allocations"]) == critical["requestedQuantity"]
+    required_logistics = {
+        "recoveryRouteId",
+        "recoveryEtaMinutes",
+        "recoveryFloodExposure",
+    }
+    assert all(required_logistics <= action.keys() for action in recovery["logisticsActions"])
+    for action in recovery["logisticsActions"]:
+        baseline_fields = {
+            "originalWarehouseId",
+            "originalWarehouseName",
+            "baselineRouteId",
+            "baselineEtaMinutes",
+            "baselineFloodExposure",
+        }
+        if action["action"] == "allocate":
+            assert baseline_fields.isdisjoint(action)
+        else:
+            assert baseline_fields <= action.keys()
+    assert client.get(f"/api/simulations/{simulation_id}/recovery").json() == recovery
+
+    impact = client.get(f"/api/simulations/{simulation_id}/impact").json()
+    assert [metric["key"] for metric in impact["metrics"]] == [
+        "orders-fulfilled",
+        "on-time-delivery",
+        "failed-orders",
+        "average-delay",
+        "sales-exposure-risk",
+    ]
+    assert impact["metrics"][1]["baseline"] <= 1
+    assert impact["metrics"][1]["recovery"] <= 1
+    assert impact["recoveryStatus"] == recovery["status"]
+    assert impact["businessDataSource"] == "demo"
+    average_delay = next(metric for metric in impact["metrics"] if metric["key"] == "average-delay")
+    assert average_delay["baselineObservationCount"] > 0
+    assert average_delay["recoveryObservationCount"] > 0
+
+
+def test_new_allocation_api_does_not_masquerade_as_reallocation(client: TestClient) -> None:
+    simulation = client.post("/api/simulations", json={"scenarioId": "scenario-jakarta-20250304"}).json()
+    recovery = client.post(f"/api/simulations/{simulation['id']}/recovery", json={}).json()
+    action = next(item for item in recovery["logisticsActions"] if item["orderId"] == "ORD-012")
+
+    assert action["action"] == "allocate"
+    assert action["recoveryWarehouseId"] == "wh-west"
+    assert action["recoveryRouteId"] == "route-recovery-wh-west-store-b"
+    assert action["vehicleId"] == "V-03"
+    assert action["recoveryEtaMinutes"] == 16
+    for field in ("originalWarehouseId", "originalWarehouseName", "baselineRouteId", "baselineEtaMinutes"):
+        assert field not in action
+
+
+def test_structured_errors_and_validation(client: TestClient, simulation_id: str) -> None:
+    missing = client.get("/api/simulations/sim-missing")
+    assert missing.status_code == 404
+    assert missing.json() == {
+        "code": "simulation_not_found",
+        "message": "Simulasi tidak ditemukan.",
+        "retryable": False,
+        "details": {"simulationId": "sim-missing"},
+    }
+    malformed = client.post("/api/simulations", content="{", headers={"content-type": "application/json"})
+    assert malformed.status_code == 400
+    assert malformed.json()["code"] == "invalid_request"
+    malformed_without_type = client.post("/api/simulations", content=b"{")
+    assert 400 <= malformed_without_type.status_code < 500
+    assert malformed_without_type.json()["code"] in {"invalid_request", "validation_error"}
+    assert "<binary input omitted>" in str(malformed_without_type.json()["details"])
+    invalid = client.post(
+        f"/api/simulations/{simulation_id}/recovery",
+        json={"constraints": {"maxAdditionalDelayMinutes": -1}},
+    )
+    assert invalid.status_code == 422
+    assert invalid.json()["code"] == "validation_error"
+
+
+def test_impact_and_recovery_use_conflict_before_generation(client: TestClient, simulation_id: str) -> None:
+    for suffix in ("recovery", "impact"):
+        response = client.get(f"/api/simulations/{simulation_id}/{suffix}")
+        assert response.status_code == 409
+        assert response.json()["code"] == "recovery_not_ready"
+
+
+def test_process_local_idempotency(client: TestClient) -> None:
+    payload = {"scenarioId": "scenario-jakarta-20250304"}
+    first = client.post("/api/simulations", json=payload).json()
+    second = client.post("/api/simulations", json=payload).json()
+    assert first["id"] == second["id"]
+    recovery_payload = {"constraints": {"allowSubstitution": True, "maxAdditionalDelayMinutes": 30}}
+    first_plan = client.post(f"/api/simulations/{first['id']}/recovery", json=recovery_payload).json()
+    second_plan = client.post(f"/api/simulations/{first['id']}/recovery", json=recovery_payload).json()
+    assert first_plan["id"] == second_plan["id"]
+
+
+def test_no_feasible_api_shape_matches_recovery_result_contract(
+    client: TestClient, simulation_id: str, monkeypatch
+) -> None:
+    from app.api import simulations as simulations_api
+    from app.repositories.scenario_repository import get_historical_jakarta
+
+    infeasible = get_historical_jakarta().model_copy(deep=True)
+    for material in infeasible.materials:
+        material.available_quantity = 0
+    for inventory in infeasible.inventory:
+        inventory.quantity = 0
+    monkeypatch.setattr(simulations_api, "get_historical_jakarta", lambda: infeasible)
+    simulations_api.simulation_repository.save_effective_scenario(simulation_id, infeasible)
+    response = client.post(
+        f"/api/simulations/{simulation_id}/recovery",
+        json={"constraints": {"allowSubstitution": False, "maxAdditionalDelayMinutes": 30}},
+    )
+    assert response.status_code == 201
+    payload = response.json()
+    assert payload["status"] == "no-feasible-plan"
+    assert payload["completedAt"]
+    assert payload["summary"]["recoverableOrders"] == 0
+    assert payload["manufacturingActions"] == []
+    assert payload["logisticsActions"] == []
+    assert payload["commerceActions"] == []
+    assert payload["possibleNextActions"]
+    assert payload["error"]["code"] == "no_feasible_plan"
+    impact = client.get(f"/api/simulations/{simulation_id}/impact").json()
+    assert impact["recoveryStatus"] == "no-feasible-plan"
+    average_delay = next(metric for metric in impact["metrics"] if metric["key"] == "average-delay")
+    assert average_delay["recoveryObservationCount"] == 0
+
+
+def test_compose_uses_supported_engine_mode() -> None:
+    compose = (Path(__file__).resolve().parents[2] / "compose.yaml").read_text(encoding="utf-8")
+    assert "ENGINE_MODE: connected" in compose
+    assert "ENGINE_MODE: stub" not in compose

@@ -1,0 +1,68 @@
+{
+  "artifactSha256": "49efd3931bc3b0030ffaa32beefac56375a19826901c4b3f2b487945c37f450c",
+  "evaluationSplit": "test-2020",
+  "experimentVersion": "temporal-hazard-phase2-v1",
+  "metrics": {
+    "accuracy": 0.8059701492537313,
+    "brier": 0.16132094488905985,
+    "calibration": [
+      {
+        "count": 6,
+        "lower": 0.0,
+        "meanPredicted": 0.17968410512679808,
+        "observedRate": 0.0,
+        "upper": 0.2
+      },
+      {
+        "count": 37,
+        "lower": 0.2,
+        "meanPredicted": 0.3068319121767565,
+        "observedRate": 0.08108108108108109,
+        "upper": 0.4
+      },
+      {
+        "count": 21,
+        "lower": 0.4,
+        "meanPredicted": 0.48938606137706275,
+        "observedRate": 0.38095238095238093,
+        "upper": 0.6000000000000001
+      },
+      {
+        "count": 3,
+        "lower": 0.6000000000000001,
+        "meanPredicted": 0.6089657878807927,
+        "observedRate": 0.0,
+        "upper": 0.8
+      }
+    ],
+    "confusionMatrix": [
+      [
+        52,
+        4
+      ],
+      [
+        9,
+        2
+      ]
+    ],
+    "f1": 0.23529411764705882,
+    "prAuc": 0.3377144558962741,
+    "precision": 0.3333333333333333,
+    "probabilityDistribution": {
+      "maximum": 0.6125467580481601,
+      "median": 0.3599043614760098,
+      "minimum": 0.1386993515562039,
+      "p10": 0.20659448806786054,
+      "p25": 0.2722949663902697,
+      "p75": 0.45149490774917256,
+      "p90": 0.5392941851067271
+    },
+    "recall": 0.18181818181818182,
+    "rocAuc": 0.7678571428571429,
+    "threshold": 0.55
+  },
+  "representation": "flattened_sequence",
+  "selectedModel": "random_forest",
+  "testAccessPolicy": "Loaded once after frozen model selection; no post-test tuning is permitted.",
+  "threshold": 0.55
+}

@@ -1,0 +1,57 @@
+{
+  "artifactVersion": "dynamic-hazard-runtime-scenarios-v1",
+  "sourceExperiment": "artifacts/dynamic-hazard/experiments/phase3a",
+  "sourceSequenceArtifactSha256": "d892e817fc851c1591586ffd46a56f9ed3f5713fbb5aa53e35a317d9c57d1f51",
+  "sourceDatasetManifestSha256": "fcfebd04f53cb0330492a9fca59caedb97326aaf92a5686d5d31b2cd9b2022d6",
+  "sourceSplit": "train-2014-2018",
+  "probabilityCalibrated": false,
+  "normalization": {
+    "method": "frozen train empirical percentile mid-rank scenario anchors",
+    "trainSampleCount": 335,
+    "runtimeRule": "validated representative temporalHazardScore is matched to its frozen scenario anchor",
+    "validationUsedForFit": false,
+    "testUsed": false
+  },
+  "scenarios": [
+    {
+      "id": "Q1",
+      "sequenceKey": "quantile_Q1",
+      "referenceDate": "2018-07-14",
+      "sourceSampleIndex": 304,
+      "representativeTemporalHazardScore": 0.14393991896426608,
+      "researchGroupMedianTemporalHazardScore": 0.15728539168581646,
+      "relativeHazardIndex": 0.15223880597014924,
+      "sequenceSha256": "f9c20f437e102d6ad31fe1632a3960b73c66cd6df3249187c587233809604ec2"
+    },
+    {
+      "id": "Q2",
+      "sequenceKey": "quantile_Q2",
+      "referenceDate": "2018-11-16",
+      "sourceSampleIndex": 329,
+      "representativeTemporalHazardScore": 0.250166672988461,
+      "researchGroupMedianTemporalHazardScore": 0.27539531509496773,
+      "relativeHazardIndex": 0.4626865671641791,
+      "sequenceSha256": "d6cb7aff080c0f2ea5e4838de6b0b6fc7dde2c90043dc6b71694125d09df054e"
+    },
+    {
+      "id": "Q3",
+      "sequenceKey": "quantile_Q3",
+      "referenceDate": "2014-04-26",
+      "sourceSampleIndex": 13,
+      "representativeTemporalHazardScore": 0.2525212779653498,
+      "researchGroupMedianTemporalHazardScore": 0.34628589111001884,
+      "relativeHazardIndex": 0.6462686567164179,
+      "sequenceSha256": "4745e61a0153fd89cf86d5eb44849e26d354ddb3cb1868b6cb6dd2370e4b885d"
+    },
+    {
+      "id": "Q4",
+      "sequenceKey": "quantile_Q4",
+      "referenceDate": "2016-09-12",
+      "sourceSampleIndex": 181,
+      "representativeTemporalHazardScore": 0.2950839237115458,
+      "researchGroupMedianTemporalHazardScore": 0.3762101060395342,
+      "relativeHazardIndex": 0.7313432835820896,
+      "sequenceSha256": "f3807e89f2ac59b5de2291618c741a39cc0758f184d8ab62974623150237b433"
+    }
+  ]
+}

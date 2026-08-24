@@ -18,18 +18,29 @@ class Facility(ApiModel):
     name: str
     kind: Literal["supplier", "factory", "warehouse", "store"]
     location: GeoPoint
+    production_capacity_units: int | None = Field(default=None, gt=0)
 
 
 class Vehicle(ApiModel):
     id: str
     label: str
     capacity_units: int = Field(gt=0)
+    available: bool = True
+    cost_per_km: float = Field(default=0, ge=0)
+
+
+class BomItem(ApiModel):
+    material_id: str
+    quantity_per_unit: float = Field(gt=0)
 
 
 class Product(ApiModel):
     id: str
     name: str
     unit: str
+    unit_price: float = Field(ge=0)
+    bom: list[BomItem] = Field(min_length=1)
+    substitute_product_ids: list[str] = Field(default_factory=list)
 
 
 class Material(ApiModel):
@@ -37,6 +48,7 @@ class Material(ApiModel):
     name: str
     supplier_id: str
     product_ids: list[str] = Field(min_length=1)
+    available_quantity: float = Field(ge=0)
 
 
 class Inventory(ApiModel):
@@ -52,6 +64,8 @@ class Order(ApiModel):
     product_id: str
     quantity: int = Field(gt=0)
     priority: Literal["normal", "high", "critical"]
+    preferred_warehouse_id: str
+    deadline_minutes: int = Field(ge=0)
 
 
 class DataSources(ApiModel):

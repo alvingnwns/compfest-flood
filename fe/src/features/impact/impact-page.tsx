@@ -1,43 +1,347 @@
-﻿"use client";
+"use client";
 
-import { AlertCircle, ArrowDown, ArrowUp, CheckCircle2, Clock3, Download, Factory, Route, ShoppingBag, Truck } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock3, CloudRain, Download, Factory, MapPin, Route, ShoppingBag, Truck, Warehouse, X, XCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/states";
-import type { ImpactMetric } from "@/domain/impact";
-import { useImpactComparison } from "@/hooks/use-resilichain-data";
-import { formatCompactIdr, formatMinutes, formatPercent } from "@/lib/format";
+import { operationalConditionLabel } from "@/components/simulation/scenario-context-card";
+import { EmptyState, ErrorState, FullPageState, LoadingState } from "@/components/ui/states";
+import type { ImpactComparison, ImpactMetric } from "@/domain/impact";
+import type { Simulation } from "@/domain/scenario";
+import { getRainfallScenario } from "@/features/scenario/scenario-presets";
+import { useImpactComparison, useSimulation } from "@/hooks/use-aruna-data";
+import { formatImpactMetricValue, impactMetricDelta, impactStatusPresentation, noDelayObservationMessage } from "@/features/impact/impact-presentation";
 import { exportService } from "@/services/export-service";
 
 const metricIcons = { "orders-fulfilled": Truck, "on-time-delivery": Clock3, "failed-orders": AlertCircle, "average-delay": Clock3, "sales-exposure-risk": ShoppingBag };
-const metricLabels: Record<ImpactMetric["key"], string> = { "orders-fulfilled": "Orders Fulfilled", "on-time-delivery": "On-Time Delivery", "failed-orders": "Failed Orders", "average-delay": "Average Delay", "sales-exposure-risk": "Sales Exposure Risk" };
-function value(metric: ImpactMetric, number: number) {
-  if (metric.key === "sales-exposure-risk") return formatCompactIdr(number);
-  if (metric.key === "on-time-delivery") return formatPercent(number);
-  if (metric.key === "average-delay") return formatMinutes(number);
-  if (metric.key === "orders-fulfilled") return `${number}/${metric.total}`;
-  return number.toString();
+const metricLabels: Record<ImpactMetric["key"], string> = { "orders-fulfilled": "Pesanan Terpenuhi", "on-time-delivery": "Pengiriman Tepat Waktu", "failed-orders": "Pesanan Gagal", "average-delay": "Rata-rata Keterlambatan", "sales-exposure-risk": "Risiko Paparan Penjualan" };
+
+function ScenarioStatus({ simulation, condition }: { simulation: Simulation; condition: string }) {
+  const dynamic = simulation.analysisMode === "scenario-simulation" && simulation.hazard !== undefined;
+  const rainfall = dynamic ? getRainfallScenario(simulation.hazard?.rainfallScenario) : undefined;
+  return (
+    <section aria-label="Status skenario" className="overflow-hidden rounded-[22px] bg-white shadow-[0_0_15px_rgb(0_0_0/18%)]">
+      <div className="flex h-[58px] items-center justify-center bg-primary px-5 text-center text-[19px] font-bold text-white">
+        Analisis Dampak
+      </div>
+      <div className="grid grid-cols-2 gap-5 px-7 py-5 text-[12px]">
+        <div>
+          <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wide text-[#979797]">
+            <span>KONDISI LINGKUNGAN</span>
+            <CloudRain className="size-[18px] shrink-0 text-primary" />
+          </div>
+          <div className="text-[14px] font-bold text-black">{dynamic ? rainfall?.label : "04 Mar 2025"}</div>
+          <div className="mt-1 text-[12px] leading-tight text-[#5a5a5a]">{dynamic ? "Simulasi Kondisi" : "Simulasi Banjir Jakarta"}</div>
+        </div>
+        <div>
+          <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wide text-[#979797]">
+            <span>KONDISI OPERASIONAL</span>
+            <Factory className="size-[18px] shrink-0 text-primary" />
+          </div>
+          <div className="text-[14px] font-bold text-black">{operationalConditionLabel(condition)}</div>
+          <div className="mt-1 flex items-center gap-1.5 text-[12px] text-[#5a5a5a]">
+            <MapPin className="size-3.5 shrink-0 text-primary" /> Jakarta
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
-function improvement(metric: ImpactMetric) {
-  const lower = ["failed-orders", "average-delay", "sales-exposure-risk"].includes(metric.key);
-  const delta = lower ? metric.baseline - metric.recovery : metric.recovery - metric.baseline;
-  if (metric.key === "on-time-delivery") return `+${Math.round(delta * 100)} pts`;
-  if (metric.key === "sales-exposure-risk") return `${formatCompactIdr(delta)} reduction`;
-  return metric.baseline === 0 ? "—" : `${Math.round((delta / metric.baseline) * 100)}%`;
+
+export function MetricCard({ metric, recoveryStatus }: { metric: ImpactMetric; recoveryStatus: "ready" | "partial" | "no-feasible-plan" }) {
+  const Icon = metricIcons[metric.key], delta = impactMetricDelta(metric), max = Math.max(metric.baseline, metric.recovery, 1);
+  const isCurrency = metric.key === "sales-exposure-risk";
+  const recoveryLabel = impactStatusPresentation(recoveryStatus).recoveryLabel;
+  const recoveryStyle = recoveryStatus === "ready" ? "bg-[#005a45] text-[#00f0b8]" : recoveryStatus === "partial" ? "bg-amber-600 text-white" : "bg-red-700 text-white";
+  const trendStyle = delta.trend === "improved" ? "bg-success/25 text-[#005a45]" : delta.trend === "worsened" ? "bg-red-100 text-red-800" : "bg-slate-100 text-slate-700";
+
+  return (
+    <article className="flex min-h-[280px] flex-col overflow-hidden rounded-[32px] bg-white shadow-[0_5px_14px_rgb(41_64_91/15%)] print:min-h-0 print:rounded-[18px] print:border print:border-outline/40 print:shadow-none">
+      <header className="flex min-h-[82px] items-center justify-between gap-4 bg-primary px-7 py-4 text-white print:min-h-[46px] print:px-4 print:py-2">
+        <h3 className="max-w-[82%] text-[17px] font-bold uppercase leading-tight print:text-[13px]">{metricLabels[metric.key]}</h3>
+        <Icon className="size-7 shrink-0 print:size-5" strokeWidth={1.7} />
+      </header>
+      <div className="flex flex-1 flex-col justify-between px-7 py-5 print:p-3.5">
+        <div className="grid grid-cols-2 items-center gap-4 print:gap-2">
+          <div className="min-w-0">
+            <p className="text-[13px] font-medium text-[#5a5a5a] print:text-[11px]">Kondisi Awal</p>
+            <span
+              title={metric.key === "average-delay" && metric.baselineObservationCount === 0 ? noDelayObservationMessage : undefined}
+              className={`mt-2 inline-flex items-center justify-center rounded-[14px] bg-[#d9d9d9] px-3 py-1 font-bold text-[#5a5a5a] print:mt-1 print:px-2.5 print:py-0.5 print:rounded-[8px] ${isCurrency ? "text-[18px] leading-tight print:text-[14px]" : "text-[25px] print:text-[18px]"
+                }`}
+            >
+              {formatImpactMetricValue(metric, "baseline")}
+            </span>
+          </div>
+          <div className="min-w-0">
+            <p className={`text-[14px] font-bold print:text-[12px] ${recoveryStatus === "ready" ? "text-[#005a45]" : recoveryStatus === "partial" ? "text-amber-700" : "text-red-700"}`}>{recoveryLabel}</p>
+            <span
+              title={metric.key === "average-delay" && metric.recoveryObservationCount === 0 ? noDelayObservationMessage : undefined}
+              className={`mt-2 inline-flex items-center justify-center rounded-[16px] px-3.5 py-1 font-bold print:mt-1 print:px-2.5 print:py-0.5 print:rounded-[8px] ${recoveryStyle} ${isCurrency ? "text-[21px] leading-tight print:text-[15px]" : "text-[31px] print:text-[20px]"
+                }`}
+            >
+              {formatImpactMetricValue(metric, "recovery")}
+            </span>
+          </div>
+        </div>
+        <span
+          title={delta.trend === "unavailable" ? noDelayObservationMessage : undefined}
+          className={`mt-3 w-max max-w-full rounded-[7px] px-2.5 py-1 text-[11px] font-bold print:mt-2 print:text-[10px] print:py-0.5 ${trendStyle}`}
+        >
+          {delta.label}
+        </span>
+        <div className="mt-4 space-y-2 print:mt-2 print:space-y-1">
+          <div className="h-3 overflow-hidden rounded-full bg-[#d9d9d9] print:h-2">
+            <div className="h-full rounded-full bg-[#5a5a5a]" style={{ width: `${(metric.baseline / max) * 100}%` }} />
+          </div>
+          <div className="h-3 overflow-hidden rounded-full bg-[#d9d9d9] print:h-2">
+            <div className={`h-full rounded-full ${recoveryStatus === "ready" ? "bg-[#005a45]" : recoveryStatus === "partial" ? "bg-amber-600" : "bg-red-700"}`} style={{ width: `${(metric.recovery / max) * 100}%` }} />
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function ImpactSummary({ impact }: { impact: ImpactComparison }) {
+  const fulfilled = impact.metrics.find((metric) => metric.key === "orders-fulfilled");
+  const failed = impact.metrics.find((metric) => metric.key === "failed-orders");
+  const totalOrders = fulfilled?.key === "orders-fulfilled" ? fulfilled.total : impact.actionCounts.commerce;
+  const fullyRecovered = fulfilled?.recovery ?? 0;
+  const failedOrders = failed?.recovery ?? 0;
+  const partialOrders = Math.max(0, totalOrders - fullyRecovered - failedOrders);
+  const copy = impactStatusPresentation(impact.recoveryStatus);
+
+  return (
+    <section
+      aria-label={copy.summaryTitle}
+      className="overflow-hidden rounded-[32px] bg-white shadow-[0_5px_14px_rgb(41_64_91/15%)] print:rounded-[16px] print:border print:border-outline/40 print:shadow-none"
+    >
+      <h2 className="flex min-h-[78px] items-center justify-between bg-primary px-7 text-[17px] font-bold uppercase text-white print:min-h-[42px] print:px-4 print:py-2 print:text-[13px]">
+        {copy.summaryTitle} <Warehouse className="size-7 print:size-5" />
+      </h2>
+      <div className="space-y-3 p-6 print:space-y-2 print:p-3.5">
+        {[
+          ["Produk dalam Rencana", impact.actionCounts.manufacturing, Factory],
+          ["Penyesuaian Logistik", impact.actionCounts.logistics, Truck],
+          ["Pesanan Dianalisis", totalOrders, ShoppingBag],
+        ].map(([label, count, Icon]) => {
+          const ItemIcon = Icon as typeof Factory;
+          return (
+            <div
+              key={String(label)}
+              className="flex items-center justify-between border-b border-outline/60 pb-3 print:pb-1.5"
+            >
+              <span className="flex items-center gap-3 text-sm font-semibold print:text-xs">
+                <ItemIcon className="size-5 text-primary print:size-4" />
+                {String(label)}
+              </span>
+              <strong className="rounded-lg bg-primary-soft px-3 py-1 text-sm text-primary print:px-2 print:py-0.5 print:text-xs">
+                {String(count)}
+              </strong>
+            </div>
+          );
+        })}
+        <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+          {[
+            ["Pulih Penuh", `${fullyRecovered}/${totalOrders}`],
+            ["Parsial", partialOrders],
+            ["Tidak Terpenuhi", failedOrders],
+          ].map(([label, value]) => (
+            <div key={String(label)} className="rounded-xl bg-surface-low px-2 py-2">
+              <strong className="block text-sm text-primary">{String(value)}</strong>
+              <span className="text-[10px] font-semibold leading-tight text-muted">{String(label)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export function ImpactPage() {
-  const simulationId = useSearchParams().get("simulation") ?? ""; const query = useImpactComparison(simulationId); const [menu, setMenu] = useState(false);
-  return <AppShell>
-    <div className="p-4 md:p-6"><div className="mx-auto max-w-[1440px]">
-      {!simulationId && <EmptyState title="No simulation selected" message="Complete a recovery plan before comparing impact." />}
-      {simulationId && query.isLoading && <LoadingState label="Calculating baseline comparison…" />}
-      {query.isError && <ErrorState message={query.error.message} onRetry={() => void query.refetch()} />}
-      {query.data && <><div className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-end"><div><h1 className="page-title">Recovery Impact</h1><p className="mt-1 text-sm text-muted">Comparing Baseline Scenario vs. ResiliChain Recommended Plan</p></div><div className="flex flex-wrap items-center gap-4"><div className="mono flex gap-4 text-[11px]"><span className="flex items-center gap-2 text-muted"><i className="h-2.5 w-2.5 rounded-sm bg-surface-highest" />Baseline (Do Nothing)</span><span className="flex items-center gap-2 font-semibold text-primary"><i className="h-2.5 w-2.5 rounded-sm bg-primary" />ResiliChain Plan</span></div><div className="relative"><button aria-expanded={menu} onClick={() => setMenu((x) => !x)} className="flex items-center gap-2 rounded-md border border-outline bg-white px-3 py-2 text-sm font-medium hover:bg-surface-low"><Download size={17} /> Export Summary</button>{menu && <div className="card absolute right-0 z-20 mt-1 w-40 overflow-hidden py-1 text-sm shadow-lg"><button className="block w-full px-4 py-2 text-left hover:bg-surface-low" onClick={() => exportService.print()}>Print / PDF</button><button className="block w-full px-4 py-2 text-left hover:bg-surface-low" onClick={() => exportService.csv(query.data)}>CSV Data</button><button className="block w-full px-4 py-2 text-left hover:bg-surface-low" onClick={() => exportService.json(query.data)}>JSON Export</button></div>}</div></div></div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">{query.data.metrics.map((metric) => { const Icon = metricIcons[metric.key]; const lower = ["failed-orders", "average-delay", "sales-exposure-risk"].includes(metric.key); const max = Math.max(metric.baseline, metric.recovery); return <article key={metric.key} className={`card relative flex min-h-[220px] flex-col justify-between overflow-hidden p-5 ${metric.key === "sales-exposure-risk" ? "md:col-span-2" : ""}`}><span className="absolute right-2 top-2 rounded bg-surface-low px-2 py-1 text-[9px] font-semibold uppercase text-muted">Simulated Scenario Estimate</span><div><div className="eyebrow mb-4 flex items-center gap-2"><Icon size={19} />{metricLabels[metric.key]}</div><div className="grid grid-cols-2 gap-4"><div><div className="mono mb-1 text-xs text-muted">Baseline</div><div className="text-2xl font-semibold text-muted">{value(metric, metric.baseline)}</div></div><div><div className="mono mb-1 text-xs font-semibold text-primary">ResiliChain Plan</div><div className="flex flex-wrap items-end gap-2"><div className="kpi text-primary">{value(metric, metric.recovery)}</div><div className="mb-1 flex items-center gap-1 rounded bg-secondary-soft px-2 py-1 text-[10px] font-bold text-primary">{lower ? <ArrowDown size={12} /> : <ArrowUp size={12} />}{improvement(metric)}</div></div></div></div></div><div className="mt-5 space-y-2"><div className="h-2 overflow-hidden rounded-full bg-surface-high"><div className="h-full bg-slate-500/50" style={{ width: `${max === 0 ? 0 : (metric.baseline / max) * 100}%` }} /></div><div className="h-2 overflow-hidden rounded-full bg-surface-high"><div className="h-full rounded-full bg-primary" style={{ width: `${max === 0 ? 0 : (metric.recovery / max) * 100}%` }} /></div></div></article>; })}</div>
-        <div className="mt-6 grid gap-4 lg:grid-cols-3"><section className="card p-5"><h2 className="section-title mb-4">Recovery Actions Summary</h2>{[["Manufacturing", query.data.actionCounts.manufacturing, Factory], ["Logistics", query.data.actionCounts.logistics, Truck], ["Commerce", query.data.actionCounts.commerce, ShoppingBag]].map(([label, count, Icon]) => { const I = Icon as typeof Factory; return <div key={String(label)} className="mb-2 flex items-center justify-between rounded-md border border-outline/50 bg-surface-low p-2"><span className="flex items-center gap-3 text-sm font-medium"><I size={18} />{String(label)}</span><span className="mono rounded bg-secondary-soft px-2 py-1 text-[10px] font-bold">{String(count)} actions</span></div>; })}</section><section className="card p-5 lg:col-span-2"><h2 className="section-title mb-8">Execution Pipeline</h2><div className="relative flex items-start justify-between before:absolute before:left-[8%] before:right-[8%] before:top-4 before:h-0.5 before:bg-primary">{[["Risk Detected", AlertCircle], ["Impact Evaluated", Route], ["Recovery Generated", Factory], ["Plan Ready", CheckCircle2]].map(([label, Icon]) => { const I = Icon as typeof AlertCircle; return <div key={String(label)} className="relative z-10 flex w-24 flex-col items-center gap-2 text-center"><span className="grid h-8 w-8 place-items-center rounded-full bg-primary text-white ring-4 ring-white"><I size={15} /></span><span className="mono text-[10px] font-medium">{String(label)}</span></div>; })}</div></section></div>
-        <div className="mt-4 rounded-lg border border-primary/20 bg-primary-soft/60 p-4 text-sm text-muted"><strong className="text-primary">Decision support only.</strong> Results are simulated scenario estimates and require operator review before execution.</div></>}
-    </div></div>
-  </AppShell>;
+  const params = useSearchParams(), simulationId = params.get("simulation") ?? "", condition = params.get("condition") ?? "normal";
+  const query = useImpactComparison(simulationId), simulation = useSimulation(simulationId);
+  const [menu, setMenu] = useState(false);
+
+  const dynamic = simulation.data?.analysisMode === "scenario-simulation" && simulation.data?.hazard !== undefined;
+  const rainfall = dynamic ? getRainfallScenario(simulation.data?.hazard?.rainfallScenario) : undefined;
+  const scenarioLabel = dynamic ? `${rainfall?.label ?? "Pola Hujan"} (Simulasi Kondisi)` : "Simulasi Banjir Jakarta (04 Mar 2025)";
+  const recoveryStatus = query.data?.recoveryStatus;
+  const noFeasible = recoveryStatus === "no-feasible-plan";
+  const partial = recoveryStatus === "partial";
+  const statusCopy = impactStatusPresentation(recoveryStatus ?? "ready");
+  const exportContext = {
+    scenario: {
+      id: simulation.data?.scenarioId ?? "-",
+      label: scenarioLabel,
+      analysisMode: simulation.data?.analysisMode ?? "unknown",
+      operationalCondition: operationalConditionLabel(condition),
+      ...(simulation.data?.hazard?.rainfallScenario
+        ? { rainfallScenario: simulation.data.hazard.rainfallScenario }
+        : {}),
+    },
+  };
+
+  if (!simulationId) {
+    return (
+      <AppShell title="Analisis Dampak">
+        <FullPageState>
+          <EmptyState
+            title="Belum ada simulasi yang dipilih"
+            message="Selesaikan rencana pemulihan sebelum membandingkan dampak."
+          />
+        </FullPageState>
+      </AppShell>
+    );
+  }
+
+  return (
+    <AppShell title="Analisis Dampak">
+      <div className="impact-pattern min-h-[calc(100vh-80px)] p-4 md:min-h-[calc(100vh-80px)] md:p-6 xl:h-[calc(100vh-80px)] xl:min-h-0 xl:overflow-hidden xl:px-8 xl:py-6 print:min-h-0 print:p-0">
+        {/* Executive Print Report Header */}
+        <div className="hidden print:block mb-4 border-b-2 border-primary pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-[18px] font-bold tracking-wide text-primary-dark">{statusCopy.reportTitle}</h1>
+              <p className="text-[11px] font-medium text-[#5a5a5a]">ARUNA — Sistem Mitigasi &amp; Pemulihan Rantai Pasok</p>
+            </div>
+            <div className="text-right text-[11px] text-[#5a5a5a] space-y-0.5">
+              <div><strong>Skenario:</strong> {scenarioLabel}</div>
+              <div><strong>Kondisi:</strong> {operationalConditionLabel(condition)}</div>
+              <div><strong>ID Simulasi:</strong> {simulationId || "-"}</div>
+              <div><strong>Status Rencana:</strong> {recoveryStatus ?? "-"}</div>
+              <div><strong>Sumber Data Bisnis:</strong> {query.data?.businessDataSource ?? "-"}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto grid max-w-[1480px] items-start gap-7 xl:h-full xl:grid-cols-[325px_minmax(0,1094px)] xl:gap-[36px] print:block print:max-w-none">
+            <div className="xl:h-full print:hidden">
+              {simulation.data && <ScenarioStatus simulation={simulation.data} condition={condition} />}
+            </div>
+            <div className="xl:h-full xl:overflow-y-auto xl:overscroll-contain xl:pb-10 xl:pr-3 print:h-auto print:overflow-visible print:p-0">
+            {query.isLoading && <LoadingState label="Menghitung perbandingan kondisi awal..." />}
+            {query.isError && <ErrorState message={query.error.message} onRetry={() => void query.refetch()} />}
+            {query.data && (
+              <>
+                <section className="overflow-hidden rounded-[54px] bg-primary/20 shadow-[0_0_8px_rgb(0_0_0/25%)] print:rounded-[20px] print:bg-white print:border print:border-outline/40 print:shadow-none">
+                  <header className="flex min-h-[122px] items-center justify-center bg-primary px-8 text-center text-[28px] font-semibold text-white md:text-[32px] print:min-h-[46px] print:py-2.5 print:text-[18px]">
+                    {statusCopy.headline}
+                  </header>
+                  <div className="p-6 md:p-10 print:p-4">
+                    {(noFeasible || partial) && (
+                      <div
+                        role="status"
+                        className={`mb-6 rounded-[20px] border px-5 py-4 text-sm print:mb-3 print:py-2 ${noFeasible ? "border-red-300 bg-red-50 text-red-900" : "border-amber-300 bg-amber-50 text-amber-900"}`}
+                      >
+                        <strong className="block text-base">{statusCopy.noticeTitle}</strong>
+                        <span>{statusCopy.noticeBody}</span>
+                      </div>
+                    )}
+                    <div className="grid gap-5 lg:grid-cols-12 print:grid-cols-2 print:gap-3">
+                      {query.data.metrics.map((metric) => (
+                        <div
+                          key={metric.key}
+                          className={`print-break-avoid ${metric.key === "average-delay"
+                              ? "lg:col-span-5 print:col-span-1"
+                              : metric.key === "sales-exposure-risk"
+                                ? "lg:col-span-7 print:col-span-1"
+                                : "lg:col-span-4 print:col-span-1"
+                            }`}
+                        >
+                          <MetricCard metric={metric} recoveryStatus={query.data.recoveryStatus} />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-6 grid gap-5 lg:grid-cols-[.85fr_1.15fr] print:mt-3.5 print:grid-cols-2 print:gap-3 print-break-avoid">
+                      <ImpactSummary impact={query.data} />
+                      <section className="overflow-hidden rounded-[32px] bg-white shadow-[0_5px_14px_rgb(41_64_91/15%)] print:rounded-[16px] print:border print:border-outline/40 print:shadow-none">
+                        <h2 className="flex min-h-[78px] items-center justify-between bg-primary px-7 text-[17px] font-bold uppercase text-white print:min-h-[42px] print:px-4 print:py-2 print:text-[13px]">
+                          Alur Pelaksanaan <Route className="size-7 print:size-5" />
+                        </h2>
+                        <div className={`relative grid gap-2 px-5 py-10 before:absolute before:left-[12%] before:right-[12%] before:top-[55px] before:h-1 before:bg-primary print:py-4 print:before:top-[28px] ${noFeasible ? "grid-cols-3" : "grid-cols-4"}`}>
+                          {statusCopy.steps.map((label, index) => {
+                            const icons = noFeasible ? [AlertCircle, Route, XCircle] : partial ? [AlertCircle, Route, Factory, AlertCircle] : [AlertCircle, Route, Factory, CheckCircle2];
+                            const StepIcon = icons[index];
+                            return (
+                              <div
+                                key={String(label)}
+                                className="relative z-10 flex flex-col items-center gap-3 text-center print:gap-1.5"
+                              >
+                                <span className="grid size-9 place-items-center rounded-full bg-primary text-white ring-4 ring-white print:size-6">
+                                  <StepIcon className="size-4 print:size-3" />
+                                </span>
+                                <span className="text-[11px] font-semibold text-primary-dark print:text-[9px]">{String(label)}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </section>
+                    </div>
+                    <p className="mt-6 rounded-[18px] bg-white/70 px-5 py-4 text-center text-xs font-medium text-muted print:mt-3 print:py-2 print:text-[10px]">
+                      <strong className="text-primary">Pendukung keputusan.</strong>{" "}
+                      {statusCopy.footer}
+                    </p>
+                  </div>
+                </section>
+                <div className="no-print print:hidden relative mx-auto mt-8 w-full max-w-[578px]">
+                  <button
+                    type="button"
+                    onClick={() => setMenu((open) => !open)}
+                    aria-expanded={menu}
+                    className="flex min-h-[96px] w-full items-center justify-center gap-4 rounded-[42px] bg-[linear-gradient(149deg,#eba92d,#856019)] px-8 text-[19px] font-bold text-white shadow-md md:text-[25px]"
+                  >
+                    <Download className="size-7" /> LIHAT RINGKASAN ANDA
+                  </button>
+                  {menu && (
+                    <div className="absolute bottom-[calc(100%+10px)] left-1/2 z-20 w-[260px] -translate-x-1/2 overflow-hidden rounded-lg border border-outline bg-white py-2 text-sm text-ink shadow-xl">
+                      <div className="flex items-center justify-between border-b border-outline px-4 pb-2">
+                        <strong>Ekspor Ringkasan</strong>
+                        <button
+                          type="button"
+                          onClick={() => setMenu(false)}
+                          aria-label="Tutup menu ekspor"
+                          className="p-1 text-muted"
+                        >
+                          <X className="size-4" />
+                        </button>
+                      </div>
+                      <button
+                        className="block w-full px-4 py-2 text-left hover:bg-surface-low"
+                        onClick={() => {
+                          setMenu(false);
+                          exportService.print();
+                        }}
+                      >
+                        Cetak / PDF
+                      </button>
+                      <button
+                        className="block w-full px-4 py-2 text-left hover:bg-surface-low"
+                        onClick={() => {
+                          setMenu(false);
+                          exportService.csv(query.data, exportContext);
+                        }}
+                      >
+                        Data CSV
+                      </button>
+                      <button
+                        className="block w-full px-4 py-2 text-left hover:bg-surface-low"
+                        onClick={() => {
+                          setMenu(false);
+                          exportService.json(query.data, exportContext);
+                        }}
+                      >
+                        Ekspor JSON
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+            </div>
+          </div>
+      </div>
+    </AppShell>
+  );
 }

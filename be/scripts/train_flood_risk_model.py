@@ -1,9 +1,9 @@
 import json
-import os
 from pathlib import Path
 
 import joblib
 import pandas as pd
+import sklearn
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, f1_score, precision_score, recall_score, roc_auc_score
 from sklearn.model_selection import train_test_split
@@ -16,14 +16,9 @@ MODEL_PATH = MODELS_DIR / "flood_risk_model.joblib"
 METRICS_PATH = MODELS_DIR / "flood_risk_metrics.json"
 
 # Features we use for training
-FEATURES = [
-    "rainfall_mm",
-    "hazard_score",
-    "elevation_meters",
-    "historical_flood_exposure",
-    "drainage_pressure"
-]
+FEATURES = ["rainfall_mm", "hazard_score", "elevation_meters", "historical_flood_exposure", "drainage_pressure"]
 TARGET = "is_disrupted"
+
 
 def train_model():
     if not DATASET_PATH.exists():
@@ -32,7 +27,7 @@ def train_model():
 
     # Load dataset
     df = pd.read_csv(DATASET_PATH)
-    
+
     X = df[FEATURES]
     y = df[TARGET]
 
@@ -63,15 +58,17 @@ def train_model():
 
     # Save metrics
     metrics = {
-        "version": "flood-risk-1.0.0",
+        "version": "flood-risk-1.0.0-synthetic-labels",
+        "trainingData": "synthetic",
+        "scikitLearnVersion": sklearn.__version__,
         "precision": precision,
         "recall": recall,
         "f1_score": f1,
         "roc_auc": roc_auc,
         "features": FEATURES,
-        "description": "Baseline Logistic Regression on synthetic road features."
+        "description": "Baseline Logistic Regression on synthetic road features.",
     }
-    
+
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
     with open(METRICS_PATH, "w") as f:
         json.dump(metrics, f, indent=2)
@@ -83,11 +80,14 @@ def train_model():
         "model": model,
         "scaler": scaler,
         "features": FEATURES,
-        "version": "flood-risk-1.0.0"
+        "version": "flood-risk-1.0.0-synthetic-labels",
+        "trainingData": "synthetic",
+        "scikitLearnVersion": sklearn.__version__,
     }
-    
+
     joblib.dump(artifact, MODEL_PATH)
     print(f"Model artifact saved to {MODEL_PATH}")
+
 
 if __name__ == "__main__":
     train_model()

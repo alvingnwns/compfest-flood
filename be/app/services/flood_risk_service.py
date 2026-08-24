@@ -1,6 +1,9 @@
-import os
+from __future__ import annotations
+
+import hashlib
+from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import joblib
 import pandas as pd
@@ -8,89 +11,145 @@ from pydantic import BaseModel
 
 from app.errors import ApiError
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-MODELS_DIR = BASE_DIR / "app" / "models"
-MODEL_PATH = MODELS_DIR / "flood_risk_model.joblib"
+APP_DIR = Path(__file__).resolve().parents[1]
+MODEL_PATH = APP_DIR / "models" / "flood_risk_model.joblib"
+JAKARTA_FEATURES_PATH = APP_DIR / "data" / "indonesia-flood-ml" / "jakarta-inference-features.csv"
+EXPECTED_TRAINING_DATA = "real-historical-global-flood-database-indonesia"
+HISTORICAL_MODEL_SHA256 = "6a087f31a8a80d77bce64bedb74b04c88e0c8269b4cc767bb3cc3984e199a78d"
+
 
 class RiskResult(BaseModel):
     riskProbability: float
     riskLevel: str
     estimatedDelayMinutes: int
-    riskFactors: List[Dict[str, str]]
+    riskFactors: list[dict[str, str]]
 
-_artifact = None
 
-def _load_model():
-    global _artifact
-    if _artifact is None:
-        if not MODEL_PATH.exists():
-            raise ApiError(500, "model_missing", "Flood risk model artifact not found.")
-        _artifact = joblib.load(MODEL_PATH)
-    return _artifact
+@lru_cache(maxsize=1)
+def _load_model() -> dict[str, Any]:
+    if not MODEL_PATH.exists():
+        raise ApiError(500, "model_missing", "Artefak model risiko banjir historis tidak ditemukan.")
+    verify_historical_model_artifact()
+    artifact = joblib.load(MODEL_PATH)
+    if artifact.get("trainingData") != EXPECTED_TRAINING_DATA or "pipeline" not in artifact:
+        raise ApiError(500, "model_provenance_invalid", "Provenance model risiko banjir historis tidak valid.")
+    return artifact
 
-def predict_risk(road_properties: Dict[str, Any]) -> RiskResult:
-    """
-    Predicts the flood disruption risk for a given road segment.
-    """
+
+def verify_historical_model_artifact(
+    path: Path = MODEL_PATH,
+    expected_sha256: str = HISTORICAL_MODEL_SHA256,
+) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as artifact_file:
+        for chunk in iter(lambda: artifact_file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    actual = digest.hexdigest()
+    if actual != expected_sha256:
+        raise ApiError(
+            500,
+            "model_integrity_invalid",
+            "Integritas artefak model risiko banjir historis tidak valid.",
+        )
+    return actual
+
+
+@lru_cache(maxsize=1)
+def _jakarta_features() -> pd.DataFrame:
+    if not JAKARTA_FEATURES_PATH.exists():
+        raise ApiError(500, "features_missing", "Fitur lokal Jakarta untuk model historis tidak ditemukan.")
+    frame = pd.read_csv(JAKARTA_FEATURES_PATH).set_index("segment_id", drop=False)
+    if frame.index.has_duplicates:
+        raise ApiError(500, "features_invalid", "ID segmen fitur model historis Jakarta tidak unik.")
+    return frame
+
+
+@lru_cache(maxsize=1)
+def _jakarta_probabilities() -> pd.Series:
     artifact = _load_model()
-    model = artifact["model"]
-    scaler = artifact["scaler"]
-    features = artifact["features"]
+    features = _jakarta_features()
+    values = artifact["pipeline"].predict_proba(features[artifact["features"]])[:, 1]
+    return pd.Series(values, index=features.index)
 
-    # Extract required features, substituting defaults if missing
-    feature_values = {
-        "rainfall_mm": float(road_properties.get("rainfallMm", 0.0)),
-        "hazard_score": float(road_properties.get("hazardScore", 0.0)),
-        "elevation_meters": float(road_properties.get("elevationMeters", 0.0)),
-        "historical_flood_exposure": float(road_properties.get("historicalFloodExposure", 0.0)),
-        "drainage_pressure": float(road_properties.get("drainagePressure", 0.0))
+
+def warm_model() -> None:
+    _jakarta_probabilities()
+
+
+def model_version() -> str:
+    return str(_load_model()["version"])
+
+
+def model_provenance() -> dict[str, Any]:
+    artifact = _load_model()
+    split = artifact["split"]
+    event_ids = {event for group in split.values() for event in group["events"]}
+    region_ids = {region for group in split.values() for region in group["regions"]}
+    algorithm = type(artifact["pipeline"].named_steps["model"]).__name__
+    return {
+        "training_data": artifact["trainingData"],
+        "source": "Global Flood Database / MODIS_EVENTS/V1",
+        "target": artifact["target"],
+        "algorithm": algorithm,
+        "training_scope": "32 kejadian banjir historis di 13 region Indonesia",
+        "deployment_scope": "Jakarta sebagai pilot inferensi/demo",
+        "training_events": len(event_ids),
+        "training_regions": len(region_ids),
+        "jakarta_validation_status": "not_validated",
+        "probability_semantics": "Probabilitas paparan banjir koridor jalan, bukan kepastian jalan ditutup",
     }
-    
-    # Alternatively, road_properties might use pythonic snake_case if called internally differently,
-    # but the geojson uses camelCase in 'properties'. We support snake_case as fallback.
-    for k in feature_values:
-        if feature_values[k] == 0.0 and k in road_properties:
-            feature_values[k] = float(road_properties[k])
 
-    df = pd.DataFrame([feature_values])
-    X_scaled = scaler.transform(df)
 
-    prob = model.predict_proba(X_scaled)[0, 1]
-    
-    # Determine risk level based on probability thresholds
-    if prob < 0.25:
-        risk_level = "low"
-    elif prob < 0.5:
-        risk_level = "medium"
-    elif prob < 0.75:
-        risk_level = "high"
+def _risk_factors(row: pd.Series) -> list[dict[str, str]]:
+    factors = [{"id": "road_class", "label": f"Kelas jalan OSM: {row['highway']}"}]
+    if float(row["log_length_meters"]) >= 6:
+        factors.append({"id": "segment_length", "label": "Segmen jalan OSM lebih panjang"})
+    if float(row["sinuosity"]) >= 1.25:
+        factors.append({"id": "road_geometry", "label": "Geometri segmen OSM berkelok"})
+    if float(row["prior_observed_events"]) > 0:
+        factors.append(
+            {
+                "id": "causal_history",
+                "label": "Riwayat paparan koridor dari observasi satelit sebelumnya",
+            }
+        )
     else:
-        risk_level = "critical"
+        factors.append(
+            {
+                "id": "no_local_label_history",
+                "label": "Belum ada event Jakarta berlabel defensible; inferensi memakai fitur jalan statis",
+            }
+        )
+    return factors
 
-    # Estimate delay (synthetic logic based on prob and travelTime)
-    base_travel_time = float(road_properties.get("travelTimeMinutes", 10.0))
-    delay_multiplier = prob * 2.0  # max 200% delay
-    if risk_level == "critical":
-        delay_multiplier += 1.5
-    estimated_delay = int(base_travel_time * delay_multiplier)
 
-    # Explainability factors
-    risk_factors = []
-    if feature_values["rainfall_mm"] > 100:
-        risk_factors.append({"id": "high_rainfall", "label": "Heavy rainfall detected"})
-    if feature_values["elevation_meters"] < 5:
-        risk_factors.append({"id": "low_elevation", "label": "Low elevation area"})
-    if feature_values["historical_flood_exposure"] > 0.5:
-        risk_factors.append({"id": "historical_risk", "label": "Historical flood exposure"})
-    if feature_values["drainage_pressure"] > 0.7:
-        risk_factors.append({"id": "drainage_pressure", "label": "High drainage pressure"})
-
-    if not risk_factors:
-        risk_factors.append({"id": "baseline", "label": "Baseline risk assessment"})
-
+def predict_risk(road_properties: dict[str, Any]) -> RiskResult:
+    artifact = _load_model()
+    segment_id = str(road_properties.get("segmentId", ""))
+    features = _jakarta_features()
+    if segment_id not in features.index:
+        raise ApiError(
+            500,
+            "segment_features_missing",
+            "Fitur model historis tidak tersedia untuk segmen OSM Jakarta yang diminta.",
+            details={"segmentId": segment_id},
+        )
+    row = features.loc[segment_id]
+    probability = float(_jakarta_probabilities().loc[segment_id])
+    thresholds = artifact["riskThresholds"]
+    if probability < thresholds["low"]:
+        level = "low"
+    elif probability < thresholds["medium"]:
+        level = "medium"
+    elif probability < thresholds["high"]:
+        level = "high"
+    else:
+        level = "critical"
+    base_time = float(road_properties.get("travelTimeMinutes", 10))
+    delay = round(base_time * probability * (3.5 if level == "critical" else 2))
     return RiskResult(
-        riskProbability=round(prob, 2),
-        riskLevel=risk_level,
-        estimatedDelayMinutes=estimated_delay,
-        riskFactors=risk_factors
+        riskProbability=round(probability, 4),
+        riskLevel=level,
+        estimatedDelayMinutes=delay,
+        riskFactors=_risk_factors(row),
     )

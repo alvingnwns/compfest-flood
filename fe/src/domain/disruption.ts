@@ -1,11 +1,16 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 import { lineGeometrySchema, moneySchema, polygonGeometrySchema, riskLevelSchema } from "./common";
 import { facilitySchema } from "./scenario";
 
 export const riskFactorSchema = z.object({ id: z.string(), label: z.string() });
 export const roadRiskSchema = z.object({
-  segmentId: z.string(), roadName: z.string(), geometry: lineGeometrySchema,
+  segmentId: z.string(), roadName: z.string(),
+  highwayClass: z.string().optional(), osmWayIds: z.array(z.string()).default([]),
+  geometry: lineGeometrySchema,
   riskProbability: z.number().min(0).max(1), riskLevel: riskLevelSchema,
+  dynamicRoadRiskScore: z.number().min(0).max(1).optional(),
+  dynamicRiskScoreSemantics: z.string().optional(),
+  routingBandBasis: z.string().optional(),
   estimatedDelayMinutes: z.number().nonnegative(), riskFactors: z.array(riskFactorSchema),
   affectedSupplierIds: z.array(z.string()), affectedWarehouseIds: z.array(z.string()), affectedOrderIds: z.array(z.string()),
 });
@@ -27,5 +32,6 @@ export const disruptionAnalysisSchema = z.object({
 export type RiskFactor = z.infer<typeof riskFactorSchema>;
 export type RoadRisk = z.infer<typeof roadRiskSchema>;
 export type Route = z.infer<typeof routeSchema>;
+export type PrioritizedIssue = z.infer<typeof prioritizedIssueSchema>;
 export type OperationalImpact = z.infer<typeof operationalImpactSchema>;
 export type DisruptionAnalysis = z.infer<typeof disruptionAnalysisSchema>;

@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "region": "DKI Jakarta pilot bounding box",
+    "bbox": [106.755, -6.25, 106.94, -6.125],
+    "timezone": "Asia/Jakarta",
+    "cataloguePreparedAt": "2026-08-12",
+    "rolePolicy": "Roles were fixed from chronology before Sentinel-1 mask inspection; March 2025 is holdout."
+  },
+  "events": [
+    {
+      "eventId": "jakarta-20200101",
+      "eventStart": "2019-12-31T18:00:00+07:00",
+      "eventEnd": "2020-01-02T23:59:59+07:00",
+      "sourceName": "BNPB",
+      "sourceReference": "https://www.bnpb.go.id/berita/infografis-1",
+      "notes": "BNPB confirmed flooding across 41 Jakarta locations on 1 January 2020 after extreme rain and river overflow.",
+      "role": "train"
+    },
+    {
+      "eventId": "jakarta-20210220",
+      "eventStart": "2021-02-19T00:00:00+07:00",
+      "eventEnd": "2021-02-21T23:59:59+07:00",
+      "sourceName": "BNPB",
+      "sourceReference": "https://www.bnpb.go.id/berita/bnpb-dukung-penanganan-darurat-banjir-jakarta-dan-sekitarnya-",
+      "notes": "BNPB Pusdalops reported the 20 February 2021 Jakarta flood and emergency response.",
+      "role": "train"
+    },
+    {
+      "eventId": "jakarta-20220118",
+      "eventStart": "2022-01-18T07:00:00+07:00",
+      "eventEnd": "2022-01-19T23:59:59+07:00",
+      "sourceName": "BPBD DKI Jakarta",
+      "sourceReference": "https://bpbd.jakarta.go.id/berita/L0hkYnFsdjRZYTBzZlM5UWpiTHF6Zz09/curah-hujan-ekstrem-di-dki-jakarta-genangan-mampu-tertangani-cepat",
+      "notes": "BPBD reported extreme rainfall over 18-19 January 2022 and 77 affected RT at the 19 January update.",
+      "role": "validation"
+    },
+    {
+      "eventId": "jakarta-20250304",
+      "eventStart": "2025-03-04T00:00:00+07:00",
+      "eventEnd": "2025-03-05T23:59:59+07:00",
+      "sourceName": "BPBD DKI Jakarta",
+      "sourceReference": "https://bpbd.jakarta.go.id/berita/RXkxMTlwMWtTSURMM3BCR3hlM3BsUT09/update-info-terkini-genangan-04-maret-2025-s-d-pukul-20-00-wib",
+      "notes": "BPBD reported 119 affected RT and two inundated road sections at 20:00 WIB on 4 March 2025.",
+      "role": "holdout"
+    }
+  ]
+}

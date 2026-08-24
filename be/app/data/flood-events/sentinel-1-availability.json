@@ -1,0 +1,250 @@
+{
+  "metadata": {
+    "collection": "COPERNICUS/S1_GRD",
+    "project": "ARUNA-aic-2026",
+    "inspectionMethod": "IW images intersecting the fixed pilot bbox; event window plus symmetric search buffer",
+    "searchBufferDays": 6,
+    "coverageDefinition": "image footprint intersection area divided by pilot bbox area"
+  },
+  "events": [
+    {
+      "eventId": "jakarta-20200101",
+      "role": "train",
+      "eventStart": "2019-12-31T18:00:00+07:00",
+      "eventEnd": "2020-01-02T23:59:59+07:00",
+      "searchStart": "2019-12-25T11:00:00Z",
+      "searchEnd": "2020-01-09T16:59:59Z",
+      "acquisitionCount": 2,
+      "homogeneousGroups": [
+        {
+          "orbitDirection": "ASCENDING",
+          "relativeOrbit": 98,
+          "polarizations": [
+            "VV",
+            "VH"
+          ],
+          "resolutionMeters": 10,
+          "count": 1
+        },
+        {
+          "orbitDirection": "DESCENDING",
+          "relativeOrbit": 47,
+          "polarizations": [
+            "VV",
+            "VH"
+          ],
+          "resolutionMeters": 10,
+          "count": 1
+        }
+      ],
+      "acquisitions": [
+        {
+          "acquiredAt": "2019-12-29T22:33:51Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20191229T223351_20191229T223418_030569_03805E_A4C3",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "DESCENDING",
+          "relativeOrbitNumberStart": 47,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        },
+        {
+          "acquiredAt": "2020-01-02T11:15:15Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20200102T111515_20200102T111540_030620_038227_CF59",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "ASCENDING",
+          "relativeOrbitNumberStart": 98,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        }
+      ]
+    },
+    {
+      "eventId": "jakarta-20210220",
+      "role": "train",
+      "eventStart": "2021-02-19T00:00:00+07:00",
+      "eventEnd": "2021-02-21T23:59:59+07:00",
+      "searchStart": "2021-02-12T17:00:00Z",
+      "searchEnd": "2021-02-28T16:59:59Z",
+      "acquisitionCount": 3,
+      "homogeneousGroups": [
+        {
+          "orbitDirection": "ASCENDING",
+          "relativeOrbit": 98,
+          "polarizations": [
+            "VV",
+            "VH"
+          ],
+          "resolutionMeters": 10,
+          "count": 2
+        },
+        {
+          "orbitDirection": "DESCENDING",
+          "relativeOrbit": 47,
+          "polarizations": [
+            "VV",
+            "VH"
+          ],
+          "resolutionMeters": 10,
+          "count": 1
+        }
+      ],
+      "acquisitions": [
+        {
+          "acquiredAt": "2021-02-13T11:15:20Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20210213T111520_20210213T111545_036570_044BAA_3448",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "ASCENDING",
+          "relativeOrbitNumberStart": 98,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        },
+        {
+          "acquiredAt": "2021-02-21T22:33:55Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20210221T223355_20210221T223423_036694_044FF3_879D",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "DESCENDING",
+          "relativeOrbitNumberStart": 47,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        },
+        {
+          "acquiredAt": "2021-02-25T11:15:20Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20210225T111520_20210225T111545_036745_0451BD_F5CD",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "ASCENDING",
+          "relativeOrbitNumberStart": 98,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        }
+      ]
+    },
+    {
+      "eventId": "jakarta-20220118",
+      "role": "validation",
+      "eventStart": "2022-01-18T07:00:00+07:00",
+      "eventEnd": "2022-01-19T23:59:59+07:00",
+      "searchStart": "2022-01-12T00:00:00Z",
+      "searchEnd": "2022-01-26T16:59:59Z",
+      "acquisitionCount": 2,
+      "homogeneousGroups": [
+        {
+          "orbitDirection": "ASCENDING",
+          "relativeOrbit": 98,
+          "polarizations": [
+            "VV",
+            "VH"
+          ],
+          "resolutionMeters": 10,
+          "count": 1
+        },
+        {
+          "orbitDirection": "DESCENDING",
+          "relativeOrbit": 47,
+          "polarizations": [
+            "VV",
+            "VH"
+          ],
+          "resolutionMeters": 10,
+          "count": 1
+        }
+      ],
+      "acquisitions": [
+        {
+          "acquiredAt": "2022-01-15T11:15:27Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20220115T111527_20220115T111552_041470_04EE6C_740C",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "ASCENDING",
+          "relativeOrbitNumberStart": 98,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        },
+        {
+          "acquiredAt": "2022-01-23T22:34:02Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20220123T223402_20220123T223429_041594_04F28F_9672",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "DESCENDING",
+          "relativeOrbitNumberStart": 47,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        }
+      ]
+    },
+    {
+      "eventId": "jakarta-20250304",
+      "role": "holdout",
+      "eventStart": "2025-03-04T00:00:00+07:00",
+      "eventEnd": "2025-03-05T23:59:59+07:00",
+      "searchStart": "2025-02-25T17:00:00Z",
+      "searchEnd": "2025-03-12T16:59:59Z",
+      "acquisitionCount": 2,
+      "homogeneousGroups": [
+        {
+          "orbitDirection": "ASCENDING",
+          "relativeOrbit": 98,
+          "polarizations": [
+            "VV",
+            "VH"
+          ],
+          "resolutionMeters": 10,
+          "count": 2
+        }
+      ],
+      "acquisitions": [
+        {
+          "acquiredAt": "2025-02-28T11:15:29Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20250228T111529_20250228T111554_058095_072CAB_C779",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "ASCENDING",
+          "relativeOrbitNumberStart": 98,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        },
+        {
+          "acquiredAt": "2025-03-12T11:15:30Z",
+          "coverageFraction": 1.0,
+          "imageId": "S1A_IW_GRDH_1SDV_20250312T111530_20250312T111555_058270_0733C0_9FB2",
+          "instrumentMode": "IW",
+          "orbitPropertiesPass": "ASCENDING",
+          "relativeOrbitNumberStart": 98,
+          "resolutionMeters": 10,
+          "transmitterReceiverPolarisation": [
+            "VV",
+            "VH"
+          ]
+        }
+      ]
+    }
+  ]
+}

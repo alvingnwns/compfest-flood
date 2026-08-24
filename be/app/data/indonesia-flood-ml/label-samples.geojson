@@ -1,0 +1,1118 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "target": "roadCorridorFloodExposure",
+    "selection": "Up to three deterministic cross-region examples per canonical label and their event centroids."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            103.6021323,
+            -1.5810701
+          ],
+          [
+            103.6020781,
+            -1.5813165
+          ],
+          [
+            103.6020041,
+            -1.5815842
+          ],
+          [
+            103.6019902,
+            -1.5816305
+          ],
+          [
+            103.6018695,
+            -1.5820689
+          ],
+          [
+            103.6017166,
+            -1.5826628
+          ],
+          [
+            103.6015677,
+            -1.5832687
+          ],
+          [
+            103.6013733,
+            -1.5840463
+          ],
+          [
+            103.6013009,
+            -1.584309
+          ],
+          [
+            103.6011828,
+            -1.584856
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18003-5126812635-5126812728-0",
+        "region_id": "gaul2-18003",
+        "province": "Jambi",
+        "region": "Kota Jambi",
+        "event_id": "DFO_2222_From_20030503_to_20030506",
+        "event_start": "2003-05-03",
+        "event_end": "2003-05-06",
+        "event_cause": "Heavy rain",
+        "segment_length_meters": 434.086,
+        "road_name": "Jalan K.H. Hasan Anang",
+        "highway": "secondary",
+        "osm_way_ids": "527325052|871073746|871073747",
+        "u": "5126812635",
+        "v": "5126812728",
+        "key": 0,
+        "oneway": false,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 413250.304,
+        "source_coverage_fraction": 0.940935,
+        "valid_observation_fraction": 0.914646,
+        "permanent_water_fraction": 0.026289,
+        "flood_exposure_fraction": 0.929123,
+        "flood_exposed_length_equivalent_meters": 403.319,
+        "label": "positive",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.9887084,
+            -6.1121938
+          ],
+          [
+            106.9882896,
+            -6.1123279
+          ],
+          [
+            106.9872796,
+            -6.1126514
+          ],
+          [
+            106.9867107,
+            -6.1128336
+          ],
+          [
+            106.9853319,
+            -6.1133646
+          ],
+          [
+            106.9831587,
+            -6.1142224
+          ],
+          [
+            106.9810872,
+            -6.1150819
+          ],
+          [
+            106.9794491,
+            -6.1156832
+          ],
+          [
+            106.9778002,
+            -6.116226
+          ],
+          [
+            106.9771953,
+            -6.1164294
+          ],
+          [
+            106.9751671,
+            -6.1169348
+          ],
+          [
+            106.973942,
+            -6.11724
+          ],
+          [
+            106.972773,
+            -6.1175261
+          ],
+          [
+            106.9712416,
+            -6.1179008
+          ],
+          [
+            106.9691488,
+            -6.118413
+          ],
+          [
+            106.9650012,
+            -6.1194577
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18007-8005110118-8005110109-0",
+        "region_id": "gaul2-18007",
+        "province": "Jawa Barat",
+        "region": "Bekasi",
+        "event_id": "DFO_2627_From_20050219_to_20050225",
+        "event_start": "2005-02-19",
+        "event_end": "2005-02-25",
+        "event_cause": "Heavy rain",
+        "segment_length_meters": 2747.531,
+        "road_name": "Jalan Tol Cibitung\u2013Cilincing",
+        "highway": "motorway",
+        "osm_way_ids": "1063804708|888812183",
+        "u": "8005110118",
+        "v": "8005110109",
+        "key": 0,
+        "oneway": true,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 1570696.368,
+        "source_coverage_fraction": 0.981346,
+        "valid_observation_fraction": 0.981346,
+        "permanent_water_fraction": 0.0,
+        "flood_exposure_fraction": 0.971979,
+        "flood_exposed_length_equivalent_meters": 2670.542,
+        "label": "positive",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            108.3186067,
+            -6.5009082
+          ],
+          [
+            108.3185883,
+            -6.5008877
+          ],
+          [
+            108.3185733,
+            -6.5008646
+          ],
+          [
+            108.3185622,
+            -6.5008395
+          ],
+          [
+            108.3185551,
+            -6.500813
+          ],
+          [
+            108.3185522,
+            -6.5007856
+          ],
+          [
+            108.3185537,
+            -6.5007582
+          ],
+          [
+            108.3185594,
+            -6.5007314
+          ],
+          [
+            108.3185692,
+            -6.5007057
+          ],
+          [
+            108.3185829,
+            -6.5006819
+          ],
+          [
+            108.3186002,
+            -6.5006604
+          ],
+          [
+            108.3186206,
+            -6.5006419
+          ],
+          [
+            108.3186437,
+            -6.5006268
+          ],
+          [
+            108.3186688,
+            -6.5006154
+          ],
+          [
+            108.3186954,
+            -6.500608
+          ],
+          [
+            108.3187229,
+            -6.5006049
+          ],
+          [
+            108.3187505,
+            -6.5006059
+          ],
+          [
+            108.3187776,
+            -6.5006113
+          ],
+          [
+            108.3188035,
+            -6.5006207
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18013-2404377542-6444582638-0",
+        "region_id": "gaul2-18013",
+        "province": "Jawa Barat",
+        "region": "Indramayu",
+        "event_id": "DFO_3888_From_20111218_to_20120104",
+        "event_start": "2011-12-18",
+        "event_end": "2012-01-04",
+        "event_cause": "Torrential Rain",
+        "segment_length_meters": 54.951,
+        "road_name": "Unnamed OSM road",
+        "highway": "trunk_link",
+        "osm_way_ids": "232334663",
+        "u": "2404377542",
+        "v": "6444582638",
+        "key": 0,
+        "oneway": true,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 220054.088,
+        "source_coverage_fraction": 0.950961,
+        "valid_observation_fraction": 0.950961,
+        "permanent_water_fraction": 0.0,
+        "flood_exposure_fraction": 1.0,
+        "flood_exposed_length_equivalent_meters": 54.951,
+        "label": "positive",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            103.615026,
+            -1.5938348
+          ],
+          [
+            103.6147843,
+            -1.5936327
+          ],
+          [
+            103.6146234,
+            -1.5935376
+          ],
+          [
+            103.6143752,
+            -1.5934342
+          ],
+          [
+            103.6141956,
+            -1.5933741
+          ],
+          [
+            103.6140883,
+            -1.5933567
+          ],
+          [
+            103.6139917,
+            -1.5933486
+          ],
+          [
+            103.6136072,
+            -1.5933878
+          ],
+          [
+            103.6133184,
+            -1.5934051
+          ],
+          [
+            103.6131139,
+            -1.5933762
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18003-3015893665-7588337313-0",
+        "region_id": "gaul2-18003",
+        "province": "Jambi",
+        "region": "Kota Jambi",
+        "event_id": "DFO_2222_From_20030503_to_20030506",
+        "event_start": "2003-05-03",
+        "event_end": "2003-05-06",
+        "event_cause": "Heavy rain",
+        "segment_length_meters": 227.674,
+        "road_name": "Jalan M.H. Thamrin",
+        "highway": "trunk",
+        "osm_way_ids": "526828522",
+        "u": "3015893665",
+        "v": "7588337313",
+        "key": 0,
+        "oneway": true,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 309672.488,
+        "source_coverage_fraction": 0.921807,
+        "valid_observation_fraction": 0.892886,
+        "permanent_water_fraction": 0.02892,
+        "flood_exposure_fraction": 0.000563,
+        "flood_exposed_length_equivalent_meters": 0.128,
+        "label": "negative",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            107.1676591,
+            -6.2999389
+          ],
+          [
+            107.1676531,
+            -6.2999905
+          ],
+          [
+            107.1676424,
+            -6.3001291
+          ],
+          [
+            107.1676317,
+            -6.300741
+          ],
+          [
+            107.1677001,
+            -6.3014262
+          ],
+          [
+            107.1678087,
+            -6.3018581
+          ],
+          [
+            107.1680327,
+            -6.3024099
+          ],
+          [
+            107.1682915,
+            -6.3028645
+          ],
+          [
+            107.1685356,
+            -6.3032004
+          ],
+          [
+            107.1689084,
+            -6.3036176
+          ],
+          [
+            107.169414,
+            -6.3040375
+          ],
+          [
+            107.1699249,
+            -6.3043134
+          ],
+          [
+            107.1702505,
+            -6.3044498
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18007-10004545158-6574205456-0",
+        "region_id": "gaul2-18007",
+        "province": "Jawa Barat",
+        "region": "Bekasi",
+        "event_id": "DFO_2627_From_20050219_to_20050225",
+        "event_start": "2005-02-19",
+        "event_end": "2005-02-25",
+        "event_cause": "Heavy rain",
+        "segment_length_meters": 623.85,
+        "road_name": "Jalan Haji Umar Ismail",
+        "highway": "secondary",
+        "osm_way_ids": "188855436|188855538",
+        "u": "10004545158",
+        "v": "6574205456",
+        "key": 0,
+        "oneway": true,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 508070.689,
+        "source_coverage_fraction": 0.950283,
+        "valid_observation_fraction": 0.950283,
+        "permanent_water_fraction": 0.0,
+        "flood_exposure_fraction": 0.0,
+        "flood_exposed_length_equivalent_meters": 0.0,
+        "label": "negative",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            108.2805375,
+            -6.4543348
+          ],
+          [
+            108.2808059,
+            -6.4548041
+          ],
+          [
+            108.281219,
+            -6.4554998
+          ],
+          [
+            108.2815751,
+            -6.4560814
+          ],
+          [
+            108.2816154,
+            -6.4561751
+          ],
+          [
+            108.2816461,
+            -6.456227
+          ],
+          [
+            108.2822095,
+            -6.4571652
+          ],
+          [
+            108.2826635,
+            -6.4578831
+          ],
+          [
+            108.282748,
+            -6.4580167
+          ],
+          [
+            108.28277,
+            -6.4580514
+          ],
+          [
+            108.2830014,
+            -6.4584426
+          ],
+          [
+            108.2832838,
+            -6.4589282
+          ],
+          [
+            108.2835357,
+            -6.459342
+          ],
+          [
+            108.2836512,
+            -6.4595239
+          ],
+          [
+            108.2837813,
+            -6.4597291
+          ],
+          [
+            108.2839099,
+            -6.4599224
+          ],
+          [
+            108.2840817,
+            -6.4601942
+          ],
+          [
+            108.2841354,
+            -6.4602644
+          ],
+          [
+            108.2842426,
+            -6.460438
+          ],
+          [
+            108.2843155,
+            -6.460548
+          ],
+          [
+            108.2844344,
+            -6.4607179
+          ],
+          [
+            108.2845758,
+            -6.4609206
+          ],
+          [
+            108.2846232,
+            -6.4609885
+          ],
+          [
+            108.2848301,
+            -6.4612829
+          ],
+          [
+            108.2850404,
+            -6.4615669
+          ],
+          [
+            108.2854506,
+            -6.4620992
+          ],
+          [
+            108.2854768,
+            -6.4621318
+          ],
+          [
+            108.2855768,
+            -6.4622612
+          ],
+          [
+            108.2858881,
+            -6.4626541
+          ],
+          [
+            108.2862179,
+            -6.4630713
+          ],
+          [
+            108.2866409,
+            -6.4635585
+          ],
+          [
+            108.2866794,
+            -6.463603
+          ],
+          [
+            108.2869643,
+            -6.4639221
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18013-7301254713-6377446318-0",
+        "region_id": "gaul2-18013",
+        "province": "Jawa Barat",
+        "region": "Indramayu",
+        "event_id": "DFO_3888_From_20111218_to_20120104",
+        "event_start": "2011-12-18",
+        "event_end": "2012-01-04",
+        "event_cause": "Torrential Rain",
+        "segment_length_meters": 1283.655,
+        "road_name": "Pantura Jawa Barat",
+        "highway": "trunk",
+        "osm_way_ids": "534701586|534701587|535163080",
+        "u": "7301254713",
+        "v": "6377446318",
+        "key": 0,
+        "oneway": true,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 838261.249,
+        "source_coverage_fraction": 0.968572,
+        "valid_observation_fraction": 0.968572,
+        "permanent_water_fraction": 0.0,
+        "flood_exposure_fraction": 0.000906,
+        "flood_exposed_length_equivalent_meters": 1.163,
+        "label": "negative",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            103.5736245,
+            -1.595271
+          ],
+          [
+            103.5737264,
+            -1.594468
+          ],
+          [
+            103.5738594,
+            -1.5937145
+          ],
+          [
+            103.5738813,
+            -1.5935986
+          ],
+          [
+            103.5739446,
+            -1.5931452
+          ],
+          [
+            103.5739376,
+            -1.5930691
+          ],
+          [
+            103.5739061,
+            -1.5929893
+          ],
+          [
+            103.5738659,
+            -1.5929317
+          ],
+          [
+            103.5738076,
+            -1.5928754
+          ],
+          [
+            103.5736996,
+            -1.5927963
+          ],
+          [
+            103.5734434,
+            -1.5926274
+          ],
+          [
+            103.5733308,
+            -1.5925402
+          ],
+          [
+            103.5732624,
+            -1.5924531
+          ],
+          [
+            103.5732208,
+            -1.5923378
+          ],
+          [
+            103.5731886,
+            -1.592185
+          ],
+          [
+            103.5731095,
+            -1.5919289
+          ],
+          [
+            103.57308,
+            -1.5918673
+          ],
+          [
+            103.5730371,
+            -1.5917815
+          ],
+          [
+            103.5729472,
+            -1.5916715
+          ],
+          [
+            103.5725449,
+            -1.5912037
+          ],
+          [
+            103.572396,
+            -1.5910066
+          ],
+          [
+            103.5723182,
+            -1.5909047
+          ],
+          [
+            103.5719401,
+            -1.5903537
+          ],
+          [
+            103.571869,
+            -1.5902639
+          ],
+          [
+            103.5717764,
+            -1.5901594
+          ],
+          [
+            103.5711005,
+            -1.5894958
+          ],
+          [
+            103.5708511,
+            -1.589233
+          ],
+          [
+            103.570658,
+            -1.5889542
+          ],
+          [
+            103.5705534,
+            -1.5887423
+          ],
+          [
+            103.5704926,
+            -1.5885161
+          ],
+          [
+            103.5702286,
+            -1.58739
+          ],
+          [
+            103.5701811,
+            -1.5870861
+          ],
+          [
+            103.5701768,
+            -1.586868
+          ],
+          [
+            103.5701829,
+            -1.5866966
+          ],
+          [
+            103.5702332,
+            -1.5864966
+          ],
+          [
+            103.570328,
+            -1.586157
+          ],
+          [
+            103.5703194,
+            -1.5860021
+          ],
+          [
+            103.5702985,
+            -1.5858543
+          ],
+          [
+            103.5702628,
+            -1.5856787
+          ],
+          [
+            103.5701922,
+            -1.5854422
+          ],
+          [
+            103.5699606,
+            -1.5848654
+          ],
+          [
+            103.5698734,
+            -1.5846924
+          ],
+          [
+            103.5698,
+            -1.5845889
+          ],
+          [
+            103.5694966,
+            -1.5842514
+          ],
+          [
+            103.5689961,
+            -1.5836512
+          ],
+          [
+            103.5686088,
+            -1.5831869
+          ],
+          [
+            103.5684866,
+            -1.5830027
+          ],
+          [
+            103.5682869,
+            -1.5827016
+          ],
+          [
+            103.5680267,
+            -1.5821815
+          ],
+          [
+            103.5679688,
+            -1.5820456
+          ],
+          [
+            103.5670719,
+            -1.57994
+          ],
+          [
+            103.5665193,
+            -1.5784922
+          ],
+          [
+            103.5657308,
+            -1.5768259
+          ],
+          [
+            103.5656831,
+            -1.5767741
+          ],
+          [
+            103.5656199,
+            -1.5767477
+          ],
+          [
+            103.565555,
+            -1.5767486
+          ],
+          [
+            103.5654951,
+            -1.5767896
+          ],
+          [
+            103.5653688,
+            -1.5769636
+          ],
+          [
+            103.5653193,
+            -1.5770091
+          ],
+          [
+            103.5652644,
+            -1.5770261
+          ],
+          [
+            103.5652168,
+            -1.5770128
+          ],
+          [
+            103.5651829,
+            -1.5769807
+          ],
+          [
+            103.5651191,
+            -1.5768933
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18003-4271540240-4271540274-0",
+        "region_id": "gaul2-18003",
+        "province": "Jambi",
+        "region": "Kota Jambi",
+        "event_id": "DFO_2222_From_20030503_to_20030506",
+        "event_start": "2003-05-03",
+        "event_end": "2003-05-06",
+        "event_cause": "Heavy rain",
+        "segment_length_meters": 2422.028,
+        "road_name": "Jalan Kyai Haji A Majid",
+        "highway": "secondary",
+        "osm_way_ids": "427999032|602562392|602562395",
+        "u": "4271540240",
+        "v": "4271540274",
+        "key": 0,
+        "oneway": false,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 1389670.563,
+        "source_coverage_fraction": 0.979833,
+        "valid_observation_fraction": 0.762593,
+        "permanent_water_fraction": 0.21724,
+        "flood_exposure_fraction": 0.679417,
+        "flood_exposed_length_equivalent_meters": 1645.567,
+        "label": "unknown",
+        "confidence": "excluded",
+        "exclusion_reason": "insufficient_clear_observation",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.9701681,
+            -6.1050241
+          ],
+          [
+            106.9700926,
+            -6.1050947
+          ],
+          [
+            106.969733,
+            -6.1052027
+          ],
+          [
+            106.9691985,
+            -6.1053427
+          ],
+          [
+            106.9689752,
+            -6.1054053
+          ],
+          [
+            106.9683898,
+            -6.1055629
+          ],
+          [
+            106.9682634,
+            -6.1055626
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18007-375643391-5668399946-0",
+        "region_id": "gaul2-18007",
+        "province": "Jawa Barat",
+        "region": "Bekasi",
+        "event_id": "DFO_2627_From_20050219_to_20050225",
+        "event_start": "2005-02-19",
+        "event_end": "2005-02-25",
+        "event_cause": "Heavy rain",
+        "segment_length_meters": 220.787,
+        "road_name": "Jalan Marunda Makmur",
+        "highway": "primary",
+        "osm_way_ids": "376781757|376781758|376781759",
+        "u": "375643391",
+        "v": "5668399946",
+        "key": 0,
+        "oneway": true,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 306326.065,
+        "source_coverage_fraction": 0.930621,
+        "valid_observation_fraction": 0.761418,
+        "permanent_water_fraction": 0.169203,
+        "flood_exposure_fraction": 0.984388,
+        "flood_exposed_length_equivalent_meters": 217.34,
+        "label": "unknown",
+        "confidence": "excluded",
+        "exclusion_reason": "insufficient_clear_observation",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            108.0647621,
+            -6.3173255
+          ],
+          [
+            108.0647345,
+            -6.3174063
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "cross_region_label_sanity_check",
+        "segment_id": "osm-gaul2-18013-2404682283-7536553955-0",
+        "region_id": "gaul2-18013",
+        "province": "Jawa Barat",
+        "region": "Indramayu",
+        "event_id": "DFO_3888_From_20111218_to_20120104",
+        "event_start": "2011-12-18",
+        "event_end": "2012-01-04",
+        "event_cause": "Torrential Rain",
+        "segment_length_meters": 9.488,
+        "road_name": "Unnamed OSM road",
+        "highway": "trunk_link",
+        "osm_way_ids": "805924692",
+        "u": "2404682283",
+        "v": "7536553955",
+        "key": 0,
+        "oneway": false,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 200825.262,
+        "source_coverage_fraction": 0.885039,
+        "valid_observation_fraction": 0.546834,
+        "permanent_water_fraction": 0.338205,
+        "flood_exposure_fraction": 1.0,
+        "flood_exposed_length_equivalent_meters": 9.488,
+        "label": "unknown",
+        "confidence": "excluded",
+        "exclusion_reason": "insufficient_clear_observation",
+        "interpretationWarning": "OSM line precision does not improve the 250 m flood-source support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.61066474132987,
+          -1.573713738043438
+        ]
+      },
+      "properties": {
+        "samplePurpose": "event_flood_centroid_context",
+        "eventId": "DFO_2222_From_20030503_to_20030506",
+        "regionId": "gaul2-18003",
+        "floodAreaSquareKm": 10.695288
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.05707221307627,
+          -6.063262529547394
+        ]
+      },
+      "properties": {
+        "samplePurpose": "event_flood_centroid_context",
+        "eventId": "DFO_2627_From_20050219_to_20050225",
+        "regionId": "gaul2-18007",
+        "floodAreaSquareKm": 132.459112
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.20567542224413,
+          -6.395151264023129
+        ]
+      },
+      "properties": {
+        "samplePurpose": "event_flood_centroid_context",
+        "eventId": "DFO_3888_From_20111218_to_20120104",
+        "regionId": "gaul2-18013",
+        "floodAreaSquareKm": 613.994494
+      }
+    }
+  ]
+}

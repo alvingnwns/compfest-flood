@@ -1,0 +1,290 @@
+{
+  "metadata": {
+    "source": "OpenStreetMap contributors",
+    "boundarySource": "FAO/GAUL/2015/level2",
+    "highwayFilter": "[\"highway\"~\"motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link\"]",
+    "selectionIndependentOfRoadLabels": true
+  },
+  "summary": {
+    "regionsPrepared": 13,
+    "roadSegments": 13771,
+    "geometryBytes": 15681977
+  },
+  "regions": [
+    {
+      "regionId": "gaul2-18003",
+      "gaulAdmin2Code": 18003,
+      "province": "Jambi",
+      "region": "Kota Jambi",
+      "roadSegments": 930,
+      "graphNodes": 441,
+      "roadCategories": {
+        "primary": 102,
+        "primary_link": 36,
+        "secondary": 193,
+        "secondary_link": 44,
+        "tertiary": 245,
+        "tertiary_link": 16,
+        "trunk": 234,
+        "trunk_link": 60
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-18003.geojson",
+      "artifactBytes": 670886,
+      "processedContentSha256": "81bff1cbb89a775d36c72830d8f9a32b05f6e7908e31fe54f3bc99f2efadba49"
+    },
+    {
+      "regionId": "gaul2-18007",
+      "gaulAdmin2Code": 18007,
+      "province": "Jawa Barat",
+      "region": "Bekasi",
+      "roadSegments": 3101,
+      "graphNodes": 1671,
+      "roadCategories": {
+        "motorway": 80,
+        "motorway_link": 159,
+        "primary": 455,
+        "primary_link": 119,
+        "secondary": 632,
+        "secondary_link": 110,
+        "tertiary": 1213,
+        "tertiary_link": 129,
+        "trunk": 143,
+        "trunk_link": 61
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-18007.geojson",
+      "artifactBytes": 3138543,
+      "processedContentSha256": "5bc1170df5fc08a6f2a5c9c63588dca76800bc89c44f790c90162b6026715a5b"
+    },
+    {
+      "regionId": "gaul2-18013",
+      "gaulAdmin2Code": 18013,
+      "province": "Jawa Barat",
+      "region": "Indramayu",
+      "roadSegments": 1095,
+      "graphNodes": 548,
+      "roadCategories": {
+        "motorway": 10,
+        "motorway_link": 16,
+        "primary": 200,
+        "primary_link": 79,
+        "secondary": 144,
+        "secondary_link": 116,
+        "tertiary": 176,
+        "tertiary_link": 6,
+        "trunk": 210,
+        "trunk_link": 138
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-18013.geojson",
+      "artifactBytes": 1139746,
+      "processedContentSha256": "f88c9601ffce03257750380ed500121bd8399ea0fd42e33233b896b15e9a898e"
+    },
+    {
+      "regionId": "gaul2-18014",
+      "gaulAdmin2Code": 18014,
+      "province": "Jawa Barat",
+      "region": "Karawang",
+      "roadSegments": 1721,
+      "graphNodes": 897,
+      "roadCategories": {
+        "motorway": 52,
+        "motorway_link": 67,
+        "primary": 282,
+        "primary_link": 29,
+        "secondary": 208,
+        "secondary_link": 19,
+        "tertiary": 750,
+        "tertiary_link": 64,
+        "trunk": 182,
+        "trunk_link": 68
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-18014.geojson",
+      "artifactBytes": 2094307,
+      "processedContentSha256": "47e0481276f1f782fee450a1b4d9b587640b0ad20fdb2a521a97e43de29f7bb1"
+    },
+    {
+      "regionId": "gaul2-18069",
+      "gaulAdmin2Code": 18069,
+      "province": "Jawa Timur",
+      "region": "Gresik",
+      "roadSegments": 1167,
+      "graphNodes": 543,
+      "roadCategories": {
+        "motorway": 38,
+        "motorway_link": 83,
+        "primary": 24,
+        "secondary": 582,
+        "secondary_link": 37,
+        "tertiary": 103,
+        "tertiary_link": 4,
+        "trunk": 254,
+        "trunk_link": 42
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-18069.geojson",
+      "artifactBytes": 1401033,
+      "processedContentSha256": "6d8740650f552abb3a459a9bab6e996196d51fe2867dc24568e61485fa364c50"
+    },
+    {
+      "regionId": "gaul2-18081",
+      "gaulAdmin2Code": 18081,
+      "province": "Jawa Timur",
+      "region": "Lamongan",
+      "roadSegments": 1101,
+      "graphNodes": 431,
+      "roadCategories": {
+        "primary": 99,
+        "secondary": 231,
+        "secondary_link": 4,
+        "tertiary": 497,
+        "tertiary_link": 1,
+        "trunk": 197,
+        "trunk_link": 72
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-18081.geojson",
+      "artifactBytes": 1598042,
+      "processedContentSha256": "6caf30bd7fbf83830ff6455cbda7fc3ee025810e83d97be6aac2a1a881005c49"
+    },
+    {
+      "regionId": "gaul2-18116",
+      "gaulAdmin2Code": 18116,
+      "province": "Kalimantan Selatan",
+      "region": "Tanahlaut",
+      "roadSegments": 331,
+      "graphNodes": 154,
+      "roadCategories": {
+        "primary": 81,
+        "primary_link": 6,
+        "secondary": 46,
+        "secondary_link": 4,
+        "tertiary": 72,
+        "trunk": 122
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-18116.geojson",
+      "artifactBytes": 804560,
+      "processedContentSha256": "4c6830af19bf2341ee169614adc99181b40b8280297031ce1fe659abfe7af04a"
+    },
+    {
+      "regionId": "gaul2-18188",
+      "gaulAdmin2Code": 18188,
+      "province": "Sulawesi Selatan",
+      "region": "Wajo",
+      "roadSegments": 256,
+      "graphNodes": 111,
+      "roadCategories": {
+        "primary": 48,
+        "primary_link": 4,
+        "secondary": 18,
+        "secondary_link": 1,
+        "tertiary": 86,
+        "tertiary_link": 20,
+        "trunk": 77,
+        "trunk_link": 2
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-18188.geojson",
+      "artifactBytes": 847021,
+      "processedContentSha256": "2a856f4c04bf10b7c073644e0a9baf6e48c43235e731ed39a263e0883c4adf7d"
+    },
+    {
+      "regionId": "gaul2-73682",
+      "gaulAdmin2Code": 73682,
+      "province": "Kalimantan Selatan",
+      "region": "Hulusungai Utara",
+      "roadSegments": 265,
+      "graphNodes": 118,
+      "roadCategories": {
+        "primary": 88,
+        "primary_link": 15,
+        "secondary": 22,
+        "tertiary": 106,
+        "tertiary_link": 4,
+        "trunk": 30
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-73682.geojson",
+      "artifactBytes": 400035,
+      "processedContentSha256": "b054c7cc8d46930b06691dad2500edfea97370d489f74f73c26082ffe7da746d"
+    },
+    {
+      "regionId": "gaul2-73705",
+      "gaulAdmin2Code": 73705,
+      "province": "Nangroe Aceh Darussalam",
+      "region": "Kota Bandaaceh",
+      "roadSegments": 952,
+      "graphNodes": 496,
+      "roadCategories": {
+        "primary": 40,
+        "primary_link": 36,
+        "secondary": 151,
+        "secondary_link": 36,
+        "tertiary": 277,
+        "tertiary_link": 26,
+        "trunk": 281,
+        "trunk_link": 105
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-73705.geojson",
+      "artifactBytes": 677197,
+      "processedContentSha256": "fcf8555ad5e1a9252730bfe73166d77b16b8b2459b3d7531b22a270ca7c1e5df"
+    },
+    {
+      "regionId": "gaul2-73735",
+      "gaulAdmin2Code": 73735,
+      "province": "Sulawesi Selatan",
+      "region": "Kota Makasar",
+      "roadSegments": 1764,
+      "graphNodes": 892,
+      "roadCategories": {
+        "motorway": 33,
+        "motorway_link": 29,
+        "primary": 158,
+        "primary_link": 48,
+        "secondary": 444,
+        "secondary_link": 88,
+        "tertiary": 507,
+        "tertiary_link": 46,
+        "trunk": 286,
+        "trunk_link": 125
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-73735.geojson",
+      "artifactBytes": 1226727,
+      "processedContentSha256": "50d064df6fa89b13c351d0cfae80b26b0c273094e5c6fd9afe5effac5c7c5f21"
+    },
+    {
+      "regionId": "gaul2-73814",
+      "gaulAdmin2Code": 73814,
+      "province": "Sumatera Selatan",
+      "region": "Ogan Ilir",
+      "roadSegments": 335,
+      "graphNodes": 188,
+      "roadCategories": {
+        "motorway": 33,
+        "motorway_link": 61,
+        "tertiary": 94,
+        "tertiary_link": 12,
+        "trunk": 113,
+        "trunk_link": 22
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-73814.geojson",
+      "artifactBytes": 523942,
+      "processedContentSha256": "cc085ee0cd2ba94e224ad50871857ddbb7e7dc81c4e418a3c37c23791bcef0ac"
+    },
+    {
+      "regionId": "gaul2-73847",
+      "gaulAdmin2Code": 73847,
+      "province": "Sumatera Utara",
+      "region": "Serdang Bedagai",
+      "roadSegments": 753,
+      "graphNodes": 316,
+      "roadCategories": {
+        "motorway": 30,
+        "motorway_link": 48,
+        "primary": 114,
+        "primary_link": 3,
+        "secondary": 22,
+        "tertiary": 434,
+        "trunk": 100,
+        "trunk_link": 2
+      },
+      "artifact": "app/data/indonesia-flood-ml/roads/gaul2-73847.geojson",
+      "artifactBytes": 1159938,
+      "processedContentSha256": "b0cc1826c2d3d46c28c6df4f31ce54d8b8aeec9d558fb624a122bd5e3c139ce9"
+    }
+  ]
+}

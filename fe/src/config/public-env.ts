@@ -1,8 +1,8 @@
 ﻿import { z } from "zod";
 
 const publicEnvSchema = z.object({
-  NEXT_PUBLIC_DATA_SOURCE: z.enum(["mock", "api"]).default("mock"),
-  NEXT_PUBLIC_API_BASE_URL: z.string().default("").transform((value) => value.replace(/\/+$/, "")),
+  NEXT_PUBLIC_DATA_SOURCE: z.enum(["mock", "api"]).default("api"),
+  NEXT_PUBLIC_API_BASE_URL: z.string().default("http://localhost:8000").transform((value) => value.replace(/\/+$/, "")),
 }).superRefine((value, context) => {
   if (value.NEXT_PUBLIC_DATA_SOURCE === "api") {
     try { new URL(value.NEXT_PUBLIC_API_BASE_URL); }

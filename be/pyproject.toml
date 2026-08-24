@@ -3,22 +3,41 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "resilichain-backend"
+name = "ARUNA-backend"
 version = "0.1.0"
-description = "FastAPI backend foundation for ResiliChain AI"
+description = "FastAPI backend foundation for ARUNA"
 requires-python = ">=3.11"
 dependencies = [
+  "google-genai>=2.0,<3.0",
   "fastapi>=0.115,<1.0",
+  "httpx>=0.28,<1.0",
+  "joblib>=1.4,<2.0",
+  "networkx>=3.4,<4.0",
+  "numpy>=2.1,<3.0",
+  "openpyxl>=3.1,<4.0",
+  "ortools>=9.12,<10.0",
+  "pandas>=2.2,<4.0",
+  "pydantic>=2.11,<3.0",
   "pydantic-settings>=2.7,<3.0",
+  "python-multipart>=0.0.20,<1.0",
+  "scikit-learn>=1.6,<2.0",
   "uvicorn[standard]>=0.34,<1.0",
 ]
 
 [project.optional-dependencies]
+data = [
+  "osmnx>=2.1,<3.0",
+]
+remote-sensing = [
+  "earthengine-api>=1.7,<2.0",
+]
 dev = [
-  "httpx>=0.28,<1.0",
   "pytest>=8.3,<10.0",
   "ruff>=0.11,<1.0",
 ]
+
+[project.scripts]
+ARUNA-api = "app.main:run"
 
 [tool.hatch.build.targets.wheel]
 packages = ["app"]

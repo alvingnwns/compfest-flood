@@ -1,0 +1,567 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "target": "roadCorridorFloodExposure",
+    "selection": "Up to three deterministic roads per canonical label plus all non-permanent source flood pixels.",
+    "visualInspectionStatus": "road geometry and source pixel centres reviewed; no road-surface claim",
+    "canonicalPositiveSampleCount": 0
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.8311359,
+            -6.2220883
+          ],
+          [
+            106.8310691,
+            -6.2218425
+          ],
+          [
+            106.8310076,
+            -6.2216159
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "manual_sanity_check",
+        "segment_id": "osm-10082667802-6330562646-0",
+        "event_id": "DFO_3251_From_20080102_to_20080106",
+        "event_start": "2008-01-02",
+        "event_end": "2008-01-06",
+        "event_context": "pilot_centroid",
+        "event_context_confidence": "moderate",
+        "segment_length_meters": 54.409,
+        "road_name": "Jalan Denpasar Raya",
+        "highway": "tertiary",
+        "osm_way_ids": "28194353",
+        "u": "10082667802",
+        "v": "6330562646",
+        "key": 0,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 223299.983,
+        "source_coverage_fraction": 0.965127,
+        "valid_observation_fraction": 0.965127,
+        "permanent_water_fraction": 0.0,
+        "flood_exposed_fraction": 0.0,
+        "flood_exposed_length_equivalent_meters": 0.0,
+        "label": "negative",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "The line is precise OSM geometry, but the exposure label has 250 m MODIS support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.8313925,
+            -6.2231898
+          ],
+          [
+            106.8313165,
+            -6.2228784
+          ],
+          [
+            106.8313071,
+            -6.2228399
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "manual_sanity_check",
+        "segment_id": "osm-10090012698-9015877330-0",
+        "event_id": "DFO_3251_From_20080102_to_20080106",
+        "event_start": "2008-01-02",
+        "event_end": "2008-01-06",
+        "event_context": "pilot_centroid",
+        "event_context_confidence": "moderate",
+        "segment_length_meters": 40.036,
+        "road_name": "Jalan Denpasar Raya",
+        "highway": "tertiary",
+        "osm_way_ids": "28194353",
+        "u": "10090012698",
+        "v": "9015877330",
+        "key": 0,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 216108.752,
+        "source_coverage_fraction": 0.964111,
+        "valid_observation_fraction": 0.964111,
+        "permanent_water_fraction": 0.0,
+        "flood_exposed_fraction": 0.0,
+        "flood_exposed_length_equivalent_meters": 0.0,
+        "label": "negative",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "The line is precise OSM geometry, but the exposure label has 250 m MODIS support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.7968022,
+            -6.186765
+          ],
+          [
+            106.7967863,
+            -6.1863407
+          ],
+          [
+            106.7967738,
+            -6.1859022
+          ],
+          [
+            106.7967546,
+            -6.1853398
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "manual_sanity_check",
+        "segment_id": "osm-10098494032-6366750161-0",
+        "event_id": "DFO_3251_From_20080102_to_20080106",
+        "event_start": "2008-01-02",
+        "event_end": "2008-01-06",
+        "event_context": "pilot_centroid",
+        "event_context_confidence": "moderate",
+        "segment_length_meters": 158.564,
+        "road_name": "Jalan Letnan Jenderal Siswondo Parman",
+        "highway": "trunk",
+        "osm_way_ids": "688087394",
+        "u": "10098494032",
+        "v": "6366750161",
+        "key": 0,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 275409.701,
+        "source_coverage_fraction": 0.970769,
+        "valid_observation_fraction": 0.970769,
+        "permanent_water_fraction": 0.0,
+        "flood_exposed_fraction": 0.0,
+        "flood_exposed_length_equivalent_meters": 0.0,
+        "label": "negative",
+        "confidence": "moderate",
+        "exclusion_reason": "",
+        "interpretationWarning": "The line is precise OSM geometry, but the exposure label has 250 m MODIS support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.9265967,
+            -6.1819585
+          ],
+          [
+            106.9267135,
+            -6.1818491
+          ],
+          [
+            106.9268702,
+            -6.1817112
+          ],
+          [
+            106.9269639,
+            -6.1815642
+          ],
+          [
+            106.9270132,
+            -6.1814518
+          ],
+          [
+            106.9270602,
+            -6.1813331
+          ],
+          [
+            106.9271124,
+            -6.1811838
+          ],
+          [
+            106.9271366,
+            -6.1810625
+          ],
+          [
+            106.9271452,
+            -6.1809789
+          ],
+          [
+            106.9271567,
+            -6.1808452
+          ],
+          [
+            106.9271593,
+            -6.1807358
+          ],
+          [
+            106.9271647,
+            -6.1806478
+          ],
+          [
+            106.9271941,
+            -6.180579
+          ],
+          [
+            106.9272519,
+            -6.1805271
+          ],
+          [
+            106.9273056,
+            -6.1804949
+          ],
+          [
+            106.9273634,
+            -6.1804572
+          ],
+          [
+            106.9274329,
+            -6.1804211
+          ],
+          [
+            106.927492,
+            -6.1803838
+          ],
+          [
+            106.9275617,
+            -6.1803158
+          ],
+          [
+            106.927602,
+            -6.1802464
+          ],
+          [
+            106.9276167,
+            -6.1801905
+          ],
+          [
+            106.9276382,
+            -6.1801065
+          ],
+          [
+            106.9276636,
+            -6.1799239
+          ],
+          [
+            106.9276784,
+            -6.1797639
+          ],
+          [
+            106.9276999,
+            -6.1796345
+          ],
+          [
+            106.92772,
+            -6.1795705
+          ],
+          [
+            106.9277331,
+            -6.179494
+          ],
+          [
+            106.9277716,
+            -6.1793374
+          ],
+          [
+            106.927848,
+            -6.1791553
+          ],
+          [
+            106.9278661,
+            -6.1790545
+          ],
+          [
+            106.9278715,
+            -6.1789759
+          ],
+          [
+            106.9278632,
+            -6.178879
+          ],
+          [
+            106.9278393,
+            -6.1787492
+          ],
+          [
+            106.9278071,
+            -6.1786225
+          ],
+          [
+            106.9277776,
+            -6.1785239
+          ],
+          [
+            106.9277535,
+            -6.1784692
+          ],
+          [
+            106.9276891,
+            -6.1783319
+          ],
+          [
+            106.9276064,
+            -6.1781519
+          ],
+          [
+            106.9275067,
+            -6.1779292
+          ],
+          [
+            106.9274557,
+            -6.1778532
+          ],
+          [
+            106.9274007,
+            -6.1777532
+          ],
+          [
+            106.927382,
+            -6.1776519
+          ],
+          [
+            106.9274289,
+            -6.1773145
+          ],
+          [
+            106.9274591,
+            -6.1771372
+          ],
+          [
+            106.9274243,
+            -6.1766999
+          ],
+          [
+            106.9273895,
+            -6.1764103
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "manual_sanity_check",
+        "segment_id": "osm-330409714-7232143502-0",
+        "event_id": "DFO_3251_From_20080102_to_20080106",
+        "event_start": "2008-01-02",
+        "event_end": "2008-01-06",
+        "event_context": "pilot_centroid",
+        "event_context_confidence": "moderate",
+        "segment_length_meters": 675.739,
+        "road_name": "Unnamed OSM road",
+        "highway": "service",
+        "osm_way_ids": "569826263|590097029|723057935",
+        "u": "330409714",
+        "v": "7232143502",
+        "key": 0,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 529995.12,
+        "source_coverage_fraction": 0.981536,
+        "valid_observation_fraction": 0.981536,
+        "permanent_water_fraction": 0.0,
+        "flood_exposed_fraction": 0.035234,
+        "flood_exposed_length_equivalent_meters": 23.809,
+        "label": "unknown",
+        "confidence": "ambiguous",
+        "exclusion_reason": "subthreshold_flood_overlap",
+        "interpretationWarning": "The line is precise OSM geometry, but the exposure label has 250 m MODIS support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.9120603,
+            -6.2288712
+          ],
+          [
+            106.9120611,
+            -6.2289775
+          ],
+          [
+            106.9120725,
+            -6.229453
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "manual_sanity_check",
+        "segment_id": "osm-11492431708-1321228510-0",
+        "event_id": "DFO_3280_From_20080301_to_20080403",
+        "event_start": "2008-03-01",
+        "event_end": "2008-04-03",
+        "event_context": "remote_event_centroid_with_isolated_pilot_pixel",
+        "event_context_confidence": "low",
+        "segment_length_meters": 64.709,
+        "road_name": "Jalan Bumi Raya",
+        "highway": "residential",
+        "osm_way_ids": "725268263",
+        "u": "11492431708",
+        "v": "1321228510",
+        "key": 0,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 228452.586,
+        "source_coverage_fraction": 0.965683,
+        "valid_observation_fraction": 0.965683,
+        "permanent_water_fraction": 0.0,
+        "flood_exposed_fraction": 0.003192,
+        "flood_exposed_length_equivalent_meters": 0.207,
+        "label": "unknown",
+        "confidence": "excluded",
+        "exclusion_reason": "event_context_not_jakarta",
+        "interpretationWarning": "The line is precise OSM geometry, but the exposure label has 250 m MODIS support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.9125639,
+            -6.2289893
+          ],
+          [
+            106.9125583,
+            -6.2289065
+          ],
+          [
+            106.9125536,
+            -6.2288945
+          ],
+          [
+            106.9125462,
+            -6.2288878
+          ],
+          [
+            106.9125333,
+            -6.2288852
+          ],
+          [
+            106.9124239,
+            -6.2288825
+          ],
+          [
+            106.9123927,
+            -6.2288805
+          ],
+          [
+            106.9120603,
+            -6.2288712
+          ]
+        ]
+      },
+      "properties": {
+        "samplePurpose": "manual_sanity_check",
+        "segment_id": "osm-12217513829-11492431708-0",
+        "event_id": "DFO_3280_From_20080301_to_20080403",
+        "event_start": "2008-03-01",
+        "event_end": "2008-04-03",
+        "event_context": "remote_event_centroid_with_isolated_pilot_pixel",
+        "event_context_confidence": "low",
+        "segment_length_meters": 65.531,
+        "road_name": "Unnamed OSM road",
+        "highway": "service",
+        "osm_way_ids": "1237350496|1237350497|1320234227",
+        "u": "12217513829",
+        "v": "11492431708",
+        "key": 0,
+        "buffer_radius_meters": 250,
+        "minimum_clear_fraction": 0.75,
+        "positive_exposure_fraction": 0.05,
+        "source_resolution_class": "coarse-modis-250m",
+        "corridor_area_square_meters": 227088.351,
+        "source_coverage_fraction": 0.969582,
+        "valid_observation_fraction": 0.969582,
+        "permanent_water_fraction": 0.0,
+        "flood_exposed_fraction": 0.002723,
+        "flood_exposed_length_equivalent_meters": 0.178,
+        "label": "unknown",
+        "confidence": "excluded",
+        "exclusion_reason": "event_context_not_jakarta",
+        "interpretationWarning": "The line is precise OSM geometry, but the exposure label has 250 m MODIS support."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "geodesic": false,
+        "type": "Point",
+        "coordinates": [
+          106.86470909296344,
+          -6.150091013903274
+        ]
+      },
+      "properties": {
+        "samplePurpose": "source_flood_pixel_center",
+        "event_id": "DFO_3251_From_20080102_to_20080106",
+        "effective_support_meters": 250,
+        "clear_perc": 0.9333333373069763,
+        "clear_views": 14,
+        "flooded": 1,
+        "jrc_perm_water": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "geodesic": false,
+        "type": "Point",
+        "coordinates": [
+          106.9253453746415,
+          -6.174794684216561
+        ]
+      },
+      "properties": {
+        "samplePurpose": "source_flood_pixel_center",
+        "event_id": "DFO_3251_From_20080102_to_20080106",
+        "effective_support_meters": 250,
+        "clear_perc": 1,
+        "clear_views": 15,
+        "flooded": 1,
+        "jrc_perm_water": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "geodesic": false,
+        "type": "Point",
+        "coordinates": [
+          106.9096248571694,
+          -6.226447813053434
+        ]
+      },
+      "properties": {
+        "samplePurpose": "source_flood_pixel_center",
+        "event_id": "DFO_3280_From_20080301_to_20080403",
+        "effective_support_meters": 250,
+        "clear_perc": 0.9696969985961914,
+        "clear_views": 64,
+        "flooded": 1,
+        "jrc_perm_water": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "contractVersion": "temporal-hazard-feature-contract-v1",
+  "shape": [30, 4],
+  "dtype": "float64",
+  "channels": ["tj_priok", "banten", "kemayoran", "month"],
+  "flattenOrder": "C",
+  "representation": "flattened_sequence",
+  "preprocessing": "frozen StandardScaler stored inside temporal_hazard_model.joblib",
+  "finiteValuesRequired": true,
+  "physicalRainfallUnitsAvailable": false
+}

@@ -1,0 +1,53 @@
+{
+  "status": "FAIL",
+  "checks": {
+    "multipleUsableEventGroups": false,
+    "defensiblePositiveLabels": false,
+    "defensibleNegativeLabels": true,
+    "meaningfulClassSupport": false,
+    "eventTemporalSplitPossible": false,
+    "independentHoldoutUsable": false,
+    "holdoutNotUsedForTuning": true,
+    "nonLeakyFeaturesAvailable": false
+  },
+  "failures": [
+    "multipleUsableEventGroups",
+    "defensiblePositiveLabels",
+    "meaningfulClassSupport",
+    "eventTemporalSplitPossible",
+    "independentHoldoutUsable",
+    "nonLeakyFeaturesAvailable"
+  ],
+  "statistics": {
+    "historicalEvents": 4,
+    "sentinelAcquisitionsInspected": 9,
+    "osmRoadSegments": 1413,
+    "roadEventObservations": 5652,
+    "positive": 0,
+    "negative": 2825,
+    "unknownExcluded": 2827,
+    "usableEventGroups": [
+      "jakarta-20200101",
+      "jakarta-20210220"
+    ],
+    "byEvent": {
+      "jakarta-20200101": {
+        "negative": 1413
+      },
+      "jakarta-20210220": {
+        "negative": 1412,
+        "unknown": 1
+      },
+      "jakarta-20220118": {
+        "unknown": 1413
+      },
+      "jakarta-20250304": {
+        "unknown": 1413
+      }
+    },
+    "holdoutAcquisitionsInSearchWindow": 2,
+    "holdoutUsableObservations": 0,
+    "featureMissingness": "Not computed: feature engineering is prohibited after a failed label gate."
+  },
+  "decision": "Historical model training is prohibited. Preserve the synthetic-label runtime artifact until additional verified events with timely Sentinel-1 acquisitions provide positive support and an independent split."
+}

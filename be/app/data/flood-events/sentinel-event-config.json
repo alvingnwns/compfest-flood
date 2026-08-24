@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "collection": "COPERNICUS/S1_GRD",
+    "instrumentMode": "IW",
+    "polarizations": ["VV", "VH"],
+    "resolutionMeters": 10,
+    "maximumEventLagHours": 48,
+    "selectionPolicy": "Use a full-coverage acquisition during or no more than 48 hours after the verified event window; preserve orbit and polarization for the dry baseline.",
+    "dryBaselinePolicy": "Median of same relative orbit/direction/polarization acquisitions from June through October preceding the event.",
+    "maskMethod": "30 m focal-median VV/VH change detection; require VV drop >=2.0 dB and VH drop >=1.5 dB.",
+    "permanentWaterMask": "JRC/GSW1_4/GlobalSurfaceWater occurrence >=90 percent",
+    "terrainQualityMask": "COPERNICUS/DEM/GLO30 slope <=5 degrees",
+    "roadBufferMeters": 15,
+    "positiveCriterion": "validCoverageFraction>=0.8, permanentWaterFraction<0.2, floodFraction>=0.2, estimatedInundatedLengthMeters>=30",
+    "negativeCriterion": "validCoverageFraction>=0.8, permanentWaterFraction<0.2, floodFraction<=0.02",
+    "unknownCriterion": "no timely acquisition, insufficient valid coverage, permanent-water overlap, or ambiguous flood fraction"
+  },
+  "events": [
+    {
+      "eventId": "jakarta-20200101",
+      "usable": true,
+      "eventImageId": "S1A_IW_GRDH_1SDV_20200102T111515_20200102T111540_030620_038227_CF59",
+      "orbitDirection": "ASCENDING",
+      "relativeOrbit": 98,
+      "dryBaselineStart": "2019-06-01",
+      "dryBaselineEnd": "2019-11-01",
+      "timingNote": "Acquired 2 January 2020 18:15 WIB, within the catalogued event window."
+    },
+    {
+      "eventId": "jakarta-20210220",
+      "usable": true,
+      "eventImageId": "S1A_IW_GRDH_1SDV_20210221T223355_20210221T223423_036694_044FF3_879D",
+      "orbitDirection": "DESCENDING",
+      "relativeOrbit": 47,
+      "dryBaselineStart": "2020-06-01",
+      "dryBaselineEnd": "2020-11-01",
+      "timingNote": "Acquired 22 February 2021 05:33 WIB, about 5.5 hours after the catalogue window; persistence uncertainty is retained."
+    },
+    {
+      "eventId": "jakarta-20220118",
+      "usable": false,
+      "exclusionReason": "No full-coverage Sentinel-1 acquisition during or within 48 hours after the event; nearest post-event acquisition was about four days later."
+    },
+    {
+      "eventId": "jakarta-20250304",
+      "usable": false,
+      "exclusionReason": "Holdout has no Sentinel-1 acquisition during or within 48 hours after 4-5 March; available images are 28 February and 12 March."
+    }
+  ]
+}

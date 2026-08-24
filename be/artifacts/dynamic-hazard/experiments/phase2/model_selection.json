@@ -1,0 +1,83 @@
+{
+  "datasetVersion": "jakarta-dynamic-hazard-temporal-v1",
+  "experimentVersion": "temporal-hazard-phase2-v1",
+  "randomSeed": 42,
+  "selectedArtifact": "selected_model.joblib",
+  "selectedArtifactSha256": "49efd3931bc3b0030ffaa32beefac56375a19826901c4b3f2b487945c37f450c",
+  "selectedModel": {
+    "complexity": "medium",
+    "hyperparameters": {
+      "classWeight": "balanced",
+      "maxDepth": 10,
+      "minSamplesLeaf": 5,
+      "nEstimators": 400
+    },
+    "model": "random_forest",
+    "representation": "flattened_sequence",
+    "selectedThreshold": {
+      "f1": 0.46153846153846156,
+      "precision": 1.0,
+      "recall": 0.3,
+      "threshold": 0.55
+    },
+    "validation": {
+      "accuracy": 0.8955223880597015,
+      "brier": 0.14691215668112956,
+      "calibration": [
+        {
+          "count": 19,
+          "lower": 0.0,
+          "meanPredicted": 0.13490099541424372,
+          "observedRate": 0.10526315789473684,
+          "upper": 0.2
+        },
+        {
+          "count": 30,
+          "lower": 0.2,
+          "meanPredicted": 0.2945312178853744,
+          "observedRate": 0.1,
+          "upper": 0.4
+        },
+        {
+          "count": 18,
+          "lower": 0.4,
+          "meanPredicted": 0.4854419059580837,
+          "observedRate": 0.2777777777777778,
+          "upper": 0.6000000000000001
+        }
+      ],
+      "confusionMatrix": [
+        [
+          57,
+          0
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "f1": 0.46153846153846156,
+      "prAuc": 0.45516016663075487,
+      "precision": 1.0,
+      "probabilityDistribution": {
+        "maximum": 0.596954300383619,
+        "median": 0.2821490394003677,
+        "minimum": 0.04724239710452945,
+        "p10": 0.11248140915120074,
+        "p25": 0.1865961886364811,
+        "p75": 0.4076286327879237,
+        "p90": 0.49982899615929355
+      },
+      "recall": 0.3,
+      "rocAuc": 0.6631578947368421,
+      "threshold": 0.55
+    }
+  },
+  "selectionData": [
+    "train",
+    "validation"
+  ],
+  "selectionPolicy": "Highest validation PR-AUC, then F1, then lower Brier score, then lower complexity. Thresholds maximize validation F1 with recall/precision tie-breakers.",
+  "testDataAccessed": false,
+  "trainingManifestSha256": "fcfebd04f53cb0330492a9fca59caedb97326aaf92a5686d5d31b2cd9b2022d6"
+}

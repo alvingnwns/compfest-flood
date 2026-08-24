@@ -1,0 +1,18 @@
+{
+  "bindingCounts": {
+    "BINDING": 7,
+    "NON_BINDING": 4,
+    "PARTIALLY_BINDING": 5
+  },
+  "checks": {
+    "allOptimizerIntegrityChecksPass": true,
+    "atLeastOneBusinessBindingEffect": true,
+    "fullBackendFlowWorks": true,
+    "hazardOperationalIndependence": true,
+    "historicalDynamicMetadataAbsent": true,
+    "historicalGoldenMatches": true
+  },
+  "decision": "CONDITIONAL GO",
+  "nextPhase": "Phase 5B - Frontend Dynamic Scenario Integration",
+  "reason": "The existing backend produces real explainable binding effects for several scenarios, while some scenario/condition combinations remain partially or non-binding because discrete routing, inventory, and vehicle slack absorb the hazard change. Frontend wording must not imply monotonic KPI impact."
+}

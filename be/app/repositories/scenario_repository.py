@@ -6,7 +6,6 @@ from pathlib import Path
 
 from app.schemas.scenario import Scenario
 
-
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "scenarios"
 
 
