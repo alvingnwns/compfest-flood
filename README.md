@@ -1,93 +1,137 @@
 # ARUNA
 
-ARUNA is a flood-aware supply-chain recovery decision-support MVP with a Next.js frontend and FastAPI backend. The shared API contract is documented in [`docs/BACKEND_INTEGRATION_CONTRACT.md`](docs/BACKEND_INTEGRATION_CONTRACT.md).
+Flood-aware supply-chain recovery decision support for manufacturing, logistics, and commerce.
+
+## Overview
+
+Flood disruption can expose critical road corridors, delay material and product movement, and force trade-offs between fulfillment, delivery time, and sales exposure. ARUNA turns a transparent Jakarta demonstration scenario into an end-to-end decision workflow: estimate corridor exposure, trace operational disruption, optimize a recovery plan, compare business impact, and explain the evidence behind the result.
+
+ARUNA is an MVP for planning support. It does not claim certain flooding, live road closure, or operational execution authority.
+
+## What ARUNA Does
+
+```text
+Scenario -> Disruption -> Recovery -> Impact -> Copilot
+```
+
+- **Scenario:** run the built-in historical replay or a historical-derived Dynamic Hazard what-if scenario; adjust inventory and fleet inputs or upload custom business data.
+- **Disruption:** inspect estimated road-corridor flood exposure, affected orders, and pre-optimization risk-aware route candidates.
+- **Recovery:** use OR-Tools to coordinate production, warehouse allocation, vehicles, routes, priorities, deadlines, and fulfillment.
+- **Impact:** compare computed baseline and recovery KPIs, including legitimate trade-offs such as additional delay.
+- **Copilot:** ask grounded questions about the current simulation, with a deterministic local fallback when remote providers are unavailable.
+
+## Core Technology
+
+- A committed Random Forest model trained on historical Global Flood Database road-corridor labels from multiple Indonesian regions
+- An optional historical-derived Dynamic Hazard temporal what-if signal
+- A compact OpenStreetMap-derived Jakarta road network
+- NetworkX baseline and risk-aware route computation
+- OR-Tools CP-SAT recovery optimization
+- FastAPI backend and Next.js frontend
+
+## AI and Model Semantics
+
+The historical model uses committed road features to estimate **road-corridor flood exposure probability**. Its output is not guaranteed flooding or road-closure certainty. The selected Random Forest and its evaluation evidence are documented in [`docs/FLOOD_RISK_MODEL_REPORT.md`](docs/FLOOD_RISK_MODEL_REPORT.md) and [`docs/INDONESIA_HISTORICAL_FLOOD_DATASET.md`](docs/INDONESIA_HISTORICAL_FLOOD_DATASET.md).
+
+Dynamic Hazard combines historical exposure with a frozen, historical-derived temporal signal for Q1-Q4 what-if analysis. It is not live weather, a calibrated flood probability, or a forecast. Research artifacts and the runtime contract are documented in [`be/docs/dynamic-hazard-runtime.md`](be/docs/dynamic-hazard-runtime.md) and [`be/artifacts/dynamic-hazard/experiments/`](be/artifacts/dynamic-hazard/experiments/).
 
 ## Quick Start with Docker
 
-Prerequisites: Docker Desktop or Docker Engine with Docker Compose.
+Prerequisite: Docker Desktop or Docker Engine with Docker Compose.
 
-```powershell
-git clone <repository-url>
-cd <repository>
+```bash
+git clone https://github.com/alvingnwns/compfest-flood.git
+cd compfest-flood
 docker compose up --build
 ```
 
-No environment file or API key is required for the core application. After both services start, open:
+Open:
 
-- Frontend: `http://localhost:3000`
-- Scenario workflow: `http://localhost:3000/scenario`
-- Backend API: `http://localhost:8000`
-- Backend health: `http://localhost:8000/health`
+- Frontend: <http://localhost:3000>
+- Scenario workflow: <http://localhost:3000/scenario>
+- Backend: <http://localhost:8000>
+- Health check: <http://localhost:8000/health>
 
-Stop the application with:
+Stop both services:
 
-```powershell
+```bash
 docker compose down
 ```
 
-### Environment variables
+No host-side Node.js, Python, model service, or API key is required for this Docker flow.
 
-Core Docker defaults require no configuration. The frontend is built in API mode with the browser-visible backend URL `http://localhost:8000`; overrides may be supplied through the shell or a root `.env` file using `NEXT_PUBLIC_DATA_SOURCE` and `NEXT_PUBLIC_API_BASE_URL`.
+## Environment Variables
 
-`GEMINI_API_KEY` and `OPENROUTER_API_KEY` are optional Copilot provider keys. With neither key configured, ARUNA boots normally and Copilot uses its grounded deterministic fallback. Never commit real keys or local `.env` files.
+### Required
 
-## Custom business data
+None. Docker defaults run the complete core workflow with the local deterministic Copilot fallback.
 
-The Scenario page defaults to the built-in demo company snapshot. To use a custom business snapshot:
+### Optional
 
-1. Select **Custom Business Data**.
-2. Download `ARUNA_Business_Data_Template.xlsx`.
-3. Replace the example rows with products, numeric IDR prices, orders, inventory, supplier-specific materials, and BOM relationships.
-4. Upload the `.xlsx`, review the validation preview and total order value, then select **Gunakan Data**.
-5. Run the normal simulation, recovery, Impact, and Copilot flow.
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_DATA_SOURCE` | `api` | Use `mock` only for isolated frontend development. |
+| `NEXT_PUBLIC_API_BASE_URL` | `http://localhost:8000` | Browser-visible backend base URL. |
+| `EXPLANATION_MODE` | `auto` | Use `deterministic` to bypass remote Copilot providers. |
+| `GEMINI_API_KEY` | empty | Optional Gemini Copilot enrichment. |
+| `GEMINI_MODEL` | `gemini-3.5-flash` | Gemini model selection. |
+| `OPENROUTER_API_KEY` | empty | Optional Qwen fallback through OpenRouter. |
+| `OPENROUTER_BASE_URL` | provider endpoint | OpenRouter API base URL. |
+| `OPENROUTER_QWEN_MODEL` | `qwen/qwen3.5-flash-02-23` | OpenRouter model selection. |
 
-Custom operational data uses the same NetworkX, OR-Tools, and KPI path as demo mode. It continues to use ARUNA's Jakarta demo facilities, vehicles, coordinates, and logistics network. Snapshots are process-local, expire after two hours, and must be uploaded again after backend restart. See [`docs/CUSTOM_BUSINESS_DATA.md`](docs/CUSTOM_BUSINESS_DATA.md).
+Copy placeholders from [`be/.env.example`](be/.env.example) and [`fe/.env.example`](fe/.env.example) when needed. Never commit real keys or local `.env` files.
 
-The MVP has no API authentication or tenancy boundary. Snapshot IDs identify process-local data but are not authorization credentials. ARUNA explicitly optimizes supplier-to-factory and warehouse-to-store road legs; the current factory-to-warehouse transfer remains an aggregate planning abstraction.
+## Demo Data
 
-## What is real and what is synthetic
+ARUNA includes a built-in fictional Nusantara Foods scenario. For the custom-data flow, open **Scenario -> Custom Business Data -> Download Template**. The backend generates `ARUNA_Business_Data_Template.xlsx`; replace its example rows, upload it, review the validation preview, and select **Gunakan Data** before running the scenario.
 
-The FastAPI API, Random Forest inference with `predict_proba`, NetworkX risk-aware routing, OR-Tools CP-SAT optimization, impact propagation, manufacturing/logistics/commerce decisions, and KPI calculations are executable computations. The active road snapshot is derived from OpenStreetMap. The active model is trained on Global Flood Database corridor labels across multiple Indonesian regions. March 2025 flood geometry, facilities, and vehicles remain transparent demo inputs. Business products, prices, orders, inventory, materials, and BOM are either the demo snapshot or an explicitly labeled user upload.
+No separate workbook is required from the repository root. The template and importer use the same schema and are tested together. See [`docs/CUSTOM_BUSINESS_DATA.md`](docs/CUSTOM_BUSINESS_DATA.md).
 
-Phase D status: both Jakarta-only scientific attempts remain documented failures. Objective multi-region Indonesia discovery produced a feasible historical corridor-exposure dataset, and the selected model now runs offline over Jakarta as the deployment/demo pilot. Jakarta is not a labeled validation region; unseen-region recall is limited and Jakarta contains two unseen road categories. See [`docs/INDONESIA_HISTORICAL_FLOOD_DATASET.md`](docs/INDONESIA_HISTORICAL_FLOOD_DATASET.md), [`docs/FLOOD_RISK_MODEL_REPORT.md`](docs/FLOOD_RISK_MODEL_REPORT.md), and [`docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md`](docs/GLOBAL_FLOOD_DATABASE_FEASIBILITY.md).
+## Current MVP Scope
 
-## Manual development
+- Jakarta is a predefined demonstration network and deployment pilot, not a labeled validation region.
+- Gudang Barat and Gudang Timur are fixed facilities; inventory is editable, but adding or renaming warehouses is unsupported.
+- Existing vehicles are configurable, and valid custom vehicles enter the effective scenario and optimizer.
+- Custom workbooks replace products, prices, orders, inventory, materials, and BOM data while retaining the Jakarta facilities and network.
+- Supplier-to-factory and warehouse-to-store legs are routed explicitly; factory-to-warehouse transfer remains an aggregate planning abstraction.
+- Dynamic Hazard is a historical-derived what-if signal, not a live forecast.
+- Simulation state, custom snapshots, idempotency, and Copilot context are process-local. There is no database, authentication, or tenancy boundary.
+
+## Repository Structure
+
+```text
+be/         FastAPI application, models, data, research artifacts, scripts, and tests
+fe/         Next.js application and frontend tests
+docs/       API, data, model, routing, and business-data documentation
+compose.yaml
+README.md
+```
+
+## Reproducibility and Tests
 
 Backend:
 
-```powershell
+```bash
 cd be
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
 python -m pip install -e ".[dev]"
-uvicorn app.main:app --reload --port 8000
+python -m pytest
+python -m ruff check .
+python -m ruff format --check .
 ```
 
 Frontend:
 
-```powershell
+```bash
 cd fe
-npm install
-$env:NEXT_PUBLIC_DATA_SOURCE="api"
-$env:NEXT_PUBLIC_API_BASE_URL="http://localhost:8000"
-npm run dev
-```
-
-Open `http://localhost:3000/scenario`. Mock mode remains available through `NEXT_PUBLIC_DATA_SOURCE=mock`.
-
-## Quality gates
-
-```powershell
-cd be
-python -m pytest
-python -m ruff check .
-python -m ruff format --check .
-
-cd ..\fe
-npm run lint
-npm run typecheck
+npm ci
 npm test
+npm run typecheck
+npm run lint
 npm run build
 ```
 
-See [`be/README.md`](be/README.md) for computation rules, KPI formulas, Docker, and current limitations. Simulation and request-idempotency state is process-local and resets on backend restart.
+The runtime model, model metrics, OSM snapshot, and Dynamic Hazard artifacts are committed for offline reproducibility. Detailed backend computation and limitations are in [`be/README.md`](be/README.md).
+
+## Competition
+
+Prepared as ARUNA for COMPFEST AIC 2026.

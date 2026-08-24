@@ -27,7 +27,6 @@ env/
 htmlcov/
 
 # Environment and secret
-ResiliChain_Dummy_Company_Test_Data
 be/env
 .env
 .env.*
