@@ -83,9 +83,9 @@ Copy placeholders from [`be/.env.example`](be/.env.example) and [`fe/.env.exampl
 
 ## Demo Data
 
-ARUNA includes a built-in fictional Nusantara Foods scenario. For the custom-data flow, open **Scenario -> Custom Business Data -> Download Template**. The backend generates `ARUNA_Business_Data_Template.xlsx`; replace its example rows, upload it, review the validation preview, and select **Gunakan Data** before running the scenario.
+ARUNA includes a built-in fictional Nusantara Foods scenario and a larger evaluator-ready workbook at [`ARUNA_Dummy_Company_Test_Data.xlsx`](ARUNA_Dummy_Company_Test_Data.xlsx). Upload that workbook through **Scenario -> Custom Business Data**, review the validation preview, and select **Gunakan Data** before running the scenario.
 
-No separate workbook is required from the repository root. The template and importer use the same schema and are tested together. See [`docs/CUSTOM_BUSINESS_DATA.md`](docs/CUSTOM_BUSINESS_DATA.md).
+For a smaller editable starting point, select **Download Template** to generate `ARUNA_Business_Data_Template.xlsx` from the backend. Both workbooks use the same validated import schema. See [`docs/CUSTOM_BUSINESS_DATA.md`](docs/CUSTOM_BUSINESS_DATA.md).
 
 ## Current MVP Scope
 
