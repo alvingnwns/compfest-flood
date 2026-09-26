@@ -19,6 +19,7 @@ import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { useInventoryLanguage } from "@/components/providers/inventory-language-provider";
 import styles from "./inventory-shell.module.css";
+import theme from "@/components/inventory/aruna-theme.module.css";
 
 type NavItem = { label: { en: string; id: string }; icon: LucideIcon; href?: string };
 
@@ -92,7 +93,7 @@ export function InventoryShell({ children, title, actions }: { children: React.R
   const { locale, toggleLocale } = useInventoryLanguage();
 
   return (
-    <div className={styles.shell}>
+    <div className={`${theme.theme} ${styles.shell}`}>
       <aside className={styles.sidebar}><Sidebar pathname={pathname} locale={locale} /></aside>
       {mobileOpen && (
         <div className={styles.mobileLayer}>

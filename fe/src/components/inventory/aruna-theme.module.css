@@ -1,0 +1,31 @@
+.theme {
+  --color-background: #fffaf3;
+  --color-surface: #ffffff;
+  --color-surface-low: #fcfaf5;
+  --color-surface-high: #f2f6ee;
+  --color-surface-highest: #e5eddf;
+  --color-ink: #24362b;
+  --color-muted: #626f63;
+  --color-outline: #dce4d8;
+  --color-primary: #327052;
+  --color-primary-dark: #214b38;
+  --color-primary-soft: #e8f2e7;
+  --color-secondary-soft: #e1edd6;
+  --color-accent: #ffb84d;
+  --color-success: #2f7a4e;
+  --color-danger: #ba1a1a;
+  --color-danger-soft: #ffdad6;
+  --color-warning: #9a6000;
+  --color-caution: #f2c744;
+}
+
+.theme :focus-visible { outline-color: var(--color-primary); }
+.theme :global(.landing-grid) {
+  background-image: linear-gradient(color-mix(in srgb, var(--color-secondary-soft) 9%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--color-secondary-soft) 9%, transparent) 1px, transparent 1px);
+}
+.theme :global(.landing-grid)::before {
+  background-image: linear-gradient(90deg, transparent 50%, color-mix(in srgb, var(--color-secondary-soft) 7%, transparent) 50%), linear-gradient(transparent 50%, color-mix(in srgb, var(--color-secondary-soft) 7%, transparent) 50%);
+}
+.theme :global(.landing-honeycomb) {
+  background-image: linear-gradient(30deg, color-mix(in srgb, var(--color-primary) 7%, transparent) 12%, transparent 12.5%, transparent 87%, color-mix(in srgb, var(--color-primary) 7%, transparent) 87.5%), linear-gradient(150deg, color-mix(in srgb, var(--color-primary) 7%, transparent) 12%, transparent 12.5%, transparent 87%, color-mix(in srgb, var(--color-primary) 7%, transparent) 87.5%);
+}

@@ -59,7 +59,6 @@ function RiskDetail({ material, locale }: { material: StockRiskMaterial; locale:
         <div><dt>{locale === "en" ? "Supplier Lead Time" : "Waktu Tunggu Pemasok"}</dt><dd>{locale === "en" ? material.restockLeadTime.replace("Hari Kerja", "Business Day") : material.restockLeadTime}</dd></div>
         <div><dt>{locale === "en" ? "Stock Shortage" : "Kekurangan Stok"}</dt><dd className={shortage > 0 ? styles.critical : styles.normal}>{quantity(shortage, material.unit)}</dd></div>
       </dl>
-      {material.riskReason && <p>{material.riskReason}</p>}
     </aside>
   );
 }

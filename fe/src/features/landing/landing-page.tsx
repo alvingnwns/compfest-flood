@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, Languages, Pause, Play } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useInventoryLanguage } from "@/components/providers/inventory-language-provider";
+import theme from "@/components/inventory/aruna-theme.module.css";
 
 const SLIDE_DURATION_MS = 5500;
 export const LANDING_NAVBAR_SOLID_Y = 48;
@@ -83,7 +84,7 @@ const content = {
 };
 const images = ["overview", "forecast", "risk", "procurement"];
 const container = "mx-auto w-full max-w-[1240px] px-6 sm:px-10 lg:px-16";
-const ctaClass = "inline-flex min-h-12 items-center justify-center rounded-full bg-[linear-gradient(110deg,#eba92d,#856019)] px-7 text-sm font-bold tracking-wide text-white shadow-md transition hover:brightness-110";
+const ctaClass = "inline-flex min-h-12 items-center justify-center rounded-full bg-accent px-7 text-sm font-bold tracking-wide text-ink shadow-md transition hover:brightness-110";
 
 export function LandingPage() {
   const { locale, toggleLocale } = useInventoryLanguage();
@@ -118,7 +119,7 @@ export function LandingPage() {
 
   const logo = <><Image src="/landing/inventory-logo.png" alt="" width={114} height={64} className="h-9 w-16 object-contain" /><span className="text-lg font-semibold sm:text-xl">Aruna AI</span></>;
   return (
-    <main className="overflow-x-hidden bg-primary text-white">
+    <main className={`${theme.theme} overflow-x-hidden bg-primary text-white`}>
       <nav aria-label={copy.navigation} data-scroll-state={isNavbarSolid ? "solid" : "transparent"}
         className={`fixed inset-x-0 top-0 z-50 flex h-20 items-center transition-colors ${isNavbarSolid ? "border-b border-white/15 bg-primary-dark/95 shadow-lg backdrop-blur-xl" : "bg-transparent"}`}>
         <div className={`${container} flex items-center justify-between gap-4`}>
@@ -137,12 +138,12 @@ export function LandingPage() {
         </div>
       </nav>
 
-      <section id="beranda" aria-roledescription="carousel" aria-label={copy.home} className="landing-grid relative scroll-mt-20 bg-[linear-gradient(155deg,#39597e,#789ab8)] pb-12 pt-28 sm:pt-32">
+      <section id="beranda" aria-roledescription="carousel" aria-label={copy.home} className="landing-grid relative scroll-mt-20 bg-[linear-gradient(155deg,var(--color-primary-dark),var(--color-primary))] pb-12 pt-28 sm:pt-32">
         <div className={`${container} relative grid min-h-[470px] items-center gap-8 pb-10 md:grid-cols-[1.2fr_1fr] lg:min-h-[510px] lg:gap-16`}>
           <div key={`copy-${activeSlide}`} className="landing-slide-copy motion-reduce:animate-none">
             <h1 className="max-w-[580px] text-4xl font-bold leading-[1.13] tracking-tight sm:text-5xl lg:text-[58px]">
-              <span className={activeSlide === 0 ? "text-[#ffc558]" : "text-white"}>{slide[0]}</span><br />
-              <span className={activeSlide === 0 ? "text-white" : "text-[#ffc558]"}>{slide[1]}</span>
+              <span className={activeSlide === 0 ? "text-accent" : "text-white"}>{slide[0]}</span><br />
+              <span className={activeSlide === 0 ? "text-white" : "text-accent"}>{slide[1]}</span>
             </h1>
             <p className="mt-5 max-w-[520px] text-sm leading-relaxed text-white/90 sm:text-base">{slide[2]}</p>
             <Link href={LANDING_APP_HREF} className={`${ctaClass} mt-7 min-w-52 uppercase`}>{copy.explore}</Link>
@@ -167,7 +168,7 @@ export function LandingPage() {
       <section id="cara-kerja" className="scroll-mt-20 bg-primary py-16 sm:py-20">
         <div className={container}>
           <p className="text-center text-sm font-semibold uppercase tracking-[.18em] text-white/80">{copy.how}</p>
-          <h2 className="mt-8 text-3xl font-extrabold tracking-tight text-[#ffc558] sm:text-4xl">{copy.howTitle}</h2>
+          <h2 className="mt-8 text-3xl font-extrabold tracking-tight text-accent sm:text-4xl">{copy.howTitle}</h2>
           <p className="mt-3 max-w-[950px] text-sm leading-relaxed text-white/90 sm:text-base">{copy.howDescription}</p>
           <ol className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {copy.steps.map(([title, description], index) => <li key={title} className="rounded-2xl bg-white px-4 py-6 text-center text-ink shadow-sm">
@@ -192,7 +193,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="bg-[linear-gradient(180deg,#eba92d,#956b1b)] py-16 text-center sm:py-20">
+      <section className="bg-accent py-16 text-center text-ink sm:py-20">
         <div className={container}><h2 className="text-3xl font-extrabold sm:text-4xl">{copy.ctaTitle}</h2>
           <p className="mx-auto mt-4 max-w-[820px] text-sm leading-relaxed sm:text-base">{copy.ctaDescription}</p>
           <Link href={LANDING_APP_HREF} className="mt-7 inline-flex min-h-14 items-center justify-center rounded-full bg-primary-dark px-8 text-sm font-semibold uppercase tracking-wider text-white shadow-md transition hover:bg-primary">{copy.cta}</Link>

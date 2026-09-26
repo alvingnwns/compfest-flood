@@ -1,12 +1,12 @@
-.dialog { width: min(480px, calc(100vw - 32px)); margin: auto; border: 1px solid #b7c9d8; border-radius: 12px; padding: 24px; background: white; color: #29405b; }
+.dialog { width: min(480px, calc(100vw - 32px)); margin: auto; border: 1px solid var(--color-outline); border-radius: 12px; padding: 24px; background: white; color: var(--color-ink); }
 .dialog::backdrop { background: rgb(0 0 0 / 45%); }
 .dialog form { display: grid; gap: 14px; }
 .dialog h2 { margin: 0; font-size: 22px; }
 .dialog label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; }
-.dialog input, .dialog select, .dialog textarea { min-width: 0; width: 100%; border: 1px solid #a6b7c7; border-radius: 5px; padding: 10px; color: #29405b; background: #fff; font: inherit; }
+.dialog input, .dialog select, .dialog textarea { min-width: 0; width: 100%; border: 1px solid var(--color-outline); border-radius: 5px; padding: 10px; color: var(--color-ink); background: var(--color-surface); font: inherit; }
 .dialog p { margin: 0; font-size: 13px; line-height: 1.5; }
-.dialog [role="alert"] { color: #bc0000; }
+.dialog [role="alert"] { color: var(--color-danger); }
 .actions { display: flex; gap: 10px; justify-content: flex-end; }
-.actions button { min-height: 40px; border: 1px solid #39597e; border-radius: 5px; padding: 0 16px; background: white; color: #39597e; cursor: pointer; font-weight: 700; }
-.actions button:last-child { background: #39597e; color: #fff; }
+.actions button { min-height: 40px; border: 1px solid var(--color-primary); border-radius: 5px; padding: 0 16px; background: white; color: var(--color-primary); cursor: pointer; font-weight: 700; }
+.actions button:last-child { background: var(--color-primary); color: var(--color-surface); }
 .actions button:disabled { opacity: .6; cursor: wait; }

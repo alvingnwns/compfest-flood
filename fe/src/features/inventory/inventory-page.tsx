@@ -15,10 +15,23 @@ import styles from "./inventory.module.css";
 type View = "stock" | "movements";
 type MovementSortKey = "materialName" | "category" | "quantityChange" | "referenceId" | "occurredAt";
 
+const isCriticalIssue = (issue: MaterialStock["issue"]) => issue === "out-of-stock" || issue === "shortage-risk";
+
+function StockIssue({ issue, locale }: { issue: MaterialStock["issue"]; locale: InventoryLocale }) {
+  const critical = isCriticalIssue(issue);
+  const warning = issue === "low-stock";
+  return (
+    <span className={`${styles.issue} ${critical ? styles.issueCritical : warning ? styles.issueWarning : ""}`}>
+      {(critical || warning) && <AlertTriangle aria-hidden="true" />}
+      {inventoryStatusLabel(issue, locale)}
+    </span>
+  );
+}
+
 const time = new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Asia/Jakarta" });
 
 function SortHeader({ label, sortKey, activeKey, ascending, onSort }: { label: string; sortKey: MovementSortKey; activeKey: MovementSortKey; ascending: boolean; onSort: (key: MovementSortKey) => void }) {
-  return <th><button type="button" onClick={() => onSort(sortKey)}>{label}<ChevronDown className={activeKey === sortKey && ascending ? styles.chevronUp : undefined} /></button></th>;
+  return <th aria-sort={activeKey === sortKey ? (ascending ? "ascending" : "descending") : "none"}><button type="button" onClick={() => onSort(sortKey)}>{label}<ChevronDown className={activeKey === sortKey && ascending ? styles.chevronUp : undefined} /></button></th>;
 }
 
 function MovementTable({ rows, selectedId, sortKey, ascending, locale, onSort, onSelect }: { rows: StockMovement[]; selectedId: string; sortKey: MovementSortKey; ascending: boolean; locale: InventoryLocale; onSort: (key: MovementSortKey) => void; onSelect: (id: string) => void }) {
@@ -45,8 +58,8 @@ function StockTable({ rows, selectedId, locale, onSelect }: { rows: MaterialStoc
         <thead><tr><th>{locale === "en" ? "Material" : "Nama Bahan"}</th><th>{locale === "en" ? "Available" : "Tersedia"}</th><th>{locale === "en" ? "Forecast Demand" : "Prediksi Kebutuhan"}</th><th>{locale === "en" ? "Issue" : "Masalah"}</th><th>{locale === "en" ? "Due" : "Waktu"}</th></tr></thead>
         <tbody>
           {rows.map((row) => <tr key={row.id} className={row.id === selectedId ? styles.selected : undefined} onClick={() => onSelect(row.id)}>
-            <td><span className={styles.materialCell}>{["out-of-stock", "low-stock"].includes(row.issue) && <AlertTriangle aria-label={row.issue === "out-of-stock" ? (locale === "en" ? "Critical stock" : "Stok kritis") : (locale === "en" ? "Low stock" : "Stok menipis")} className={row.issue === "out-of-stock" ? styles.critical : styles.warning} />}<strong>{localizeInventoryTerm(row.name, locale)}</strong></span></td>
-            <td>{row.quantity} {row.unit}</td><td>{row.predictedDemand} {row.unit}</td><td>{inventoryStatusLabel(row.issue, locale)}</td><td>{localizeInventoryTerm(row.dueLabel, locale)}</td>
+            <td><span className={styles.materialCell}>{(isCriticalIssue(row.issue) || row.issue === "low-stock") && <AlertTriangle aria-label={isCriticalIssue(row.issue) ? (locale === "en" ? "Critical stock" : "Stok kritis") : (locale === "en" ? "Low stock" : "Stok menipis")} className={isCriticalIssue(row.issue) ? styles.critical : styles.warning} />}<strong>{localizeInventoryTerm(row.name, locale)}</strong></span></td>
+            <td>{row.quantity} {row.unit}</td><td>{row.predictedDemand} {row.unit}</td><td><StockIssue issue={row.issue} locale={locale} /></td><td>{localizeInventoryTerm(row.dueLabel, locale)}</td>
           </tr>)}
           {rows.length === 0 && <tr><td colSpan={5} className={styles.empty}>{locale === "en" ? "No materials found." : "Bahan tidak ditemukan."}</td></tr>}
         </tbody>
@@ -82,9 +95,10 @@ function InventoryContent({ overview, view, locale, onViewChange }: { overview: 
     const needle = query.trim().toLowerCase();
     const filtered = overview.movements.filter((row) => (row.materialName.toLowerCase().includes(needle) || localizeInventoryTerm(row.materialName, locale).toLowerCase().includes(needle)));
     return [...filtered].sort((a, b) => {
-      const left = a[sort.key];
-      const right = b[sort.key];
-      const result = typeof left === "number" && typeof right === "number" ? left - right : String(left).localeCompare(String(right));
+      const displayValue = (row: StockMovement) => sort.key === "materialName" || sort.key === "category" ? localizeInventoryTerm(row[sort.key], locale) : row[sort.key];
+      const left = displayValue(a);
+      const right = displayValue(b);
+      const result = sort.key === "occurredAt" ? Date.parse(String(left)) - Date.parse(String(right)) : typeof left === "number" && typeof right === "number" ? left - right : String(left).localeCompare(String(right), locale, { numeric: true, sensitivity: "base" });
       return sort.ascending ? result : -result;
     });
   }, [overview.movements, query, sort, locale]);
