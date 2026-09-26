@@ -16,23 +16,28 @@ RESULTS = Path(__file__).with_name("results")
 WIB = ZoneInfo("Asia/Jakarta")
 
 
-def _case_result(
+def _single_case_result(
     case: dict[str, Any], defaults: dict[str, Any], frame
 ) -> dict[str, Any]:
     output = run_system(case, defaults, frame)
     simulation = simulate(output)
     expected = set(case["expectedPlanOutcomes"])
-    passed = (
-        output["planOutcome"] in expected
-        and simulation["metrics"]["constraintViolationRatePercent"] == 0
+    constraint_expectation = case.get("constraintEvaluation", "REQUIRED")
+    actual_cvr = simulation["metrics"]["constraintViolationRatePercent"]
+    constraint_passed = (
+        actual_cvr == 0 if constraint_expectation == "REQUIRED" else actual_cvr is None
     )
+    passed = output["planOutcome"] in expected and constraint_passed
     return {
         "caseId": case["id"],
         "category": case["category"],
         "passed": passed,
         "expectation": {
             "planOutcomeIn": sorted(expected),
-            "constraintViolationRatePercent": 0,
+            "constraintEvaluation": constraint_expectation,
+            "constraintViolationRatePercent": 0
+            if constraint_expectation == "REQUIRED"
+            else None,
         },
         "decision": {
             "optimizerStatus": output["optimizerStatus"],
@@ -45,6 +50,55 @@ def _case_result(
         },
         **simulation,
     }
+
+
+def _case_result(
+    case: dict[str, Any], defaults: dict[str, Any], frame
+) -> dict[str, Any]:
+    variants = case.get("variants")
+    if not variants:
+        return _single_case_result(case, defaults, frame)
+    runs = []
+    primary = None
+    for variant in variants:
+        merged = {key: value for key, value in case.items() if key != "variants"}
+        merged.update(
+            {
+                key: value
+                for key, value in variant.items()
+                if key not in {"id", "primary"}
+            }
+        )
+        result = _single_case_result(merged, defaults, frame)
+        runs.append({"variantId": variant["id"], **result})
+        if variant.get("primary"):
+            primary = result
+    if primary is None:
+        raise ValueError(
+            f"Case {case['id']} with variants requires exactly one primary run"
+        )
+    control = runs[0]
+    stress = next(run for run in runs if run["variantId"] != control["variantId"])
+    primary["runs"] = runs
+    primary["sensitivity"] = {
+        "controlVariant": control["variantId"],
+        "stressVariant": stress["variantId"],
+        "serviceLevelPercentagePoints": round(
+            stress["metrics"]["serviceLevelPercent"]
+            - control["metrics"]["serviceLevelPercent"],
+            6,
+        ),
+        "unfulfilledDemandCups": (
+            stress["metrics"]["unfulfilledDemandCups"]
+            - control["metrics"]["unfulfilledDemandCups"]
+        ),
+        "totalOperationalCostIdr": (
+            stress["metrics"]["totalOperationalCostIdr"]
+            - control["metrics"]["totalOperationalCostIdr"]
+        ),
+    }
+    primary["passed"] = all(run["passed"] for run in runs)
+    return primary
 
 
 def run_suite(

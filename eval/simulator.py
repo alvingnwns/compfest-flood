@@ -10,6 +10,8 @@ from eval.metrics import forecast_diagnostics, operational_metrics
 def _check_constraints(output: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
     violations: list[dict[str, Any]] = []
     checks = 0
+    if not output["decisions"]:
+        return violations, checks
     purchases: dict[str, int] = defaultdict(int)
     total_cost = 0
     for decision in output["decisions"]:

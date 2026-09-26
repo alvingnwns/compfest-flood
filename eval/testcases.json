@@ -54,39 +54,49 @@
           "packCostIdr": 100000
         }
       ],
+      "constraintEvaluation": "NOT_APPLICABLE",
       "expectedPlanOutcomes": ["PARTIAL"]
     },
     {
       "id": "I03-heavy-constraint-pressure",
       "category": "heavy-constraint-pressure",
-      "description": "Weekend high demand dengan stok rendah, budget dan storage terbatas, MOQ, serta opsi supplier cepat/lambat.",
+      "description": "Sensitivity pair pada ground truth yang sama: control lalu tekanan berat.",
       "asOfDate": "2026-07-24",
-      "initialStockKg": 2.0,
-      "storageCapacityKg": 15.0,
-      "budgetIdr": 500000,
-      "offers": [
+      "expectedPlanOutcomes": ["COMPLETE", "PARTIAL"],
+      "variants": [
         {
-          "id": "fast-1kg",
-          "supplierId": "SUP-FAST",
-          "supplierName": "Fast Supplier",
-          "leadTimeHours": 24,
-          "packQuantityKg": 1.0,
-          "minimumPacks": 2,
-          "capacityPacks": 10,
-          "packCostIdr": 30000
+          "id": "control"
         },
         {
-          "id": "slow-5kg",
-          "supplierId": "SUP-SLOW",
-          "supplierName": "Slow Supplier",
-          "leadTimeHours": 48,
-          "packQuantityKg": 5.0,
-          "minimumPacks": 1,
-          "capacityPacks": 2,
-          "packCostIdr": 80000
+          "id": "heavy",
+          "primary": true,
+          "initialStockKg": 2.0,
+          "storageCapacityKg": 15.0,
+          "budgetIdr": 500000,
+          "offers": [
+            {
+              "id": "fast-1kg",
+              "supplierId": "SUP-FAST",
+              "supplierName": "Fast Supplier",
+              "leadTimeHours": 24,
+              "packQuantityKg": 1.0,
+              "minimumPacks": 2,
+              "capacityPacks": 10,
+              "packCostIdr": 30000
+            },
+            {
+              "id": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "supplierName": "Slow Supplier",
+              "leadTimeHours": 48,
+              "packQuantityKg": 5.0,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000
+            }
+          ]
         }
-      ],
-      "expectedPlanOutcomes": ["PARTIAL"]
+      ]
     }
   ]
 }

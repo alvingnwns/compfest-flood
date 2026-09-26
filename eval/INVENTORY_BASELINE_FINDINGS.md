@@ -1,14 +1,14 @@
-# ARUNA Inventory Decision Suite — First Baseline
+# ARUNA Inventory Decision Suite — Iteration 1
 
-Status: metric-corrected baseline recorded; no system tuning or after-iteration run has been performed.
+Status: iteration 1 recorded; no tuning after the first finding has been performed.
 
-Canonical result: `eval/results/inventory_metric-corrected-before-iteration_20260926_143000.json`
+Canonical result: `eval/results/inventory_iter1_20260926_144839.json`
 
-Generated: 26 September 2026, 14:30 WIB
+Generated: 26 September 2026, 14:48 WIB
 
 Suite: `inventory-decision-v1.1`
 
-Cases: three fixed deterministic scenarios, matching the initial baseline's experiment count.
+Cases: three fixed deterministic scenarios and four system executions, matching the legacy baseline structure.
 
 ## Metric definitions
 
@@ -17,9 +17,11 @@ Cases: three fixed deterministic scenarios, matching the initial baseline's expe
 - Total Operational Cost = Purchase Cost + Holding Cost + Stockout Cost + Waste Cost.
 - Constraint Violation Rate = Violated Constraints / Total Constraints × 100%.
 
-The fixed stockout cost is IDR 20,000 per unfulfilled cup, equal to the documented test selling price. Purchase cost comes directly from selected supplier packs. Holding cost is zero and marked unevaluated because no validated holding-cost rate exists. Waste cost is zero and marked unevaluated because no shelf-life or lot-age ground truth exists.
+The fixed stockout cost is IDR 20,000 per unfulfilled cup, equal to the documented test selling price. Purchase cost comes from selected supplier packs. Holding and waste are zero and marked unevaluated because validated rates, shelf-life, and lot-age ground truth are unavailable.
 
 ## Aggregate KPI
+
+The aggregate uses the primary run from each case, including the heavy variant for I03.
 
 | Metric | Result |
 | --- | ---: |
@@ -28,7 +30,7 @@ The fixed stockout cost is IDR 20,000 per unfulfilled cup, equal to the document
 | Service Level | 47.470489% |
 | Unfulfilled Demand | 623 cups |
 | Total Operational Cost | IDR 13,740,000 |
-| Constraint Violation Rate | 0 / 80 = 0.0% |
+| Constraint Violation Rate | 0 / 79 = 0.0% |
 
 ### Operational cost breakdown
 
@@ -39,35 +41,19 @@ The fixed stockout cost is IDR 20,000 per unfulfilled cup, equal to the document
 | Stockout Cost | IDR 12,460,000 |
 | Waste Cost | IDR 0 — unevaluated |
 
-Forecast diagnostics remain separate from business KPIs:
+Forecast diagnostics remain separate from business KPIs: MAE 2.686869 and RMSE 3.609751 cups per product-day.
 
-| Diagnostic | Result |
-| --- | ---: |
-| MAE | 2.686869 cups per product-day |
-| RMSE | 3.609751 cups per product-day |
+## Test cases
 
-## Three test cases
+| ID | Condition | Plan | Actual | Fulfilled | Service Level | Unfulfilled | Total Cost | CVR |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| I01 | Normal demand | COMPLETE | 377 | 377 | 100.000000% | 0 | IDR 800,000 | 0/36 |
+| I02 | Impossible procurement | PARTIAL | 384 | 0 | 0.000000% | 384 | IDR 7,680,000 | N/A |
+| I03 control | Standard constraints | COMPLETE | 425 | 424 | 99.764706% | 1 | IDR 720,000 | 0/36 |
+| I03 heavy | Heavy constraints | PARTIAL | 425 | 186 | 43.764706% | 239 | IDR 5,260,000 | 0/43 |
 
-| ID | Condition | Plan | Actual | Fulfilled | Service Level | Unfulfilled | Purchase | Stockout | Total Cost | CVR |
-| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| I01 | Normal demand | COMPLETE | 377 | 377 | 100.000000% | 0 | IDR 800,000 | IDR 0 | IDR 800,000 | 0/36 |
-| I02 | Impossible procurement | PARTIAL | 384 | 0 | 0.000000% | 384 | IDR 0 | IDR 7,680,000 | IDR 7,680,000 | 0/1 |
-| I03 | Heavy constraint pressure | PARTIAL | 425 | 186 | 43.764706% | 239 | IDR 480,000 | IDR 4,780,000 | IDR 5,260,000 | 0/43 |
-
-### I01 — normal
-
-Standard stock, IDR 1,000,000 budget, 50 kg storage per ingredient, one-pack MOQ, and 24-hour supply. All 377 cups of actual demand are fulfilled.
-
-### I02 — impossible
-
-Opening stock and budget are zero, while the only supplier arrives after 96 hours, outside the three-day horizon. All 384 cups remain unfulfilled. A `PARTIAL` result here represents a structurally valid plan with explicit unmet requirement, not operational success.
-
-### I03 — heavy constraint pressure
-
-Weekend/high demand is combined with 2 kg opening stock, IDR 500,000 shared budget, 15 kg storage, MOQ, supplier capacity, and fast/slow procurement options. The system fulfills 186 of 425 cups.
+I03 keeps the same actual demand for its control and heavy executions. Heavy constraints reduce Service Level by 56 percentage points, add 238 unfulfilled cups, and add IDR 4,540,000 operational cost.
 
 ## First finding
 
-The suite distinguishes constraint feasibility from operational effectiveness. All generated recommendations obey their checked constraints, but the aggregate Service Level is only 47.470489% because the impossible and heavy-pressure cases leave 623 cups unfulfilled.
-
-The first candidate for iteration is lead-time-aware procurement under I03. The optimizer accepts eligible supply within the overall 72-hour horizon, but does not optimize cumulative arrivals against the day actual demand occurs. No correction has been applied yet.
+All generated recommendations obey their evaluated constraints, but operational effectiveness drops sharply under heavy constraints. The first iteration target is lead-time-aware procurement in I03: eligible supply is accepted within the 72-hour horizon without optimizing cumulative arrivals against each day of actual demand. No correction has been applied.
