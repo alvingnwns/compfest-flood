@@ -110,11 +110,17 @@ Output:
 
 ## BASELINE FINDINGS
 
-Run pertama checkpoint-1 disimpan di `eval/results/baseline_20260926_101319.json` (2026-09-26, data `ARUNA_Dummy_Company_Test_Data.xlsx`, kode aplikasi di commit `a61268f`). Run kedua menghasilkan status, KPI, dan hasil checker yang identik (deterministik).
+**Run canonical: `eval/results/baseline_20260926_111142.json`** (2026-09-26 11:11, data `ARUNA_Dummy_Company_Test_Data.xlsx`, scikit-learn 1.9.0, nol `InconsistentVersionWarning`). Semua angka di bawah berasal dari run ini.
 
-Run 10:20 (`eval/results/baseline_20260926_102041.json`) tersedia di repo sebagai bukti determinisme; hasilnya identik dengan canonical run 10:13.
+Run canonical menggunakan scikit-learn 1.9.0 sesuai versi model tersimpan. Run 10:13/10:20 (scikit-learn 1.6.1) diarsipkan; warning version mismatch membuat angkanya berpotensi bias.
 
-Catatan: string `findings` di JSON run pertama masih memakai redaksi awal untuk C2 ("20/20 gagal total", sales exposure). Interpretasi yang berlaku adalah redaksi di bawah ini: **C2 = no plan produced**.
+Hasil baseline terbukti stabil antara scikit-learn 1.6.1 dan 1.9.1 (headline numbers identik sebelum pin final); environment dikunci pada 1.9.0 untuk menghilangkan warning sepenuhnya. Perbandingan field-by-field (status, 5 KPI baseline/recovery, unfulfilled demand, exposure, hazard index, jumlah route per exposure, dan violation/check) atas run 10:13 (1.6.1), 10:54 (1.9.1), dan 11:11 (1.9.0) menunjukkan 72/72 nilai identik.
+
+Arsip:
+
+- `baseline_20260926_101319.json`: run pertama (scikit-learn 1.6.1, kode aplikasi `a61268f`).
+- `baseline_20260926_102041.json`: rerun 10:20 sebagai bukti determinisme; identik dengan run 10:13.
+- String `findings` di kedua JSON arsip masih memakai redaksi awal untuk C2 ("20/20 gagal total", sales exposure). Interpretasi yang berlaku adalah redaksi di bawah ini: **C2 = no plan produced**.
 
 ### 1. Kesesuaian ekspektasi: 3/3
 

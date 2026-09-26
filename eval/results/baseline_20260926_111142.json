@@ -1,0 +1,1097 @@
+{
+  "suite": "aruna-phase1-baseline",
+  "checkpoint": 1,
+  "generated_at": "2026-09-26T11:11:42",
+  "data_source": "ARUNA_Dummy_Company_Test_Data.xlsx",
+  "scenario_id": "scenario-jakarta-20250304",
+  "score": {
+    "cases_passed": 3,
+    "cases_total": 3,
+    "score": 1.0,
+    "cases_pending": [
+      "C3",
+      "C4",
+      "C6"
+    ]
+  },
+  "findings": [
+    {
+      "case_id": "C1",
+      "finding": "baseline: 7/20 order terpenuhi penuh, 1 gagal total, 13 tidak terpenuhi penuh; sales exposure IDR 39,500,000."
+    },
+    {
+      "case_id": "C1",
+      "finding": "recovery: 7/20 order terpenuhi penuh, 0 gagal total, 13 tidak terpenuhi penuh; sales exposure IDR 31,984,000."
+    },
+    {
+      "case_id": "C2",
+      "finding": "ORDER-001 (critical) dinaikkan 180 -> 1800 unit, melebihi kendaraan terbesar (800 unit; satu order hanya boleh satu kendaraan)."
+    },
+    {
+      "case_id": "C2",
+      "finding": "No feasible plan produced: order critical adalah hard constraint di CP-SAT, sehingga satu order critical yang mustahil memutus kelayakan SELURUH plan recovery. Tidak ada rencana alokasi untuk 20 order (termasuk 19 order lain yang sebenarnya bisa dilayani). Angka 0/20 fulfilled dan sales exposure IDR 224,070,000 adalah exposure jika tidak ada plan, bukan hasil observasi 20 order yang gagal."
+    },
+    {
+      "case_id": "C2",
+      "finding": "Baseline juga tidak menghasilkan plan (constraint critical sama-sama hard di baseline): KPI baseline mencerminkan ketiadaan plan, sehingga perbandingan baseline vs recovery tidak informatif."
+    },
+    {
+      "case_id": "C2",
+      "finding": "Status HTTP recovery tetap 201 dan response tidak menyebut order mana penyebab infeasibility (error.details = {\"criticalOrderPolicy\": \"semua permintaan pesanan kritis harus dialokasikan\"})."
+    },
+    {
+      "case_id": "C5",
+      "finding": "Relative hazard index Q1=0.15223880597014924 vs Q4=0.7313432835820896."
+    },
+    {
+      "case_id": "C5",
+      "finding": "baseline: delta Q4-Q1 orders-fulfilled +0, failed-orders +0, sales-exposure-risk +340,000 IDR."
+    },
+    {
+      "case_id": "C5",
+      "finding": "recovery: delta Q4-Q1 orders-fulfilled +0, failed-orders +2, sales-exposure-risk +6,550,000 IDR."
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "C1",
+      "name": "nominal-baseline",
+      "mutation": "Data workbook apa adanya, rainfall Q2.",
+      "expectation": "status ready/partial dan 0 constraint violation; catat seluruh KPI baseline vs recovery.",
+      "passed": true,
+      "actual_status": "partial",
+      "constraint_violations": 0,
+      "findings": [
+        "baseline: 7/20 order terpenuhi penuh, 1 gagal total, 13 tidak terpenuhi penuh; sales exposure IDR 39,500,000.",
+        "recovery: 7/20 order terpenuhi penuh, 0 gagal total, 13 tidak terpenuhi penuh; sales exposure IDR 31,984,000."
+      ],
+      "runs": [
+        {
+          "rainfall_scenario": "Q2",
+          "vehicle_overrides": [],
+          "recovery_constraints": {
+            "allowSubstitution": false
+          },
+          "simulation_id": "sim-jakarta-20250304-001",
+          "business_snapshot_id": "business-6dd1514e7ba5",
+          "actual_status": "partial",
+          "recovery_error": null,
+          "hazard": {
+            "rainfallScenario": "Q2",
+            "temporalHazardScore": 0.250166672988461,
+            "relativeHazardIndex": 0.4626865671641791,
+            "probabilityCalibrated": false,
+            "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+            "modelType": "RandomForestClassifier",
+            "fusionMethod": "logit_shift",
+            "fusionBeta": 1.5,
+            "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds"
+          },
+          "route_exposure_counts": {
+            "baseline": {
+              "critical": 1,
+              "high": 5,
+              "medium": 4
+            },
+            "recovery": {
+              "high": 3,
+              "medium": 2
+            }
+          },
+          "baseline_plan_feasible": true,
+          "recovery_plan_feasible": true,
+          "kpis": {
+            "orders-fulfilled": {
+              "baseline": 7.0,
+              "recovery": 7.0
+            },
+            "on-time-delivery": {
+              "baseline": 0.35,
+              "recovery": 0.25
+            },
+            "failed-orders": {
+              "baseline": 1.0,
+              "recovery": 0.0
+            },
+            "average-delay": {
+              "baseline": 0.0,
+              "recovery": 0.2
+            },
+            "sales-exposure-risk": {
+              "baseline": 39500000.0,
+              "recovery": 31984000.0
+            }
+          },
+          "outcome_metrics": {
+            "baseline": {
+              "service_level": 0.35,
+              "unfulfilled_demand_units": 780,
+              "requested_units": 2325,
+              "operational_loss_idr": 39500000.0,
+              "constraint_violation_rate": 0.0,
+              "constraint_checks": 238
+            },
+            "recovery": {
+              "service_level": 0.35,
+              "unfulfilled_demand_units": 635,
+              "requested_units": 2325,
+              "operational_loss_idr": 31984000.0,
+              "constraint_violation_rate": 0.0,
+              "constraint_checks": 245
+            }
+          },
+          "not_fully_fulfilled": {
+            "baseline": [
+              {
+                "order_id": "ORDER-002",
+                "priority": "high",
+                "allocated": 0,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-003",
+                "priority": "high",
+                "allocated": 40,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-005",
+                "priority": "normal",
+                "allocated": 50,
+                "requested": 80
+              },
+              {
+                "order_id": "ORDER-006",
+                "priority": "normal",
+                "allocated": 100,
+                "requested": 160
+              },
+              {
+                "order_id": "ORDER-007",
+                "priority": "normal",
+                "allocated": 85,
+                "requested": 130
+              },
+              {
+                "order_id": "ORDER-008",
+                "priority": "high",
+                "allocated": 50,
+                "requested": 110
+              },
+              {
+                "order_id": "ORDER-010",
+                "priority": "high",
+                "allocated": 60,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-011",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-012",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 100
+              },
+              {
+                "order_id": "ORDER-014",
+                "priority": "normal",
+                "allocated": 40,
+                "requested": 105
+              },
+              {
+                "order_id": "ORDER-015",
+                "priority": "high",
+                "allocated": 130,
+                "requested": 150
+              },
+              {
+                "order_id": "ORDER-017",
+                "priority": "high",
+                "allocated": 35,
+                "requested": 75
+              },
+              {
+                "order_id": "ORDER-018",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 125
+              }
+            ],
+            "recovery": [
+              {
+                "order_id": "ORDER-002",
+                "priority": "high",
+                "allocated": 60,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-003",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-005",
+                "priority": "normal",
+                "allocated": 50,
+                "requested": 80
+              },
+              {
+                "order_id": "ORDER-006",
+                "priority": "normal",
+                "allocated": 100,
+                "requested": 160
+              },
+              {
+                "order_id": "ORDER-007",
+                "priority": "normal",
+                "allocated": 85,
+                "requested": 130
+              },
+              {
+                "order_id": "ORDER-008",
+                "priority": "high",
+                "allocated": 55,
+                "requested": 110
+              },
+              {
+                "order_id": "ORDER-011",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-012",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 100
+              },
+              {
+                "order_id": "ORDER-014",
+                "priority": "normal",
+                "allocated": 50,
+                "requested": 105
+              },
+              {
+                "order_id": "ORDER-015",
+                "priority": "high",
+                "allocated": 137,
+                "requested": 150
+              },
+              {
+                "order_id": "ORDER-017",
+                "priority": "high",
+                "allocated": 35,
+                "requested": 75
+              },
+              {
+                "order_id": "ORDER-018",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 125
+              },
+              {
+                "order_id": "ORDER-019",
+                "priority": "high",
+                "allocated": 83,
+                "requested": 85
+              }
+            ]
+          },
+          "constraint_checks": {
+            "baseline": {
+              "checks": 238,
+              "violations": 0,
+              "checks_by_rule": {
+                "order-coverage": 20,
+                "order-known": 20,
+                "requested-matches-source": 20,
+                "allocated-within-requested": 20,
+                "critical-fully-allocated": 6,
+                "assignment-complete": 19,
+                "allocation-lines-sum": 19,
+                "substitution-allowed": 19,
+                "vehicle-available": 19,
+                "baseline-preferred-warehouse": 19,
+                "route-known": 19,
+                "route-matches-order": 19,
+                "vehicle-capacity": 3,
+                "warehouse-inventory": 15,
+                "factory-capacity": 1
+              },
+              "violation_details": []
+            },
+            "recovery": {
+              "checks": 245,
+              "violations": 0,
+              "checks_by_rule": {
+                "order-coverage": 20,
+                "order-known": 20,
+                "requested-matches-source": 20,
+                "allocated-within-requested": 20,
+                "critical-fully-allocated": 6,
+                "assignment-complete": 20,
+                "allocation-lines-sum": 20,
+                "substitution-allowed": 20,
+                "vehicle-available": 20,
+                "route-known": 20,
+                "route-matches-order": 20,
+                "no-critical-route": 20,
+                "vehicle-capacity": 3,
+                "warehouse-inventory": 15,
+                "factory-capacity": 1
+              },
+              "violation_details": []
+            }
+          },
+          "constraint_violations": 0
+        }
+      ]
+    },
+    {
+      "case_id": "C2",
+      "name": "critical-order-infeasible",
+      "mutation": "quantity ORDER-001 (critical) x10: 180 -> 1800.",
+      "expectation": "status HARUS 'no-feasible-plan'.",
+      "passed": true,
+      "actual_status": "no-feasible-plan",
+      "constraint_violations": 0,
+      "findings": [
+        "ORDER-001 (critical) dinaikkan 180 -> 1800 unit, melebihi kendaraan terbesar (800 unit; satu order hanya boleh satu kendaraan).",
+        "No feasible plan produced: order critical adalah hard constraint di CP-SAT, sehingga satu order critical yang mustahil memutus kelayakan SELURUH plan recovery. Tidak ada rencana alokasi untuk 20 order (termasuk 19 order lain yang sebenarnya bisa dilayani). Angka 0/20 fulfilled dan sales exposure IDR 224,070,000 adalah exposure jika tidak ada plan, bukan hasil observasi 20 order yang gagal.",
+        "Baseline juga tidak menghasilkan plan (constraint critical sama-sama hard di baseline): KPI baseline mencerminkan ketiadaan plan, sehingga perbandingan baseline vs recovery tidak informatif.",
+        "Status HTTP recovery tetap 201 dan response tidak menyebut order mana penyebab infeasibility (error.details = {\"criticalOrderPolicy\": \"semua permintaan pesanan kritis harus dialokasikan\"})."
+      ],
+      "runs": [
+        {
+          "rainfall_scenario": "Q2",
+          "vehicle_overrides": [],
+          "recovery_constraints": {
+            "allowSubstitution": false
+          },
+          "simulation_id": "sim-jakarta-20250304-002",
+          "business_snapshot_id": "business-cc0d0529424f",
+          "actual_status": "no-feasible-plan",
+          "recovery_error": {
+            "code": "no_feasible_plan",
+            "message": "Permintaan pesanan kritis tidak dapat dipenuhi berdasarkan kendala operasional yang diberikan.",
+            "retryable": false,
+            "details": {
+              "criticalOrderPolicy": "semua permintaan pesanan kritis harus dialokasikan"
+            }
+          },
+          "hazard": {
+            "rainfallScenario": "Q2",
+            "temporalHazardScore": 0.250166672988461,
+            "relativeHazardIndex": 0.4626865671641791,
+            "probabilityCalibrated": false,
+            "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+            "modelType": "RandomForestClassifier",
+            "fusionMethod": "logit_shift",
+            "fusionBeta": 1.5,
+            "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds"
+          },
+          "route_exposure_counts": {
+            "baseline": {
+              "critical": 1,
+              "high": 5,
+              "medium": 4
+            },
+            "recovery": {
+              "high": 3,
+              "medium": 2
+            }
+          },
+          "baseline_plan_feasible": false,
+          "recovery_plan_feasible": false,
+          "kpis": {
+            "orders-fulfilled": {
+              "baseline": 0.0,
+              "recovery": 0.0
+            },
+            "on-time-delivery": {
+              "baseline": 0.0,
+              "recovery": 0.0
+            },
+            "failed-orders": {
+              "baseline": 20.0,
+              "recovery": 20.0
+            },
+            "average-delay": {
+              "baseline": 0.0,
+              "recovery": 0.0
+            },
+            "sales-exposure-risk": {
+              "baseline": 224070000.0,
+              "recovery": 224070000.0
+            }
+          },
+          "outcome_metrics": {
+            "baseline": {
+              "service_level": 0.0,
+              "unfulfilled_demand_units": 3945,
+              "requested_units": 3945,
+              "operational_loss_idr": 224070000.0,
+              "constraint_violation_rate": null,
+              "constraint_checks": 0
+            },
+            "recovery": {
+              "service_level": 0.0,
+              "unfulfilled_demand_units": 3945,
+              "requested_units": 3945,
+              "operational_loss_idr": 224070000.0,
+              "constraint_violation_rate": null,
+              "constraint_checks": 0
+            }
+          },
+          "not_fully_fulfilled": {
+            "baseline": [],
+            "recovery": []
+          },
+          "constraint_checks": {
+            "baseline": {
+              "checks": 0,
+              "violations": 0,
+              "checks_by_rule": {},
+              "violation_details": []
+            },
+            "recovery": {
+              "checks": 0,
+              "violations": 0,
+              "checks_by_rule": {},
+              "violation_details": []
+            }
+          },
+          "constraint_violations": 0
+        }
+      ]
+    },
+    {
+      "case_id": "C5",
+      "name": "hazard-sensitivity",
+      "mutation": "Data nominal, dua simulasi: rainfall Q1 vs Q4.",
+      "expectation": "kedua run ready/partial dengan 0 violation; dokumentasikan delta KPI lintas hazard.",
+      "passed": true,
+      "actual_status": {
+        "Q1": "partial",
+        "Q4": "partial"
+      },
+      "constraint_violations": 0,
+      "sensitivity": {
+        "relative_hazard_index": {
+          "Q1": 0.15223880597014924,
+          "Q4": 0.7313432835820896
+        },
+        "route_exposure_counts": {
+          "Q1": {
+            "baseline": {
+              "high": 5,
+              "medium": 5
+            },
+            "recovery": {
+              "high": 1,
+              "medium": 4
+            }
+          },
+          "Q4": {
+            "baseline": {
+              "critical": 4,
+              "high": 6
+            },
+            "recovery": {
+              "critical": 4,
+              "high": 5
+            }
+          }
+        },
+        "kpi_delta_q4_minus_q1": {
+          "orders-fulfilled": {
+            "baseline": 0.0,
+            "recovery": 0.0
+          },
+          "on-time-delivery": {
+            "baseline": 0.0,
+            "recovery": 0.05
+          },
+          "failed-orders": {
+            "baseline": 0.0,
+            "recovery": 2.0
+          },
+          "average-delay": {
+            "baseline": 0.0,
+            "recovery": -0.1
+          },
+          "sales-exposure-risk": {
+            "baseline": 340000.0,
+            "recovery": 6550000.0
+          }
+        }
+      },
+      "findings": [
+        "Relative hazard index Q1=0.15223880597014924 vs Q4=0.7313432835820896.",
+        "baseline: delta Q4-Q1 orders-fulfilled +0, failed-orders +0, sales-exposure-risk +340,000 IDR.",
+        "recovery: delta Q4-Q1 orders-fulfilled +0, failed-orders +2, sales-exposure-risk +6,550,000 IDR."
+      ],
+      "runs": [
+        {
+          "rainfall_scenario": "Q1",
+          "vehicle_overrides": [],
+          "recovery_constraints": {
+            "allowSubstitution": false
+          },
+          "simulation_id": "sim-jakarta-20250304-003",
+          "business_snapshot_id": "business-00ecac6c186c",
+          "actual_status": "partial",
+          "recovery_error": null,
+          "hazard": {
+            "rainfallScenario": "Q1",
+            "temporalHazardScore": 0.14393991896426608,
+            "relativeHazardIndex": 0.15223880597014924,
+            "probabilityCalibrated": false,
+            "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+            "modelType": "RandomForestClassifier",
+            "fusionMethod": "logit_shift",
+            "fusionBeta": 1.5,
+            "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds"
+          },
+          "route_exposure_counts": {
+            "baseline": {
+              "high": 5,
+              "medium": 5
+            },
+            "recovery": {
+              "high": 1,
+              "medium": 4
+            }
+          },
+          "baseline_plan_feasible": true,
+          "recovery_plan_feasible": true,
+          "kpis": {
+            "orders-fulfilled": {
+              "baseline": 7.0,
+              "recovery": 8.0
+            },
+            "on-time-delivery": {
+              "baseline": 0.35,
+              "recovery": 0.3
+            },
+            "failed-orders": {
+              "baseline": 1.0,
+              "recovery": 0.0
+            },
+            "average-delay": {
+              "baseline": 0.0,
+              "recovery": 0.2
+            },
+            "sales-exposure-risk": {
+              "baseline": 39500000.0,
+              "recovery": 32205000.0
+            }
+          },
+          "outcome_metrics": {
+            "baseline": {
+              "service_level": 0.35,
+              "unfulfilled_demand_units": 780,
+              "requested_units": 2325,
+              "operational_loss_idr": 39500000.0,
+              "constraint_violation_rate": 0.0,
+              "constraint_checks": 238
+            },
+            "recovery": {
+              "service_level": 0.4,
+              "unfulfilled_demand_units": 635,
+              "requested_units": 2325,
+              "operational_loss_idr": 32205000.0,
+              "constraint_violation_rate": 0.0,
+              "constraint_checks": 245
+            }
+          },
+          "not_fully_fulfilled": {
+            "baseline": [
+              {
+                "order_id": "ORDER-002",
+                "priority": "high",
+                "allocated": 0,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-003",
+                "priority": "high",
+                "allocated": 40,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-005",
+                "priority": "normal",
+                "allocated": 50,
+                "requested": 80
+              },
+              {
+                "order_id": "ORDER-006",
+                "priority": "normal",
+                "allocated": 100,
+                "requested": 160
+              },
+              {
+                "order_id": "ORDER-007",
+                "priority": "normal",
+                "allocated": 85,
+                "requested": 130
+              },
+              {
+                "order_id": "ORDER-008",
+                "priority": "high",
+                "allocated": 50,
+                "requested": 110
+              },
+              {
+                "order_id": "ORDER-010",
+                "priority": "high",
+                "allocated": 60,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-011",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-012",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 100
+              },
+              {
+                "order_id": "ORDER-014",
+                "priority": "normal",
+                "allocated": 40,
+                "requested": 105
+              },
+              {
+                "order_id": "ORDER-015",
+                "priority": "high",
+                "allocated": 130,
+                "requested": 150
+              },
+              {
+                "order_id": "ORDER-017",
+                "priority": "high",
+                "allocated": 35,
+                "requested": 75
+              },
+              {
+                "order_id": "ORDER-018",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 125
+              }
+            ],
+            "recovery": [
+              {
+                "order_id": "ORDER-002",
+                "priority": "high",
+                "allocated": 60,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-003",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-005",
+                "priority": "normal",
+                "allocated": 50,
+                "requested": 80
+              },
+              {
+                "order_id": "ORDER-006",
+                "priority": "normal",
+                "allocated": 100,
+                "requested": 160
+              },
+              {
+                "order_id": "ORDER-007",
+                "priority": "normal",
+                "allocated": 85,
+                "requested": 130
+              },
+              {
+                "order_id": "ORDER-008",
+                "priority": "high",
+                "allocated": 55,
+                "requested": 110
+              },
+              {
+                "order_id": "ORDER-010",
+                "priority": "high",
+                "allocated": 105,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-011",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-012",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 100
+              },
+              {
+                "order_id": "ORDER-014",
+                "priority": "normal",
+                "allocated": 50,
+                "requested": 105
+              },
+              {
+                "order_id": "ORDER-017",
+                "priority": "high",
+                "allocated": 35,
+                "requested": 75
+              },
+              {
+                "order_id": "ORDER-018",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 125
+              }
+            ]
+          },
+          "constraint_checks": {
+            "baseline": {
+              "checks": 238,
+              "violations": 0,
+              "checks_by_rule": {
+                "order-coverage": 20,
+                "order-known": 20,
+                "requested-matches-source": 20,
+                "allocated-within-requested": 20,
+                "critical-fully-allocated": 6,
+                "assignment-complete": 19,
+                "allocation-lines-sum": 19,
+                "substitution-allowed": 19,
+                "vehicle-available": 19,
+                "baseline-preferred-warehouse": 19,
+                "route-known": 19,
+                "route-matches-order": 19,
+                "vehicle-capacity": 3,
+                "warehouse-inventory": 15,
+                "factory-capacity": 1
+              },
+              "violation_details": []
+            },
+            "recovery": {
+              "checks": 245,
+              "violations": 0,
+              "checks_by_rule": {
+                "order-coverage": 20,
+                "order-known": 20,
+                "requested-matches-source": 20,
+                "allocated-within-requested": 20,
+                "critical-fully-allocated": 6,
+                "assignment-complete": 20,
+                "allocation-lines-sum": 20,
+                "substitution-allowed": 20,
+                "vehicle-available": 20,
+                "route-known": 20,
+                "route-matches-order": 20,
+                "no-critical-route": 20,
+                "vehicle-capacity": 3,
+                "warehouse-inventory": 15,
+                "factory-capacity": 1
+              },
+              "violation_details": []
+            }
+          },
+          "constraint_violations": 0
+        },
+        {
+          "rainfall_scenario": "Q4",
+          "vehicle_overrides": [],
+          "recovery_constraints": {
+            "allowSubstitution": false
+          },
+          "simulation_id": "sim-jakarta-20250304-004",
+          "business_snapshot_id": "business-e02c577e0d30",
+          "actual_status": "partial",
+          "recovery_error": null,
+          "hazard": {
+            "rainfallScenario": "Q4",
+            "temporalHazardScore": 0.2950839237115458,
+            "relativeHazardIndex": 0.7313432835820896,
+            "probabilityCalibrated": false,
+            "modelVersion": "dynamic-hazard-phase2-random-forest-v1",
+            "modelType": "RandomForestClassifier",
+            "fusionMethod": "logit_shift",
+            "fusionBeta": 1.5,
+            "riskLevelSemantics": "routing compatibility band from unchanged static-model thresholds"
+          },
+          "route_exposure_counts": {
+            "baseline": {
+              "critical": 4,
+              "high": 6
+            },
+            "recovery": {
+              "critical": 4,
+              "high": 5
+            }
+          },
+          "baseline_plan_feasible": true,
+          "recovery_plan_feasible": true,
+          "kpis": {
+            "orders-fulfilled": {
+              "baseline": 7.0,
+              "recovery": 8.0
+            },
+            "on-time-delivery": {
+              "baseline": 0.35,
+              "recovery": 0.35
+            },
+            "failed-orders": {
+              "baseline": 1.0,
+              "recovery": 2.0
+            },
+            "average-delay": {
+              "baseline": 0.0,
+              "recovery": 0.1
+            },
+            "sales-exposure-risk": {
+              "baseline": 39840000.0,
+              "recovery": 38755000.0
+            }
+          },
+          "outcome_metrics": {
+            "baseline": {
+              "service_level": 0.35,
+              "unfulfilled_demand_units": 780,
+              "requested_units": 2325,
+              "operational_loss_idr": 39840000.0,
+              "constraint_violation_rate": 0.0,
+              "constraint_checks": 238
+            },
+            "recovery": {
+              "service_level": 0.4,
+              "unfulfilled_demand_units": 780,
+              "requested_units": 2325,
+              "operational_loss_idr": 38755000.0,
+              "constraint_violation_rate": 0.0,
+              "constraint_checks": 231
+            }
+          },
+          "not_fully_fulfilled": {
+            "baseline": [
+              {
+                "order_id": "ORDER-002",
+                "priority": "high",
+                "allocated": 0,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-003",
+                "priority": "high",
+                "allocated": 40,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-005",
+                "priority": "normal",
+                "allocated": 50,
+                "requested": 80
+              },
+              {
+                "order_id": "ORDER-006",
+                "priority": "normal",
+                "allocated": 100,
+                "requested": 160
+              },
+              {
+                "order_id": "ORDER-007",
+                "priority": "normal",
+                "allocated": 85,
+                "requested": 130
+              },
+              {
+                "order_id": "ORDER-008",
+                "priority": "high",
+                "allocated": 50,
+                "requested": 110
+              },
+              {
+                "order_id": "ORDER-010",
+                "priority": "high",
+                "allocated": 60,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-011",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-012",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 100
+              },
+              {
+                "order_id": "ORDER-014",
+                "priority": "normal",
+                "allocated": 40,
+                "requested": 105
+              },
+              {
+                "order_id": "ORDER-017",
+                "priority": "high",
+                "allocated": 35,
+                "requested": 75
+              },
+              {
+                "order_id": "ORDER-018",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 125
+              },
+              {
+                "order_id": "ORDER-019",
+                "priority": "high",
+                "allocated": 65,
+                "requested": 85
+              }
+            ],
+            "recovery": [
+              {
+                "order_id": "ORDER-002",
+                "priority": "high",
+                "allocated": 0,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-003",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 120
+              },
+              {
+                "order_id": "ORDER-005",
+                "priority": "normal",
+                "allocated": 50,
+                "requested": 80
+              },
+              {
+                "order_id": "ORDER-006",
+                "priority": "normal",
+                "allocated": 100,
+                "requested": 160
+              },
+              {
+                "order_id": "ORDER-007",
+                "priority": "normal",
+                "allocated": 85,
+                "requested": 130
+              },
+              {
+                "order_id": "ORDER-008",
+                "priority": "high",
+                "allocated": 55,
+                "requested": 110
+              },
+              {
+                "order_id": "ORDER-011",
+                "priority": "normal",
+                "allocated": 70,
+                "requested": 140
+              },
+              {
+                "order_id": "ORDER-012",
+                "priority": "high",
+                "allocated": 45,
+                "requested": 100
+              },
+              {
+                "order_id": "ORDER-014",
+                "priority": "normal",
+                "allocated": 40,
+                "requested": 105
+              },
+              {
+                "order_id": "ORDER-015",
+                "priority": "high",
+                "allocated": 130,
+                "requested": 150
+              },
+              {
+                "order_id": "ORDER-017",
+                "priority": "high",
+                "allocated": 35,
+                "requested": 75
+              },
+              {
+                "order_id": "ORDER-018",
+                "priority": "normal",
+                "allocated": 0,
+                "requested": 125
+              }
+            ]
+          },
+          "constraint_checks": {
+            "baseline": {
+              "checks": 238,
+              "violations": 0,
+              "checks_by_rule": {
+                "order-coverage": 20,
+                "order-known": 20,
+                "requested-matches-source": 20,
+                "allocated-within-requested": 20,
+                "critical-fully-allocated": 6,
+                "assignment-complete": 19,
+                "allocation-lines-sum": 19,
+                "substitution-allowed": 19,
+                "vehicle-available": 19,
+                "baseline-preferred-warehouse": 19,
+                "route-known": 19,
+                "route-matches-order": 19,
+                "vehicle-capacity": 3,
+                "warehouse-inventory": 15,
+                "factory-capacity": 1
+              },
+              "violation_details": []
+            },
+            "recovery": {
+              "checks": 231,
+              "violations": 0,
+              "checks_by_rule": {
+                "order-coverage": 20,
+                "order-known": 20,
+                "requested-matches-source": 20,
+                "allocated-within-requested": 20,
+                "critical-fully-allocated": 6,
+                "assignment-complete": 18,
+                "allocation-lines-sum": 18,
+                "substitution-allowed": 18,
+                "vehicle-available": 18,
+                "route-known": 18,
+                "route-matches-order": 18,
+                "no-critical-route": 18,
+                "vehicle-capacity": 3,
+                "warehouse-inventory": 15,
+                "factory-capacity": 1
+              },
+              "violation_details": []
+            }
+          },
+          "constraint_violations": 0
+        }
+      ]
+    }
+  ]
+}
