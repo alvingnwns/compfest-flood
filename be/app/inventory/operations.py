@@ -106,8 +106,9 @@ def create_transaction(
         )
 
     recipes = connection.execute(
-        "SELECT r.product_id,r.ingredient_id,r.quantity_required_base "
-        "FROM inventory_recipe r JOIN inventory_ingredient i ON i.id=r.ingredient_id AND i.active "
+        "SELECT r.product_id,r.ingredient_id,r.quantity_required_base,i.active AS ingredient_active,"
+        "i.api_unit,i.quantity_kind,i.storage_scale "
+        "FROM inventory_recipe r LEFT JOIN inventory_ingredient i ON i.id=r.ingredient_id "
         "WHERE r.product_id=ANY(%s)",
         (product_ids,),
     ).fetchall()
@@ -115,6 +116,27 @@ def create_transaction(
     missing_recipes = sorted(set(product_ids) - recipe_products)
     if missing_recipes:
         raise ApiError(409, "MISSING_BOM", "Resep produk belum lengkap.", details={"productIds": missing_recipes})
+
+    # Every persisted recipe dependency is required. Do not silently filter inactive
+    # ingredients, or infer extra ingredients outside the canonical demo recipe.
+    unit_config = {
+        "g": ("weight", 1_000), "kg": ("weight", 1_000_000),
+        "ml": ("volume", 1_000), "l": ("volume", 1_000_000), "pcs": ("discrete", 1),
+    }
+    invalid = [
+        row for row in recipes
+        if not row["ingredient_active"]
+        or row["quantity_required_base"] <= 0
+        or unit_config.get(row["api_unit"]) != (row["quantity_kind"], row["storage_scale"])
+    ]
+    if invalid:
+        raise ApiError(
+            409, "INVALID_BOM", "Resep memiliki bahan tidak aktif atau konfigurasi kuantitas tidak valid.",
+            details={
+                "productIds": sorted({row["product_id"] for row in invalid}),
+                "ingredientIds": sorted({row["ingredient_id"] for row in invalid}),
+            },
+        )
 
     required_base: Counter[str] = Counter()
     for row in recipes:

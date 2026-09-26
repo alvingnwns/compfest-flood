@@ -2,327 +2,203 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, Languages, Pause, Play } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useInventoryLanguage } from "@/components/providers/inventory-language-provider";
 
 const SLIDE_DURATION_MS = 5500;
 export const LANDING_NAVBAR_SOLID_Y = 48;
-
+export const LANDING_APP_HREF = "/ringkasan";
 export function shouldUseSolidLandingNavbar(scrollY: number): boolean {
   return scrollY >= LANDING_NAVBAR_SOLID_Y;
 }
 
-const slides = [
-  {
-    title: (
-      <>
-        <span className="text-[#ffc558]">Siapkan<br />Bisnis Anda</span>{" "}
-        <span className="text-white">Hadapi Banjir</span>
-      </>
-    ),
-    description: "Kenali risiko lebih awal, ambil langkah lebih cepat.",
-    image: "/landing/asset-1.png",
-    alt: "Tim bisnis merencanakan ketahanan rantai pasok",
-    hasCta: true,
+const content = {
+  en: {
+    home: "Home", how: "How it works", features: "Features", start: "Start now", explore: "Explore now",
+    navigation: "Landing navigation", switchLanguage: "Switch to Indonesian",
+    previous: "Previous slide", next: "Next slide", pause: "Pause autoplay", resume: "Resume autoplay", slide: "Go to slide",
+    howTitle: "From data to decisions",
+    howDescription: "ARUNA turns sales and stock data into actionable recommendations for your business.",
+    featureTitle: "Smarter solutions for your business",
+    featureDescription: "From tracking sales to planning replenishment, keep your inventory ready for what comes next.",
+    ctaTitle: "Ready stock. Smoother business.",
+    ctaDescription: "Make informed decisions with demand forecasts and replenishment recommendations from ARUNA.",
+    cta: "Optimize your inventory",
+    slides: [
+      ["Manage your business", "Smarter", "Track sales, manage inventory, and plan procurement with ease.", "Sales and inventory dashboard illustration"],
+      ["Forecast stock needs", "Ahead of time", "Forecast demand for the next three days using sales history, then translate it into ingredient needs. When history is insufficient, ARUNA clearly identifies its fallback estimates.", "Demand forecast illustration"],
+      ["Spot stockout risks", "Before they happen", "Compare available stock with projected needs to identify ingredients that require attention.", "Inventory risk illustration"],
+      ["Plan your purchases", "Quantity and timing", "Review replenishment recommendations based on stock needs, supplier lead times, and purchasing constraints.", "Procurement planning illustration"],
+    ],
+    steps: [
+      ["Collect data", "Sales and inventory records form the foundation for analysis."],
+      ["Forecast demand", "Estimate demand for the next three days from sales history."],
+      ["Calculate needs", "Convert product forecasts into required ingredient quantities."],
+      ["Detect stock risks", "Compare projected needs with available inventory."],
+      ["Recommend restocking", "Identify what to buy, how much, and when it is needed."],
+      ["Review the plan", "Review and approve recommendations. Record stock only when goods arrive."],
+    ],
+    cards: [
+      ["Forecast needs", "Estimate ingredient requirements for the next three days."],
+      ["Manage stock", "Identify ingredients that need attention before stock runs out."],
+      ["Recommended quantities", "Align purchases with projected demand and current inventory."],
+      ["Purchase timing", "Plan replenishment around supplier delivery lead times."],
+      ["Review plans", "Review and approve recommendations to suit your business."],
+    ],
   },
-  {
-    title: (
-      <>
-        <span className="text-white">Memprediksi<br />Resiko Banjir</span>{" "}
-        <span className="text-[#ffc558]">Lebih Awal</span>
-      </>
-    ),
-    description:
-      "ARUNA menggunakan model Random Forest Classifier untuk membantu bisnis mengantisipasi gangguan dan mempersiapkan langkah lebih awal.",
-    image: "/landing/asset-3.png",
-    alt: "Visualisasi prediksi risiko banjir perkotaan",
-    hasCta: false,
+  id: {
+    home: "Beranda", how: "Cara kerja", features: "Fitur", start: "Mulai sekarang", explore: "Jelajahi sekarang",
+    navigation: "Navigasi landing page", switchLanguage: "Ganti ke bahasa Inggris",
+    previous: "Slide sebelumnya", next: "Slide berikutnya", pause: "Jeda carousel otomatis", resume: "Lanjutkan carousel otomatis", slide: "Buka slide",
+    howTitle: "Dari Data Menjadi Keputusan",
+    howDescription: "ARUNA mengolah data penjualan dan stok menjadi rekomendasi yang dapat ditindaklanjuti oleh bisnis.",
+    featureTitle: "Solusi Cerdas untuk Bisnis",
+    featureDescription: "Dari pemantauan penjualan hingga perencanaan restock, kelola stok dengan lebih siap.",
+    ctaTitle: "Siapkan Stok, Lancarkan Bisnis",
+    ctaDescription: "Ambil keputusan lebih tepat dengan prediksi permintaan dan rekomendasi restock dari ARUNA.",
+    cta: "Optimalkan stok bisnis Anda",
+    slides: [
+      ["Kelola Bisnis Anda", "Lebih Cerdas", "Pantau penjualan, kelola stok, dan rencanakan pengadaan dengan mudah.", "Ilustrasi dashboard penjualan dan stok"],
+      ["Prediksi Kebutuhan Stok", "Lebih Awal", "Prediksi permintaan tiga hari ke depan dari riwayat penjualan, lalu terjemahkan menjadi kebutuhan bahan. Jika riwayat belum cukup, ARUNA menandai estimasi fallback secara jelas.", "Ilustrasi prediksi permintaan"],
+      ["Kenali Risiko Kehabisan Stok", "Sebelum Terjadi", "Bandingkan stok tersedia dengan prediksi kebutuhan untuk mengidentifikasi bahan yang perlu segera ditindaklanjuti.", "Ilustrasi risiko stok"],
+      ["Rencanakan Pembelian", "Jumlah dan Waktunya", "Tinjau rekomendasi restock berdasarkan kebutuhan bahan, durasi pengiriman pemasok, dan batasan pembelian.", "Ilustrasi perencanaan pengadaan"],
+    ],
+    steps: [
+      ["Data Masuk", "Data penjualan dan jumlah stok dikumpulkan sebagai dasar analisis."],
+      ["Prediksi Permintaan", "Perkirakan permintaan untuk tiga hari ke depan dari riwayat penjualan."],
+      ["Analisis Kebutuhan", "Hasil prediksi diterjemahkan menjadi jumlah bahan yang dibutuhkan."],
+      ["Deteksi Risiko Stok", "Kebutuhan bahan dibandingkan dengan stok yang tersedia."],
+      ["Rekomendasi Restock", "Tentukan bahan yang perlu dibeli, jumlah, dan waktunya."],
+      ["Rencana Optimasi", "Tinjau dan setujui rekomendasi. Catat stok saat barang diterima."],
+    ],
+    cards: [
+      ["Prediksi Kebutuhan", "Perkirakan kebutuhan bahan untuk tiga hari ke depan."],
+      ["Kelola Stok", "Kenali bahan yang perlu ditambah sebelum stok habis."],
+      ["Rekomendasi Jumlah", "Sesuaikan pembelian dengan kebutuhan dan stok tersedia."],
+      ["Waktu Pembelian", "Rencanakan restock dengan mempertimbangkan durasi pengiriman."],
+      ["Tinjau Rencana", "Periksa dan setujui rekomendasi sesuai kebutuhan bisnis."],
+    ],
   },
-  {
-    title: (
-      <>
-        <span className="text-white">Memetakan</span><br />
-        <span className="text-[#ffc558]">Dampak Banjir</span>{" "}
-        <span className="text-white">pada Jalan</span>
-      </>
-    ),
-    description:
-      "Identifikasi jalan yang berpotensi terdampak banjir dan pahami pengaruhnya terhadap akses serta distribusi barang.",
-    image: "/landing/asset-5.png",
-    alt: "Visualisasi jaringan jalan terdampak banjir",
-    hasCta: false,
-  },
-  {
-    title: (
-      <>
-        <span className="text-white">Menentukan<br />Strategi saat</span>{" "}
-        <span className="text-[#ffc558]">Terjadi Banjir</span>
-      </>
-    ),
-    description:
-      "Analisis kondisi jalan untuk menentukan rute alternatif dan prioritas distribusi agar bisnis dapat mengurangi dampak gangguan.",
-    image: "/landing/asset-7.png",
-    alt: "Visualisasi penentuan strategi pemulihan",
-    hasCta: false,
-  },
-];
-
-const steps = [
-  ["Data Masuk", "Data cuaca, banjir, jaringan jalan, dan informasi bisnis dikumpulkan sebagai dasar analisis."],
-  ["Prediksi Risiko Banjir", "AI Random Forest memprediksi tingkat risiko paparan banjir pada koridor jalan."],
-  ["Analisis Jaringan Jalan", "Sistem memetakan jalan yang berpotensi terdampak dan melihat perubahan akses akibat banjir."],
-  ["Dampak Distribusi", "Menganalisis dampak gangguan jalan terhadap perjalanan dan distribusi barang."],
-  ["Rekomendasi Rute", "Sistem mencari alternatif rute dan menentukan prioritas berdasarkan kondisi jaringan."],
-  ["Rencana Pemulihan", "Hasil analisis dirangkum menjadi langkah yang membantu bisnis mengurangi dampak gangguan."],
-];
-
-const features = [
-  ["Prediksi Risiko Banjir", "Memprediksi tingkat paparan banjir pada koridor jalan menggunakan AI."],
-  ["Peta Dampak Jalan", "Menampilkan lokasi dan tingkat dampak banjir pada jaringan jalan."],
-  ["Analisis Distribusi", "Menilai bagaimana gangguan jalan memengaruhi pergerakan barang."],
-  ["Rute Alternatif", "Menentukan rute lain untuk membantu distribusi tetap berjalan."],
-  ["Prioritas Pemulihan", "Membantu menentukan prioritas dan langkah setelah terjadi gangguan."],
-];
+};
+const images = ["overview", "forecast", "risk", "procurement"];
+const container = "mx-auto w-full max-w-[1240px] px-6 sm:px-10 lg:px-16";
+const ctaClass = "inline-flex min-h-12 items-center justify-center rounded-full bg-[linear-gradient(110deg,#eba92d,#856019)] px-7 text-sm font-bold tracking-wide text-white shadow-md transition hover:brightness-110";
 
 export function LandingPage() {
+  const { locale, toggleLocale } = useInventoryLanguage();
+  const copy = content[locale];
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const [isNavbarSolid, setIsNavbarSolid] = useState(false);
-  const slide = slides[activeSlide];
+  const slide = copy.slides[activeSlide];
   const move = useCallback((direction: number) => {
-    setActiveSlide((current) => (current + direction + slides.length) % slides.length);
+    setActiveSlide((current) => (current + direction + images.length) % images.length);
   }, []);
 
   useEffect(() => {
-    if (isPaused) return;
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (isPaused || reducedMotion) return;
     const timeout = window.setTimeout(() => move(1), SLIDE_DURATION_MS);
     return () => window.clearTimeout(timeout);
-  }, [activeSlide, isPaused, move]);
-
+  }, [activeSlide, isPaused, reducedMotion, move]);
   useEffect(() => {
-    const updateNavbar = () => setIsNavbarSolid(shouldUseSolidLandingNavbar(window.scrollY));
-    updateNavbar();
-    window.addEventListener("scroll", updateNavbar, { passive: true });
-    return () => window.removeEventListener("scroll", updateNavbar);
+    const update = () => setIsNavbarSolid(shouldUseSolidLandingNavbar(window.scrollY));
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
   }, []);
 
+  const logo = <><Image src="/landing/inventory-logo.png" alt="" width={114} height={64} className="h-9 w-16 object-contain" /><span className="text-lg font-semibold sm:text-xl">Aruna AI</span></>;
   return (
     <main className="overflow-x-hidden bg-primary text-white">
-      <nav
-        aria-label="Navigasi landing page"
-        data-scroll-state={isNavbarSolid ? "solid" : "transparent"}
-        className={`fixed inset-x-0 top-0 z-50 flex h-[90px] w-full items-center transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ${isNavbarSolid
-          ? "border-b border-white/15 bg-primary-dark/95 shadow-[0_10px_30px_rgb(0_0_0/30%)] backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent shadow-none"
-          }`}
-      >
-        <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-8 md:px-14 lg:px-16">
-          <Link href="/" className="flex items-center gap-3" aria-label="ARUNA beranda">
-            <Image
-              src="/logo-aruna.png"
-              alt="ARUNA Logo"
-              width={56}
-              height={32}
-              priority
-              className="h-9 w-auto object-contain drop-shadow-sm"
-            />
-            <span className="text-[22px] font-bold tracking-wide text-[#eaeced] md:text-[28px]">ARUNA</span>
-          </Link>
-          <div className="hidden items-center gap-8 text-[15px] text-[#eaeced] md:flex">
-            <a href="#beranda" className="transition hover:text-accent">
-              Beranda
-            </a>
-            <a href="#cara-kerja" className="transition hover:text-accent">
-              Cara Kerja
-            </a>
-            <a href="#fitur" className="transition hover:text-accent">
-              Fitur
-            </a>
-            <Link
-              href="/scenario"
-              className="rounded-full bg-[linear-gradient(180deg,#eba92d,#856019)] px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110"
-            >
-              Start Now!
-            </Link>
+      <nav aria-label={copy.navigation} data-scroll-state={isNavbarSolid ? "solid" : "transparent"}
+        className={`fixed inset-x-0 top-0 z-50 flex h-20 items-center transition-colors ${isNavbarSolid ? "border-b border-white/15 bg-primary-dark/95 shadow-lg backdrop-blur-xl" : "bg-transparent"}`}>
+        <div className={`${container} flex items-center justify-between gap-4`}>
+          <Link href="/" aria-label="Aruna AI" className="flex shrink-0 items-center gap-2">{logo}</Link>
+          <div className="flex items-center gap-3 lg:gap-7">
+            <div className="hidden items-center gap-7 text-sm text-white/90 md:flex">
+              <a href="#beranda" className="hover:text-accent">{copy.home}</a>
+              <a href="#cara-kerja" className="hover:text-accent">{copy.how}</a>
+              <a href="#fitur" className="hover:text-accent">{copy.features}</a>
+            </div>
+            <button type="button" onClick={toggleLocale} aria-label={copy.switchLanguage} className="flex min-h-11 items-center gap-1.5 rounded-full border border-white/40 px-3 text-xs font-semibold hover:bg-white/10">
+              <Languages size={16} aria-hidden="true" />{locale === "en" ? "ID" : "EN"}
+            </button>
+            <Link href={LANDING_APP_HREF} className={`${ctaClass} hidden sm:inline-flex`}>{copy.start}</Link>
           </div>
-          <Link
-            href="/scenario"
-            className="rounded-full bg-accent px-4 py-2 text-xs font-bold text-primary-dark md:hidden"
-          >
-            Mulai
-          </Link>
         </div>
       </nav>
 
-      <section id="beranda" className="landing-grid relative min-h-[780px] scroll-mt-[90px] bg-primary pt-[90px]">
-        <h1 className="sr-only">ARUNA</h1>
-        <div className="relative mx-auto grid min-h-[580px] w-full max-w-[1240px] items-center gap-10 px-8 pb-20 pt-8 md:px-14 lg:grid-cols-[minmax(0,540px)_minmax(320px,460px)] lg:justify-between lg:px-16">
-          <div key={`copy-${activeSlide}`} aria-live="polite" className="landing-slide-copy relative z-10">
-            <div className="max-w-[540px] text-[38px] font-bold leading-[1.1] [text-shadow:0_0_19px_rgb(0_0_0/25%)] md:text-[52px] lg:text-[62px]">
-              {slide.title}
-            </div>
-            <p className="mt-5 max-w-[500px] text-[15px] leading-relaxed text-[#eaeced] md:text-[18px]">
-              {slide.description}
-            </p>
-            {slide.hasCta && (
-              <Link
-                href="/scenario"
-                className="mt-8 inline-flex h-[64px] min-w-[240px] items-center justify-center rounded-full bg-[linear-gradient(90deg,#eba92d,#856019)] px-7 text-[16px] font-bold text-white shadow-lg transition hover:brightness-110 active:scale-95"
-              >
-                EXPLORE NOW!
-              </Link>
-            )}
+      <section id="beranda" aria-roledescription="carousel" aria-label={copy.home} className="landing-grid relative scroll-mt-20 bg-[linear-gradient(155deg,#39597e,#789ab8)] pb-12 pt-28 sm:pt-32">
+        <div className={`${container} relative grid min-h-[470px] items-center gap-8 pb-10 md:grid-cols-[1.2fr_1fr] lg:min-h-[510px] lg:gap-16`}>
+          <div key={`copy-${activeSlide}`} className="landing-slide-copy motion-reduce:animate-none">
+            <h1 className="max-w-[580px] text-4xl font-bold leading-[1.13] tracking-tight sm:text-5xl lg:text-[58px]">
+              <span className={activeSlide === 0 ? "text-[#ffc558]" : "text-white"}>{slide[0]}</span><br />
+              <span className={activeSlide === 0 ? "text-white" : "text-[#ffc558]"}>{slide[1]}</span>
+            </h1>
+            <p className="mt-5 max-w-[520px] text-sm leading-relaxed text-white/90 sm:text-base">{slide[2]}</p>
+            <Link href={LANDING_APP_HREF} className={`${ctaClass} mt-7 min-w-52 uppercase`}>{copy.explore}</Link>
           </div>
-          <div
-            key={`image-${activeSlide}`}
-            className="landing-slide-image relative mx-auto aspect-square w-full max-w-[440px]"
-          >
-            <Image
-              src={slide.image}
-              alt={slide.alt}
-              fill
-              priority={activeSlide === 0}
-              sizes="(max-width: 1024px) 85vw, 440px"
-              className="object-contain drop-shadow-[0_12px_28px_rgb(255_255_255/14%)]"
-            />
+          <div key={images[activeSlide]} className="landing-slide-image relative mx-auto aspect-square w-full max-w-[340px] motion-reduce:animate-none lg:max-w-[390px]">
+            <Image src={`/landing/inventory-${images[activeSlide]}.png`} alt={slide[3]} fill priority={activeSlide === 0} sizes="(max-width: 767px) 80vw, 390px" className="object-contain drop-shadow-[0_0_20px_rgb(255_255_255/20%)]" />
           </div>
         </div>
-        <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4">
-          <button
-            type="button"
-            onClick={() => move(-1)}
-            aria-label="Slide sebelumnya"
-            className="grid size-8 place-items-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white"
-          >
-            <ChevronLeft className="size-5" />
-          </button>
-          <div className="w-[110px]">
-            <div className="flex justify-center gap-2.5">
-              {slides.map((item, index) => (
-                <button
-                  key={item.image}
-                  type="button"
-                  onClick={() => setActiveSlide(index)}
-                  aria-label={`Buka slide ${index + 1}`}
-                  aria-current={index === activeSlide}
-                  className={`size-2.5 rounded-full transition ${index === activeSlide ? "scale-125 bg-white" : "bg-white/55 hover:bg-white"
-                    }`}
-                />
-              ))}
-            </div>
-            <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-white/20" aria-hidden="true">
-              <span
-                key={activeSlide}
-                className={`landing-slide-progress block h-full rounded-full bg-accent ${isPaused ? "[animation-play-state:paused]" : ""
-                  }`}
-              />
+        <div className="relative flex items-center justify-center gap-3">
+          <button type="button" onClick={() => move(-1)} aria-label={copy.previous} className="grid size-10 place-items-center rounded-full hover:bg-white/10"><ChevronLeft size={20} /></button>
+          <div className="relative h-[14px] w-[150px]">
+            <Image src="/landing/inventory-dots.svg" alt="" width={149.76} height={13.44} aria-hidden="true" />
+            <div className="absolute inset-0 flex items-center justify-between">
+              {images.map((name, index) => <button type="button" key={name} onClick={() => setActiveSlide(index)} aria-label={`${copy.slide} ${index + 1}`} aria-current={index === activeSlide ? "true" : undefined} className={`relative -my-3 grid h-10 w-5 place-items-center rounded-full ${index === activeSlide ? "after:size-3 after:rounded-full after:bg-white after:ring-2 after:ring-primary" : ""}`} />)}
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => move(1)}
-            aria-label="Slide berikutnya"
-            className="grid size-8 place-items-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white"
-          >
-            <ChevronRight className="size-5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsPaused((paused) => !paused)}
-            aria-label={isPaused ? "Lanjutkan carousel otomatis" : "Jeda carousel otomatis"}
-            title={isPaused ? "Putar otomatis" : "Jeda autoplay"}
-            className="grid size-8 place-items-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white"
-          >
-            {isPaused ? <Play className="size-3.5" fill="currentColor" /> : <Pause className="size-3.5" fill="currentColor" />}
-          </button>
+          <button type="button" onClick={() => move(1)} aria-label={copy.next} className="grid size-10 place-items-center rounded-full hover:bg-white/10"><ChevronRight size={20} /></button>
+          {!reducedMotion && <button type="button" onClick={() => setIsPaused((paused) => !paused)} aria-label={isPaused ? copy.resume : copy.pause} className="grid size-10 place-items-center rounded-full hover:bg-white/10">{isPaused ? <Play size={16} /> : <Pause size={16} />}</button>}
         </div>
       </section>
 
-      <section id="cara-kerja" className="scroll-mt-[90px] bg-primary-dark px-8 py-24 md:px-14 lg:px-16">
-        <div className="mx-auto max-w-[1240px]">
-          <p className="text-center text-[18px] font-bold tracking-[0.18em] text-[#d9d9d9] md:text-[22px]">
-            CARA KERJA
-          </p>
-          <h2 className="mt-4 text-[32px] font-extrabold text-[#ffc558] md:text-[46px]">
-            Dari Data Menjadi Keputusan
-          </h2>
-          <p className="mt-3 max-w-[1050px] text-[15px] leading-relaxed text-[#eaeced] md:text-[19px]">
-            ARUNA mengolah data banjir, jaringan jalan, dan distribusi untuk menghasilkan rekomendasi yang dapat ditindaklanjuti.
-          </p>
-          <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {steps.map(([title, description], index) => (
-              <li
-                key={title}
-                className="flex min-h-[300px] flex-col rounded-[22px] bg-white px-4 py-6 text-center text-black shadow-md transition hover:-translate-y-1 hover:shadow-xl"
-              >
-                <span className="mx-auto grid size-[50px] place-items-center rounded-full bg-primary text-[22px] font-bold text-white shadow-md">
-                  {index + 1}
-                </span>
-                <h3 className="mt-4 text-[16px] font-bold leading-tight">{title}</h3>
-                <p className="mt-3 text-[12px] font-medium leading-relaxed text-[#5a5a5a]">{description}</p>
-              </li>
-            ))}
+      <section id="cara-kerja" className="scroll-mt-20 bg-primary py-16 sm:py-20">
+        <div className={container}>
+          <p className="text-center text-sm font-semibold uppercase tracking-[.18em] text-white/80">{copy.how}</p>
+          <h2 className="mt-8 text-3xl font-extrabold tracking-tight text-[#ffc558] sm:text-4xl">{copy.howTitle}</h2>
+          <p className="mt-3 max-w-[950px] text-sm leading-relaxed text-white/90 sm:text-base">{copy.howDescription}</p>
+          <ol className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            {copy.steps.map(([title, description], index) => <li key={title} className="rounded-2xl bg-white px-4 py-6 text-center text-ink shadow-sm">
+              <span className="relative mx-auto grid size-[63px] place-items-center"><Image src="/landing/inventory-step.svg" alt="" width={63} height={63} /><span className="absolute text-xl font-bold text-white">{index + 1}</span></span>
+              <h3 className="mt-4 text-sm font-bold">{title}</h3><p className="mt-3 text-xs leading-relaxed text-muted">{description}</p>
+            </li>)}
           </ol>
         </div>
       </section>
 
-      <section id="fitur" className="landing-honeycomb scroll-mt-[90px] bg-secondary-soft px-8 py-24 text-primary md:px-14 lg:px-16">
-        <div className="mx-auto max-w-[1240px]">
-          <p className="text-center text-[18px] font-bold tracking-[0.18em] text-primary-dark md:text-[22px]">
-            FITUR
-          </p>
-          <h2 className="mt-4 text-[32px] font-extrabold md:text-[46px]">
-            Solusi Cerdas untuk Bisnis
-          </h2>
-          <p className="mt-3 max-w-[1050px] text-[15px] leading-relaxed md:text-[19px]">
-            Dari analisis paparan risiko banjir pada koridor jalan hingga rute alternatif, ARUNA membantu bisnis menghadapi gangguan dengan lebih siap.
-          </p>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            {features.map(([title, description], index) => (
-              <article
-                key={title}
-                className="flex min-h-[320px] flex-col rounded-[22px] bg-white/80 px-5 py-7 text-center text-black shadow-sm backdrop-blur-sm transition hover:-translate-y-1 hover:shadow-lg"
-              >
-                <span className="mx-auto grid size-[56px] place-items-center rounded-full bg-accent text-[24px] font-bold text-white shadow-md">
-                  {index + 1}
-                </span>
-                <h3 className="mt-5 text-[17px] font-bold leading-tight">{title}</h3>
-                <p className="mt-4 text-[13px] font-medium leading-relaxed text-[#5a5a5a]">{description}</p>
-              </article>
-            ))}
+      <section id="fitur" className="landing-honeycomb scroll-mt-20 bg-secondary-soft py-16 text-primary sm:py-20">
+        <div className={container}>
+          <p className="text-center text-sm font-semibold uppercase tracking-[.18em] text-primary-dark">{copy.features}</p>
+          <h2 className="mt-8 text-3xl font-extrabold tracking-tight sm:text-4xl">{copy.featureTitle}</h2>
+          <p className="mt-3 max-w-[950px] text-sm leading-relaxed sm:text-base">{copy.featureDescription}</p>
+          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {copy.cards.map(([title, description], index) => <article key={title} className="rounded-2xl bg-white/75 px-5 py-6 text-center text-ink shadow-sm">
+              <span className="relative mx-auto grid size-[75.6px] place-items-center"><Image src="/landing/inventory-feature.svg" alt="" width={75.6} height={75.6} /><span className="absolute text-2xl font-bold text-white">{index + 1}</span></span>
+              <h3 className="mt-4 text-base font-bold">{title}</h3><p className="mt-3 text-sm leading-relaxed text-muted">{description}</p>
+            </article>)}
           </div>
         </div>
       </section>
 
-      <section className="bg-[linear-gradient(180deg,#eba92d,#a16d12)] px-8 py-24 text-center md:px-14 lg:px-16">
-        <div className="mx-auto max-w-[1240px]">
-          <h2 className="text-[32px] font-extrabold md:text-[44px]">
-            Bangun Ketahanan Bisnis Anda
-          </h2>
-          <p className="mx-auto mt-4 max-w-[760px] text-[15px] leading-relaxed md:text-[18px]">
-            Uji skenario banjir, pahami dampaknya, dan siapkan keputusan pemulihan sebelum gangguan terjadi.
-          </p>
-          <Link
-            href="/scenario"
-            className="mt-8 inline-flex min-h-[64px] min-w-[min(100%,460px)] items-center justify-center rounded-full bg-primary-dark px-9 text-[15px] font-bold text-white shadow-xl transition hover:bg-primary active:scale-95"
-          >
-            CREATE YOUR SCENARIO HERE
-          </Link>
+      <section className="bg-[linear-gradient(180deg,#eba92d,#956b1b)] py-16 text-center sm:py-20">
+        <div className={container}><h2 className="text-3xl font-extrabold sm:text-4xl">{copy.ctaTitle}</h2>
+          <p className="mx-auto mt-4 max-w-[820px] text-sm leading-relaxed sm:text-base">{copy.ctaDescription}</p>
+          <Link href={LANDING_APP_HREF} className="mt-7 inline-flex min-h-14 items-center justify-center rounded-full bg-primary-dark px-8 text-sm font-semibold uppercase tracking-wider text-white shadow-md transition hover:bg-primary">{copy.cta}</Link>
         </div>
       </section>
-
-      <footer className="flex min-h-[120px] items-center bg-primary-dark px-8 md:px-14 lg:px-16">
-        <div className="mx-auto flex w-full max-w-[1240px] items-center gap-3">
-          <Image
-            src="/logo-aruna.png"
-            alt="ARUNA Logo"
-            width={48}
-            height={28}
-            className="h-8 w-auto object-contain"
-          />
-          <span className="text-[22px] font-bold tracking-wide">ARUNA</span>
-        </div>
-      </footer>
+      <footer className="bg-primary-dark py-8"><div className={container}><Link href="/" aria-label="Aruna AI" className="inline-flex items-center gap-2">{logo}</Link></div></footer>
     </main>
   );
 }

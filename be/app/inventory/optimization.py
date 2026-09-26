@@ -8,7 +8,7 @@ from ortools.sat.python import cp_model
 
 from app.errors import ApiError
 
-OPTIMIZER_VERSION = "time-indexed-lexicographic-v2"
+OPTIMIZER_VERSION = "time-indexed-lexicographic-v2-single-offer"
 HORIZON_DAYS = 3
 # Lost-sales weights are micro-IDR per base unit so fractional IDR/base rates stay integral.
 LOST_SALES_SCALE = 1_000_000
@@ -128,6 +128,7 @@ def optimize_procurement(
 
         arrivals_by_day: dict[int, list[Any]] = defaultdict(list)
         max_purchase = 0
+        selection_vars = []
         for offer in eligible[ingredient_id]:
             capacity_packs = offer["capacity_packs"]
             if capacity_packs is None:
@@ -140,12 +141,18 @@ def optimize_procurement(
             pack_units = offer["pack_quantity_base"] // unit
             packs = model.new_int_var(0, capacity_packs, f"packs_{offer['id']}")
             selected = model.new_bool_var(f"selected_{offer['id']}")
+            selection_vars.append(selected)
             model.add(packs == 0).only_enforce_if(selected.Not())
             model.add(packs >= offer["minimum_packs"]).only_enforce_if(selected)
             pack_vars[offer["id"]] = packs
             arrivals_by_day[arrival_days[offer["id"]]].append(packs * pack_units)
             cost_terms.append(packs * offer["pack_cost_idr"])
             max_purchase += capacity_packs * pack_units
+
+        # Keep the production persistence invariant: one recommendation per ingredient per plan.
+        # A limited supplier capacity produces a truthful PARTIAL plan, not duplicate rows.
+        if selection_vars:
+            model.add(sum(selection_vars) <= 1)
 
         storage_capacity = None if base["storageCapacity"] is None else int(base["storageCapacity"]) // unit
         cumulative_incoming = 0

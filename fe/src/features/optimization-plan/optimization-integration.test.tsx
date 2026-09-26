@@ -1,0 +1,28 @@
+import { vi, it, expect, afterEach } from "vitest";
+vi.mock("@/config/public-env", () => ({ publicEnv: { NEXT_PUBLIC_DATA_SOURCE: "api", NEXT_PUBLIC_API_BASE_URL: "http://localhost:8000" } }));
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { OptimizationPlanPage } from "./optimization-plan-page";
+import { optimizationPlanService } from "@/services/optimization-plan-service";
+const recommendation = { id: "original-rec", planId: "old-plan", ingredientId: "ing_mangga", ingredientName: "Mango", unit: "kg", currentStock: 2, predictedRequirement: 6, safetyStock: 1, projectedStock: -4, riskLevel: "HIGH", recommendedOrderQuantity: 5, receivedQuantity: 2, outstandingQuantity: 3, recommendedOrderAt: "2026-09-26", supplier: { id: "canonical-supplier", name: "Canonical Supplier", leadTimeHours: 24 }, status: "APPROVED", estimatedCost: 50000, explanation: { source: "QWEN", text: "Buy 999 kg from Wrong Supplier for Rp 1 tomorrow." } };
+afterEach(() => { vi.unstubAllGlobals(); Reflect.deleteProperty(HTMLDialogElement.prototype, "showModal"); });
+it("keeps old approved receipts accessible and takes facts from structured fields, not prose", async () => {
+  Object.defineProperty(HTMLDialogElement.prototype, "showModal", { configurable: true, value: function (this: HTMLDialogElement) { this.open = true; } });
+  vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => Response.json({ generatedAt: "2026-09-26T08:00:00Z", optimizerStatus: "OPTIMAL", recommendations: [], outstandingRecommendations: [recommendation] })));
+  const plan = await optimizationPlanService.getPlan();
+  expect(plan.actions[0]).toMatchObject({ id: "original-rec", planId: "old-plan", quantity: 5, receivedQuantity: 2, outstandingQuantity: 3, supplierId: "canonical-supplier", riskLevel: "HIGH", estimatedCost: 50000 });
+  render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}><OptimizationPlanPage /></QueryClientProvider>);
+  await screen.findByRole("heading", { name: "System Optimization Recommendations" });
+  await userEvent.click(screen.getByRole("tab", { name: "Approved" }));
+  expect(screen.getByText("Risk: HIGH")).toBeInTheDocument();
+  expect(screen.getByText("Order date: 2026-09-26")).toBeInTheDocument();
+  expect(screen.getByText("Supplier: Canonical Supplier")).toBeInTheDocument();
+  expect(screen.getByText("Estimated cost: Rp 50.000")).toBeInTheDocument();
+  expect(screen.getByLabelText("Proposed Quantity (kg)")).toHaveValue(5);
+  expect(screen.getByText("Explanation (QWEN)")).toBeInTheDocument();
+  expect(screen.getByText(/Received: 2 kg/)).toHaveTextContent("Outstanding: 3 kg");
+  await userEvent.click(screen.getByRole("button", { name: "Receive Stock" }));
+  expect(screen.getByLabelText("Quantity received (kg)")).toHaveValue(3);
+  expect(screen.getByLabelText("Supplier")).toHaveValue("canonical-supplier");
+});

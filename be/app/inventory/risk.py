@@ -7,7 +7,7 @@ from typing import Any
 import psycopg
 
 from app.core.config import Settings
-from app.inventory.db import balances_base, from_base, now_utc
+from app.inventory.db import balances_base, from_base, lock_state, now_utc
 from app.inventory.forecast import ensure_forecast, validation_mae_by_horizon
 
 HORIZON_DAYS = 3
@@ -198,6 +198,7 @@ def inventory_view(
     search: str | None,
     risk_level: str | None,
 ) -> dict[str, Any]:
+    state = lock_state(connection)
     risks = evaluate_risks(connection, settings, correlation_id=correlation_id)
     needle = search.casefold().strip() if search else None
     items = []
@@ -220,7 +221,7 @@ def inventory_view(
                 "updatedAt": risks["generatedAt"],
             }
         )
-    return {"items": items}
+    return {"items": items, "inventoryVersion": state["inventory_version"]}
 
 
 def public_risks(result: dict[str, Any], level: str | None = None) -> dict[str, Any]:

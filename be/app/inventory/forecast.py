@@ -76,9 +76,9 @@ def _load_artifact(settings: Settings) -> tuple[dict[str, Any], list[Any]]:
 
 
 def validation_mae_by_horizon(settings: Settings, *, fallback: bool = False) -> list[float]:
-    """Validation-split MAE per horizon in cups; never the test split, which is frozen for reporting.
+    """Read validation MAE only; frozen test metrics are not optimizer inputs.
 
-    Fallback forecasts have no validated error, so the persistence baseline MAE is the proxy.
+    The persistence baseline is a proxy for fallback forecasts, not validated fallback accuracy.
     """
     manifest_path = settings.inventory_model_dir / "manifest.json"
     if not manifest_path.exists():
@@ -233,6 +233,8 @@ def product_forecast(
     if product is None:
         raise ApiError(404, "PRODUCT_NOT_FOUND", "Produk tidak ditemukan.")
     run = ensure_forecast(connection, settings, correlation_id=correlation_id)
+    # Provenance only: inspect the existing manifest, never train or rewrite it.
+    manifest = json.loads((settings.inventory_model_dir / "manifest.json").read_text(encoding="utf-8"))
     forecast = [item for item in run["items"] if item["productId"] == product_id]
     observed = connection.execute(
         "SELECT s.business_date AS date,sum(si.quantity)::integer AS demand FROM inventory_sale s "
@@ -246,7 +248,6 @@ def product_forecast(
             for row in reversed(observed)
         ]
     else:
-        manifest, _ = _load_artifact(settings)
         history = [
             {"date": item["date"], "actualDemand": item["demand"], "historySource": "SYNTHETIC_DEMAND"}
             for item in manifest.get("demoHistory", [])
@@ -280,5 +281,6 @@ def product_forecast(
         "dataCutoff": run["data_cutoff"],
         "source": run["source"],
         "isSynthetic": run["is_synthetic"],
+        "trainingDataSynthetic": manifest.get("syntheticData"),
         "fallbackReason": run["fallback_reason"],
     }

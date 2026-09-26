@@ -83,7 +83,7 @@ def test_inventory_routes_use_canonical_error_envelope_without_database() -> Non
 
 
 def test_required_frontend_endpoint_matrix_is_registered() -> None:
-    paths = {route.path for route in create_app(Settings(app_env="test", inventory_database_url=None)).routes}
+    paths = set(create_app(Settings(app_env="test", inventory_database_url=None)).openapi()["paths"])
     assert {
         "/api/products",
         "/api/transactions",

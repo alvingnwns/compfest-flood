@@ -1,0 +1,82 @@
+.page {
+  min-height: calc(100vh - var(--inventory-header, 80px));
+  padding: 18px 28px 30px;
+  color: #29405b;
+  background-color: #fbfdff;
+  background-image:
+    linear-gradient(30deg, transparent 24%, rgb(164 202 233 / 24%) 25%, rgb(164 202 233 / 24%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 24%) 75%, rgb(164 202 233 / 24%) 77%, transparent 78%),
+    linear-gradient(150deg, transparent 24%, rgb(164 202 233 / 24%) 25%, rgb(164 202 233 / 24%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 24%) 75%, rgb(164 202 233 / 24%) 77%, transparent 78%);
+  background-size: 42px 72px;
+}
+.optimizationButton {
+  display: inline-flex;
+  height: 40px;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 4px;
+  padding: 0 18px;
+  background: #29405b;
+  color: white;
+  font: 700 13px/1 var(--font-sans);
+  text-decoration: none;
+}
+.optimizationButton svg { width: 16px; height: 16px; }
+.optimizationButton:disabled, .orderButton:disabled { cursor: not-allowed; opacity: 1; }
+.topGrid { display: grid; grid-template-columns: minmax(0, 2.25fr) minmax(270px, .75fr); gap: 14px; }
+.tableCard, .detailCard, .projectionCard { border: 1px solid #979797; border-radius: 7px; background: white; box-shadow: 0 2px 7px rgb(0 0 0 / 8%); }
+.tableCard { min-width: 0; padding: 12px; }
+.tableCard > h2 { margin: 0 0 8px; color: #39597e; font-size: 17px; line-height: 1.25; }
+.tableScroll { overflow-x: auto; }
+.tableScroll table { width: 100%; min-width: 620px; border-collapse: collapse; table-layout: fixed; }
+.tableScroll th { height: 36px; padding: 0 10px; background: #39597e; color: white; font-size: 11px; text-align: center; }
+.tableScroll th:first-child { text-align: left; }
+.tableScroll td { height: 38px; border: 1px solid #d1d9e0; padding: 0 10px; color: #29405b; font-size: 11px; text-align: center; }
+.tableScroll td:first-child { text-align: left; }
+.selectedRow { background: #a4cae9; }
+.rowButton { width: 100%; border: 0; padding: 7px 0; background: transparent; color: #39597e; font: 700 11px/1 var(--font-sans); text-align: left; cursor: pointer; }
+.statusBadge { display: inline-flex; min-width: 74px; justify-content: center; border-radius: 3px; padding: 5px 8px; color: white !important; font-size: 10px; font-weight: 700; }
+.critical { color: #bc0000 !important; }
+.statusBadge.critical { background: #bc0000; color: white !important; }
+.warning { color: #d78500 !important; }
+.statusBadge.warning { background: #eba82e; color: white !important; }
+.surplus { color: #2e8c57 !important; }
+.statusBadge.surplus { background: #2e8c57; color: white !important; }
+.normal { color: #39597e !important; }
+.statusBadge.normal { background: #6e9fc0; color: #29405b !important; }
+.detailCard { min-height: 244px; padding: 20px; }
+.detailHeading { display: flex; align-items: center; gap: 14px; }
+.detailHeading svg { width: 42px; height: 42px; color: #39597e; }
+.detailHeading h2 { margin: 0; color: #39597e; font-size: 20px; line-height: 1.15; }
+.detailCard h3 { margin: 22px 0 10px; color: #39597e; font-size: 28px; line-height: 1; }
+.detailCard dl { display: grid; gap: 10px; margin: 0; }
+.detailCard dl div { display: flex; justify-content: space-between; gap: 14px; font-size: 11px; }
+.detailCard dt { color: #6a6a6a; }
+.detailCard dd { margin: 0; color: #29405b; font-weight: 700; text-align: right; }
+.projectionCard { display: flex; min-height: 290px; flex-direction: column; align-items: center; margin-top: 14px; padding: 14px 24px 18px; }
+.projectionCard h2 { margin: 0 0 12px; color: #39597e; font-size: 22px; }
+.barChart { width: min(760px, 100%); }
+.barRow { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 12px; align-items: center; min-height: 31px; }
+.barRow > span { color: #4d5966; font-size: 11px; text-align: right; }
+.bars { display: flex; flex-direction: column; gap: 3px; }
+.bars i { display: block; height: 9px; border-radius: 2px; }
+.stockBar, .stockKey { background: #6e9fc0; }
+.needBar, .needKey { background: #29405b; }
+.legend { display: flex; gap: 20px; margin: 9px 0 12px; color: #4d5966; font-size: 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 9px; height: 9px; border-radius: 2px; }
+.orderButton { display: inline-flex; align-items: center; justify-content: center; height: 38px; border: 0; border-radius: 5px; padding: 0 30px; background: #eba82e; color: white; font: 700 12px/1 var(--font-sans); text-decoration: none; }
+
+@media (max-width: 900px) {
+  .topGrid { grid-template-columns: 1fr; }
+  .detailCard { min-height: 220px; }
+}
+@media (max-width: 767px) {
+  .page { padding: 16px; }
+  .optimizationButton { width: 40px; justify-content: center; padding: 0; font-size: 0; }
+  .projectionCard { align-items: stretch; padding-inline: 14px; }
+  .projectionCard h2 { font-size: 19px; text-align: center; }
+  .barRow { grid-template-columns: 78px minmax(0, 1fr); }
+  .legend { justify-content: center; }
+  .orderButton { align-self: center; }
+}
