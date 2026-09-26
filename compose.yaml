@@ -3,7 +3,7 @@ services:
     build:
       context: ./be
     env_file:
-      - ./be/.env
+      - .env
     environment:
       APP_ENV: development
       FRONTEND_ORIGIN: http://localhost:3000
