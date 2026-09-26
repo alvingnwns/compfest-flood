@@ -4,7 +4,9 @@ from datetime import date
 from typing import Annotated
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Header, Query, Request, status
+from fastapi import APIRouter, File, Header, Query, Request, UploadFile, status
+from fastapi.responses import PlainTextResponse
+from starlette.concurrency import run_in_threadpool
 
 from app.errors import ApiError
 from app.inventory.dashboard import summary as dashboard_summary
@@ -22,6 +24,12 @@ from app.inventory.operations import (
 )
 from app.inventory.procurement import decide, recommendations
 from app.inventory.risk import evaluate_risks, inventory_view, public_risks
+from app.inventory.sales_history import (
+    MAX_FILE_BYTES,
+    SALES_HISTORY_TEMPLATE,
+    history_coverage,
+    import_sales_history,
+)
 from app.inventory.schemas import (
     AdjustmentRequest,
     AdjustmentResponse,
@@ -36,6 +44,8 @@ from app.inventory.schemas import (
     ProductsResponse,
     RecommendationDecisionRequest,
     RecommendationDecisionResponse,
+    SalesHistoryCoverageResponse,
+    SalesHistoryImportResponse,
     StockInRequest,
     StockInResponse,
     TransactionListResponse,
@@ -249,6 +259,50 @@ def recommendation_decision(
             payload.decision,
             correlation_id=_correlation_id(correlation_id),
         )
+
+
+@router.get("/api/sales-history/template", response_class=PlainTextResponse)
+def sales_history_template() -> PlainTextResponse:
+    return PlainTextResponse(
+        SALES_HISTORY_TEMPLATE,
+        media_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="ARUNA_Sales_History_Template.csv"'},
+    )
+
+
+@router.post(
+    "/api/sales-history/imports",
+    response_model=SalesHistoryImportResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def sales_history_import(
+    request: Request,
+    file: Annotated[UploadFile, File()],
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key", max_length=200),
+    correlation_id: str | None = Header(default=None, alias="X-Correlation-ID", max_length=200),
+) -> dict:
+    contents = await file.read(MAX_FILE_BYTES + 1)
+    filename = file.filename
+    await file.close()
+
+    def run() -> dict:
+        with connect(request.app.state.settings) as connection:
+            return import_sales_history(
+                connection,
+                contents,
+                filename=filename,
+                idempotency_key=idempotency_key,
+                correlation_id=_correlation_id(correlation_id),
+            )
+
+    # Parsing and the database transaction are synchronous; keep them off the event loop.
+    return await run_in_threadpool(run)
+
+
+@router.get("/api/sales-history/coverage", response_model=SalesHistoryCoverageResponse)
+def sales_history_status(request: Request) -> dict:
+    with connect(request.app.state.settings) as connection:
+        return history_coverage(connection)
 
 
 @router.get("/api/dashboard/summary", response_model=DashboardSummaryResponse)

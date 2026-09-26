@@ -41,6 +41,7 @@ _INVENTORY_API_PREFIXES = (
     "/api/forecasts",
     "/api/procurement",
     "/api/dashboard",
+    "/api/sales-history",
 )
 
 

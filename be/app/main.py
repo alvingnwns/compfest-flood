@@ -32,6 +32,7 @@ _INVENTORY_PATHS = (
     "/api/forecasts",
     "/api/procurement",
     "/api/dashboard",
+    "/api/sales-history",
 )
 
 

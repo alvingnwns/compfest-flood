@@ -29,6 +29,7 @@ from app.inventory.schemas import ProductForecastResponse
 from datetime import datetime, timedelta
 from app.inventory.db import WIB
 from app.inventory.optimization import optimize_procurement
+from app.inventory.sales_history import import_sales_history
 import httpx
 
 
@@ -43,7 +44,8 @@ def isolated_settings():
     with psycopg.connect(url) as connection:
         assert connection.execute("SELECT current_database()").fetchone()[0] == "aruna_hardening"
         connection.execute("DROP SCHEMA IF EXISTS aruna_inventory CASCADE")
-        connection.execute((Path(__file__).resolve().parents[1] / "migrations/001_inventory.sql").read_text())
+        for migration in sorted((Path(__file__).resolve().parents[1] / "migrations").glob("*.sql")):
+            connection.execute(migration.read_text(encoding="utf-8"))
     settings = Settings(
         app_env="test", inventory_database_url=SecretStr(url),
         openrouter_api_key=None, gemini_api_key=None, explanation_mode="deterministic",
@@ -219,19 +221,74 @@ def test_qwen_timeout_preserves_usable_deterministic_recommendation(isolated_set
         assert balances_base(connection) == before
 
 
-@pytest.mark.parametrize("history_kind", ["synthetic", "observed", "runtime"])
+def days_ago(days):
+    return datetime.now(WIB).date() - timedelta(days=days)
+
+
+def history_csv(days, start_offset=1, product="P009", quantity=6):
+    rows = [f"{days_ago(start_offset + index).isoformat()},{product},{quantity}" for index in range(days)]
+    return ("date,product_id,quantity\n" + "\n".join(rows) + "\n").encode()
+
+
+def import_history(connection, content, key=None):
+    return import_sales_history(connection, content, filename="h.csv", idempotency_key=key, correlation_id="test")
+
+
+@pytest.mark.parametrize("history_kind", ["synthetic", "observed", "single-old-sale", "imported"])
 def test_forecast_provenance_distinguishes_training_runtime_and_history(isolated_settings, history_kind):
     settings = isolated_settings
-    if history_kind != "synthetic":
+    if history_kind in {"observed", "single-old-sale"}:
         checkout(settings)
-    if history_kind == "runtime":
+    if history_kind == "single-old-sale":
+        # One old sale is not a usable feature window; it must not unlock XGBoost.
         with connect(settings) as connection:
-            connection.execute("UPDATE inventory_sale SET business_date=%s", (datetime.now(WIB).date() - timedelta(days=30),))
+            connection.execute("UPDATE inventory_sale SET business_date=%s", (days_ago(30),))
+    if history_kind == "imported":
+        with connect(settings) as connection:
+            import_history(connection, history_csv(29))
     with connect(settings) as connection:
         forecast = product_forecast(connection, settings, "P009", correlation_id="test")
         ProductForecastResponse.model_validate(forecast)
+        model_ready = history_kind == "imported"
         assert forecast["trainingDataSynthetic"] is True
-        assert forecast["source"] == ("XGBOOST" if history_kind == "runtime" else "FALLBACK")
-        assert forecast["isSynthetic"] == (history_kind != "runtime")
-        assert {point["historySource"] for point in forecast["history"]} == ({"SYNTHETIC_DEMAND"} if history_kind == "synthetic" else {"OBSERVED_SALES"})
-        assert forecast["fallbackReason"] == (None if history_kind == "runtime" else "INSUFFICIENT_OBSERVED_SALES_HISTORY")
+        assert forecast["source"] == ("XGBOOST" if model_ready else "FALLBACK")
+        assert forecast["isSynthetic"] == (not model_ready)
+        assert forecast["historyCoverage"]["coveredDays"] == (29 if model_ready else 0)
+        expected_sources = {
+            "synthetic": {"SYNTHETIC_DEMAND"},
+            "observed": {"OBSERVED_SALES"},
+            "single-old-sale": {"OBSERVED_SALES"},
+            "imported": {"IMPORTED_SALES"},
+        }[history_kind]
+        assert {point["historySource"] for point in forecast["history"]} == expected_sources
+        assert forecast["fallbackReason"] == (None if model_ready else "INSUFFICIENT_OBSERVED_SALES_HISTORY")
+
+
+def test_sales_history_import_feeds_forecast_without_touching_stock(isolated_settings):
+    settings = isolated_settings
+    with connect(settings) as connection:
+        before = balances_base(connection)
+        version = connection.execute("SELECT inventory_version FROM inventory_state WHERE id=1").fetchone()
+        first = import_history(connection, history_csv(20), key="k1")
+        assert first["daysImported"] == 20 and first["coverage"]["ready"] is False
+        assert first["coverage"]["coveredDays"] == 20
+        assert import_history(connection, history_csv(20), key="k1")["batchId"] == first["batchId"]
+        second = import_history(connection, history_csv(29, quantity=8))
+        assert second["replacedDays"] == 20 and second["coverage"]["ready"] is True
+        assert balances_base(connection) == before
+        assert connection.execute("SELECT inventory_version FROM inventory_state WHERE id=1").fetchone() == version
+        assert connection.execute("SELECT count(*) AS n FROM inventory_sale").fetchone()["n"] == 0
+        quantities = connection.execute("SELECT DISTINCT quantity FROM inventory_sales_history").fetchall()
+        assert quantities == [{"quantity": 8}]
+
+
+def test_sales_history_import_rejects_dates_already_recorded_by_pos(isolated_settings):
+    settings = isolated_settings
+    checkout(settings)
+    with connect(settings) as connection:
+        connection.execute("UPDATE inventory_sale SET business_date=%s", (days_ago(3),))
+    with pytest.raises(ApiError) as error, connect(settings) as connection:
+        import_history(connection, history_csv(5))
+    assert error.value.code == "SALES_HISTORY_OVERLAPS_POS"
+    with connect(settings) as connection:
+        assert connection.execute("SELECT count(*) AS n FROM inventory_sales_history").fetchone()["n"] == 0

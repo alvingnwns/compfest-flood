@@ -195,7 +195,7 @@ class StockInResponse(ApiModel):
 class DemandHistoryPoint(ApiModel):
     date: date
     actual_demand: int = Field(ge=0)
-    history_source: Literal["SYNTHETIC_DEMAND", "OBSERVED_SALES"] | None = None
+    history_source: Literal["SYNTHETIC_DEMAND", "OBSERVED_SALES", "IMPORTED_SALES"] | None = None
 
 
 class ForecastPoint(ApiModel):
@@ -221,6 +221,36 @@ class IngredientRequirement(ApiModel):
     unit: InventoryUnit
 
 
+class HistoryCoverage(ApiModel):
+    covered_days: int = Field(ge=0)
+    required_days: int = Field(gt=0)
+
+
+class SalesHistoryCoverageResponse(ApiModel):
+    as_of_date: date
+    covered_days: int = Field(ge=0)
+    required_days: int = Field(gt=0)
+    ready: bool
+    missing_dates: list[date]
+    imported_days: int = Field(ge=0)
+    imported_first_date: date | None = None
+    imported_last_date: date | None = None
+
+
+class SalesHistoryImportResponse(ApiModel):
+    batch_id: str
+    imported_at: datetime
+    rows_received: int = Field(gt=0)
+    days_imported: int = Field(gt=0)
+    products_imported: int = Field(gt=0)
+    replaced_days: int = Field(ge=0)
+    first_date: date
+    last_date: date
+    coverage: SalesHistoryCoverageResponse
+
+    _imported_at_aware = field_validator("imported_at")(_aware)
+
+
 class ProductForecastResponse(ApiModel):
     product: ForecastProduct
     horizon_days: Literal[3] = 3
@@ -236,6 +266,7 @@ class ProductForecastResponse(ApiModel):
     is_synthetic: bool | None = None
     training_data_synthetic: bool | None = None
     fallback_reason: str | None = None
+    history_coverage: HistoryCoverage | None = None
 
     _generated_at_aware = field_validator("generated_at")(_aware)
 

@@ -228,9 +228,32 @@ Only `horizonDays=3` is accepted. Response contains:
 - completed-day history with `actualDemand` and optional `historySource`;
 - D+1/D+2/D+3 `forecast` entries;
 - deterministic BOM `ingredientRequirements` for this product;
-- optional run ID, `asOfDate`, cutoff, `source`, synthetic flag, and fallback reason.
+- optional run ID, `asOfDate`, cutoff, `source`, synthetic flag, and fallback reason;
+- optional `historyCoverage: { coveredDays, requiredDays }` for the model feature window.
 
 At intraday request time, the origin is the latest completed WIB calendar day. Training never runs in the request. Observed API sales are fulfilled sales and may be stockout-censored; the supplied training target is synthetic unconstrained demand. A fallback must be labeled `FALLBACK`. If no defensible forecast exists, return `409 FORECAST_UNAVAILABLE`.
+
+`source` is `XGBOOST` only when every one of the 29 completed days from `asOfDate − 28` to `asOfDate` is recorded (by POS sales or imported history), because the model reads lags up to 28 days. Otherwise it is `FALLBACK` with the training-profile mean, which is the most accurate simple method on the validation split (MAE 2.87, versus 3.00–3.09 for recent-sales means). A forecast run is reused only while its history inputs are unchanged. `historySource` is `OBSERVED_SALES` for POS days (today's partial POS sales are shown as live feedback but never used by the model), `IMPORTED_SALES` for imported days, or `SYNTHETIC_DEMAND` when nothing is recorded.
+
+### Sales history import
+
+Historical daily sales feed forecasting only. They are stored in `inventory_sales_history` and never create sale records, stock movements, or inventory-version changes.
+
+- `GET /api/sales-history/template` returns the CSV header `date,product_id,quantity`.
+- `POST /api/sales-history/imports` accepts multipart field `file` (CSV, UTF-8, at most 10 MB and 200,000 rows) and an optional `Idempotency-Key`. It returns `201` with `batchId`, `importedAt`, `rowsReceived`, `daysImported`, `productsImported`, `replacedDays`, `firstDate`, `lastDate`, and `coverage`.
+- `GET /api/sales-history/coverage` returns `asOfDate`, `coveredDays`, `requiredDays` (29), `ready`, `missingDates`, `importedDays`, `importedFirstDate`, and `importedLastDate`.
+
+CSV rules:
+
+- Delimiter `,`, `;`, or tab. Header names are case-insensitive, and Indonesian aliases are accepted.
+- Date: `date`/`tanggal` as `YYYY-MM-DD`, `DD/MM/YYYY`, or `DD-MM-YYYY`, or `datetime`/`timestamp`/`waktu` as ISO 8601 (naive times are WIB; zoned times are converted to the WIB business date).
+- Product: `product_id`, or `product_name`/`nama_produk` matched case-insensitively to the catalog.
+- Quantity: `quantity`/`qty`/`jumlah` as a non-negative integer. Rows for the same date and product are summed, so transaction-level exports work.
+- Only completed WIB days (before today) are accepted. A date with POS sales is rejected with `409 SALES_HISTORY_OVERLAPS_POS`, because POS is the source of truth.
+- A date present in the file counts as a recorded day; products absent on that date sold zero. To record an open day with no sales, or a closed day, include at least one row with quantity 0.
+- The import is all-or-nothing. Invalid rows return `422 INVALID_SALES_HISTORY_ROWS` with up to 50 line-numbered errors; missing columns return `422 INVALID_SALES_HISTORY_COLUMNS`. Re-importing a date replaces that whole date.
+
+CLI: `python scripts/import_sales_history.py <file.csv> --dry-run` validates and reports without saving; omit `--dry-run` to save. Migration `002_sales_history.sql` must be applied first.
 
 ### `GET /api/inventory/risks`
 

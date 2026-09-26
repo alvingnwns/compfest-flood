@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from collections import defaultdict
 from datetime import date, datetime, time, timedelta
 from typing import Any
 from uuid import UUID, uuid4
@@ -12,7 +11,8 @@ import psycopg
 
 from app.core.config import Settings
 from app.errors import ApiError
-from app.inventory.db import WIB, lock_state, log_activity, now_utc
+from app.inventory.db import WIB, fingerprint, lock_state, log_activity, now_utc
+from app.inventory.sales_history import MODEL_HISTORY_DAYS, coverage, recorded_history
 
 NUMERIC = [
     "demand_cups_t",
@@ -31,21 +31,16 @@ NUMERIC = [
 FEATURES = ["product_id", *NUMERIC]
 
 
-def _sales_history(connection: psycopg.Connection, as_of: date) -> tuple[date | None, dict[str, dict[date, int]]]:
-    first = connection.execute(
-        "SELECT min(business_date) AS first_date FROM inventory_sale WHERE status='COMPLETED' AND business_date<=%s",
-        (as_of,),
-    ).fetchone()["first_date"]
-    rows = connection.execute(
-        "SELECT si.product_id,s.business_date,sum(si.quantity)::integer AS quantity FROM inventory_sale s "
-        "JOIN inventory_sale_item si ON si.sale_id=s.id WHERE s.status='COMPLETED' "
-        "AND s.business_date BETWEEN %s AND %s GROUP BY si.product_id,s.business_date",
-        (as_of - timedelta(days=60), as_of),
-    ).fetchall()
-    result: dict[str, dict[date, int]] = defaultdict(dict)
-    for row in rows:
-        result[row["product_id"]][row["business_date"]] = row["quantity"]
-    return first, result
+def history_fingerprint(histories: dict[str, dict[date, int]], product_ids: list[str], as_of: date) -> str:
+    """Identity of the exact model inputs, so a forecast is regenerated whenever recorded history changes."""
+    window = [as_of - timedelta(days=offset) for offset in range(MODEL_HISTORY_DAYS)]
+    return fingerprint(
+        {
+            "asOf": as_of,
+            "values": {product_id: [histories.get(product_id, {}).get(day, 0) for day in window]
+                       for product_id in product_ids},
+        }
+    )
 
 
 def _feature_row(product_id: str, history: dict[date, int], as_of: date) -> dict[str, Any]:
@@ -120,21 +115,29 @@ def ensure_forecast(
     products = connection.execute("SELECT id,name FROM inventory_product WHERE active ORDER BY id").fetchall()
     if not products:
         raise ApiError(409, "FORECAST_UNAVAILABLE", "Katalog produk kosong.")
-    first_sale_date, histories = _sales_history(connection, completed_day)
-    runtime_history_ready = first_sale_date is not None and first_sale_date <= completed_day - timedelta(days=28)
+    recorded = recorded_history(connection, completed_day - timedelta(days=60), completed_day)
+    histories = recorded.histories
+    history_status = coverage(recorded.covered_dates, completed_day)
+    # XGBoost features need every day from t-28 to t; a gap would silently read as zero demand.
+    runtime_history_ready = history_status["ready"]
     source = "XGBOOST" if runtime_history_ready else "FALLBACK"
     model_name = "xgboost" if runtime_history_ready else "training-profile-mean"
     model_version = manifest["version"] if runtime_history_ready else f"{manifest['version']}-fallback-v1"
     fallback_reason = None if runtime_history_ready else "INSUFFICIENT_OBSERVED_SALES_HISTORY"
+    product_ids = [product["id"] for product in products]
+    # The training-profile fallback ignores history, so its runs are shared across history changes.
+    input_fingerprint = (
+        history_fingerprint(histories, product_ids, completed_day) if runtime_history_ready else "training-profile"
+    )
 
     existing = connection.execute(
-        "SELECT * FROM inventory_forecast_run WHERE as_of_date=%s AND model_version=%s AND source=%s",
-        (completed_day, model_version, source),
+        "SELECT * FROM inventory_forecast_run WHERE as_of_date=%s AND model_version=%s AND source=%s "
+        "AND history_fingerprint=%s",
+        (completed_day, model_version, source, input_fingerprint),
     ).fetchone()
     if existing:
         return _run(connection, existing["id"])
 
-    product_ids = [product["id"] for product in products]
     xgboost_predictions: dict[str, list[int]] = {}
     if runtime_history_ready:
         _, xgboost_predictions = predict_products(
@@ -170,7 +173,8 @@ def ensure_forecast(
     connection.execute(
         "INSERT INTO inventory_forecast_run("
         "id,as_of_date,generated_at,model_name,model_version,source,is_synthetic,fallback_reason,data_cutoff,"
-        "inventory_version,forecast_version) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+        "inventory_version,forecast_version,history_fingerprint,history_covered_days"
+        ") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
         (
             run_id,
             completed_day,
@@ -183,6 +187,8 @@ def ensure_forecast(
             data_cutoff,
             state["inventory_version"],
             forecast_version,
+            input_fingerprint,
+            history_status["coveredDays"],
         ),
     )
     for item in items:
@@ -202,7 +208,12 @@ def ensure_forecast(
         entity_id=str(run_id),
         source="MODEL" if source == "XGBOOST" else "FALLBACK",
         correlation_id=correlation_id,
-        details={"asOfDate": completed_day.isoformat(), "source": source, "forecastVersion": forecast_version},
+        details={
+            "asOfDate": completed_day.isoformat(),
+            "source": source,
+            "forecastVersion": forecast_version,
+            "historyCoveredDays": history_status["coveredDays"],
+        },
     )
     return _run(connection, run_id)
 
@@ -236,16 +247,18 @@ def product_forecast(
     # Provenance only: inspect the existing manifest, never train or rewrite it.
     manifest = json.loads((settings.inventory_model_dir / "manifest.json").read_text(encoding="utf-8"))
     forecast = [item for item in run["items"] if item["productId"] == product_id]
-    observed = connection.execute(
-        "SELECT s.business_date AS date,sum(si.quantity)::integer AS demand FROM inventory_sale s "
-        "JOIN inventory_sale_item si ON si.sale_id=s.id WHERE s.status='COMPLETED' AND si.product_id=%s "
-        "GROUP BY s.business_date ORDER BY s.business_date DESC LIMIT 14",
-        (product_id,),
-    ).fetchall()
-    if observed:
+    as_of = run["as_of_date"]
+    # Display includes today's POS sales as live feedback; the model itself only reads completed days.
+    recorded = recorded_history(connection, as_of - timedelta(days=60), datetime.now(WIB).date())
+    recent_days = sorted(recorded.covered_dates)[-14:]
+    if recent_days:
         history = [
-            {"date": row["date"], "actualDemand": row["demand"], "historySource": "OBSERVED_SALES"}
-            for row in reversed(observed)
+            {
+                "date": day,
+                "actualDemand": recorded.histories.get(product_id, {}).get(day, 0),
+                "historySource": "OBSERVED_SALES" if day in recorded.pos_dates else "IMPORTED_SALES",
+            }
+            for day in recent_days
         ]
     else:
         history = [
@@ -283,4 +296,8 @@ def product_forecast(
         "isSynthetic": run["is_synthetic"],
         "trainingDataSynthetic": manifest.get("syntheticData"),
         "fallbackReason": run["fallback_reason"],
+        "historyCoverage": {
+            "coveredDays": run["history_covered_days"] or 0,
+            "requiredDays": MODEL_HISTORY_DAYS,
+        },
     }
