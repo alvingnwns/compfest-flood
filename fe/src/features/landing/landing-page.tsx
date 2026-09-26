@@ -16,73 +16,75 @@ export function shouldUseSolidLandingNavbar(scrollY: number): boolean {
 
 const content = {
   en: {
-    home: "Home", how: "How it works", features: "Features", start: "Start now", explore: "Explore now",
+    home: "Home", how: "How it works", features: "Features", start: "Start now", explore: "EXPLORE NOW!",
     navigation: "Landing navigation", switchLanguage: "Switch to Indonesian",
     previous: "Previous slide", next: "Next slide", pause: "Pause autoplay", resume: "Resume autoplay", slide: "Go to slide",
-    howTitle: "From data to decisions",
-    howDescription: "ARUNA turns sales and stock data into actionable recommendations for your business.",
-    featureTitle: "Smarter solutions for your business",
-    featureDescription: "From tracking sales to planning replenishment, keep your inventory ready for what comes next.",
-    ctaTitle: "Ready stock. Smoother business.",
-    ctaDescription: "Make informed decisions with demand forecasts and replenishment recommendations from ARUNA.",
-    cta: "Optimize your inventory",
+    howTitle: "From Sales to Production Plans",
+    howDescription: "ARUNA turns sales and stock data into more measurable recommendations for production and ingredient procurement.",
+    featureTitle: "Better-Planned Production, Better-Controlled Ingredients",
+    featureDescription: "From sales forecasts to ingredient procurement, ARUNA helps juice businesses prepare for production more accurately.",
+    ctaTitle: "Prepare Ingredients. Keep Production Running.",
+    ctaDescription: "Turn demand forecasts into better production and restocking decisions with ARUNA.",
+    cta: "OPTIMIZE YOUR PRODUCTION",
     slides: [
-      ["Manage your business", "Smarter", "Track sales, manage inventory, and plan procurement with ease.", "Sales and inventory dashboard illustration"],
-      ["Forecast stock needs", "Ahead of time", "Forecast demand for the next three days using sales history, then translate it into ingredient needs. When history is insufficient, ARUNA clearly identifies its fallback estimates.", "Demand forecast illustration"],
-      ["Spot stockout risks", "Before they happen", "Compare available stock with projected needs to identify ingredients that require attention.", "Inventory risk illustration"],
-      ["Plan your purchases", "Quantity and timing", "Review replenishment recommendations based on stock needs, supplier lead times, and purchasing constraints.", "Procurement planning illustration"],
+      ["Manage Juice Production", "Smarter", "Forecast demand, prepare ingredients, and plan production more accurately.", "Sales and inventory dashboard illustration"],
+      ["Forecast Juice Demand", "Earlier", "ARUNA learns from sales patterns to estimate how much juice will be needed over the next few days. Production no longer has to rely on guesswork alone.", "Demand forecast illustration"],
+      ["Understand Your", "Ingredient Needs More Accurately", "Demand forecasts are translated into requirements for fruit, milk, sugar, and other ingredients. Prepare what you need, in the right quantities.", "Ingredient requirements illustration"],
+      ["Identify Risks", "Of Stock Shortages", "ARUNA compares production requirements with available stock to detect ingredients that may run out sooner. Take action before production is disrupted.", "Inventory risk illustration"],
+      ["Determine When and", "How Much to Restock", "Get recommendations on which ingredients to buy, how much to purchase, and the best time to restock. Be ready for demand without holding excess stock.", "Procurement planning illustration"],
     ],
     steps: [
-      ["Collect data", "Sales and inventory records form the foundation for analysis."],
-      ["Forecast demand", "Estimate demand for the next three days from sales history."],
-      ["Calculate needs", "Convert product forecasts into required ingredient quantities."],
-      ["Detect stock risks", "Compare projected needs with available inventory."],
-      ["Recommend restocking", "Identify what to buy, how much, and when it is needed."],
-      ["Review the plan", "Review and approve recommendations. Record stock only when goods arrive."],
+      ["Sales Data Comes In", "Juice transactions are recorded as the basis for demand analysis."],
+      ["Forecast Demand", "ARUNA estimates how many of each juice menu item will be sold."],
+      ["Calculate Ingredient Needs", "Sales forecasts are translated into requirements for each ingredient."],
+      ["Detect Stock Risks", "Requirements are compared with available stock to identify potential shortages."],
+      ["Restocking Recommendations", "ARUNA recommends which ingredients to buy, in what quantities, and when."],
+      ["Production Plan", "The owner reviews recommendations and decides on the next production plan."],
     ],
     cards: [
-      ["Forecast needs", "Estimate ingredient requirements for the next three days."],
-      ["Manage stock", "Identify ingredients that need attention before stock runs out."],
-      ["Recommended quantities", "Align purchases with projected demand and current inventory."],
-      ["Purchase timing", "Plan replenishment around supplier delivery lead times."],
-      ["Review plans", "Review and approve recommendations to suit your business."],
+      ["Demand Forecasting", "Estimate how many of each juice menu item will be needed over the next few days."],
+      ["Ingredient Requirements", "Know how much fruit and other ingredients are needed to meet demand."],
+      ["Stock Shortage Risks", "Identify ingredients that may be insufficient before they disrupt production."],
+      ["Recommended Quantities", "Align purchase quantities with production needs and available stock."],
+      ["Restocking Timing", "Know when ingredients need to be purchased so they are available when needed."],
     ],
   },
   id: {
-    home: "Beranda", how: "Cara kerja", features: "Fitur", start: "Mulai sekarang", explore: "Jelajahi sekarang",
+    home: "Beranda", how: "Cara kerja", features: "Fitur", start: "Mulai sekarang", explore: "EXPLORE NOW!",
     navigation: "Navigasi landing page", switchLanguage: "Ganti ke bahasa Inggris",
     previous: "Slide sebelumnya", next: "Slide berikutnya", pause: "Jeda carousel otomatis", resume: "Lanjutkan carousel otomatis", slide: "Buka slide",
-    howTitle: "Dari Data Menjadi Keputusan",
-    howDescription: "ARUNA mengolah data penjualan dan stok menjadi rekomendasi yang dapat ditindaklanjuti oleh bisnis.",
-    featureTitle: "Solusi Cerdas untuk Bisnis",
-    featureDescription: "Dari pemantauan penjualan hingga perencanaan restock, kelola stok dengan lebih siap.",
-    ctaTitle: "Siapkan Stok, Lancarkan Bisnis",
-    ctaDescription: "Ambil keputusan lebih tepat dengan prediksi permintaan dan rekomendasi restock dari ARUNA.",
-    cta: "Optimalkan stok bisnis Anda",
+    howTitle: "Dari Penjualan Menjadi Rencana Produksi",
+    howDescription: "ARUNA mengubah data penjualan dan stok menjadi rekomendasi produksi dan pengadaan bahan baku yang lebih terukur.",
+    featureTitle: "Produksi Lebih Terencana, Bahan Lebih Terkendali",
+    featureDescription: "Dari prediksi penjualan hingga pengadaan bahan baku, ARUNA membantu bisnis jus mempersiapkan produksi dengan lebih tepat.",
+    ctaTitle: "Siapkan Bahan. Lancarkan Produksi.",
+    ctaDescription: "Ubah prediksi permintaan menjadi keputusan produksi dan restock yang lebih tepat bersama ARUNA.",
+    cta: "OPTIMALKAN PRODUKSI ANDA",
     slides: [
-      ["Kelola Bisnis Anda", "Lebih Cerdas", "Pantau penjualan, kelola stok, dan rencanakan pengadaan dengan mudah.", "Ilustrasi dashboard penjualan dan stok"],
-      ["Prediksi Kebutuhan Stok", "Lebih Awal", "Prediksi permintaan tiga hari ke depan dari riwayat penjualan, lalu terjemahkan menjadi kebutuhan bahan. Jika riwayat belum cukup, ARUNA menandai estimasi fallback secara jelas.", "Ilustrasi prediksi permintaan"],
-      ["Kenali Risiko Kehabisan Stok", "Sebelum Terjadi", "Bandingkan stok tersedia dengan prediksi kebutuhan untuk mengidentifikasi bahan yang perlu segera ditindaklanjuti.", "Ilustrasi risiko stok"],
-      ["Rencanakan Pembelian", "Jumlah dan Waktunya", "Tinjau rekomendasi restock berdasarkan kebutuhan bahan, durasi pengiriman pemasok, dan batasan pembelian.", "Ilustrasi perencanaan pengadaan"],
+      ["Kelola Produksi Jus", "Lebih Cerdas", "Prediksi permintaan, siapkan bahan baku, dan rencanakan produksi dengan lebih tepat.", "Ilustrasi dashboard penjualan dan stok"],
+      ["Prediksi Permintaan Jus", "Lebih Awal", "ARUNA mempelajari pola penjualan untuk memperkirakan jumlah jus yang akan dibutuhkan dalam beberapa hari ke depan. Jadi, produksi tidak lagi hanya bergantung pada perkiraan.", "Ilustrasi prediksi permintaan"],
+      ["Ketahui Kebutuhan", "Bahan Baku Lebih Tepat", "Prediksi permintaan diterjemahkan menjadi kebutuhan bahan baku seperti buah, susu, gula, dan bahan lainnya. Siapkan yang dibutuhkan, sesuai jumlahnya.", "Ilustrasi kebutuhan bahan baku"],
+      ["Kenali Risiko", "Kekurangan Stok", "ARUNA membandingkan kebutuhan produksi dengan stok yang tersedia untuk mendeteksi bahan yang berisiko habis lebih awal. Antisipasi sebelum produksi terganggu.", "Ilustrasi risiko stok"],
+      ["Tentukan Waktu dan", "Jumlah Restock", "Dapatkan rekomendasi bahan apa yang perlu dibeli, berapa jumlahnya, dan kapan waktu terbaik untuk restock. Lebih siap menghadapi permintaan, tanpa menyimpan stok berlebihan.", "Ilustrasi perencanaan pengadaan"],
     ],
     steps: [
-      ["Data Masuk", "Data penjualan dan jumlah stok dikumpulkan sebagai dasar analisis."],
-      ["Prediksi Permintaan", "Perkirakan permintaan untuk tiga hari ke depan dari riwayat penjualan."],
-      ["Analisis Kebutuhan", "Hasil prediksi diterjemahkan menjadi jumlah bahan yang dibutuhkan."],
-      ["Deteksi Risiko Stok", "Kebutuhan bahan dibandingkan dengan stok yang tersedia."],
-      ["Rekomendasi Restock", "Tentukan bahan yang perlu dibeli, jumlah, dan waktunya."],
-      ["Rencana Optimasi", "Tinjau dan setujui rekomendasi. Catat stok saat barang diterima."],
+      ["Data Penjualan Masuk", "Transaksi jus tercatat sebagai dasar analisis permintaan."],
+      ["Prediksi Permintaan", "ARUNA memperkirakan jumlah setiap menu jus yang akan terjual."],
+      ["Hitung Kebutuhan Bahan", "Prediksi penjualan diterjemahkan menjadi kebutuhan setiap bahan baku."],
+      ["Deteksi Risiko Stok", "Kebutuhan dibandingkan dengan stok yang tersedia untuk menemukan potensi kekurangan."],
+      ["Rekomendasi Restock", "ARUNA menentukan bahan, jumlah, dan waktu pembelian yang disarankan."],
+      ["Rencana Produksi", "Owner meninjau rekomendasi dan menentukan rencana produksi berikutnya."],
     ],
     cards: [
-      ["Prediksi Kebutuhan", "Perkirakan kebutuhan bahan untuk tiga hari ke depan."],
-      ["Kelola Stok", "Kenali bahan yang perlu ditambah sebelum stok habis."],
-      ["Rekomendasi Jumlah", "Sesuaikan pembelian dengan kebutuhan dan stok tersedia."],
-      ["Waktu Pembelian", "Rencanakan restock dengan mempertimbangkan durasi pengiriman."],
-      ["Tinjau Rencana", "Periksa dan setujui rekomendasi sesuai kebutuhan bisnis."],
+      ["Prediksi Permintaan", "Perkirakan jumlah menu jus yang dibutuhkan untuk beberapa hari ke depan."],
+      ["Kebutuhan Bahan Baku", "Ketahui berapa banyak buah dan bahan lain yang diperlukan untuk memenuhi permintaan."],
+      ["Risiko Kekurangan Stok", "Temukan bahan yang berpotensi tidak cukup sebelum mengganggu produksi."],
+      ["Rekomendasi Jumlah", "Sesuaikan jumlah pembelian dengan kebutuhan produksi dan stok yang tersedia."],
+      ["Waktu Restock", "Ketahui kapan bahan perlu dibeli agar tersedia saat dibutuhkan."],
     ],
   },
 };
-const images = ["overview", "forecast", "risk", "procurement"];
+const images = ["overview", "forecast", "forecast", "risk", "procurement"];
 const container = "mx-auto w-full max-w-[1240px] px-6 sm:px-10 lg:px-16";
 const ctaClass = "inline-flex min-h-12 items-center justify-center rounded-full bg-accent px-7 text-sm font-bold tracking-wide text-ink shadow-md transition hover:brightness-110";
 
@@ -142,23 +144,22 @@ export function LandingPage() {
         <div className={`${container} relative grid min-h-[470px] items-center gap-8 pb-10 md:grid-cols-[1.2fr_1fr] lg:min-h-[510px] lg:gap-16`}>
           <div key={`copy-${activeSlide}`} className="landing-slide-copy motion-reduce:animate-none">
             <h1 className="max-w-[580px] text-4xl font-bold leading-[1.13] tracking-tight sm:text-5xl lg:text-[58px]">
-              <span className={activeSlide === 0 ? "text-accent" : "text-white"}>{slide[0]}</span><br />
-              <span className={activeSlide === 0 ? "text-white" : "text-accent"}>{slide[1]}</span>
+              <span className={activeSlide === 0 ? "text-[var(--color-caution)]" : "text-white"}>{slide[0]}</span><br />
+              <span className={activeSlide === 0 ? "text-white" : "text-[var(--color-caution)]"}>{slide[1]}</span>
             </h1>
             <p className="mt-5 max-w-[520px] text-sm leading-relaxed text-white/90 sm:text-base">{slide[2]}</p>
             <Link href={LANDING_APP_HREF} className={`${ctaClass} mt-7 min-w-52 uppercase`}>{copy.explore}</Link>
           </div>
-          <div key={images[activeSlide]} className="landing-slide-image relative mx-auto aspect-square w-full max-w-[340px] motion-reduce:animate-none lg:max-w-[390px]">
+          <div key={`${activeSlide}-${images[activeSlide]}`} className="landing-slide-image relative mx-auto aspect-square w-full max-w-[340px] motion-reduce:animate-none lg:max-w-[390px]">
             <Image src={`/landing/inventory-${images[activeSlide]}.png`} alt={slide[3]} fill priority={activeSlide === 0} sizes="(max-width: 767px) 80vw, 390px" className="object-contain drop-shadow-[0_0_20px_rgb(255_255_255/20%)]" />
           </div>
         </div>
-        <div className="relative flex items-center justify-center gap-3">
+        <div className="relative flex items-center justify-center gap-1 sm:gap-3">
           <button type="button" onClick={() => move(-1)} aria-label={copy.previous} className="grid size-10 place-items-center rounded-full hover:bg-white/10"><ChevronLeft size={20} /></button>
-          <div className="relative h-[14px] w-[150px]">
-            <Image src="/landing/inventory-dots.svg" alt="" width={149.76} height={13.44} aria-hidden="true" />
-            <div className="absolute inset-0 flex items-center justify-between">
-              {images.map((name, index) => <button type="button" key={name} onClick={() => setActiveSlide(index)} aria-label={`${copy.slide} ${index + 1}`} aria-current={index === activeSlide ? "true" : undefined} className={`relative -my-3 grid h-10 w-5 place-items-center rounded-full ${index === activeSlide ? "after:size-3 after:rounded-full after:bg-white after:ring-2 after:ring-primary" : ""}`} />)}
-            </div>
+          <div className="flex items-center" role="group" aria-label={locale === "en" ? "Choose a slide" : "Pilih slide"}>
+            {images.map((name, index) => <button type="button" key={`${name}-${index}`} onClick={() => setActiveSlide(index)} aria-label={`${copy.slide} ${index + 1}`} aria-current={index === activeSlide ? "true" : undefined} className="grid size-10 shrink-0 place-items-center rounded-full hover:bg-white/10">
+              <span aria-hidden="true" className={`block rounded-full transition-colors ${index === activeSlide ? "size-3 bg-accent" : "size-2.5 bg-white/40"}`} />
+            </button>)}
           </div>
           <button type="button" onClick={() => move(1)} aria-label={copy.next} className="grid size-10 place-items-center rounded-full hover:bg-white/10"><ChevronRight size={20} /></button>
           {!reducedMotion && <button type="button" onClick={() => setIsPaused((paused) => !paused)} aria-label={isPaused ? copy.resume : copy.pause} className="grid size-10 place-items-center rounded-full hover:bg-white/10">{isPaused ? <Play size={16} /> : <Pause size={16} />}</button>}

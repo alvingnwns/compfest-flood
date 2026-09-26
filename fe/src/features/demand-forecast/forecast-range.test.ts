@@ -16,8 +16,9 @@ describe("Forecast date ranges", () => {
   };
   it("starts the forward range at operational Today without inventing a fourth prediction", () => {
     const points = selectForecastPoints(forecast, "future");
-    expect(points.map((point) => point.label)).toEqual(["Hari Ini", "2026-09-27", "2026-09-28"]);
+    expect(points.map((point) => point.label)).toEqual(["Hari Ini", "2026-09-27", "2026-09-28", "2026-09-29"]);
     expect(points[0]).toMatchObject({ actual: 4, predicted: 12, historySource: "OBSERVED_SALES" });
+    expect(points[3]).toMatchObject({ actual: null, predicted: null });
   });
   it("ends the backward range at Today, preserving zero and missing history distinctly", () => {
     const points = selectForecastPoints(forecast, "past");
@@ -25,9 +26,14 @@ describe("Forecast date ranges", () => {
     expect(points[0].actual).toBe(0);
     expect(points[1]).toMatchObject({ actual: null, predicted: null });
   });
+  it("shows a fourth value when the API supplies H+3, without shifting any forecast dates", () => {
+    const points = selectForecastPoints({ ...forecast, points: [...forecast.points, { label: "2026-09-29", actual: null, predicted: 21 }] }, "future");
+    expect(points.map((point) => point.predicted)).toEqual([12, 15, 18, 21]);
+    expect(points[3].label).toBe("2026-09-29");
+  });
   it("combines history and predictions chronologically with one Today point", () => {
     const points = selectForecastPoints(forecast, "both");
-    expect(points).toHaveLength(6);
+    expect(points).toHaveLength(7);
     expect(points.filter((point) => point.label === "Hari Ini")).toHaveLength(1);
   });
 });

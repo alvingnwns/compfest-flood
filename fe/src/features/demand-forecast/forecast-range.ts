@@ -16,7 +16,7 @@ export function selectForecastPoints(forecast: DemandForecast, range: ForecastRa
       merged.set(point.label, { ...point, actual: point.actual ?? previous?.actual ?? null, predicted: point.predicted ?? previous?.predicted ?? null, historySource: point.historySource ?? previous?.historySource });
     }
     const past = [-3, -2, -1].map(days);
-    const future = [...merged.keys()].filter((label) => label > today && label <= days(3)).sort();
+    const future = [1, 2, 3].map(days);
     const labels = range === "future" ? [today, ...future] : range === "past" ? [...past, today] : [...past, today, ...future];
     return labels.map((label) => ({ ...(merged.get(label) ?? { actual: null, predicted: null }), label: label === today ? "Hari Ini" : label }));
   }

@@ -11,6 +11,7 @@ import { localizeInventoryTerm } from "@/lib/inventory-translations";
 import { inventoryStatusLabel } from "@/lib/inventory-risk";
 import { StockMutationForm } from "./stock-mutation-form";
 import styles from "./inventory.module.css";
+import { matchesMaterialName, matchesMovementDate } from "./inventory-filters";
 
 type View = "stock" | "movements";
 type MovementSortKey = "materialName" | "category" | "quantityChange" | "referenceId" | "occurredAt";
@@ -85,6 +86,8 @@ function StockDetail({ material, locale, onClose, onAdjust }: { material: Materi
 
 function InventoryContent({ overview, view, locale, onViewChange }: { overview: InventoryOverview; view: View; locale: InventoryLocale; onViewChange: (view: View) => void }) {
   const [query, setQuery] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const [adjusting, setAdjusting] = useState<MaterialStock>();
   const [sort, setSort] = useState<{ key: MovementSortKey; ascending: boolean }>({ key: "occurredAt", ascending: false });
   const [selectedId, setSelectedId] = useState(overview.movements[0]?.id ?? "");
@@ -92,8 +95,7 @@ function InventoryContent({ overview, view, locale, onViewChange }: { overview: 
   const [stockDetailOpen, setStockDetailOpen] = useState(true);
 
   const movements = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    const filtered = overview.movements.filter((row) => (row.materialName.toLowerCase().includes(needle) || localizeInventoryTerm(row.materialName, locale).toLowerCase().includes(needle)));
+    const filtered = overview.movements.filter((row) => matchesMaterialName(row.materialName, query, locale) && matchesMovementDate(row.occurredAt, fromDate, toDate));
     return [...filtered].sort((a, b) => {
       const displayValue = (row: StockMovement) => sort.key === "materialName" || sort.key === "category" ? localizeInventoryTerm(row[sort.key], locale) : row[sort.key];
       const left = displayValue(a);
@@ -101,8 +103,8 @@ function InventoryContent({ overview, view, locale, onViewChange }: { overview: 
       const result = sort.key === "occurredAt" ? Date.parse(String(left)) - Date.parse(String(right)) : typeof left === "number" && typeof right === "number" ? left - right : String(left).localeCompare(String(right), locale, { numeric: true, sensitivity: "base" });
       return sort.ascending ? result : -result;
     });
-  }, [overview.movements, query, sort, locale]);
-  const materials = useMemo(() => overview.materials.filter((row) => (row.name.toLowerCase().includes(query.trim().toLowerCase()) || localizeInventoryTerm(row.name, locale).toLowerCase().includes(query.trim().toLowerCase()))), [overview.materials, query, locale]);
+  }, [overview.movements, query, sort, locale, fromDate, toDate]);
+  const materials = useMemo(() => overview.materials.filter((row) => matchesMaterialName(row.name, query, locale)), [overview.materials, query, locale]);
   const selected = movements.find((row) => row.id === selectedId) ?? movements[0];
   const selectedMaterial = materials.find((row) => row.id === selectedMaterialId) ?? materials[0];
   const onSort = (key: MovementSortKey) => setSort((current) => ({ key, ascending: current.key === key ? !current.ascending : true }));
@@ -115,7 +117,14 @@ function InventoryContent({ overview, view, locale, onViewChange }: { overview: 
         <button type="button" role="tab" aria-selected={view === "movements"} className={view === "movements" ? styles.activeTab : undefined} onClick={() => onViewChange("movements")}>{locale === "en" ? "Stock Movements" : "Pergerakan Stok"}</button>
       </div>
       <div className={view === "stock" ? `${styles.toolbar} ${styles.stockToolbar}` : styles.toolbar}>
-        {view === "movements" && <div className={styles.date}><CalendarDays aria-hidden="true" /><span>{locale === "en" ? "All movements" : "Semua pergerakan"}</span></div>}
+        {view === "movements" && <details className={styles.dateFilter}>
+          <summary className={styles.date}><CalendarDays aria-hidden="true" /><span>{fromDate || toDate ? `${fromDate || "…"} – ${toDate || "…"}` : locale === "en" ? "All movements" : "Semua pergerakan"}</span></summary>
+          <div className={styles.datePopover}>
+            <label>{locale === "en" ? "From date" : "Dari tanggal"}<input type="date" value={fromDate} max={toDate || undefined} onChange={(event) => { setFromDate(event.target.value); if (toDate && event.target.value > toDate) setToDate(event.target.value); }} /></label>
+            <label>{locale === "en" ? "To date" : "Sampai tanggal"}<input type="date" value={toDate} min={fromDate || undefined} onChange={(event) => { setToDate(event.target.value); if (fromDate && event.target.value && event.target.value < fromDate) setFromDate(event.target.value); }} /></label>
+            <button type="button" onClick={() => { setFromDate(""); setToDate(""); }}>{locale === "en" ? "Clear date filter" : "Hapus filter tanggal"}</button>
+          </div>
+        </details>}
         <label className={styles.search}><Search aria-hidden="true" /><span className={styles.srOnly}>{locale === "en" ? "Search material name" : "Cari nama bahan"}</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={locale === "en" ? "Enter material name..." : "Masukkan nama bahan..."} /></label>
 
       </div>

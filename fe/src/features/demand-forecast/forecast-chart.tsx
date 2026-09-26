@@ -21,6 +21,7 @@ function coordinates(series: Array<number | null>, min: number, max: number) {
 export function ForecastChart({ points, locale }: { points: DemandForecast["points"]; locale: InventoryLocale }) {
   const todayIndex = points.findIndex((point) => point.label === "Hari Ini" || point.label === "Today");
   const todayX = todayIndex < 0 ? undefined : LEFT + (todayIndex * (WIDTH - LEFT - RIGHT)) / Math.max(1, points.length - 1);
+  const unavailableDates = todayIndex < 0 ? [] : points.slice(todayIndex + 1).filter((point) => point.predicted === null).map((point) => point.label);
   const sources = [...new Set(points.filter((point) => point.actual !== null).map((point) => point.historySource ?? "UNKNOWN"))];
   const historyLabel = sources.length === 1 && sources[0] === "OBSERVED_SALES" ? (locale === "en" ? "Observed sales" : "Penjualan tercatat") : sources.length === 1 && sources[0] === "SYNTHETIC_DEMAND" ? (locale === "en" ? "Synthetic history" : "Riwayat sintetis") : (locale === "en" ? "History (mixed or unspecified)" : "Riwayat (campuran atau tidak diketahui)");
   const values = points.flatMap((point) => [point.actual, point.predicted]).filter((value): value is number => value !== null);
@@ -59,6 +60,7 @@ export function ForecastChart({ points, locale }: { points: DemandForecast["poin
           <text x={20} y={(TOP + HEIGHT - BOTTOM) / 2} textAnchor="middle" transform={`rotate(-90 20 ${(TOP + HEIGHT - BOTTOM) / 2})`} className={styles.axisLabel}>{locale === "en" ? "PRODUCTS SOLD" : "PRODUK TERJUAL"}</text>
           <text x={(LEFT + WIDTH - RIGHT) / 2} y={HEIGHT - 2} textAnchor="middle" className={styles.axisLabel}>{locale === "en" ? "DATE" : "TANGGAL"}</text>
         </svg>
+        {unavailableDates.length > 0 && <p className={styles.availabilityNote}>{locale === "en" ? "Forecast not yet available for" : "Prediksi belum tersedia untuk"}: {unavailableDates.join(", ")}</p>}
       </div>
     </section>
   );

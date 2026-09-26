@@ -5,7 +5,7 @@ vi.mock("@/mocks/inventory-data", async (importOriginal) => {
   return { inventoryOverviewMock: { ...original.inventoryOverviewMock, materials: original.inventoryOverviewMock.materials.map((material) => material.id === "nasi" ? { ...material, issue: "shortage-risk" } : material) } };
 });
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { InventoryPage } from "./inventory-page";
@@ -13,6 +13,25 @@ import styles from "./inventory.module.css";
 import { InventoryLanguageProvider } from "@/components/providers/inventory-language-provider";
 
 describe("InventoryPage", () => {
+  it("opens the calendar, filters movement dates, and restores all movements on clear", async () => {
+    const user = userEvent.setup();
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    window.localStorage.clear();
+    render(<QueryClientProvider client={client}><InventoryLanguageProvider><InventoryPage /></InventoryLanguageProvider></QueryClientProvider>);
+    await screen.findByRole("heading", { name: "Stock Movements" });
+    await user.click(screen.getByText("All movements"));
+    expect(screen.getByText("All movements").closest("details")).toHaveAttribute("open");
+    fireEvent.change(screen.getByLabelText("From date"), { target: { value: "2026-09-28" } });
+    expect(screen.getByText("No materials found.")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("From date"), { target: { value: "2026-09-27" } });
+    fireEvent.change(screen.getByLabelText("To date"), { target: { value: "2026-09-27" } });
+    expect(screen.getByText("Chicken", { selector: "strong" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Clear date filter" }));
+    expect(screen.getByText("All movements")).toBeInTheDocument();
+    expect(screen.getByLabelText("From date")).toHaveValue("");
+    expect(screen.getByLabelText("To date")).toHaveValue("");
+  });
+
   it("sorts by displayed material names in both directions and updates when the language changes", async () => {
     const user = userEvent.setup();
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
