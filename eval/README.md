@@ -112,6 +112,8 @@ Output:
 
 Run pertama checkpoint-1 disimpan di `eval/results/baseline_20260926_101319.json` (2026-09-26, data `ARUNA_Dummy_Company_Test_Data.xlsx`, kode aplikasi di commit `a61268f`). Run kedua menghasilkan status, KPI, dan hasil checker yang identik (deterministik).
 
+Run 10:20 (`eval/results/baseline_20260926_102041.json`) tersedia di repo sebagai bukti determinisme; hasilnya identik dengan canonical run 10:13.
+
 Catatan: string `findings` di JSON run pertama masih memakai redaksi awal untuk C2 ("20/20 gagal total", sales exposure). Interpretasi yang berlaku adalah redaksi di bawah ini: **C2 = no plan produced**.
 
 ### 1. Kesesuaian ekspektasi: 3/3

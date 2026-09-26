@@ -321,15 +321,17 @@ def case_c2(ctx: Context) -> dict[str, Any]:
         )
         if status == "no-feasible-plan":
             findings.append(
-                "All-or-nothing failure: satu order critical yang mustahil membuat seluruh plan recovery "
-                f"'no-feasible-plan' -> {int(kpis['orders-fulfilled']['recovery'])}/{total} order terpenuhi, "
-                f"{int(kpis['failed-orders']['recovery'])}/{total} gagal total, sales exposure recovery "
-                f"{_fmt_idr(kpis['sales-exposure-risk']['recovery'])}. Tidak ada partial plan untuk 19 order lain."
+                "No feasible plan produced: order critical adalah hard constraint di CP-SAT, sehingga satu order "
+                "critical yang mustahil memutus kelayakan SELURUH plan recovery. Tidak ada rencana alokasi untuk "
+                f"{total} order (termasuk {total - 1} order lain yang sebenarnya bisa dilayani). Angka "
+                f"{int(kpis['orders-fulfilled']['recovery'])}/{total} fulfilled dan sales exposure "
+                f"{_fmt_idr(kpis['sales-exposure-risk']['recovery'])} adalah exposure jika tidak ada plan, "
+                f"bukan hasil observasi {total} order yang gagal."
             )
         if not run["baseline_plan_feasible"]:
             findings.append(
-                "Baseline plan juga infeasible (constraint critical sama-sama hard): KPI baseline = 0 alokasi, "
-                "sehingga perbandingan baseline vs recovery tidak informatif."
+                "Baseline juga tidak menghasilkan plan (constraint critical sama-sama hard di baseline): KPI baseline "
+                "mencerminkan ketiadaan plan, sehingga perbandingan baseline vs recovery tidak informatif."
             )
         findings.append(
             "Status HTTP recovery tetap 201 dan response tidak menyebut order mana penyebab infeasibility "
