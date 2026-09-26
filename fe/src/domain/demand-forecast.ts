@@ -30,6 +30,7 @@ export const demandForecastSchema = z.object({
   forecastSource: z.enum(["XGBOOST", "FALLBACK"]).nullable().optional(),
   trainingDataSynthetic: z.boolean().nullable().optional(),
   fallbackReason: z.string().nullable().optional(),
+  historyCoverage: z.object({ coveredDays: z.number().int().nonnegative(), requiredDays: z.number().int().positive() }).nullable().optional(),
   requirements: z.array(z.object({ name: z.string(), quantity: z.number(), unit: z.string() })).optional(),
 }).refine((data) => {
   if (data.productId === "" || data.productName === "") {

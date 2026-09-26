@@ -20,5 +20,7 @@ describe("SalesPage", () => {
     expect(screen.getAllByText("TRS-00123").length).toBeGreaterThan(1);
     expect(screen.queryByText("Source")).not.toBeInTheDocument();
     expect(screen.queryByText("Cashier POS")).not.toBeInTheDocument();
+    // Mock data mode has no backend to import into.
+    expect(screen.queryByRole("button", { name: /Import Sales History/ })).not.toBeInTheDocument();
   });
 });

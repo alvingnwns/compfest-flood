@@ -7,7 +7,9 @@ export class InventoryApiError extends Error {
 }
 export const usesInventoryApi = () => publicEnv.NEXT_PUBLIC_DATA_SOURCE === "api";
 export async function inventoryRequest<T>(path: string, schema: ZodType<T>, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${publicEnv.NEXT_PUBLIC_API_BASE_URL}/api${path}`, { ...init, headers: { Accept: "application/json", "Content-Type": "application/json", ...init?.headers } });
+  // FormData needs the browser-generated multipart boundary, so never force a JSON content type on it.
+  const isFormData = typeof FormData !== "undefined" && init?.body instanceof FormData;
+  const response = await fetch(`${publicEnv.NEXT_PUBLIC_API_BASE_URL}/api${path}`, { ...init, headers: { Accept: "application/json", ...(!isFormData ? { "Content-Type": "application/json" } : {}), ...init?.headers } });
   const body: unknown = await response.json().catch(() => null);
   if (!response.ok) {
     const parsed = envelope.safeParse(body);
@@ -17,3 +19,4 @@ export async function inventoryRequest<T>(path: string, schema: ZodType<T>, init
 }
 export function wibDate(value = new Date()) { return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta", year: "numeric", month: "2-digit", day: "2-digit" }).format(value); }
 export const mutationHeaders = (key: string) => ({ "Idempotency-Key": key });
+export const inventoryApiUrl = (path: string) => `${publicEnv.NEXT_PUBLIC_API_BASE_URL}/api${path}`;

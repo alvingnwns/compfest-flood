@@ -31,6 +31,7 @@ export const demandForecastService = {
       forecastSource: forecast.source,
       trainingDataSynthetic: forecast.trainingDataSynthetic,
       fallbackReason: forecast.fallbackReason,
+      historyCoverage: forecast.historyCoverage,
     });
   },
 };

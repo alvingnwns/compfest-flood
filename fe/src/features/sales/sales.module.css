@@ -59,6 +59,26 @@
 .status { margin-top: 14px; border-radius: 4px; padding: 9px 12px; background: var(--color-secondary-soft); color: var(--color-primary); font-size: 12px; font-weight: 700; text-align: center; }
 .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
+.importButton:disabled { background: var(--color-muted); }
+.historyPanel { display: grid; gap: 10px; margin-bottom: 16px; border: 1px solid var(--color-outline); border-radius: 7px; padding: 16px 18px; background: white; color: var(--color-ink); font-size: 13px; }
+.historyHeader { display: flex; align-items: center; justify-content: space-between; }
+.historyHeader h2 { margin: 0; color: var(--color-primary); font-size: 18px; font-weight: 700; }
+.historyHeader button { display: grid; width: 32px; height: 32px; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--color-ink); cursor: pointer; }
+.historyHeader button:hover { background: var(--color-surface-low); }
+.historyHeader svg { width: 18px; }
+.historyIntro, .historyFormat, .historyCoverage { margin: 0; line-height: 1.5; }
+.historyFormat { color: var(--color-muted); }
+.historyFormat a { display: inline-flex; align-items: center; gap: 4px; color: var(--color-primary); font-weight: 700; }
+.historyFormat svg { width: 14px; height: 14px; }
+.historyCoverage { width: fit-content; border-radius: 4px; padding: 7px 10px; background: var(--color-surface-low); }
+.historyCoverage[data-ready="true"] { background: var(--color-secondary-soft); color: var(--color-primary); }
+.historyForm { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.historyForm input[type="file"] { max-width: 100%; font: 400 13px/1 var(--font-sans); }
+.historyError { border-left: 3px solid var(--color-danger); padding: 8px 12px; background: var(--color-surface-low); }
+.historyError p { margin: 0; font-weight: 600; }
+.historyError ul { margin: 6px 0 0; padding-left: 18px; color: var(--color-ink); }
+.historySuccess { margin: 0; border-radius: 4px; padding: 9px 12px; background: var(--color-secondary-soft); color: var(--color-primary); font-weight: 700; }
+
 @media (max-width: 1100px) {
   .page { padding: 20px 22px 32px; }
   .contentGrid { grid-template-columns: 1fr; }
@@ -67,6 +87,7 @@
 }
 @media (max-width: 767px) {
   .importButton { width: 40px; padding: 0; justify-content: center; font-size: 0; }
+  .historyForm .importButton { width: auto; padding: 0 18px; font-size: 13px; }
   .kpis { grid-template-columns: 1fr; }
   .toolbar { align-items: stretch; flex-direction: column; }
   .search { max-width: none; }

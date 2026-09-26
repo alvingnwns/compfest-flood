@@ -1,13 +1,15 @@
 "use client";
 
-import { CalendarDays, ChevronDown, Search, X } from "lucide-react";
+import { CalendarDays, ChevronDown, FileUp, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { InventoryShell } from "@/components/layout/inventory-shell";
 import { useInventoryLanguage, type InventoryLocale } from "@/components/providers/inventory-language-provider";
 import { ErrorState, LoadingState, InventoryEmptyState } from "@/components/inventory/inventory-page-state";
 import type { SalesOverview, SalesTransaction } from "@/domain/sales";
 import { useSalesOverview, useSalesTransaction } from "@/hooks/use-sales-overview";
+import { usesInventoryApi } from "@/lib/inventory-api";
 import { localizeInventoryTerm } from "@/lib/inventory-translations";
+import { SalesHistoryImport } from "./sales-history-import";
 import styles from "./sales.module.css";
 
 type SortKey = "id" | "occurredAt" | "cupCount" | "total";
@@ -85,10 +87,16 @@ function SalesContent({ overview, locale }: { overview: SalesOverview; locale: I
 export function SalesPage() {
   const overview = useSalesOverview();
   const { locale } = useInventoryLanguage();
+  const [importOpen, setImportOpen] = useState(false);
+  // Importing needs the real backend; mock data mode has nothing to import into.
+  const importAction = usesInventoryApi()
+    ? <button type="button" className={styles.importButton} aria-expanded={importOpen} onClick={() => setImportOpen((open) => !open)}><FileUp aria-hidden="true" />{locale === "en" ? "Import Sales History" : "Impor Riwayat Penjualan"}</button>
+    : undefined;
 
   return (
-    <InventoryShell title={locale === "en" ? "Sales" : "Penjualan"}>
+    <InventoryShell title={locale === "en" ? "Sales" : "Penjualan"} actions={importAction}>
       <div className={styles.page}>
+        {importOpen && <SalesHistoryImport locale={locale} onClose={() => setImportOpen(false)} />}
         {overview.isLoading && <LoadingState label={locale === "en" ? "Loading sales data..." : "Memuat data penjualan..."} />}
         {overview.isError && <ErrorState message={locale === "en" ? "Sales data could not be loaded." : "Data penjualan tidak dapat dimuat."} onRetry={() => void overview.refetch()} />}
         {overview.data && !overview.isError && (overview.data.transactions.length === 0 ? <InventoryEmptyState page="sales" locale={locale} /> : <SalesContent overview={overview.data} locale={locale} />)}
