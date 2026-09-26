@@ -1,0 +1,57 @@
+.page {
+  min-height: calc(100vh - var(--inventory-header, 80px));
+  padding: 18px 28px 30px;
+  color: #29405b;
+  background-color: #fbfdff;
+  background-image:
+    linear-gradient(30deg, transparent 24%, rgb(164 202 233 / 24%) 25%, rgb(164 202 233 / 24%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 24%) 75%, rgb(164 202 233 / 24%) 77%, transparent 78%),
+    linear-gradient(150deg, transparent 24%, rgb(164 202 233 / 24%) 25%, rgb(164 202 233 / 24%) 27%, transparent 28%, transparent 74%, rgb(164 202 233 / 24%) 75%, rgb(164 202 233 / 24%) 77%, transparent 78%);
+  background-size: 42px 72px;
+}
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
+.tabs button { flex: none; min-width: 88px; height: 34px; border: 0; border-radius: 18px; padding: 0 16px; background: #d9d9d9; color: #5a5a5a; font: 600 12px/1 var(--font-sans); cursor: pointer; }
+.tabs .activeTab { background: #29405b; color: white; font-weight: 700; }
+.contentGrid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(290px, .72fr); gap: 14px; align-items: stretch; min-height: min(540px, calc(100vh - 160px)); }
+.tableCard, .detailCard { border: 1px solid #979797; border-radius: 7px; background: white; box-shadow: 0 2px 7px rgb(0 0 0 / 8%); }
+.tableCard { min-width: 0; padding: 14px 12px; }
+.tableCard > h2 { margin: 0 0 10px; color: #39597e; font-size: 17px; line-height: 1.25; }
+.tableScroll { overflow-x: auto; }
+.tableScroll table { width: 100%; min-width: 680px; border-collapse: collapse; table-layout: fixed; }
+.tableScroll th { height: 36px; padding: 0 9px; background: #39597e; color: white; font-size: 10px; text-align: center; }
+.tableScroll th:first-child, .tableScroll th:nth-child(2) { text-align: left; }
+.tableScroll td { height: 40px; border-bottom: 1px solid #c9c9c9; padding: 0 9px; color: #29405b; font-size: 11px; text-align: center; }
+.tableScroll td:first-child, .tableScroll td:nth-child(2) { text-align: left; }
+.selectedRow { background: #a4cae9; }
+.rowButton { width: 100%; border: 0; padding: 8px 0; background: transparent; color: #39597e; font: 700 11px/1.25 var(--font-sans); text-align: left; cursor: pointer; }
+.priority { display: inline-flex; min-width: 58px; justify-content: center; border-radius: 3px; padding: 5px 8px; font-size: 9px; font-weight: 800; }
+.high { background: #bc0000; color: white; }
+.medium { background: #ffc558; color: #29405b; }
+.low { background: #a4cae9; color: #29405b; }
+.empty { height: 140px !important; color: #687a8b !important; }
+.detailCard { padding: 20px; }
+.detailHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.detailHeading h2 { margin: 0; color: #39597e; font-size: 21px; line-height: 1.18; }
+.detailHeading svg { width: 19px; height: 19px; flex: none; color: #39597e; }
+.detailCard h3 { margin: 18px 0 6px; color: #39597e; font-size: 19px; line-height: 1.25; }
+.detailCard > p { margin: 0; color: #5a5a5a; font-size: 11px; line-height: 1.55; }
+.rule { height: 1px; margin: 16px 0; background: #c7c7c7; }
+.quantityField { display: grid; gap: 7px; }
+.quantityField span { color: #29405b; font-size: 11px; font-weight: 700; }
+.quantityField input { width: 100%; height: 36px; border: 1px solid #979797; border-radius: 3px; padding: 0 10px; background: white; color: #29405b; font: 400 12px/1 var(--font-sans); outline: none; }
+.quantityField input:focus { border-color: #39597e; box-shadow: 0 0 0 2px rgb(57 89 126 / 14%); }
+.actions { display: grid; gap: 8px; margin-top: 14px; }
+.actions button { height: 38px; border-radius: 3px; font: 700 11px/1 var(--font-sans); }
+.actions button:disabled { cursor: not-allowed; opacity: 1; }
+.approveButton { border: 0; background: #eba92d; color: #29405b; }
+.dismissButton { border: 1px solid #979797; background: white; color: #5a5a5a; }
+.emptyDetail { display: grid; min-height: 220px; place-items: center; color: #687a8b; font-size: 12px; text-align: center; }
+
+@media (max-width: 980px) {
+  .contentGrid { grid-template-columns: 1fr; }
+  .detailCard { min-height: 300px; }
+}
+@media (max-width: 767px) {
+  .page { padding: 16px; }
+  .tabs { margin-inline: -2px; }
+  .contentGrid { min-height: auto; }
+}

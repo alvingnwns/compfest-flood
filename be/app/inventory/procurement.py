@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import json
 import math
-from datetime import timedelta
+from collections import defaultdict
+from datetime import date, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -11,9 +12,9 @@ from psycopg.types.json import Jsonb
 
 from app.core.config import Settings
 from app.errors import ApiError
-from app.inventory.db import WIB, fingerprint, from_base, lock_state, log_activity, now_utc
+from app.inventory.db import WIB, business_date, fingerprint, from_base, lock_state, log_activity, now_utc
 from app.inventory.explanation import apply_qwen_explanations
-from app.inventory.optimization import optimize_procurement
+from app.inventory.optimization import HORIZON_DAYS, OPTIMIZER_VERSION, optimize_procurement
 from app.inventory.risk import evaluate_risks
 
 
@@ -28,6 +29,7 @@ def recommendations(
     state = lock_state(connection)
     budget = settings.inventory_procurement_budget_idr
     input_payload = {
+        "optimizerVersion": OPTIMIZER_VERSION,
         "inventoryVersion": state["inventory_version"],
         "forecastVersion": run["forecast_version"],
         "supplierVersion": state["supplier_version"],
@@ -52,8 +54,9 @@ def recommendations(
     if existing:
         return _plan_response(connection, existing["id"])
 
+    generated_at = now_utc()
     reserved_cost = _approved_budget_reservation(connection)
-    approved_outstanding = _approved_outstanding_by_ingredient(connection)
+    incoming_by_day, late_incoming = _approved_incoming_by_day(connection, run["as_of_date"])
     offers = connection.execute(
         "SELECT o.*,s.name AS supplier_name,s.lead_time_hours,i.storage_scale,i.api_unit "
         "FROM inventory_supplier_offer o JOIN inventory_supplier s ON s.id=o.supplier_id AND s.active "
@@ -64,7 +67,10 @@ def recommendations(
         offers=offers,
         budget_idr=budget,
         reserved_cost_idr=reserved_cost,
-        approved_outstanding=approved_outstanding,
+        incoming_by_day=incoming_by_day,
+        arrival_day_by_offer={
+            offer["id"]: arrival_day(generated_at, offer["lead_time_hours"], run["as_of_date"]) for offer in offers
+        },
         timeout_seconds=settings.inventory_solver_timeout_seconds,
     )
     optimizer_status = optimization["optimizerStatus"]
@@ -72,11 +78,13 @@ def recommendations(
     plan_outcome = optimization["planOutcome"]
     selected_offers = optimization["selectedOffers"]
     unmet = optimization["unmet"]
-    limitations = optimization["limitations"]
+    limitations = optimization["limitations"] + [
+        f"APPROVED_ARRIVAL_OUTSIDE_HORIZON:{ingredient_id}:{quantity}"
+        for ingredient_id, quantity in sorted(late_incoming.items())
+    ]
     available_budget = optimization["availableBudget"]
 
     plan_id = uuid4()
-    generated_at = now_utc()
     total_cost = optimization["totalEstimatedCost"]
     snapshot = json.loads(json.dumps(risk_result["items"], default=str))
     connection.execute(
@@ -205,13 +213,29 @@ def _approved_budget_reservation(connection: psycopg.Connection) -> int:
     return sum(math.ceil(row["outstanding"] / row["pack_quantity_base"]) * row["pack_cost_idr"] for row in rows)
 
 
-def _approved_outstanding_by_ingredient(connection: psycopg.Connection) -> dict[str, int]:
+def arrival_day(ordered_at: datetime, lead_time_hours: int, as_of: date) -> int:
+    """Horizon day of the WIB business date on which an offer arrives."""
+    return max(1, (business_date(ordered_at + timedelta(hours=lead_time_hours)) - as_of).days)
+
+
+def _approved_incoming_by_day(
+    connection: psycopg.Connection, as_of: date
+) -> tuple[dict[str, dict[int, int]], dict[str, int]]:
+    """Unconfirmed approved quantities for duplicate-order avoidance, not physical stock."""
     rows = connection.execute(
-        "SELECT ingredient_id,sum(recommended_quantity_base-received_quantity_base)::bigint AS outstanding "
+        "SELECT ingredient_id,expected_arrival_at,recommended_quantity_base-received_quantity_base AS outstanding "
         "FROM inventory_recommendation WHERE status='APPROVED' "
-        "AND received_quantity_base<recommended_quantity_base GROUP BY ingredient_id"
+        "AND received_quantity_base<recommended_quantity_base"
     ).fetchall()
-    return {row["ingredient_id"]: row["outstanding"] for row in rows}
+    in_horizon: dict[str, dict[int, int]] = defaultdict(lambda: defaultdict(int))
+    outside: dict[str, int] = defaultdict(int)
+    for row in rows:
+        day = max(1, (business_date(row["expected_arrival_at"]) - as_of).days)
+        if day > HORIZON_DAYS:
+            outside[row["ingredient_id"]] += row["outstanding"]
+        else:
+            in_horizon[row["ingredient_id"]][day] += row["outstanding"]
+    return {key: dict(value) for key, value in in_horizon.items()}, dict(outside)
 
 
 def _fallback_explanation(risk: dict[str, Any], quantity_base: int, offer: dict[str, Any]) -> str:
@@ -237,35 +261,28 @@ def _plan_response(connection: psycopg.Connection, plan_id: UUID) -> dict[str, A
         "JOIN inventory_supplier s ON s.id=r.supplier_id WHERE r.plan_id=%s ORDER BY r.id",
         (plan_id,),
     ).fetchall()
-    recommendations_response = []
-    for row in rows:
-        risk = risks[row["ingredient_id"]]
-        recommendations_response.append(
-            {
-                "id": str(row["id"]),
-                "ingredientId": row["ingredient_id"],
-                "ingredientName": row["ingredient_name"],
-                "unit": row["api_unit"],
-                "currentStock": risk["currentStock"],
-                "predictedRequirement": risk["predictedRequirement"],
-                "safetyStock": risk["safetyStock"],
-                "projectedStock": risk["projectedStock"],
-                "riskLevel": risk["riskLevel"],
-                "recommendedOrderQuantity": from_base(row["recommended_quantity_base"], row),
-                "recommendedOrderAt": row["recommended_order_date"],
-                "supplier": {
-                    "id": row["supplier_id"],
-                    "name": row["supplier_name"],
-                    "leadTimeHours": row["lead_time_hours"],
-                },
-                "status": row["status"],
-                "explanation": {"text": row["explanation_text"], "source": row["explanation_source"]},
-                "expectedArrivalAt": row["expected_arrival_at"],
-                "estimatedCost": row["estimated_cost_idr"],
-                "reasonCodes": row["reason_codes"],
-                "unmetQuantity": from_base(row["unmet_quantity_base"], row),
-            }
-        )
+    recommendations_response = [
+        _recommendation_response(row, risks[row["ingredient_id"]]) for row in rows
+    ]
+    recommendations_response.sort(
+        key=lambda item: (risks[item["ingredientId"]].get("_base", {}).get("priorityRank", math.inf), item["id"])
+    )
+    # Receiving is an approved commitment lifecycle, not a property of the newest
+    # forecast plan. Keep original IDs and facts until the full quantity arrives.
+    outstanding_rows = connection.execute(
+        "SELECT r.*,i.name AS ingredient_name,i.api_unit,i.storage_scale,"
+        "s.name AS supplier_name,s.lead_time_hours,p.risk_snapshot AS original_risks "
+        "FROM inventory_recommendation r JOIN inventory_procurement_plan p ON p.id=r.plan_id "
+        "JOIN inventory_ingredient i ON i.id=r.ingredient_id "
+        "JOIN inventory_supplier s ON s.id=r.supplier_id "
+        "WHERE r.status='APPROVED' AND r.received_quantity_base<r.recommended_quantity_base "
+        "ORDER BY r.reviewed_at,r.id"
+    ).fetchall()
+    outstanding_response = [
+        _recommendation_response(
+            row, next(risk for risk in row["original_risks"] if risk["ingredientId"] == row["ingredient_id"])
+        ) for row in outstanding_rows
+    ]
     stale = (
         plan["inventory_version"] != current["inventory_version"]
         or plan["forecast_version"] != current["forecast_version"]
@@ -275,6 +292,7 @@ def _plan_response(connection: psycopg.Connection, plan_id: UUID) -> dict[str, A
         "generatedAt": plan["generated_at"],
         "optimizerStatus": plan["optimizer_status"],
         "recommendations": recommendations_response,
+        "outstandingRecommendations": outstanding_response,
         "planId": str(plan["id"]),
         "inventoryVersion": str(plan["inventory_version"]),
         "forecastRunId": str(plan["forecast_run_id"]),
@@ -284,4 +302,35 @@ def _plan_response(connection: psycopg.Connection, plan_id: UUID) -> dict[str, A
         "totalEstimatedCost": plan["total_estimated_cost_idr"],
         "currency": "IDR",
         "limitations": plan["limitations"],
+    }
+
+
+def _recommendation_response(row: dict[str, Any], risk: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "id": str(row["id"]),
+        "planId": str(row["plan_id"]),
+        "ingredientId": row["ingredient_id"],
+        "ingredientName": row["ingredient_name"],
+        "unit": row["api_unit"],
+        "currentStock": risk["currentStock"],
+        "predictedRequirement": risk["predictedRequirement"],
+        "safetyStock": risk["safetyStock"],
+        "projectedStock": risk["projectedStock"],
+        "riskLevel": risk["riskLevel"],
+        "recommendedOrderQuantity": from_base(row["recommended_quantity_base"], row),
+        "receivedQuantity": from_base(row["received_quantity_base"], row),
+        "outstandingQuantity": from_base(
+            row["recommended_quantity_base"] - row["received_quantity_base"], row
+        ),
+        "recommendedOrderAt": row["recommended_order_date"],
+        "supplier": {
+            "id": row["supplier_id"], "name": row["supplier_name"],
+            "leadTimeHours": row["lead_time_hours"],
+        },
+        "status": row["status"],
+        "explanation": {"text": row["explanation_text"], "source": row["explanation_source"]},
+        "expectedArrivalAt": row["expected_arrival_at"],
+        "estimatedCost": row["estimated_cost_idr"],
+        "reasonCodes": row["reason_codes"],
+        "unmetQuantity": from_base(row["unmet_quantity_base"], row),
     }

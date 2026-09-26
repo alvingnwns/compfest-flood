@@ -75,6 +75,19 @@ def _load_artifact(settings: Settings) -> tuple[dict[str, Any], list[Any]]:
     return manifest, [joblib.load(path) for path in model_paths]
 
 
+def validation_mae_by_horizon(settings: Settings, *, fallback: bool = False) -> list[float]:
+    """Read validation MAE only; frozen test metrics are not optimizer inputs.
+
+    The persistence baseline is a proxy for fallback forecasts, not validated fallback accuracy.
+    """
+    manifest_path = settings.inventory_model_dir / "manifest.json"
+    if not manifest_path.exists():
+        raise ApiError(409, "FORECAST_UNAVAILABLE", "Artifact forecast belum tersedia.")
+    metrics = json.loads(manifest_path.read_text(encoding="utf-8"))["metrics"]
+    key = "persistenceMae" if fallback else "xgboostMae"
+    return [float(metrics[f"d{horizon}"]["validation"][key]) for horizon in (1, 2, 3)]
+
+
 def predict_products(
     settings: Settings,
     *,
@@ -220,6 +233,8 @@ def product_forecast(
     if product is None:
         raise ApiError(404, "PRODUCT_NOT_FOUND", "Produk tidak ditemukan.")
     run = ensure_forecast(connection, settings, correlation_id=correlation_id)
+    # Provenance only: inspect the existing manifest, never train or rewrite it.
+    manifest = json.loads((settings.inventory_model_dir / "manifest.json").read_text(encoding="utf-8"))
     forecast = [item for item in run["items"] if item["productId"] == product_id]
     observed = connection.execute(
         "SELECT s.business_date AS date,sum(si.quantity)::integer AS demand FROM inventory_sale s "
@@ -233,7 +248,6 @@ def product_forecast(
             for row in reversed(observed)
         ]
     else:
-        manifest, _ = _load_artifact(settings)
         history = [
             {"date": item["date"], "actualDemand": item["demand"], "historySource": "SYNTHETIC_DEMAND"}
             for item in manifest.get("demoHistory", [])
@@ -267,5 +281,6 @@ def product_forecast(
         "dataCutoff": run["data_cutoff"],
         "source": run["source"],
         "isSynthetic": run["is_synthetic"],
+        "trainingDataSynthetic": manifest.get("syntheticData"),
         "fallbackReason": run["fallback_reason"],
     }

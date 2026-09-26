@@ -1,0 +1,106 @@
+.page { min-height: calc(100vh - var(--inventory-header, 80px)); padding: 18px 28px 28px; background: #f5f6f8; color: #29405b; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 16px; height: calc(100vh - var(--inventory-header, 80px) - 46px); min-height: 570px; }
+.catalogue { min-width: 0; overflow-y: auto; padding-right: 2px; }
+.search { display: flex; height: 44px; align-items: center; gap: 9px; border: 1px solid #b7b7b7; border-radius: 6px; padding: 0 10px; background: white; }
+.search svg { width: 18px; height: 18px; color: #8a8a8a; }
+.search input { min-width: 0; flex: 1; border: 0; background: transparent; color: #29405b; font: 400 12px/1 var(--font-sans); outline: none; }
+.productGrid { display: grid; grid-template-columns: repeat(4, minmax(145px, 1fr)); gap: 10px; margin-top: 10px; }
+.productCard { display: flex; min-height: 196px; flex-direction: column; gap: 8px; border: 1px solid #b7b7b7; border-radius: 7px; padding: 10px; background: white; }
+.productVisual { height: 68px; flex: none; border-radius: 5px; }
+.productCard h2 { margin: 0 0 3px; color: #29405b; font-size: 13px; line-height: 1.2; }
+.productCard p { min-height: 26px; margin: 0; color: #5a5a5a; font-size: 9px; line-height: 1.35; }
+.productCard > strong { margin-top: auto; color: #39597e; font-size: 13px; }
+.productCard > button { width: max-content; height: 28px; border: 0; border-radius: 3px; padding: 0 12px; background: #39597e; color: white; font: 700 10px/1 var(--font-sans); cursor: pointer; }
+.orderPanel { display: flex; min-height: 0; flex-direction: column; border: 1px solid #b7b7b7; border-radius: 7px; padding: 14px; background: white; }
+.orderPanel > h2 { margin: 0 0 8px; color: #39597e; font-size: 18px; }
+.basket { min-height: 0; flex: 1; overflow-y: auto; }
+.basketItem { display: grid; gap: 6px; border-bottom: 1px solid #c6c6c6; padding: 9px 0; }
+.itemRow, .adjustmentRow, .subtotal, .billing { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.itemRow { font-size: 10px; }
+.itemRow strong:last-child { color: #39597e; }
+.adjustmentRow { font-size: 10px; }
+.quantityControls { display: flex; align-items: center; gap: 7px; }
+.quantityControls button { display: grid; width: 21px; height: 21px; place-items: center; border: 1px solid #979797; border-radius: 3px; background: white; color: #5a5a5a; cursor: pointer; }
+.removeButton { border: 0; padding: 0; background: transparent; color: #bc0000; font: 500 10px/1 var(--font-sans); text-decoration: underline; cursor: pointer; }
+.emptyBasket, .noProducts { display: grid; min-height: 120px; place-items: center; color: #7a8794; font-size: 11px; }
+.noProducts { grid-column: 1 / -1; }
+.orderFooter { display: grid; gap: 10px; border-top: 1px dashed #c7c7c7; padding-top: 12px; }
+.subtotal { color: #5a5a5a; font-size: 10px; }
+.subtotal strong { color: #39597e; }
+.billing { color: #39597e; font-size: 14px; font-weight: 800; }
+.billing strong { color: #29405b; font-size: 21px; }
+.checkoutButton, .clearButton { height: 36px; border-radius: 3px; font: 700 10px/1 var(--font-sans); cursor: pointer; }
+.checkoutButton { border: 0; background: #eba92d; color: white; }
+.clearButton { border: 1px solid #979797; background: white; color: #5a5a5a; }
+.checkoutButton:disabled, .clearButton:disabled { cursor: not-allowed; opacity: .55; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1050px) {
+  .productGrid { grid-template-columns: repeat(3, minmax(145px, 1fr)); }
+}
+@media (max-width: 850px) {
+  .layout { grid-template-columns: 1fr; height: auto; }
+  .catalogue { overflow: visible; }
+  .orderPanel { min-height: 420px; }
+}
+@media (max-width: 767px) {
+  .page { padding: 16px; }
+  .productGrid { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+}
+@media (max-width: 430px) {
+  .productGrid { grid-template-columns: 1fr; }
+}
+
+.modalOverlay { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: 24px; background: rgb(20 24 29 / 72%); }
+.modalCard { width: min(440px, 100%); overflow: hidden; border: 1px solid #979797; border-radius: 7px; background: white; box-shadow: 0 16px 45px rgb(0 0 0 / 28%); }
+.iconBanner { display: flex; justify-content: center; padding: 22px 0 14px; background: #d5e6ee; }
+.iconCircle { display: grid; width: 54px; height: 54px; place-items: center; border-radius: 50%; background: white; }
+.iconCircle img { width: 26px; height: 26px; }
+.modalContent { display: grid; gap: 24px; padding: 20px 28px; }
+.modalTitle { text-align: center; }
+.modalTitle h2 { margin: 0; color: #39597e; font-size: 23px; line-height: 1.25; }
+.modalTitle p { margin: 5px 0 0; color: #6e9fc0; font-size: 13px; font-weight: 600; }
+.receiptBox { display: grid; gap: 10px; border-radius: 5px; padding: 13px; background: #f5f6f8; color: #29405b; }
+.receiptHeader, .receiptLine, .receiptTotal { display: flex; justify-content: space-between; gap: 12px; }
+.receiptHeader { color: #39597e; font-size: 12px; }
+.receiptLine { font-size: 12px; }
+.receiptRule { border-top: 1px dashed #bdbdbd; }
+.receiptTotal { align-items: center; color: #39597e; font-size: 13px; }
+.receiptTotal strong:last-child { font-size: 19px; }
+.modalFooter { display: flex; border-top: 1px solid #bdbdbd; padding: 16px 20px; background: #f5f6f8; }
+.confirmButtons { display: grid; width: 100%; grid-template-columns: 1fr 1fr; gap: 10px; }
+.modalFooter button { height: 40px; border-radius: 3px; font: 700 12px/1 var(--font-sans); cursor: pointer; }
+.cancelButton { border: 1px solid #39597e; background: white; color: #39597e; }
+.confirmButton { border: 0; background: #39597e; color: white; }
+.newOrderButton { width: 100%; border: 0; background: #eba92d; color: white; }
+.warningModal { width: min(760px, 100%); }
+.warningContent { padding: 26px 30px 22px; }
+.warningContent h2 { display: flex; align-items: center; gap: 11px; margin: 0 0 18px; color: #c90000; font-size: 25px; }
+.warningContent h2 svg { width: 19px; height: 19px; color: #5a5a5a; }
+.warningContent > p { margin: 0 0 18px; color: #333; font-size: 13px; line-height: 1.5; }
+.shortageTableWrap { overflow-x: auto; }
+.shortageTableWrap table { width: 100%; min-width: 560px; border-collapse: collapse; }
+.shortageTableWrap th { height: 35px; padding: 0 12px; background: #39597e; color: white; font-size: 11px; text-align: center; }
+.shortageTableWrap th:first-child { text-align: left; }
+.shortageTableWrap td { height: 38px; border: 1px solid #bdbdbd; padding: 0 12px; color: #39597e; font-size: 12px; text-align: center; }
+.shortageTableWrap td:first-child { font-weight: 700; text-align: left; }
+.shortageTableWrap td:last-child { color: #c90000; font-weight: 800; }
+.warningHint { margin: 16px 0 0 !important; color: #777 !important; }
+.warningFooter { display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #bdbdbd; padding: 14px 20px; background: #f5f6f8; }
+.warningFooter a, .warningFooter button { display: inline-flex; height: 38px; align-items: center; justify-content: center; border-radius: 3px; padding: 0 18px; font: 700 11px/1 var(--font-sans); text-decoration: none; }
+.warningFooter a { border: 1px solid #39597e; background: white; color: #39597e; }
+.warningFooter button { border: 0; background: #eba92d; color: white; cursor: pointer; }
+.failedModal { width: min(440px, 100%); }
+.failedBanner { display: grid; height: 82px; place-items: center; background: #ce0000; }
+.failedBanner span { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 50%; background: white; color: #ce0000; }
+.failedBanner svg { width: 24px; height: 24px; }
+.failedContent { padding: 18px 24px; text-align: center; }
+.failedContent h2 { margin: 0; color: #39597e; font-size: 23px; }
+.failedContent p { margin: 5px 0 0; color: #6e9fc0; font-size: 13px; font-weight: 600; }
+
+@media (max-width: 600px) {
+  .modalOverlay { padding: 12px; }
+  .modalContent { padding-inline: 16px; }
+  .warningContent { padding-inline: 18px; }
+  .warningFooter { flex-direction: column; }
+}

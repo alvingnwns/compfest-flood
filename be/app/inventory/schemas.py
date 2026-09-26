@@ -123,6 +123,7 @@ class InventoryItem(ApiModel):
 
 class InventoryResponse(ApiModel):
     items: list[InventoryItem]
+    inventory_version: int = Field(ge=0)
 
 
 class InventoryMovement(ApiModel):
@@ -233,6 +234,7 @@ class ProductForecastResponse(ApiModel):
     data_cutoff: datetime | None = None
     source: Literal["XGBOOST", "FALLBACK"] | None = None
     is_synthetic: bool | None = None
+    training_data_synthetic: bool | None = None
     fallback_reason: str | None = None
 
     _generated_at_aware = field_validator("generated_at")(_aware)
@@ -286,6 +288,7 @@ class RecommendationExplanation(ApiModel):
 
 class ProcurementRecommendation(ApiModel):
     id: str
+    plan_id: str
     ingredient_id: str
     ingredient_name: str
     unit: InventoryUnit
@@ -295,6 +298,8 @@ class ProcurementRecommendation(ApiModel):
     projected_stock: float
     risk_level: RiskLevel
     recommended_order_quantity: float = Field(gt=0)
+    received_quantity: float = Field(ge=0)
+    outstanding_quantity: float = Field(ge=0)
     recommended_order_at: date
     supplier: SupplierSummary
     status: RecommendationStatus
@@ -309,6 +314,7 @@ class ProcurementResponse(ApiModel):
     generated_at: datetime
     optimizer_status: OptimizerStatus
     recommendations: list[ProcurementRecommendation]
+    outstanding_recommendations: list[ProcurementRecommendation] = Field(default_factory=list)
     plan_id: str | None = None
     inventory_version: str | None = None
     forecast_run_id: str | None = None

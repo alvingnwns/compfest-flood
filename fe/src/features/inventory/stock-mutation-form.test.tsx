@@ -1,0 +1,24 @@
+import { vi, it, expect, afterEach } from "vitest";
+vi.mock("@/config/public-env", () => ({ publicEnv: { NEXT_PUBLIC_DATA_SOURCE: "api", NEXT_PUBLIC_API_BASE_URL: "http://localhost:8000" } }));
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { StockMutationForm } from "./stock-mutation-form";
+afterEach(() => { vi.unstubAllGlobals(); Reflect.deleteProperty(HTMLDialogElement.prototype, "showModal"); });
+it("freezes the counted version and requires recount after a stale conflict", async () => {
+  Object.defineProperty(HTMLDialogElement.prototype, "showModal", { configurable: true, value: function (this: HTMLDialogElement) { this.open = true; } });
+  const fetch = vi.fn().mockResolvedValue(Response.json({ error: { code: "STALE_INVENTORY", message: "Refresh inventory" } }, { status: 409 }));
+  vi.stubGlobal("fetch", fetch);
+  const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
+  const close = vi.fn();
+  const form = (version: number) => <QueryClientProvider client={client}><StockMutationForm materials={[{ id: "ing_mangga", name: "Mango", quantity: 10, unit: "kg", inventoryVersion: version }]} mode="adjust" locale="en" onClose={close} /></QueryClientProvider>;
+  const { rerender } = render(form(7));
+  rerender(form(8));
+  await userEvent.click(screen.getByRole("button", { name: "Adjust Stock" }));
+  expect(await screen.findByRole("alert")).toHaveTextContent("Stock changed while you were counting");
+  expect(JSON.parse(fetch.mock.calls[0][1].body).expectedInventoryVersion).toBe(7);
+  expect(screen.getByRole("button", { name: "Adjust Stock" })).toBeDisabled();
+  await userEvent.click(screen.getByRole("button", { name: "Close and recount" }));
+  expect(close).toHaveBeenCalledOnce();
+  expect(fetch).toHaveBeenCalledOnce();
+});
