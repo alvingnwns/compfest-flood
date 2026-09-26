@@ -1,0 +1,1250 @@
+{
+  "suite": "ARUNA Inventory Decision Evaluation",
+  "suiteVersion": "inventory-decision-v1.1",
+  "label": "iter2",
+  "generatedAt": "2026-09-26T09:05:45.381210Z",
+  "dataset": {
+    "path": "be/data/new_data/aruna_juice.csv",
+    "sha256": "f6461f8934d5a879c0bdc0fbd07d4dbbac9209139ce03e65637c4f0f9561cac0"
+  },
+  "caseCount": 3,
+  "passedCases": 3,
+  "aggregate": {
+    "actualDemandCups": 1186,
+    "fulfilledDemandCups": 582,
+    "serviceLevelPercent": 49.072513,
+    "unfulfilledDemandCups": 604,
+    "totalOperationalCostIdr": 13360000,
+    "costBreakdownIdr": {
+      "purchase": 1280000,
+      "holding": 0,
+      "stockout": 12080000,
+      "waste": 0
+    },
+    "constraintViolationRatePercent": 0.0,
+    "constraintChecks": 79,
+    "constraintViolations": 0
+  },
+  "diagnosticsOnly": {
+    "forecastMaeCups": 2.686869,
+    "forecastRmseCups": 3.609751,
+    "note": "Forecast error is diagnostic and is not an operational success metric."
+  },
+  "oracleDiagnostics": {
+    "oracleMaximumFulfilledCups": 585,
+    "feasibleFulfillmentPercent": 99.487179,
+    "serviceRegretCups": 3,
+    "oracleMinimumCostIdr": 13000000,
+    "operationalCostRegretIdr": 360000,
+    "note": "Hindsight bounds use actual demand after decisions are fixed; they are not decision inputs."
+  },
+  "cases": [
+    {
+      "caseId": "I01-normal-demand",
+      "category": "normal-demand",
+      "passed": true,
+      "expectation": {
+        "planOutcomeIn": [
+          "COMPLETE",
+          "PARTIAL"
+        ],
+        "constraintEvaluation": "REQUIRED",
+        "constraintViolationRatePercent": 0
+      },
+      "decision": {
+        "optimizerStatus": "OPTIMAL",
+        "planOutcome": "COMPLETE",
+        "solverStatusDetail": "OPTIMAL",
+        "recommendationCount": 5,
+        "totalEstimatedCostIdr": 800000,
+        "limitations": [],
+        "optimizerVersion": "time-indexed-lexicographic-v2",
+        "objectiveStages": [
+          {
+            "stage": "SERVICE",
+            "status": "OPTIMAL",
+            "value": 0
+          },
+          {
+            "stage": "URGENCY",
+            "status": "OPTIMAL",
+            "value": 0
+          },
+          {
+            "stage": "SAFETY",
+            "status": "OPTIMAL",
+            "value": 0
+          },
+          {
+            "stage": "COST",
+            "status": "OPTIMAL",
+            "value": 800000
+          }
+        ],
+        "canonicalDecisionSha256": "031327005d5226e70781d0d4440c5be6b6352d7d3a0e94c561bebd016a463461"
+      },
+      "daily": [
+        {
+          "day": 1,
+          "demandedCups": 120,
+          "fulfilledCups": 120,
+          "unfulfilledCups": 0,
+          "endingStockKg": 120.0,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 2,
+          "demandedCups": 135,
+          "fulfilledCups": 135,
+          "unfulfilledCups": 0,
+          "endingStockKg": 86.25,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 3,
+          "demandedCups": 122,
+          "fulfilledCups": 122,
+          "unfulfilledCups": 0,
+          "endingStockKg": 55.75,
+          "holdingCostIdr": 0
+        }
+      ],
+      "endingStockBase": {
+        "ING-001": 4500000,
+        "ING-002": 3750000,
+        "ING-003": 5750000,
+        "ING-004": 7250000,
+        "ING-005": 1750000,
+        "ING-006": 5500000,
+        "ING-007": 7250000,
+        "ING-008": 2000000,
+        "ING-009": 5750000,
+        "ING-010": 4500000,
+        "ING-011": 7750000
+      },
+      "metrics": {
+        "actualDemandCups": 377,
+        "fulfilledDemandCups": 377,
+        "serviceLevelPercent": 100.0,
+        "unfulfilledDemandCups": 0,
+        "totalOperationalCostIdr": 800000,
+        "costBreakdownIdr": {
+          "purchase": 800000,
+          "holding": 0,
+          "stockout": 0,
+          "waste": 0
+        },
+        "constraintViolationRatePercent": 0.0,
+        "constraintChecks": 36,
+        "constraintViolations": []
+      },
+      "forecastDiagnostics": {
+        "observations": 33,
+        "maeCups": 2.181818,
+        "rmseCups": 2.828427
+      },
+      "waste": {
+        "evaluated": false,
+        "reason": "Shelf-life and lot-age data are unavailable; waste is not fabricated."
+      },
+      "holdingCost": {
+        "evaluated": false,
+        "rateIdrPerKgDay": 0,
+        "reason": "No validated holding-cost rate is available."
+      },
+      "oracle": {
+        "oracleMaximumFulfilledCups": 377,
+        "oracleServiceLevelPercent": 100.0,
+        "oracleCostAtMaximumFulfillmentIdr": 500000,
+        "oracleMinimumCostIdr": 500000,
+        "feasibleFulfillmentPercent": 100.0,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 300000,
+        "oracleDecisions": {
+          "maximumFulfillment": [
+            {
+              "ingredientId": "ING-005",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            },
+            {
+              "ingredientId": "ING-007",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            },
+            {
+              "ingredientId": "ING-008",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            },
+            {
+              "ingredientId": "ING-009",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            },
+            {
+              "ingredientId": "ING-011",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            }
+          ],
+          "minimumCost": [
+            {
+              "ingredientId": "ING-005",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            },
+            {
+              "ingredientId": "ING-007",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            },
+            {
+              "ingredientId": "ING-008",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            },
+            {
+              "ingredientId": "ING-009",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            },
+            {
+              "ingredientId": "ING-011",
+              "offerId": "standard",
+              "supplierId": "SUP-STANDARD",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 10,
+              "packCostIdr": 100000,
+              "totalCostIdr": 100000,
+              "leadTimeHours": 24
+            }
+          ]
+        },
+        "note": "Hindsight oracle uses actual demand after the system decision; it never feeds decisions."
+      }
+    },
+    {
+      "caseId": "I02-procurement-impossible",
+      "category": "infeasible-procurement",
+      "passed": true,
+      "expectation": {
+        "planOutcomeIn": [
+          "PARTIAL"
+        ],
+        "constraintEvaluation": "NOT_APPLICABLE",
+        "constraintViolationRatePercent": null
+      },
+      "decision": {
+        "optimizerStatus": "OPTIMAL",
+        "planOutcome": "PARTIAL",
+        "solverStatusDetail": "OPTIMAL",
+        "recommendationCount": 0,
+        "totalEstimatedCostIdr": 0,
+        "limitations": [
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-001",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-002",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-003",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-004",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-005",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-006",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-007",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-008",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-009",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-010",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-011",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-001:6000000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-002:5000000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-003:5250000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-004:3750000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-005:12250000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-006:5500000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-007:12500000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-008:12750000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-009:12750000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-010:5500000",
+          "SHORTAGE_BEFORE_EARLIEST_ARRIVAL:ING-011:12750000"
+        ],
+        "optimizerVersion": "time-indexed-lexicographic-v2",
+        "objectiveStages": [
+          {
+            "stage": "SERVICE",
+            "status": "OPTIMAL",
+            "value": 376
+          },
+          {
+            "stage": "URGENCY",
+            "status": "OPTIMAL",
+            "value": 5444
+          },
+          {
+            "stage": "SAFETY",
+            "status": "OPTIMAL",
+            "value": 132
+          },
+          {
+            "stage": "COST",
+            "status": "OPTIMAL",
+            "value": 0
+          }
+        ],
+        "canonicalDecisionSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "daily": [
+        {
+          "day": 1,
+          "demandedCups": 102,
+          "fulfilledCups": 0,
+          "unfulfilledCups": 102,
+          "endingStockKg": 0.0,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 2,
+          "demandedCups": 126,
+          "fulfilledCups": 0,
+          "unfulfilledCups": 126,
+          "endingStockKg": 0.0,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 3,
+          "demandedCups": 156,
+          "fulfilledCups": 0,
+          "unfulfilledCups": 156,
+          "endingStockKg": 0.0,
+          "holdingCostIdr": 0
+        }
+      ],
+      "endingStockBase": {
+        "ING-001": 0,
+        "ING-002": 0,
+        "ING-003": 0,
+        "ING-004": 0,
+        "ING-005": 0,
+        "ING-006": 0,
+        "ING-007": 0,
+        "ING-008": 0,
+        "ING-009": 0,
+        "ING-010": 0,
+        "ING-011": 0
+      },
+      "metrics": {
+        "actualDemandCups": 384,
+        "fulfilledDemandCups": 0,
+        "serviceLevelPercent": 0.0,
+        "unfulfilledDemandCups": 384,
+        "totalOperationalCostIdr": 7680000,
+        "costBreakdownIdr": {
+          "purchase": 0,
+          "holding": 0,
+          "stockout": 7680000,
+          "waste": 0
+        },
+        "constraintViolationRatePercent": null,
+        "constraintChecks": 0,
+        "constraintViolations": []
+      },
+      "forecastDiagnostics": {
+        "observations": 33,
+        "maeCups": 2.969697,
+        "rmseCups": 3.516196
+      },
+      "waste": {
+        "evaluated": false,
+        "reason": "Shelf-life and lot-age data are unavailable; waste is not fabricated."
+      },
+      "holdingCost": {
+        "evaluated": false,
+        "rateIdrPerKgDay": 0,
+        "reason": "No validated holding-cost rate is available."
+      },
+      "oracle": {
+        "oracleMaximumFulfilledCups": 0,
+        "oracleServiceLevelPercent": 0.0,
+        "oracleCostAtMaximumFulfillmentIdr": 7680000,
+        "oracleMinimumCostIdr": 7680000,
+        "feasibleFulfillmentPercent": null,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 0,
+        "oracleDecisions": {
+          "maximumFulfillment": [],
+          "minimumCost": []
+        },
+        "note": "Hindsight oracle uses actual demand after the system decision; it never feeds decisions."
+      }
+    },
+    {
+      "caseId": "I03-heavy-constraint-pressure",
+      "category": "heavy-constraint-pressure",
+      "passed": true,
+      "expectation": {
+        "planOutcomeIn": [
+          "COMPLETE",
+          "PARTIAL"
+        ],
+        "constraintEvaluation": "REQUIRED",
+        "constraintViolationRatePercent": 0
+      },
+      "decision": {
+        "optimizerStatus": "OPTIMAL",
+        "planOutcome": "PARTIAL",
+        "solverStatusDetail": "OPTIMAL",
+        "recommendationCount": 6,
+        "totalEstimatedCostIdr": 480000,
+        "limitations": [],
+        "optimizerVersion": "time-indexed-lexicographic-v2",
+        "objectiveStages": [
+          {
+            "stage": "SERVICE",
+            "status": "OPTIMAL",
+            "value": 159
+          },
+          {
+            "stage": "URGENCY",
+            "status": "OPTIMAL",
+            "value": 1914
+          },
+          {
+            "stage": "SAFETY",
+            "status": "OPTIMAL",
+            "value": 128
+          },
+          {
+            "stage": "COST",
+            "status": "OPTIMAL",
+            "value": 480000
+          }
+        ],
+        "canonicalDecisionSha256": "abdba832ba8a386c612f51bcb2581df58b810c09643e6b5c5b772db1a1a6def6"
+      },
+      "daily": [
+        {
+          "day": 1,
+          "demandedCups": 164,
+          "fulfilledCups": 87,
+          "unfulfilledCups": 77,
+          "endingStockKg": 0.25,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 2,
+          "demandedCups": 142,
+          "fulfilledCups": 98,
+          "unfulfilledCups": 44,
+          "endingStockKg": 5.75,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 3,
+          "demandedCups": 119,
+          "fulfilledCups": 20,
+          "unfulfilledCups": 99,
+          "endingStockKg": 0.75,
+          "holdingCostIdr": 0
+        }
+      ],
+      "endingStockBase": {
+        "ING-001": 750000,
+        "ING-002": 0,
+        "ING-003": 0,
+        "ING-004": 0,
+        "ING-005": 0,
+        "ING-006": 0,
+        "ING-007": 0,
+        "ING-008": 0,
+        "ING-009": 0,
+        "ING-010": 0,
+        "ING-011": 0
+      },
+      "metrics": {
+        "actualDemandCups": 425,
+        "fulfilledDemandCups": 205,
+        "serviceLevelPercent": 48.235294,
+        "unfulfilledDemandCups": 220,
+        "totalOperationalCostIdr": 4880000,
+        "costBreakdownIdr": {
+          "purchase": 480000,
+          "holding": 0,
+          "stockout": 4400000,
+          "waste": 0
+        },
+        "constraintViolationRatePercent": 0.0,
+        "constraintChecks": 43,
+        "constraintViolations": []
+      },
+      "forecastDiagnostics": {
+        "observations": 33,
+        "maeCups": 2.909091,
+        "rmseCups": 4.327502
+      },
+      "waste": {
+        "evaluated": false,
+        "reason": "Shelf-life and lot-age data are unavailable; waste is not fabricated."
+      },
+      "holdingCost": {
+        "evaluated": false,
+        "rateIdrPerKgDay": 0,
+        "reason": "No validated holding-cost rate is available."
+      },
+      "oracle": {
+        "oracleMaximumFulfilledCups": 208,
+        "oracleServiceLevelPercent": 48.941176,
+        "oracleCostAtMaximumFulfillmentIdr": 4820000,
+        "oracleMinimumCostIdr": 4820000,
+        "feasibleFulfillmentPercent": 98.557692,
+        "serviceRegretCups": 3,
+        "operationalCostRegretIdr": 60000,
+        "oracleDecisions": {
+          "maximumFulfillment": [
+            {
+              "ingredientId": "ING-005",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 80000,
+              "leadTimeHours": 48
+            },
+            {
+              "ingredientId": "ING-007",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 80000,
+              "leadTimeHours": 48
+            },
+            {
+              "ingredientId": "ING-008",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 80000,
+              "leadTimeHours": 48
+            },
+            {
+              "ingredientId": "ING-009",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 80000,
+              "leadTimeHours": 48
+            },
+            {
+              "ingredientId": "ING-011",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 2,
+              "packQuantityBase": 5000000,
+              "quantityBase": 10000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 160000,
+              "leadTimeHours": 48
+            }
+          ],
+          "minimumCost": [
+            {
+              "ingredientId": "ING-005",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 80000,
+              "leadTimeHours": 48
+            },
+            {
+              "ingredientId": "ING-007",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 80000,
+              "leadTimeHours": 48
+            },
+            {
+              "ingredientId": "ING-008",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 80000,
+              "leadTimeHours": 48
+            },
+            {
+              "ingredientId": "ING-009",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 1,
+              "packQuantityBase": 5000000,
+              "quantityBase": 5000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 80000,
+              "leadTimeHours": 48
+            },
+            {
+              "ingredientId": "ING-011",
+              "offerId": "slow-5kg",
+              "supplierId": "SUP-SLOW",
+              "packCount": 2,
+              "packQuantityBase": 5000000,
+              "quantityBase": 10000000,
+              "minimumPacks": 1,
+              "capacityPacks": 2,
+              "packCostIdr": 80000,
+              "totalCostIdr": 160000,
+              "leadTimeHours": 48
+            }
+          ]
+        },
+        "note": "Hindsight oracle uses actual demand after the system decision; it never feeds decisions."
+      },
+      "runs": [
+        {
+          "variantId": "control",
+          "caseId": "I03-heavy-constraint-pressure",
+          "category": "heavy-constraint-pressure",
+          "passed": true,
+          "expectation": {
+            "planOutcomeIn": [
+              "COMPLETE",
+              "PARTIAL"
+            ],
+            "constraintEvaluation": "REQUIRED",
+            "constraintViolationRatePercent": 0
+          },
+          "decision": {
+            "optimizerStatus": "OPTIMAL",
+            "planOutcome": "COMPLETE",
+            "solverStatusDetail": "OPTIMAL",
+            "recommendationCount": 5,
+            "totalEstimatedCostIdr": 700000,
+            "limitations": [],
+            "optimizerVersion": "time-indexed-lexicographic-v2",
+            "objectiveStages": [
+              {
+                "stage": "SERVICE",
+                "status": "OPTIMAL",
+                "value": 0
+              },
+              {
+                "stage": "URGENCY",
+                "status": "OPTIMAL",
+                "value": 0
+              },
+              {
+                "stage": "SAFETY",
+                "status": "OPTIMAL",
+                "value": 0
+              },
+              {
+                "stage": "COST",
+                "status": "OPTIMAL",
+                "value": 700000
+              }
+            ],
+            "canonicalDecisionSha256": "d43d29254ccc48f5da7a62b626eae2f9f71d9257464c523828ebe57685334157"
+          },
+          "daily": [
+            {
+              "day": 1,
+              "demandedCups": 164,
+              "fulfilledCups": 164,
+              "unfulfilledCups": 0,
+              "endingStockKg": 104.0,
+              "holdingCostIdr": 0
+            },
+            {
+              "day": 2,
+              "demandedCups": 142,
+              "fulfilledCups": 142,
+              "unfulfilledCups": 0,
+              "endingStockKg": 68.5,
+              "holdingCostIdr": 0
+            },
+            {
+              "day": 3,
+              "demandedCups": 119,
+              "fulfilledCups": 118,
+              "unfulfilledCups": 1,
+              "endingStockKg": 39.0,
+              "holdingCostIdr": 0
+            }
+          ],
+          "endingStockBase": {
+            "ING-001": 2500000,
+            "ING-002": 4000000,
+            "ING-003": 3000000,
+            "ING-004": 5250000,
+            "ING-005": 3000000,
+            "ING-006": 3750000,
+            "ING-007": 8250000,
+            "ING-008": 0,
+            "ING-009": 6500000,
+            "ING-010": 2750000,
+            "ING-011": 0
+          },
+          "metrics": {
+            "actualDemandCups": 425,
+            "fulfilledDemandCups": 424,
+            "serviceLevelPercent": 99.764706,
+            "unfulfilledDemandCups": 1,
+            "totalOperationalCostIdr": 720000,
+            "costBreakdownIdr": {
+              "purchase": 700000,
+              "holding": 0,
+              "stockout": 20000,
+              "waste": 0
+            },
+            "constraintViolationRatePercent": 0.0,
+            "constraintChecks": 36,
+            "constraintViolations": []
+          },
+          "forecastDiagnostics": {
+            "observations": 33,
+            "maeCups": 2.909091,
+            "rmseCups": 4.327502
+          },
+          "waste": {
+            "evaluated": false,
+            "reason": "Shelf-life and lot-age data are unavailable; waste is not fabricated."
+          },
+          "holdingCost": {
+            "evaluated": false,
+            "rateIdrPerKgDay": 0,
+            "reason": "No validated holding-cost rate is available."
+          },
+          "oracle": {
+            "oracleMaximumFulfilledCups": 425,
+            "oracleServiceLevelPercent": 100.0,
+            "oracleCostAtMaximumFulfillmentIdr": 600000,
+            "oracleMinimumCostIdr": 520000,
+            "feasibleFulfillmentPercent": 99.764706,
+            "serviceRegretCups": 1,
+            "operationalCostRegretIdr": 200000,
+            "oracleDecisions": {
+              "maximumFulfillment": [
+                {
+                  "ingredientId": "ING-005",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                },
+                {
+                  "ingredientId": "ING-007",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                },
+                {
+                  "ingredientId": "ING-008",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 2,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 10000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 200000,
+                  "leadTimeHours": 24
+                },
+                {
+                  "ingredientId": "ING-009",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                },
+                {
+                  "ingredientId": "ING-011",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                }
+              ],
+              "minimumCost": [
+                {
+                  "ingredientId": "ING-005",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                },
+                {
+                  "ingredientId": "ING-007",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                },
+                {
+                  "ingredientId": "ING-008",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                },
+                {
+                  "ingredientId": "ING-009",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                },
+                {
+                  "ingredientId": "ING-011",
+                  "offerId": "standard",
+                  "supplierId": "SUP-STANDARD",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 10,
+                  "packCostIdr": 100000,
+                  "totalCostIdr": 100000,
+                  "leadTimeHours": 24
+                }
+              ]
+            },
+            "note": "Hindsight oracle uses actual demand after the system decision; it never feeds decisions."
+          }
+        },
+        {
+          "variantId": "heavy",
+          "caseId": "I03-heavy-constraint-pressure",
+          "category": "heavy-constraint-pressure",
+          "passed": true,
+          "expectation": {
+            "planOutcomeIn": [
+              "COMPLETE",
+              "PARTIAL"
+            ],
+            "constraintEvaluation": "REQUIRED",
+            "constraintViolationRatePercent": 0
+          },
+          "decision": {
+            "optimizerStatus": "OPTIMAL",
+            "planOutcome": "PARTIAL",
+            "solverStatusDetail": "OPTIMAL",
+            "recommendationCount": 6,
+            "totalEstimatedCostIdr": 480000,
+            "limitations": [],
+            "optimizerVersion": "time-indexed-lexicographic-v2",
+            "objectiveStages": [
+              {
+                "stage": "SERVICE",
+                "status": "OPTIMAL",
+                "value": 159
+              },
+              {
+                "stage": "URGENCY",
+                "status": "OPTIMAL",
+                "value": 1914
+              },
+              {
+                "stage": "SAFETY",
+                "status": "OPTIMAL",
+                "value": 128
+              },
+              {
+                "stage": "COST",
+                "status": "OPTIMAL",
+                "value": 480000
+              }
+            ],
+            "canonicalDecisionSha256": "abdba832ba8a386c612f51bcb2581df58b810c09643e6b5c5b772db1a1a6def6"
+          },
+          "daily": [
+            {
+              "day": 1,
+              "demandedCups": 164,
+              "fulfilledCups": 87,
+              "unfulfilledCups": 77,
+              "endingStockKg": 0.25,
+              "holdingCostIdr": 0
+            },
+            {
+              "day": 2,
+              "demandedCups": 142,
+              "fulfilledCups": 98,
+              "unfulfilledCups": 44,
+              "endingStockKg": 5.75,
+              "holdingCostIdr": 0
+            },
+            {
+              "day": 3,
+              "demandedCups": 119,
+              "fulfilledCups": 20,
+              "unfulfilledCups": 99,
+              "endingStockKg": 0.75,
+              "holdingCostIdr": 0
+            }
+          ],
+          "endingStockBase": {
+            "ING-001": 750000,
+            "ING-002": 0,
+            "ING-003": 0,
+            "ING-004": 0,
+            "ING-005": 0,
+            "ING-006": 0,
+            "ING-007": 0,
+            "ING-008": 0,
+            "ING-009": 0,
+            "ING-010": 0,
+            "ING-011": 0
+          },
+          "metrics": {
+            "actualDemandCups": 425,
+            "fulfilledDemandCups": 205,
+            "serviceLevelPercent": 48.235294,
+            "unfulfilledDemandCups": 220,
+            "totalOperationalCostIdr": 4880000,
+            "costBreakdownIdr": {
+              "purchase": 480000,
+              "holding": 0,
+              "stockout": 4400000,
+              "waste": 0
+            },
+            "constraintViolationRatePercent": 0.0,
+            "constraintChecks": 43,
+            "constraintViolations": []
+          },
+          "forecastDiagnostics": {
+            "observations": 33,
+            "maeCups": 2.909091,
+            "rmseCups": 4.327502
+          },
+          "waste": {
+            "evaluated": false,
+            "reason": "Shelf-life and lot-age data are unavailable; waste is not fabricated."
+          },
+          "holdingCost": {
+            "evaluated": false,
+            "rateIdrPerKgDay": 0,
+            "reason": "No validated holding-cost rate is available."
+          },
+          "oracle": {
+            "oracleMaximumFulfilledCups": 208,
+            "oracleServiceLevelPercent": 48.941176,
+            "oracleCostAtMaximumFulfillmentIdr": 4820000,
+            "oracleMinimumCostIdr": 4820000,
+            "feasibleFulfillmentPercent": 98.557692,
+            "serviceRegretCups": 3,
+            "operationalCostRegretIdr": 60000,
+            "oracleDecisions": {
+              "maximumFulfillment": [
+                {
+                  "ingredientId": "ING-005",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 80000,
+                  "leadTimeHours": 48
+                },
+                {
+                  "ingredientId": "ING-007",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 80000,
+                  "leadTimeHours": 48
+                },
+                {
+                  "ingredientId": "ING-008",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 80000,
+                  "leadTimeHours": 48
+                },
+                {
+                  "ingredientId": "ING-009",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 80000,
+                  "leadTimeHours": 48
+                },
+                {
+                  "ingredientId": "ING-011",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 2,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 10000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 160000,
+                  "leadTimeHours": 48
+                }
+              ],
+              "minimumCost": [
+                {
+                  "ingredientId": "ING-005",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 80000,
+                  "leadTimeHours": 48
+                },
+                {
+                  "ingredientId": "ING-007",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 80000,
+                  "leadTimeHours": 48
+                },
+                {
+                  "ingredientId": "ING-008",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 80000,
+                  "leadTimeHours": 48
+                },
+                {
+                  "ingredientId": "ING-009",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 1,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 5000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 80000,
+                  "leadTimeHours": 48
+                },
+                {
+                  "ingredientId": "ING-011",
+                  "offerId": "slow-5kg",
+                  "supplierId": "SUP-SLOW",
+                  "packCount": 2,
+                  "packQuantityBase": 5000000,
+                  "quantityBase": 10000000,
+                  "minimumPacks": 1,
+                  "capacityPacks": 2,
+                  "packCostIdr": 80000,
+                  "totalCostIdr": 160000,
+                  "leadTimeHours": 48
+                }
+              ]
+            },
+            "note": "Hindsight oracle uses actual demand after the system decision; it never feeds decisions."
+          }
+        }
+      ],
+      "sensitivity": {
+        "controlVariant": "control",
+        "stressVariant": "heavy",
+        "serviceLevelPercentagePoints": -51.529412,
+        "unfulfilledDemandCups": 219,
+        "totalOperationalCostIdr": 4160000
+      }
+    }
+  ],
+  "limitations": [
+    "Fixed synthetic demand is ground truth only inside this deterministic evaluation.",
+    "No shelf-life or lot-age source exists, so waste is not evaluated.",
+    "No validated holding-cost rate exists, so holding cost is reported as zero and unevaluated.",
+    "The adapter invokes production forecast and procurement engines but excludes persistence, approval, and Qwen explanation."
+  ]
+}

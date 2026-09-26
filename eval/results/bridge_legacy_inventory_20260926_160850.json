@@ -1,0 +1,377 @@
+{
+  "bridgeVersion": "legacy-inventory-context-v3",
+  "generatedAt": "2026-09-26T09:08:50.614221Z",
+  "experiment": {
+    "baseline": "legacy ARUNA recovery without XGBoost forecast or Qwen reasoning",
+    "inventory": "new ARUNA inventory risk, XGBoost forecast, and procurement optimization",
+    "inventoryLabel": "iter2",
+    "legacyOptimizer": "deterministic CP-SAT/OR-Tools",
+    "comparisonType": "formula-aligned contextual bridge"
+  },
+  "legacyArtifact": "eval/results/baseline_20260926_111142.json",
+  "inventoryArtifact": "eval/results/inventory_iter2_20260926_160545.json",
+  "formula": {
+    "serviceLevel": "fulfilled demand units / actual demand units * 100%",
+    "unfulfilledDemand": "actual demand units - fulfilled demand units",
+    "totalOperationalCost": "purchase + holding + stockout + waste",
+    "constraintViolationRate": "violated constraints / evaluated constraints * 100%"
+  },
+  "comparisons": [
+    {
+      "pairId": "B01-normal",
+      "archetype": "Nominal operating condition",
+      "legacyRecovery": {
+        "sourceCaseId": "C1",
+        "sourceVariant": null,
+        "decisionStatus": "partial",
+        "metrics": {
+          "actualDemandUnits": 2325,
+          "fulfilledDemandUnits": 1690,
+          "serviceLevelPercent": 72.688172,
+          "unfulfilledDemandUnits": 635,
+          "unfulfilledDemandRatePercent": 27.311828,
+          "totalOperationalCostIdr": 31984000,
+          "operationalCostPerDemandUnitIdr": 13756.56,
+          "operationalCostToDemandValuePercent": 25.870743,
+          "costBreakdownIdr": {
+            "purchase": null,
+            "holding": null,
+            "stockout": 31984000,
+            "waste": null
+          },
+          "constraintViolationRatePercent": 0.0,
+          "constraintChecks": 245,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "NOT_MODELED",
+          "holding": "NOT_MODELED",
+          "stockout": "SALES_EXPOSURE_RISK_PROXY",
+          "waste": "NOT_MODELED"
+        }
+      },
+      "inventory": {
+        "sourceCaseId": "I01-normal-demand",
+        "sourceVariant": null,
+        "decisionStatus": "COMPLETE",
+        "metrics": {
+          "actualDemandUnits": 377,
+          "fulfilledDemandUnits": 377,
+          "serviceLevelPercent": 100.0,
+          "unfulfilledDemandUnits": 0,
+          "unfulfilledDemandRatePercent": 0.0,
+          "totalOperationalCostIdr": 800000,
+          "operationalCostPerDemandUnitIdr": 2122.02,
+          "operationalCostToDemandValuePercent": 10.61008,
+          "costBreakdownIdr": {
+            "purchase": 800000,
+            "holding": 0,
+            "stockout": 0,
+            "waste": 0
+          },
+          "constraintViolationRatePercent": 0.0,
+          "constraintChecks": 36,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "EVALUATED",
+          "holding": "NOT_EVALUATED_NO_RATE",
+          "stockout": "UNFULFILLED_CUPS_X_FIXED_SELLING_PRICE",
+          "waste": "NOT_EVALUATED_NO_SHELF_LIFE"
+        }
+      },
+      "contextualDelta": {
+        "serviceLevelPercentagePoints": 27.311828,
+        "unfulfilledDemandRatePercentagePoints": -27.311828,
+        "operationalCostToDemandValuePercentagePoints": -15.260663,
+        "causalImprovementClaimAllowed": false
+      }
+    },
+    {
+      "pairId": "B02-impossible",
+      "archetype": "Impossible input or procurement condition",
+      "legacyRecovery": {
+        "sourceCaseId": "C2",
+        "sourceVariant": null,
+        "decisionStatus": "no-feasible-plan",
+        "metrics": {
+          "actualDemandUnits": 3945,
+          "fulfilledDemandUnits": 0,
+          "serviceLevelPercent": 0.0,
+          "unfulfilledDemandUnits": 3945,
+          "unfulfilledDemandRatePercent": 100.0,
+          "totalOperationalCostIdr": 224070000,
+          "operationalCostPerDemandUnitIdr": 56798.48,
+          "operationalCostToDemandValuePercent": 100.0,
+          "costBreakdownIdr": {
+            "purchase": null,
+            "holding": null,
+            "stockout": 224070000,
+            "waste": null
+          },
+          "constraintViolationRatePercent": null,
+          "constraintChecks": 0,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "NOT_MODELED",
+          "holding": "NOT_MODELED",
+          "stockout": "SALES_EXPOSURE_RISK_PROXY",
+          "waste": "NOT_MODELED"
+        }
+      },
+      "inventory": {
+        "sourceCaseId": "I02-procurement-impossible",
+        "sourceVariant": null,
+        "decisionStatus": "PARTIAL",
+        "metrics": {
+          "actualDemandUnits": 384,
+          "fulfilledDemandUnits": 0,
+          "serviceLevelPercent": 0.0,
+          "unfulfilledDemandUnits": 384,
+          "unfulfilledDemandRatePercent": 100.0,
+          "totalOperationalCostIdr": 7680000,
+          "operationalCostPerDemandUnitIdr": 20000.0,
+          "operationalCostToDemandValuePercent": 100.0,
+          "costBreakdownIdr": {
+            "purchase": 0,
+            "holding": 0,
+            "stockout": 7680000,
+            "waste": 0
+          },
+          "constraintViolationRatePercent": null,
+          "constraintChecks": 0,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "EVALUATED",
+          "holding": "NOT_EVALUATED_NO_RATE",
+          "stockout": "UNFULFILLED_CUPS_X_FIXED_SELLING_PRICE",
+          "waste": "NOT_EVALUATED_NO_SHELF_LIFE"
+        }
+      },
+      "contextualDelta": {
+        "serviceLevelPercentagePoints": 0.0,
+        "unfulfilledDemandRatePercentagePoints": 0.0,
+        "operationalCostToDemandValuePercentagePoints": 0.0,
+        "causalImprovementClaimAllowed": false
+      }
+    },
+    {
+      "pairId": "B03-heavy-pressure",
+      "archetype": "Heavy hazard or operational constraint pressure",
+      "legacyRecovery": {
+        "sourceCaseId": "C5",
+        "sourceVariant": "Q4",
+        "decisionStatus": "partial",
+        "metrics": {
+          "actualDemandUnits": 2325,
+          "fulfilledDemandUnits": 1545,
+          "serviceLevelPercent": 66.451613,
+          "unfulfilledDemandUnits": 780,
+          "unfulfilledDemandRatePercent": 33.548387,
+          "totalOperationalCostIdr": 38755000,
+          "operationalCostPerDemandUnitIdr": 16668.82,
+          "operationalCostToDemandValuePercent": 31.347569,
+          "costBreakdownIdr": {
+            "purchase": null,
+            "holding": null,
+            "stockout": 38755000,
+            "waste": null
+          },
+          "constraintViolationRatePercent": 0.0,
+          "constraintChecks": 231,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "NOT_MODELED",
+          "holding": "NOT_MODELED",
+          "stockout": "SALES_EXPOSURE_RISK_PROXY",
+          "waste": "NOT_MODELED"
+        }
+      },
+      "inventory": {
+        "sourceCaseId": "I03-heavy-constraint-pressure",
+        "sourceVariant": "heavy",
+        "decisionStatus": "PARTIAL",
+        "metrics": {
+          "actualDemandUnits": 425,
+          "fulfilledDemandUnits": 205,
+          "serviceLevelPercent": 48.235294,
+          "unfulfilledDemandUnits": 220,
+          "unfulfilledDemandRatePercent": 51.764706,
+          "totalOperationalCostIdr": 4880000,
+          "operationalCostPerDemandUnitIdr": 11482.35,
+          "operationalCostToDemandValuePercent": 57.411765,
+          "costBreakdownIdr": {
+            "purchase": 480000,
+            "holding": 0,
+            "stockout": 4400000,
+            "waste": 0
+          },
+          "constraintViolationRatePercent": 0.0,
+          "constraintChecks": 43,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "EVALUATED",
+          "holding": "NOT_EVALUATED_NO_RATE",
+          "stockout": "UNFULFILLED_CUPS_X_FIXED_SELLING_PRICE",
+          "waste": "NOT_EVALUATED_NO_SHELF_LIFE"
+        }
+      },
+      "contextualDelta": {
+        "serviceLevelPercentagePoints": -18.216319,
+        "unfulfilledDemandRatePercentagePoints": 18.216319,
+        "operationalCostToDemandValuePercentagePoints": 26.064196,
+        "causalImprovementClaimAllowed": false
+      }
+    }
+  ],
+  "matchedSensitivity": {
+    "design": "fixed ground truth within each track; control then stress",
+    "legacy": {
+      "control": {
+        "sourceCaseId": "C5",
+        "sourceVariant": "Q1",
+        "decisionStatus": "partial",
+        "metrics": {
+          "actualDemandUnits": 2325,
+          "fulfilledDemandUnits": 1690,
+          "serviceLevelPercent": 72.688172,
+          "unfulfilledDemandUnits": 635,
+          "unfulfilledDemandRatePercent": 27.311828,
+          "totalOperationalCostIdr": 32205000,
+          "operationalCostPerDemandUnitIdr": 13851.61,
+          "operationalCostToDemandValuePercent": 26.049503,
+          "costBreakdownIdr": {
+            "purchase": null,
+            "holding": null,
+            "stockout": 32205000,
+            "waste": null
+          },
+          "constraintViolationRatePercent": 0.0,
+          "constraintChecks": 245,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "NOT_MODELED",
+          "holding": "NOT_MODELED",
+          "stockout": "SALES_EXPOSURE_RISK_PROXY",
+          "waste": "NOT_MODELED"
+        }
+      },
+      "stress": {
+        "sourceCaseId": "C5",
+        "sourceVariant": "Q4",
+        "decisionStatus": "partial",
+        "metrics": {
+          "actualDemandUnits": 2325,
+          "fulfilledDemandUnits": 1545,
+          "serviceLevelPercent": 66.451613,
+          "unfulfilledDemandUnits": 780,
+          "unfulfilledDemandRatePercent": 33.548387,
+          "totalOperationalCostIdr": 38755000,
+          "operationalCostPerDemandUnitIdr": 16668.82,
+          "operationalCostToDemandValuePercent": 31.347569,
+          "costBreakdownIdr": {
+            "purchase": null,
+            "holding": null,
+            "stockout": 38755000,
+            "waste": null
+          },
+          "constraintViolationRatePercent": 0.0,
+          "constraintChecks": 231,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "NOT_MODELED",
+          "holding": "NOT_MODELED",
+          "stockout": "SALES_EXPOSURE_RISK_PROXY",
+          "waste": "NOT_MODELED"
+        }
+      },
+      "delta": {
+        "serviceLevelPercentagePoints": -6.236559,
+        "unfulfilledDemandUnits": 145,
+        "totalOperationalCostIdr": 6550000
+      }
+    },
+    "inventory": {
+      "control": {
+        "sourceCaseId": "I03-heavy-constraint-pressure",
+        "sourceVariant": "control",
+        "decisionStatus": "COMPLETE",
+        "metrics": {
+          "actualDemandUnits": 425,
+          "fulfilledDemandUnits": 424,
+          "serviceLevelPercent": 99.764706,
+          "unfulfilledDemandUnits": 1,
+          "unfulfilledDemandRatePercent": 0.235294,
+          "totalOperationalCostIdr": 720000,
+          "operationalCostPerDemandUnitIdr": 1694.12,
+          "operationalCostToDemandValuePercent": 8.470588,
+          "costBreakdownIdr": {
+            "purchase": 700000,
+            "holding": 0,
+            "stockout": 20000,
+            "waste": 0
+          },
+          "constraintViolationRatePercent": 0.0,
+          "constraintChecks": 36,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "EVALUATED",
+          "holding": "NOT_EVALUATED_NO_RATE",
+          "stockout": "UNFULFILLED_CUPS_X_FIXED_SELLING_PRICE",
+          "waste": "NOT_EVALUATED_NO_SHELF_LIFE"
+        }
+      },
+      "stress": {
+        "sourceCaseId": "I03-heavy-constraint-pressure",
+        "sourceVariant": "heavy",
+        "decisionStatus": "PARTIAL",
+        "metrics": {
+          "actualDemandUnits": 425,
+          "fulfilledDemandUnits": 205,
+          "serviceLevelPercent": 48.235294,
+          "unfulfilledDemandUnits": 220,
+          "unfulfilledDemandRatePercent": 51.764706,
+          "totalOperationalCostIdr": 4880000,
+          "operationalCostPerDemandUnitIdr": 11482.35,
+          "operationalCostToDemandValuePercent": 57.411765,
+          "costBreakdownIdr": {
+            "purchase": 480000,
+            "holding": 0,
+            "stockout": 4400000,
+            "waste": 0
+          },
+          "constraintViolationRatePercent": 0.0,
+          "constraintChecks": 43,
+          "constraintViolations": 0
+        },
+        "coverage": {
+          "purchase": "EVALUATED",
+          "holding": "NOT_EVALUATED_NO_RATE",
+          "stockout": "UNFULFILLED_CUPS_X_FIXED_SELLING_PRICE",
+          "waste": "NOT_EVALUATED_NO_SHELF_LIFE"
+        }
+      },
+      "delta": {
+        "serviceLevelPercentagePoints": -51.529412,
+        "unfulfilledDemandUnits": 219,
+        "totalOperationalCostIdr": 4160000
+      }
+    },
+    "crossTrackDeltaComparisonIsCausal": false
+  },
+  "interpretation": [
+    "Scenario archetypes and formulas are aligned, but source domains and demand units differ.",
+    "Absolute demand and IDR totals must not be subtracted across tracks.",
+    "Contextual deltas are descriptive normalized rates, not causal product improvement.",
+    "Legacy operational cost contains only the sales-exposure stockout proxy.",
+    "Inventory holding and waste costs remain unevaluated because their source data is absent.",
+    "CVR is null when no decision exists and zero constraints can be evaluated."
+  ]
+}

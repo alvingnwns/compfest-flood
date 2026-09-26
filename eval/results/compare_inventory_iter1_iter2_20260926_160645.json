@@ -1,0 +1,230 @@
+{
+  "comparison": "inventory same-track iteration comparison",
+  "generatedAt": "2026-09-26T09:06:45.529174Z",
+  "beforeArtifact": "C:/Users/leona/OneDrive/Documents/ORCA/compfest-flood/eval/results/inventory_iter1_20260926_144839.json",
+  "afterArtifact": "eval/results/inventory_iter2_20260926_160545.json",
+  "suiteVersion": "inventory-decision-v1.1",
+  "dataset": {
+    "path": "be/data/new_data/aruna_juice.csv",
+    "sha256": "f6461f8934d5a879c0bdc0fbd07d4dbbac9209139ce03e65637c4f0f9561cac0"
+  },
+  "primaryRuns": [
+    "I01-normal-demand/primary",
+    "I02-procurement-impossible/primary",
+    "I03-heavy-constraint-pressure/heavy"
+  ],
+  "aggregate": {
+    "before": {
+      "actualDemandCups": 1186,
+      "fulfilledDemandCups": 563,
+      "serviceLevelPercent": 47.470489,
+      "unfulfilledDemandCups": 623,
+      "totalOperationalCostIdr": 13740000,
+      "constraintViolations": 0,
+      "constraintChecks": 79,
+      "feasibleFulfillmentPercent": 96.239316,
+      "serviceRegretCups": 22,
+      "operationalCostRegretIdr": 740000
+    },
+    "after": {
+      "actualDemandCups": 1186,
+      "fulfilledDemandCups": 582,
+      "serviceLevelPercent": 49.072513,
+      "unfulfilledDemandCups": 604,
+      "totalOperationalCostIdr": 13360000,
+      "constraintViolations": 0,
+      "constraintChecks": 79,
+      "feasibleFulfillmentPercent": 99.487179,
+      "serviceRegretCups": 3,
+      "operationalCostRegretIdr": 360000
+    },
+    "delta": {
+      "fulfilledDemandCups": 19,
+      "serviceLevelPercent": 1.602024,
+      "unfulfilledDemandCups": -19,
+      "totalOperationalCostIdr": -380000,
+      "constraintViolations": 0,
+      "feasibleFulfillmentPercent": 3.247863,
+      "serviceRegretCups": -19,
+      "operationalCostRegretIdr": -380000
+    }
+  },
+  "runs": [
+    {
+      "runId": "I01-normal-demand/primary",
+      "actualDemandCups": 377,
+      "oracleMaximumFulfilledCups": 377,
+      "oracleMinimumCostIdr": 500000,
+      "before": {
+        "planOutcome": "COMPLETE",
+        "fulfilledDemandCups": 377,
+        "serviceLevelPercent": 100.0,
+        "unfulfilledDemandCups": 0,
+        "totalOperationalCostIdr": 800000,
+        "purchaseCostIdr": 800000,
+        "constraintViolations": 0,
+        "constraintChecks": 36,
+        "feasibleFulfillmentPercent": 100.0,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 300000
+      },
+      "after": {
+        "planOutcome": "COMPLETE",
+        "fulfilledDemandCups": 377,
+        "serviceLevelPercent": 100.0,
+        "unfulfilledDemandCups": 0,
+        "totalOperationalCostIdr": 800000,
+        "purchaseCostIdr": 800000,
+        "constraintViolations": 0,
+        "constraintChecks": 36,
+        "feasibleFulfillmentPercent": 100.0,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 300000
+      },
+      "delta": {
+        "fulfilledDemandCups": 0,
+        "serviceLevelPercent": 0.0,
+        "unfulfilledDemandCups": 0,
+        "totalOperationalCostIdr": 0,
+        "purchaseCostIdr": 0,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 0,
+        "feasibleFulfillmentPercentagePoints": 0.0
+      },
+      "decisionChanged": false
+    },
+    {
+      "runId": "I02-procurement-impossible/primary",
+      "actualDemandCups": 384,
+      "oracleMaximumFulfilledCups": 0,
+      "oracleMinimumCostIdr": 7680000,
+      "before": {
+        "planOutcome": "PARTIAL",
+        "fulfilledDemandCups": 0,
+        "serviceLevelPercent": 0.0,
+        "unfulfilledDemandCups": 384,
+        "totalOperationalCostIdr": 7680000,
+        "purchaseCostIdr": 0,
+        "constraintViolations": 0,
+        "constraintChecks": 0,
+        "feasibleFulfillmentPercent": null,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 0
+      },
+      "after": {
+        "planOutcome": "PARTIAL",
+        "fulfilledDemandCups": 0,
+        "serviceLevelPercent": 0.0,
+        "unfulfilledDemandCups": 384,
+        "totalOperationalCostIdr": 7680000,
+        "purchaseCostIdr": 0,
+        "constraintViolations": 0,
+        "constraintChecks": 0,
+        "feasibleFulfillmentPercent": null,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 0
+      },
+      "delta": {
+        "fulfilledDemandCups": 0,
+        "serviceLevelPercent": 0.0,
+        "unfulfilledDemandCups": 0,
+        "totalOperationalCostIdr": 0,
+        "purchaseCostIdr": 0,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 0
+      },
+      "decisionChanged": false
+    },
+    {
+      "runId": "I03-heavy-constraint-pressure/control",
+      "actualDemandCups": 425,
+      "oracleMaximumFulfilledCups": 425,
+      "oracleMinimumCostIdr": 520000,
+      "before": {
+        "planOutcome": "COMPLETE",
+        "fulfilledDemandCups": 424,
+        "serviceLevelPercent": 99.764706,
+        "unfulfilledDemandCups": 1,
+        "totalOperationalCostIdr": 720000,
+        "purchaseCostIdr": 700000,
+        "constraintViolations": 0,
+        "constraintChecks": 36,
+        "feasibleFulfillmentPercent": 99.764706,
+        "serviceRegretCups": 1,
+        "operationalCostRegretIdr": 200000
+      },
+      "after": {
+        "planOutcome": "COMPLETE",
+        "fulfilledDemandCups": 424,
+        "serviceLevelPercent": 99.764706,
+        "unfulfilledDemandCups": 1,
+        "totalOperationalCostIdr": 720000,
+        "purchaseCostIdr": 700000,
+        "constraintViolations": 0,
+        "constraintChecks": 36,
+        "feasibleFulfillmentPercent": 99.764706,
+        "serviceRegretCups": 1,
+        "operationalCostRegretIdr": 200000
+      },
+      "delta": {
+        "fulfilledDemandCups": 0,
+        "serviceLevelPercent": 0.0,
+        "unfulfilledDemandCups": 0,
+        "totalOperationalCostIdr": 0,
+        "purchaseCostIdr": 0,
+        "serviceRegretCups": 0,
+        "operationalCostRegretIdr": 0,
+        "feasibleFulfillmentPercentagePoints": 0.0
+      },
+      "decisionChanged": false
+    },
+    {
+      "runId": "I03-heavy-constraint-pressure/heavy",
+      "actualDemandCups": 425,
+      "oracleMaximumFulfilledCups": 208,
+      "oracleMinimumCostIdr": 4820000,
+      "before": {
+        "planOutcome": "PARTIAL",
+        "fulfilledDemandCups": 186,
+        "serviceLevelPercent": 43.764706,
+        "unfulfilledDemandCups": 239,
+        "totalOperationalCostIdr": 5260000,
+        "purchaseCostIdr": 480000,
+        "constraintViolations": 0,
+        "constraintChecks": 43,
+        "feasibleFulfillmentPercent": 89.423077,
+        "serviceRegretCups": 22,
+        "operationalCostRegretIdr": 440000
+      },
+      "after": {
+        "planOutcome": "PARTIAL",
+        "fulfilledDemandCups": 205,
+        "serviceLevelPercent": 48.235294,
+        "unfulfilledDemandCups": 220,
+        "totalOperationalCostIdr": 4880000,
+        "purchaseCostIdr": 480000,
+        "constraintViolations": 0,
+        "constraintChecks": 43,
+        "feasibleFulfillmentPercent": 98.557692,
+        "serviceRegretCups": 3,
+        "operationalCostRegretIdr": 60000
+      },
+      "delta": {
+        "fulfilledDemandCups": 19,
+        "serviceLevelPercent": 4.470588,
+        "unfulfilledDemandCups": -19,
+        "totalOperationalCostIdr": -380000,
+        "purchaseCostIdr": 0,
+        "serviceRegretCups": -19,
+        "operationalCostRegretIdr": -380000,
+        "feasibleFulfillmentPercentagePoints": 9.134615
+      },
+      "decisionChanged": true
+    }
+  ],
+  "guards": [
+    "Identical suite, suiteVersion, dataset hash, case runs and daily actual demand are asserted.",
+    "Oracle bounds come from case inputs and actual demand only and never feed decisions.",
+    "Holding and waste remain unevaluated in both artifacts."
+  ]
+}

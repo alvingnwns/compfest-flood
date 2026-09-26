@@ -8,6 +8,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from eval.adapter import canonical_decision_hash, load_dataset, run_system
+from eval.oracle import oracle_diagnostics
 from eval.simulator import simulate
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +22,8 @@ def _single_case_result(
 ) -> dict[str, Any]:
     output = run_system(case, defaults, frame)
     simulation = simulate(output)
+    # The hindsight oracle runs only after the system decision is fixed.
+    oracle = oracle_diagnostics(output, simulation["metrics"])
     expected = set(case["expectedPlanOutcomes"])
     constraint_expectation = case.get("constraintEvaluation", "REQUIRED")
     actual_cvr = simulation["metrics"]["constraintViolationRatePercent"]
@@ -46,9 +49,12 @@ def _single_case_result(
             "recommendationCount": len(output["decisions"]),
             "totalEstimatedCostIdr": output["totalEstimatedCostIdr"],
             "limitations": output["limitations"],
+            "optimizerVersion": output["optimizerVersion"],
+            "objectiveStages": output["objectiveStages"],
             "canonicalDecisionSha256": canonical_decision_hash(output),
         },
         **simulation,
+        "oracle": oracle,
     }
 
 
@@ -128,6 +134,9 @@ def run_suite(
         case["metrics"]["costBreakdownIdr"]["stockout"] for case in cases
     )
     waste_cost = sum(case["metrics"]["costBreakdownIdr"]["waste"] for case in cases)
+    oracle_fulfilled = sum(case["oracle"]["oracleMaximumFulfilledCups"] for case in cases)
+    total_cost = purchase_cost + holding_cost + stockout_cost + waste_cost
+    oracle_min_cost = sum(case["oracle"]["oracleMinimumCostIdr"] for case in cases)
     result = {
         "suite": "ARUNA Inventory Decision Evaluation",
         "suiteVersion": specification["suiteVersion"],
@@ -143,10 +152,7 @@ def run_suite(
             if total_demand
             else 100.0,
             "unfulfilledDemandCups": total_demand - total_fulfilled,
-            "totalOperationalCostIdr": purchase_cost
-            + holding_cost
-            + stockout_cost
-            + waste_cost,
+            "totalOperationalCostIdr": total_cost,
             "costBreakdownIdr": {
                 "purchase": purchase_cost,
                 "holding": holding_cost,
@@ -184,6 +190,16 @@ def run_suite(
                 6,
             ),
             "note": "Forecast error is diagnostic and is not an operational success metric.",
+        },
+        "oracleDiagnostics": {
+            "oracleMaximumFulfilledCups": oracle_fulfilled,
+            "feasibleFulfillmentPercent": round(total_fulfilled / oracle_fulfilled * 100, 6)
+            if oracle_fulfilled
+            else None,
+            "serviceRegretCups": oracle_fulfilled - total_fulfilled,
+            "oracleMinimumCostIdr": oracle_min_cost,
+            "operationalCostRegretIdr": total_cost - oracle_min_cost,
+            "note": "Hindsight bounds use actual demand after decisions are fixed; they are not decision inputs.",
         },
         "cases": cases,
         "limitations": [

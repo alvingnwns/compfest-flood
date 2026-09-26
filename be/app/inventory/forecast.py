@@ -75,6 +75,19 @@ def _load_artifact(settings: Settings) -> tuple[dict[str, Any], list[Any]]:
     return manifest, [joblib.load(path) for path in model_paths]
 
 
+def validation_mae_by_horizon(settings: Settings, *, fallback: bool = False) -> list[float]:
+    """Validation-split MAE per horizon in cups; never the test split, which is frozen for reporting.
+
+    Fallback forecasts have no validated error, so the persistence baseline MAE is the proxy.
+    """
+    manifest_path = settings.inventory_model_dir / "manifest.json"
+    if not manifest_path.exists():
+        raise ApiError(409, "FORECAST_UNAVAILABLE", "Artifact forecast belum tersedia.")
+    metrics = json.loads(manifest_path.read_text(encoding="utf-8"))["metrics"]
+    key = "persistenceMae" if fallback else "xgboostMae"
+    return [float(metrics[f"d{horizon}"]["validation"][key]) for horizon in (1, 2, 3)]
+
+
 def predict_products(
     settings: Settings,
     *,

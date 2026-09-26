@@ -173,7 +173,7 @@ def build_bridge(legacy_path: Path, inventory_path: Path) -> dict[str, Any]:
                 "pairId": pair_id,
                 "archetype": archetype,
                 "legacyRecovery": old,
-                "inventoryIteration1": new,
+                "inventory": new,
                 "contextualDelta": {
                     "serviceLevelPercentagePoints": round(
                         new_metrics["serviceLevelPercent"]
@@ -221,11 +221,12 @@ def build_bridge(legacy_path: Path, inventory_path: Path) -> dict[str, Any]:
         }
 
     return {
-        "bridgeVersion": "legacy-inventory-context-v2",
+        "bridgeVersion": "legacy-inventory-context-v3",
         "generatedAt": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "experiment": {
             "baseline": "legacy ARUNA recovery without XGBoost forecast or Qwen reasoning",
-            "iteration1": "new ARUNA inventory risk, XGBoost forecast, and procurement optimization",
+            "inventory": "new ARUNA inventory risk, XGBoost forecast, and procurement optimization",
+            "inventoryLabel": inventory["label"],
             "legacyOptimizer": "deterministic CP-SAT/OR-Tools",
             "comparisonType": "formula-aligned contextual bridge",
         },

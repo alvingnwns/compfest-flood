@@ -15,9 +15,9 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 from app.core.config import Settings
-from app.inventory.forecast import predict_products
+from app.inventory.forecast import predict_products, validation_mae_by_horizon
 from app.inventory.optimization import optimize_procurement
-from app.inventory.risk import classify_risk
+from app.inventory.risk import assign_priorities, classify_risk, project_daily
 
 BASE_PER_KG = 1_000_000
 
@@ -83,25 +83,25 @@ def run_system(
     safety_kg = float(case.get("safetyStockKg", defaults["safetyStockKg"]))
     capacity_kg = float(case.get("storageCapacityKg", defaults["storageCapacityKg"]))
     recipe_kg = float(defaults["recipeKgPerCup"])
+    recipe_base = round(recipe_kg * BASE_PER_KG)
+    horizon_mae = validation_mae_by_horizon(settings)
     risks = []
     for product_id in product_ids:
         ingredient_id = ingredient_by_product[product_id]
-        daily_required = [
-            round(value * recipe_kg * BASE_PER_KG) for value in predictions[product_id]
-        ]
+        daily_required = [value * recipe_base for value in predictions[product_id]]
         current = round(initial_kg * BASE_PER_KG)
-        running = current
-        stockout_date = None
-        for horizon, required in enumerate(daily_required, start=1):
-            running -= required
-            if running < 0 and stockout_date is None:
-                stockout_date = as_of + timedelta(days=horizon)
+        projection = project_daily(current_base=current, daily_required=daily_required)
+        stockout_date = (
+            as_of + timedelta(days=projection["firstStockoutDay"])
+            if projection["firstStockoutDay"]
+            else None
+        )
         required = sum(daily_required)
         safety = round(safety_kg * BASE_PER_KG)
         level, reason, reason_codes = classify_risk(
             current_base=current,
             total_required_base=required,
-            ending_base=running,
+            ending_base=projection["ending"],
             safety_stock_base=safety,
             projected_stockout_date=stockout_date,
         )
@@ -119,9 +119,15 @@ def run_system(
                     "required": required,
                     "safety": safety,
                     "storageCapacity": round(capacity_kg * BASE_PER_KG),
+                    "dailyRequired": daily_required,
+                    "dailyShortfall": projection["dailyShortfall"],
+                    "firstStockoutDay": projection["firstStockoutDay"],
+                    "lostSalesIdrPerBase": int(defaults["salePriceIdr"]) / recipe_base,
+                    "forecastUncertaintyBase": round(sum(horizon_mae) * recipe_base),
                 },
             }
         )
+    assign_priorities(risks)
 
     offer_templates = case.get("offers", defaults["offers"])
     offers = []
@@ -177,6 +183,9 @@ def run_system(
         "predictions": predictions,
         "actualDemand": _actual(frame, product_ids, as_of),
         "risks": risks,
+        "offers": offers,
+        "optimizerVersion": optimization["optimizerVersion"],
+        "objectiveStages": optimization["objectiveStages"],
         "optimizerStatus": optimization["optimizerStatus"],
         "planOutcome": optimization["planOutcome"],
         "solverStatusDetail": optimization["solverStatusDetail"],
@@ -186,7 +195,7 @@ def run_system(
         "input": {
             "initialStockBase": round(initial_kg * BASE_PER_KG),
             "storageCapacityBase": round(capacity_kg * BASE_PER_KG),
-            "recipeBasePerCup": round(recipe_kg * BASE_PER_KG),
+            "recipeBasePerCup": recipe_base,
             "budgetIdr": int(case.get("budgetIdr", defaults["budgetIdr"])),
             "salePriceIdr": int(defaults["salePriceIdr"]),
             "stockoutCostIdrPerCup": int(defaults["stockoutCostIdrPerCup"]),

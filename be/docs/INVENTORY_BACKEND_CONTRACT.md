@@ -247,13 +247,22 @@ Zero stock and zero requirement is not `STOCKOUT`. Confirmed physical inbound is
 
 ### `GET /api/procurement/recommendations`
 
-The backend reuses a persisted nonstale plan for identical inventory, forecast, supplier/constraint versions, and budget. Otherwise it runs the bounded OR-Tools model. It never auto-approves, purchases, or receives goods.
+The backend reuses a persisted nonstale plan for identical optimizer version, inventory, forecast, supplier/constraint versions, and budget. Otherwise it runs the bounded OR-Tools model. It never auto-approves, purchases, or receives goods.
 
 Response required fields are `generatedAt`, `optimizerStatus`, and `recommendations`. `optimizerStatus` is `OPTIMAL | FEASIBLE | INFEASIBLE | ERROR`. Each recommendation contains ingredient, unit, stock/requirement/safety/projection, risk, recommended order quantity/date, supplier, `PENDING | APPROVED | REJECTED` status, and explanation `{ text, source }`, where source is `QWEN | FALLBACK`.
 
 Optional plan metadata includes plan ID, input versions, staleness, `COMPLETE | PARTIAL | INFEASIBLE` outcome, solver detail, total integer IDR cost, limitations, line ETA/cost/reason codes, and unmet quantity. A solver optimum may still be partial when the modeled objective permits shortage with penalty.
 
-The model enforces configured shared budget, pack/MOQ, lead time, supplier capacity, and storage capacity. Approved outstanding quantities reserve decision budget but remain unconfirmed and do not count as stock or inbound.
+The model enforces configured shared budget, pack/MOQ, lead time, supplier capacity, and storage capacity. Approved outstanding quantities reserve decision budget but remain unconfirmed and do not count as stock or inbound in risk views.
+
+Since optimizer version `time-indexed-lexicographic-v2` (Iteration 2):
+
+- Each ingredient has a daily D+1..D+3 inventory balance. An offer is credited only on the WIB business date of `generatedAt + leadTimeHours`; offers landing after D+3 are not eligible. Approved outstanding lines are credited on their `expectedArrivalAt` date (overdue lines on D+1) solely to avoid duplicate orders, and are flagged `APPROVED_QUANTITY_UNCONFIRMED:<ingredientId>:<baseQuantity>`.
+- Storage is checked without crediting forecast consumption: current stock plus unconfirmed inbound plus purchases arrived so far never exceeds capacity, even if forecast demand does not materialize.
+- Objectives are solved in order, each stage fixing the previous optimum: lost-sales value of daily shortage, a priority/day urgency tie-break, ending safety-stock deficit, then purchase cost.
+- `unmetQuantity` is the ingredient's remaining daily shortage plus its ending safety-stock deficit. Shortage before the earliest eligible arrival is reported as `SHORTAGE_BEFORE_EARLIEST_ARRIVAL:<ingredientId>:<baseQuantity>`; approved lines arriving after D+3 as `APPROVED_ARRIVAL_OUTSIDE_HORIZON:<ingredientId>:<baseQuantity>`.
+- Recommendations are ordered most urgent first by a deterministic internal priority rank (first stockout day, lost-sales value of shortfall, shortfall share, D+1 requirement value, validation-MAE uncertainty). The rank is not a public field and risk-level enums are unchanged.
+- `solverStatusDetail` is `OPTIMAL` when every stage proves optimality; otherwise it lists each stage status, for example `SERVICE=OPTIMAL;URGENCY=FEASIBLE`, and `optimizerStatus` is `FEASIBLE`.
 
 ### `POST /api/procurement/recommendations/{recommendationId}/decision`
 
