@@ -28,5 +28,7 @@ Thumbs.db
 tests/
 scripts/
 docs/
-artifacts/
+artifacts/*
+!artifacts/inventory/
+!artifacts/inventory/**
 data/

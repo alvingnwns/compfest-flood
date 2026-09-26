@@ -7,6 +7,7 @@ WORKDIR /app
 
 COPY pyproject.toml ./
 COPY app ./app
+COPY artifacts/inventory ./artifacts/inventory
 
 RUN pip install --no-cache-dir . \
     && useradd --create-home --uid 10001 ARUNA \

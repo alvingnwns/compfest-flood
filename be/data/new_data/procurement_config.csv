@@ -1,0 +1,9 @@
+config_key,value,unit,description,is_synthetic
+plan_budget,2000000,IDR,Budget maksimum satu rencana procurement,true
+forecast_horizon,3,day,Horizon forecast dan planning,true
+safety_stock_factor,0.5,daily_mean_28d,Safety stock dikali kebutuhan harian rata-rata 28 hari,true
+fruit_total_capacity,80,kg,Kapasitas gabungan seluruh buah,true
+shipping_cost,0,IDR,Ongkir belum dimodelkan,true
+initial_incoming_stock,0,mixed,Tidak ada incoming stock pada seed,true
+initial_backorder,0,mixed,Tidak ada backorder pada seed,true
+business_timezone,Asia/Jakarta,iana,Waktu bisnis GMT+7,false

@@ -1,0 +1,16 @@
+ingredient_id,ingredient_name,category,unit,initial_stock,unit_cost_idr,storage_capacity,shelf_life_days,is_synthetic
+I001,Buah Naga,fruit,kg,3,52000,8,4,true
+I002,Semangka,fruit,kg,3,16000,8,5,true
+I003,Jambu,fruit,kg,3,26000,8,5,true
+I004,Pisang,fruit,kg,2,24000,5,4,true
+I005,Nanas,fruit,kg,5,22000,12,5,true
+I006,Melon,fruit,kg,3,22000,8,5,true
+I007,Sirsak,fruit,kg,5,38000,12,4,true
+I008,Alpukat,fruit,kg,4,48000,10,4,true
+I009,Stroberi,fruit,kg,2,70000,10,3,true
+I010,Jeruk,fruit,kg,3,32000,8,7,true
+I011,Mangga,fruit,kg,5,38000,12,5,true
+I026,Set Cup Tutup Sedotan,packaging,pcs,250,1200,1000,365,true
+I027,Gula,dry_good,kg,5,18000,20,365,true
+I028,Es,consumable,kg,20,3000,40,2,true
+I029,Air Minum,consumable,l,30,1000,100,365,true

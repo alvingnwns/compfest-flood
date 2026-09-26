@@ -1,0 +1,321 @@
+{
+  "suite": "ARUNA Inventory Decision Evaluation",
+  "suiteVersion": "inventory-decision-v1.1",
+  "label": "metric-corrected-before-iteration",
+  "generatedAt": "2026-09-26T07:30:00.054063Z",
+  "dataset": {
+    "path": "be/data/new_data/aruna_juice.csv",
+    "sha256": "f6461f8934d5a879c0bdc0fbd07d4dbbac9209139ce03e65637c4f0f9561cac0"
+  },
+  "caseCount": 3,
+  "passedCases": 3,
+  "aggregate": {
+    "actualDemandCups": 1186,
+    "fulfilledDemandCups": 563,
+    "serviceLevelPercent": 47.470489,
+    "unfulfilledDemandCups": 623,
+    "totalOperationalCostIdr": 13740000,
+    "costBreakdownIdr": {
+      "purchase": 1280000,
+      "holding": 0,
+      "stockout": 12460000,
+      "waste": 0
+    },
+    "constraintViolationRatePercent": 0.0,
+    "constraintChecks": 80,
+    "constraintViolations": 0
+  },
+  "diagnosticsOnly": {
+    "forecastMaeCups": 2.686869,
+    "forecastRmseCups": 3.609751,
+    "note": "Forecast error is diagnostic and is not an operational success metric."
+  },
+  "cases": [
+    {
+      "caseId": "I01-normal-demand",
+      "category": "normal-demand",
+      "passed": true,
+      "expectation": {
+        "planOutcomeIn": [
+          "COMPLETE",
+          "PARTIAL"
+        ],
+        "constraintViolationRatePercent": 0
+      },
+      "decision": {
+        "optimizerStatus": "OPTIMAL",
+        "planOutcome": "COMPLETE",
+        "solverStatusDetail": "OPTIMAL",
+        "recommendationCount": 5,
+        "totalEstimatedCostIdr": 800000,
+        "limitations": [],
+        "canonicalDecisionSha256": "031327005d5226e70781d0d4440c5be6b6352d7d3a0e94c561bebd016a463461"
+      },
+      "daily": [
+        {
+          "day": 1,
+          "demandedCups": 120,
+          "fulfilledCups": 120,
+          "unfulfilledCups": 0,
+          "endingStockKg": 120.0,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 2,
+          "demandedCups": 135,
+          "fulfilledCups": 135,
+          "unfulfilledCups": 0,
+          "endingStockKg": 86.25,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 3,
+          "demandedCups": 122,
+          "fulfilledCups": 122,
+          "unfulfilledCups": 0,
+          "endingStockKg": 55.75,
+          "holdingCostIdr": 0
+        }
+      ],
+      "endingStockBase": {
+        "ING-001": 4500000,
+        "ING-002": 3750000,
+        "ING-003": 5750000,
+        "ING-004": 7250000,
+        "ING-005": 1750000,
+        "ING-006": 5500000,
+        "ING-007": 7250000,
+        "ING-008": 2000000,
+        "ING-009": 5750000,
+        "ING-010": 4500000,
+        "ING-011": 7750000
+      },
+      "metrics": {
+        "actualDemandCups": 377,
+        "fulfilledDemandCups": 377,
+        "serviceLevelPercent": 100.0,
+        "unfulfilledDemandCups": 0,
+        "totalOperationalCostIdr": 800000,
+        "costBreakdownIdr": {
+          "purchase": 800000,
+          "holding": 0,
+          "stockout": 0,
+          "waste": 0
+        },
+        "constraintViolationRatePercent": 0.0,
+        "constraintChecks": 36,
+        "constraintViolations": []
+      },
+      "forecastDiagnostics": {
+        "observations": 33,
+        "maeCups": 2.181818,
+        "rmseCups": 2.828427
+      },
+      "waste": {
+        "evaluated": false,
+        "reason": "Shelf-life and lot-age data are unavailable; waste is not fabricated."
+      },
+      "holdingCost": {
+        "evaluated": false,
+        "rateIdrPerKgDay": 0,
+        "reason": "No validated holding-cost rate is available."
+      }
+    },
+    {
+      "caseId": "I02-procurement-impossible",
+      "category": "infeasible-procurement",
+      "passed": true,
+      "expectation": {
+        "planOutcomeIn": [
+          "PARTIAL"
+        ],
+        "constraintViolationRatePercent": 0
+      },
+      "decision": {
+        "optimizerStatus": "OPTIMAL",
+        "planOutcome": "PARTIAL",
+        "solverStatusDetail": "OPTIMAL",
+        "recommendationCount": 0,
+        "totalEstimatedCostIdr": 0,
+        "limitations": [
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-001",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-002",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-003",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-004",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-005",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-006",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-007",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-008",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-009",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-010",
+          "NO_ELIGIBLE_SUPPLIER_WITHIN_HORIZON:ING-011"
+        ],
+        "canonicalDecisionSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "daily": [
+        {
+          "day": 1,
+          "demandedCups": 102,
+          "fulfilledCups": 0,
+          "unfulfilledCups": 102,
+          "endingStockKg": 0.0,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 2,
+          "demandedCups": 126,
+          "fulfilledCups": 0,
+          "unfulfilledCups": 126,
+          "endingStockKg": 0.0,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 3,
+          "demandedCups": 156,
+          "fulfilledCups": 0,
+          "unfulfilledCups": 156,
+          "endingStockKg": 0.0,
+          "holdingCostIdr": 0
+        }
+      ],
+      "endingStockBase": {
+        "ING-001": 0,
+        "ING-002": 0,
+        "ING-003": 0,
+        "ING-004": 0,
+        "ING-005": 0,
+        "ING-006": 0,
+        "ING-007": 0,
+        "ING-008": 0,
+        "ING-009": 0,
+        "ING-010": 0,
+        "ING-011": 0
+      },
+      "metrics": {
+        "actualDemandCups": 384,
+        "fulfilledDemandCups": 0,
+        "serviceLevelPercent": 0.0,
+        "unfulfilledDemandCups": 384,
+        "totalOperationalCostIdr": 7680000,
+        "costBreakdownIdr": {
+          "purchase": 0,
+          "holding": 0,
+          "stockout": 7680000,
+          "waste": 0
+        },
+        "constraintViolationRatePercent": 0.0,
+        "constraintChecks": 1,
+        "constraintViolations": []
+      },
+      "forecastDiagnostics": {
+        "observations": 33,
+        "maeCups": 2.969697,
+        "rmseCups": 3.516196
+      },
+      "waste": {
+        "evaluated": false,
+        "reason": "Shelf-life and lot-age data are unavailable; waste is not fabricated."
+      },
+      "holdingCost": {
+        "evaluated": false,
+        "rateIdrPerKgDay": 0,
+        "reason": "No validated holding-cost rate is available."
+      }
+    },
+    {
+      "caseId": "I03-heavy-constraint-pressure",
+      "category": "heavy-constraint-pressure",
+      "passed": true,
+      "expectation": {
+        "planOutcomeIn": [
+          "PARTIAL"
+        ],
+        "constraintViolationRatePercent": 0
+      },
+      "decision": {
+        "optimizerStatus": "OPTIMAL",
+        "planOutcome": "PARTIAL",
+        "solverStatusDetail": "OPTIMAL",
+        "recommendationCount": 6,
+        "totalEstimatedCostIdr": 480000,
+        "limitations": [],
+        "canonicalDecisionSha256": "dcc5b61c68cec59eef3c4cbd6e26b923e2259486c0270dd8390b60dcc8048f33"
+      },
+      "daily": [
+        {
+          "day": 1,
+          "demandedCups": 164,
+          "fulfilledCups": 87,
+          "unfulfilledCups": 77,
+          "endingStockKg": 0.25,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 2,
+          "demandedCups": 142,
+          "fulfilledCups": 61,
+          "unfulfilledCups": 81,
+          "endingStockKg": 15.0,
+          "holdingCostIdr": 0
+        },
+        {
+          "day": 3,
+          "demandedCups": 119,
+          "fulfilledCups": 38,
+          "unfulfilledCups": 81,
+          "endingStockKg": 5.5,
+          "holdingCostIdr": 0
+        }
+      ],
+      "endingStockBase": {
+        "ING-001": 750000,
+        "ING-002": 2000000,
+        "ING-003": 1000000,
+        "ING-004": 0,
+        "ING-005": 0,
+        "ING-006": 750000,
+        "ING-007": 0,
+        "ING-008": 0,
+        "ING-009": 0,
+        "ING-010": 1000000,
+        "ING-011": 0
+      },
+      "metrics": {
+        "actualDemandCups": 425,
+        "fulfilledDemandCups": 186,
+        "serviceLevelPercent": 43.764706,
+        "unfulfilledDemandCups": 239,
+        "totalOperationalCostIdr": 5260000,
+        "costBreakdownIdr": {
+          "purchase": 480000,
+          "holding": 0,
+          "stockout": 4780000,
+          "waste": 0
+        },
+        "constraintViolationRatePercent": 0.0,
+        "constraintChecks": 43,
+        "constraintViolations": []
+      },
+      "forecastDiagnostics": {
+        "observations": 33,
+        "maeCups": 2.909091,
+        "rmseCups": 4.327502
+      },
+      "waste": {
+        "evaluated": false,
+        "reason": "Shelf-life and lot-age data are unavailable; waste is not fabricated."
+      },
+      "holdingCost": {
+        "evaluated": false,
+        "rateIdrPerKgDay": 0,
+        "reason": "No validated holding-cost rate is available."
+      }
+    }
+  ],
+  "limitations": [
+    "Fixed synthetic demand is ground truth only inside this deterministic evaluation.",
+    "No shelf-life or lot-age source exists, so waste is not evaluated.",
+    "No validated holding-cost rate exists, so holding cost is reported as zero and unevaluated.",
+    "The adapter invokes production forecast and procurement engines but excludes persistence, approval, and Qwen explanation."
+  ]
+}

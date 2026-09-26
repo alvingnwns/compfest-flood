@@ -1,0 +1,16 @@
+supplier_id,supplier_name,ingredient_id,unit,unit_cost_idr,moq_qty,order_multiple,supply_capacity_per_day,lead_time_hours,lead_time_max_hours,is_active,is_synthetic
+SUP-FRUIT,Supplier Buah Demo,I001,kg,52000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I002,kg,16000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I003,kg,26000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I004,kg,24000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I005,kg,22000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I006,kg,22000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I007,kg,38000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I008,kg,48000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I009,kg,70000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I010,kg,32000,0,0.1,20,24,48,true,true
+SUP-FRUIT,Supplier Buah Demo,I011,kg,38000,0,0.1,20,24,48,true,true
+SUP-PACK,Supplier Kemasan Demo,I026,pcs,1200,50,50,1000,24,24,true,true
+SUP-DRY,Supplier Bahan Kering Demo,I027,kg,18000,1,1,20,24,24,true,true
+SUP-ICE,Supplier Es Demo,I028,kg,3000,1,1,40,6,6,true,true
+SUP-WATER,Supplier Air Demo,I029,l,1000,10,10,100,6,6,true,true

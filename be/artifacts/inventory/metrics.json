@@ -1,0 +1,38 @@
+{
+  "d1": {
+    "validation": {
+      "xgboostMae": 2.8915,
+      "persistenceMae": 3.9299,
+      "rows": 528
+    },
+    "test": {
+      "xgboostMae": 2.9934,
+      "persistenceMae": 4.2159,
+      "rows": 528
+    }
+  },
+  "d2": {
+    "validation": {
+      "xgboostMae": 2.9043,
+      "persistenceMae": 4.2689,
+      "rows": 528
+    },
+    "test": {
+      "xgboostMae": 3.013,
+      "persistenceMae": 4.3371,
+      "rows": 528
+    }
+  },
+  "d3": {
+    "validation": {
+      "xgboostMae": 2.9102,
+      "persistenceMae": 4.0436,
+      "rows": 528
+    },
+    "test": {
+      "xgboostMae": 3.0323,
+      "persistenceMae": 4.0303,
+      "rows": 528
+    }
+  }
+}

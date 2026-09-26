@@ -1,0 +1,92 @@
+{
+  "suiteVersion": "inventory-decision-v1.1",
+  "dataset": {
+    "path": "be/data/new_data/aruna_juice.csv",
+    "sha256": "f6461f8934d5a879c0bdc0fbd07d4dbbac9209139ce03e65637c4f0f9561cac0"
+  },
+  "horizonDays": 3,
+  "defaults": {
+    "initialStockKg": 10.0,
+    "safetyStockKg": 3.0,
+    "storageCapacityKg": 50.0,
+    "recipeKgPerCup": 0.25,
+    "salePriceIdr": 20000,
+    "stockoutCostIdrPerCup": 20000,
+    "holdingCostIdrPerKgDay": 0,
+    "budgetIdr": 1000000,
+    "offers": [
+      {
+        "id": "standard",
+        "supplierId": "SUP-STANDARD",
+        "supplierName": "Standard Supplier",
+        "leadTimeHours": 24,
+        "packQuantityKg": 5.0,
+        "minimumPacks": 1,
+        "capacityPacks": 10,
+        "packCostIdr": 100000
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "I01-normal-demand",
+      "category": "normal-demand",
+      "description": "Kondisi nominal dengan stock, budget, storage, MOQ, dan lead time standar.",
+      "asOfDate": "2026-07-19",
+      "expectedPlanOutcomes": ["COMPLETE", "PARTIAL"]
+    },
+    {
+      "id": "I02-procurement-impossible",
+      "category": "infeasible-procurement",
+      "description": "Stok nol, budget nol, dan satu-satunya supplier tiba di luar horizon.",
+      "asOfDate": "2026-07-31",
+      "initialStockKg": 0.0,
+      "budgetIdr": 0,
+      "offers": [
+        {
+          "id": "outside-horizon",
+          "supplierId": "SUP-LATE",
+          "supplierName": "Late Supplier",
+          "leadTimeHours": 96,
+          "packQuantityKg": 5.0,
+          "minimumPacks": 1,
+          "capacityPacks": 10,
+          "packCostIdr": 100000
+        }
+      ],
+      "expectedPlanOutcomes": ["PARTIAL"]
+    },
+    {
+      "id": "I03-heavy-constraint-pressure",
+      "category": "heavy-constraint-pressure",
+      "description": "Weekend high demand dengan stok rendah, budget dan storage terbatas, MOQ, serta opsi supplier cepat/lambat.",
+      "asOfDate": "2026-07-24",
+      "initialStockKg": 2.0,
+      "storageCapacityKg": 15.0,
+      "budgetIdr": 500000,
+      "offers": [
+        {
+          "id": "fast-1kg",
+          "supplierId": "SUP-FAST",
+          "supplierName": "Fast Supplier",
+          "leadTimeHours": 24,
+          "packQuantityKg": 1.0,
+          "minimumPacks": 2,
+          "capacityPacks": 10,
+          "packCostIdr": 30000
+        },
+        {
+          "id": "slow-5kg",
+          "supplierId": "SUP-SLOW",
+          "supplierName": "Slow Supplier",
+          "leadTimeHours": 48,
+          "packQuantityKg": 5.0,
+          "minimumPacks": 1,
+          "capacityPacks": 2,
+          "packCostIdr": 80000
+        }
+      ],
+      "expectedPlanOutcomes": ["PARTIAL"]
+    }
+  ]
+}

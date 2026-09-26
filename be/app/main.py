@@ -3,11 +3,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.business_data import router as business_data_router
 from app.api.copilot import router as copilot_router
 from app.api.health import router as health_router
+from app.api.inventory import router as inventory_router
 from app.api.map import router as map_router
 from app.api.scenarios import router as scenarios_router
 from app.api.simulations import router as simulations_router
@@ -19,8 +21,18 @@ from app.errors import (
     unhandled_error_handler,
     validation_error_handler,
 )
+from app.inventory.db import record_failed_request
 from app.services.flood_risk_service import warm_model
 from app.services.routing_service import warm_graphs
+
+_INVENTORY_PATHS = (
+    "/api/products",
+    "/api/transactions",
+    "/api/inventory",
+    "/api/forecasts",
+    "/api/procurement",
+    "/api/dashboard",
+)
 
 
 @asynccontextmanager
@@ -46,13 +58,30 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_origins=configured.cors_origins,
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS"],
-        allow_headers=["Accept", "Content-Type"],
+        allow_headers=["Accept", "Content-Type", "Idempotency-Key", "X-Correlation-ID"],
     )
     application.add_exception_handler(ApiError, api_error_handler)
     application.add_exception_handler(RequestValidationError, validation_error_handler)
     application.add_exception_handler(StarletteHTTPException, http_error_handler)
     application.add_exception_handler(Exception, unhandled_error_handler)
+
+    @application.middleware("http")
+    async def audit_inventory_failures(request, call_next):
+        response = await call_next(request)
+        if response.status_code >= 400 and request.url.path.startswith(_INVENTORY_PATHS):
+            correlation_id = request.headers.get("X-Correlation-ID") or "missing"
+            await run_in_threadpool(
+                record_failed_request,
+                configured,
+                path=request.url.path,
+                method=request.method,
+                status_code=response.status_code,
+                correlation_id=correlation_id,
+            )
+        return response
+
     application.include_router(health_router)
+    application.include_router(inventory_router)
     application.include_router(business_data_router)
     application.include_router(copilot_router)
     application.include_router(map_router)

@@ -1,0 +1,12 @@
+product_id,product_name,category,unit_price_idr,currency,is_active,is_synthetic
+P001,Jus Naga,juice,16500,IDR,true,false
+P002,Jus Semangka,juice,16500,IDR,true,false
+P003,Jus Jambu,juice,16500,IDR,true,false
+P004,Jus Pisang,juice,16500,IDR,true,false
+P005,Jus Nanas,juice,16500,IDR,true,false
+P006,Jus Melon,juice,16500,IDR,true,false
+P007,Jus Sirsak,juice,16500,IDR,true,false
+P008,Jus Alpukat,juice,20000,IDR,true,false
+P009,Jus Stroberi,juice,16500,IDR,true,false
+P010,Jus Jeruk,juice,16500,IDR,true,false
+P011,Jus Mangga,juice,16500,IDR,true,false
